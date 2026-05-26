@@ -1,5 +1,9 @@
 # pokebattlesim
 
+<p align="center">
+  <img src="docs/hero_title.png" alt="Battle Theater — AI vs AI Simulator" width="600">
+</p>
+
 An AI-vs-AI Pokémon battle simulator built on
 [pokeemerald-expansion 1.15.2](https://github.com/rh-hideout/pokeemerald-expansion).
 Pit any two trainers from the mainline games (Gens 1–9) against each other,
@@ -7,6 +11,20 @@ or pilot one side via Pilot Mode.
 
 **Releases:** see the [Releases page](https://github.com/logdog2325/pokebattlesim/releases)
 for the `.bps` patch and end-user docs.
+
+---
+
+## In-game
+
+| Roster picker | Custom Trainer editor |
+|---|---|
+| ![Pick from ~120 trainers across every generation — Ash (Anime) Lv 90 shown](docs/roster_picker.png) | ![PKHeX-style per-mon editor — Arcanine with Flame Plate, Intimidate, Extreme Speed, Double-Edge, Flare Blitz, Take Down, EVs / IVs visible](docs/build_trainer_editor.png) |
+| ~120 trainers across every generation. L/R jumps between regions. | Full per-mon editor saved to your file — sprite / name / species / item / ability / EVs / IVs / 4 moves / nature / gender / shiny. |
+
+| Mega Evolution mid-trigger | Doubles + Mega in action |
+|---|---|
+| ![Giovanni's Mewtwonite Y reacting to his Mega Ring mid-animation](docs/battle_mewtwo_mega.png) | ![Mega Lucario evolved on the player side in a doubles match against Mewtwo + Nidoqueen](docs/battle_mega_lucario.png) |
+| Z-Move / Mega / Dynamax / Gigantamax all wired with AI bias tuning. | Doubles, multi-battles, tournament brackets, best-of-N — every format works AI-vs-AI. |
 
 ---
 
