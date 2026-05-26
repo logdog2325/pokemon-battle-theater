@@ -252,6 +252,44 @@ struct NPCFollower
 #include "constants/items.h"
 #define ITEM_FLAGS_COUNT ((ITEMS_COUNT / 8) + ((ITEMS_COUNT % 8) ? 1 : 0))
 
+// Battle Simulator v0.51: custom trainer slots. Saved to SaveBlock3 (much
+// less crowded than SaveBlock1). Each slot stores up to 6 mons + a name.
+// Flat layout (no pointers) so it survives saveblock serialization.
+#define SIM_NUM_CUSTOM_TRAINERS 3
+#define SIM_CUSTOM_TRAINER_NAME_LEN 10  // matches TRAINER_NAME_LENGTH (max chars before EOS)
+
+struct SimCustomTrainerMon
+{
+    u16 species;        // SPECIES_*
+    u16 heldItem;       // ITEM_* (0 = none)
+    u16 moves[4];       // up to 4 MOVE_* (0 = empty slot)
+    u8  abilityNum;     // 0/1/2 (index into species' abilities table)
+    u8  nature;         // NATURE_*
+    u8  evs[6];         // HP/Atk/Def/SpA/SpD/Spe, 0-252 each
+    u8  level;          // 1-100 (battle level cap may override)
+    u8  gender;         // 0=random, 1=male, 2=female
+    // v0.52.4 — per-stat IVs (0-31) and shiny flag. Appended at the end so
+    // existing saveblock data for the prior fields stays valid. New mons /
+    // unused bytes default to 0; Sim_GetCustomTrainerStruct treats all-zero
+    // ivs[] as "default 31s" (perfect IVs) to avoid making old saves look weak.
+    u8  ivs[6];         // HP/Atk/Def/SpA/SpD/Spe, 0-31 each
+    u8  shiny;          // 0 = not shiny, 1 = shiny
+    u8  padding;        // align to 2 bytes for u16 mons[] in next struct slot
+};                      // 30 bytes per mon
+
+struct SimCustomTrainer
+{
+    u8 name[SIM_CUSTOM_TRAINER_NAME_LEN + 1];  // null-terminated, 11 bytes
+    u8 inUse;                                  // 0 = empty slot, 1 = configured
+    u8 monCount;                               // 1-6
+    // v0.52.5 — sprite class (TRAINER_PIC_FRONT_*). 0 here is back-compat
+    // friendly: legacy slots default to whatever Sim_GetCustomTrainerStruct's
+    // hardcoded fallback was (TRAINER_PIC_FRONT_COOLTRAINER_M).
+    u8 padding;                                // align u16 to even offset
+    u16 trainerPic;                            // 0 = default sprite, else TRAINER_PIC_FRONT_*
+    struct SimCustomTrainerMon mons[6];        // 180 bytes (30 each * 6)
+};                                             // 196 bytes per trainer
+
 struct SaveBlock3
 {
 #if OW_USE_FAKE_RTC
@@ -270,6 +308,8 @@ struct SaveBlock3
 #if APRICORN_TREE_COUNT > 0
     u8 apricornTrees[NUM_APRICORN_TREE_BYTES];
 #endif
+    // v0.51 — 3 custom trainer slots (~444 bytes total).
+    struct SimCustomTrainer simCustomTrainers[SIM_NUM_CUSTOM_TRAINERS];
 }; /* max size 1624 bytes */
 
 extern struct SaveBlock3 *gSaveBlock3Ptr;

@@ -2,6 +2,9 @@
 #include "battle.h"
 #include "battle_hold_effects.h"
 #include "battle_message.h"
+// v0.53.4 — gSimPilotMode flag (declared in debug.h) lets us suppress exp
+// gain in pilot battles so loaner mons can't out-level the level cap mid-fight.
+#include "debug.h"
 #include "battle_anim.h"
 #include "battle_anim_scripts.h"
 #include "battle_ai_main.h"
@@ -4289,6 +4292,17 @@ static void Cmd_getexp(void)
                             gBattleStruct->battlerExpReward = gExperienceTables[growthRate][levelCap] - currentExp;
                     }
 
+                    // v0.53.4 — Pilot mode hands the player a borrowed trainer's
+                    // full team (often Lv 50+ aces, sometimes Lv 80+ legendaries).
+                    // Vanilla exp gain would let those loaners level up mid-match
+                    // — slipping past gSimLevelCap and changing stats between
+                    // rounds of a best-of. Zero out the reward so loaner mons
+                    // stay frozen at their configured level. The "PKMN gained
+                    // EXP" line still prints (low maintenance), it just reads
+                    // "0 EXP Points".
+                    if (gSimPilotMode)
+                        gBattleStruct->battlerExpReward = 0;
+
                     if (IsTradedMon(&gPlayerParty[*expMonId]))
                     {
                         // check if the Pokémon doesn't belong to the player
@@ -4486,8 +4500,11 @@ bool32 NoAliveMonsForPlayer(void)
     }
 
     if (B_MULTI_BATTLE_WHITEOUT > GEN_3 && gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER)
-     && !(gBattleTypeFlags & BATTLE_TYPE_ARENA) && !(IsMultibattleTest())) // Multibattle tests appear to not save the player party data for the check below.
+     && !(gBattleTypeFlags & BATTLE_TYPE_ARENA) && !(IsMultibattleTest()) && !IsAiVsAiBattle()) // Multibattle tests appear to not save the player party data for the check below.
     {
+        // Battle Simulator: skip this saved-party reserve check in AI-vs-AI sim mode.
+        // We swap the real save out for the AI's trainer team, so the saved data is empty
+        // and would force an instant whiteout the moment any battler faints.
         for (i = 0; i < PARTY_SIZE; i++)
         {
             if (!GetMonData(GetSavedPlayerPartyMon(i), MON_DATA_SPECIES)

@@ -47,6 +47,7 @@
 #include "mystery_gift.h"
 #include "union_room_chat.h"
 #include "constants/map_groups.h"
+#include "debug.h"
 #include "constants/items.h"
 #include "difficulty.h"
 #include "follower_npc.h"
@@ -134,7 +135,13 @@ static void ClearFrontierRecord(void)
 
 static void WarpToTruck(void)
 {
-    if (IS_FRLG)
+    // Battle Simulator: when launching via the auto-open path, warp straight into
+    // the Battle Tower lobby instead of the truck cutscene map. (The dome battle
+    // room can't be used as a spawn — its map scripts auto-start a Battle Frontier
+    // battle as soon as you enter, which crashes when the player has no party.)
+    if (gSimAutoOpenPending)
+        SetWarpDestination(MAP_GROUP(MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY), MAP_NUM(MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY), WARP_ID_NONE, 5, 8);
+    else if (IS_FRLG)
         SetWarpDestination(MAP_GROUP(MAP_PALLET_TOWN_PLAYERS_HOUSE_2F), MAP_NUM(MAP_PALLET_TOWN_PLAYERS_HOUSE_2F), WARP_ID_NONE, 6, 6);
     else
         SetWarpDestination(MAP_GROUP(MAP_INSIDE_OF_TRUCK), MAP_NUM(MAP_INSIDE_OF_TRUCK), WARP_ID_NONE, -1, -1);
@@ -202,6 +209,13 @@ void NewGameInitData(void)
     gSaveBlock1Ptr->registeredItem = ITEM_NONE;
     ClearBag();
     NewGameInitPCItems();
+    // Battle Simulator: stock the bag with the Mega Ring (+ Z-Ring + Dynamax Band)
+    // so Player AI side mons can actually use their held Mega Stones / Z-Crystals
+    // / Dynamax — the engine gates those gimmicks on the Player having the
+    // corresponding key item in their bag.
+    AddBagItem(ITEM_MEGA_RING, 1);
+    AddBagItem(ITEM_Z_POWER_RING, 1);
+    AddBagItem(ITEM_DYNAMAX_BAND, 1);
     ClearPokeblocks();
     ClearDecorationInventories();
     InitEasyChatPhrases();

@@ -63,6 +63,14 @@ bool32 CanTerastallize(enum BattlerId battler)
 {
     enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
 
+    // Battle Simulator v0.41.1: Terastallization disabled project-wide until
+    // Scarlet/Violet trainer rosters land. Until then every trainer in the
+    // sim is Gen-8-or-earlier canon, so letting Tera fire would be jarring.
+    // Remove this early return when adding S/V teams to re-enable Tera for
+    // everyone — Tera Type: lines in trainers.party already populate the
+    // per-mon Tera type, so the data path is preserved.
+    return FALSE;
+
     if (gBattleMons[battler].volatiles.transformed && GET_BASE_SPECIES_ID(gBattleMons[battler].species) == SPECIES_TERAPAGOS)
         return FALSE;
 

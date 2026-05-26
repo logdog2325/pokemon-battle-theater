@@ -1,5 +1,7 @@
 #include "global.h"
 #include "battle.h"
+#include "constants/map_groups.h"
+#include "debug.h"
 #include "load_save.h"
 #include "battle_setup.h"
 #include "battle_tower.h"
@@ -1385,6 +1387,65 @@ static void CB2_EndDebugBattle(void)
                 SavePlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1, &gPlayerParty[i]);
         }
         LoadPlayerParty();
+    }
+    // Battle Simulator bugfix: was `else if` — that branching skipped the sim
+    // cleanup (warp back to lobby + gSimAutoOpenPending = TRUE) whenever the
+    // sim battle used Co-op Partner mode (BATTLE_TYPE_INGAME_PARTNER set).
+    // The player would land back at the Pokemon Center via CB2_EndTrainerBattle
+    // and no trainer menu would reopen. Run the sim cleanup independently so
+    // partner-mode sim battles also rewarp + auto-open the picker.
+    if (B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE))
+    {
+        LoadPlayerParty();
+        FlagClear(B_FLAG_AI_VS_AI_BATTLE);
+        gPartnerTrainerId = 0;
+        // Battle Simulator: best-of-N scoring. From the AI-vs-AI sim's point of
+        // view, the Player AI side is "trainer 1" and the opponent side is
+        // "trainer 2". gBattleOutcome is reported from the player POV, so
+        // B_OUTCOME_WON means our Player AI side won, B_OUTCOME_LOST means the
+        // opponent side won. Draws / forfeits don't count toward either tally.
+        if (gSimBestOf > 1)
+        {
+            if (gBattleOutcome == B_OUTCOME_WON)
+                gSimT1Wins++;
+            else if (gBattleOutcome == B_OUTCOME_LOST)
+                gSimT2Wins++;
+        }
+        // Battle Simulator: tournament progression — single-elim bracket.
+        // Win → record the player slot as match winner, bump round. Lose →
+        // record the opponent slot, mark eliminated. Draws / forfeits are a
+        // no-op (the same round re-runs on retry).
+        if (gSimTournamentCup > 0 && gSimTournamentRound > 0 && !gSimTournamentDone)
+        {
+            if (gBattleOutcome == B_OUTCOME_WON)
+                Sim_AdvanceTournamentAfterMatch(TRUE);
+            else if (gBattleOutcome == B_OUTCOME_LOST)
+                Sim_AdvanceTournamentAfterMatch(FALSE);
+        }
+        // Battle Simulator: snapshot the team-preview picks so the NEXT round
+        // (Best-Of or Tournament) can score adaptively. The lookup matches by
+        // trainer ID, so the same trainer fighting again brings a team picked
+        // to counter what their opponent showed last round.
+        Sim_SnapshotPicksForNextRound();
+        // Battle Simulator: after a sim battle, warp back to the Battle Tower
+        // lobby and immediately re-open the trainer picker — no overworld
+        // wandering. Best-of-N rematch dispatch happens inside
+        // Debug_ShowTrainersSubMenu once the lobby map loads.
+        SetWarpDestination(MAP_GROUP(MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY),
+                           MAP_NUM(MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY),
+                           WARP_ID_NONE, 5, 8);
+        WarpIntoMap();
+        gSimAutoOpenPending = TRUE;
+        // Battle Simulator: bypass CB2_EndTrainerBattle so its
+        // IsPlayerDefeated() branch can't override our warp with CB2_WhiteOut
+        // (which would dump the player at the last Pokemon Center —
+        // Rustboro on a fresh sim save — every time the Player AI side loses).
+        gIsDebugBattle = FALSE;
+        // v0.52.15 — clear pilot mode so the next round picks it up fresh
+        // from Sim_SetupMatchRound's snapshot (or live menu state).
+        gSimPilotMode = FALSE;
+        SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
+        return;
     }
     SetMainCallback2(CB2_EndTrainerBattle);
 }

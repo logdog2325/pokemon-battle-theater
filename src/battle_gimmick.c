@@ -7,6 +7,7 @@
 #include "battle_z_move.h"
 #include "battle_setup.h"
 #include "battle_util.h"
+#include "event_data.h"
 #include "item.h"
 #include "palette.h"
 #include "pokemon.h"
@@ -69,6 +70,21 @@ bool32 ShouldTrainerBattlerUseGimmick(enum BattlerId battler, enum Gimmick gimmi
     #if TESTING
     return gimmick == TestRunner_Battle_GetChosenGimmick(GetBattlerTrainer(battler), gBattlerPartyIndexes[battler]);
     #else
+    // Battle Simulator: in AI-vs-AI mode, the "player side" is AI-controlled, so
+    // the usual unconditional TRUE for that side would let any trainer (Lance,
+    // Cynthia, etc.) Dynamax any mon. Gate on the actual mon's DYNAMAX_LEVEL,
+    // which trainerproc only sets > 0 for the 24 canonical SwSh targets.
+    if (B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE))
+    {
+        if (gimmick == GIMMICK_DYNAMAX)
+        {
+            struct Pokemon *mon = GetBattlerMon(battler);
+            return GetMonData(mon, MON_DATA_DYNAMAX_LEVEL) > 0;
+        }
+        if (gimmick == GIMMICK_TERA && gBattleStruct->opponentMonCanTera & 1 << gBattlerPartyIndexes[battler])
+            return TRUE;
+        return FALSE;
+    }
     // The player can bypass these checks because they can choose through the controller.
     if (IsOnPlayerSide(battler) && !((gBattleTypeFlags & BATTLE_TYPE_MULTI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT))
     {

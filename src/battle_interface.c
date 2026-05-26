@@ -2,6 +2,7 @@
 #include "malloc.h"
 #include "battle.h"
 #include "pokemon.h"
+#include "battle_ai_util.h"
 #include "battle_controllers.h"
 #include "battle_interface.h"
 #include "battle_z_move.h"
@@ -1665,6 +1666,59 @@ static void SpriteCB_StatusSummaryBalls_OnSwitchout(struct Sprite *sprite)
     sprite->y2 = gSprites[barSpriteId].y2;
 }
 
+// Battle Simulator: count mons still in play on the same side as the given
+// battler. Honors multi-battle slot ownership via GetAIPartyIndexes (so each
+// trainer's half of a multi shows their own count, not the combined six).
+// Skips empty slots and eggs the same way CalculatePartyCount does. To stay
+// current with in-progress KOs (party HP only commits at end-of-turn but
+// gBattleMons HP is set immediately on damage), each party slot that
+// corresponds to an active battler uses gBattleMons[b].hp instead of the
+// party data — so the count drops the instant a mon faints, not at switch-in.
+static u8 Sim_CountAliveOnSide(enum BattlerId battler)
+{
+    struct Pokemon *party = IsOnPlayerSide(battler) ? gPlayerParty : gEnemyParty;
+    enum BattleSide thisSide = GetBattlerSide(battler);
+    s32 firstId, lastId;
+    GetAIPartyIndexes(battler, &firstId, &lastId);
+    u8 alive = 0;
+    for (s32 i = firstId; i < lastId; i++)
+    {
+        if (GetMonData(&party[i], MON_DATA_SPECIES) == SPECIES_NONE)
+            continue;
+        if (GetMonData(&party[i], MON_DATA_IS_EGG))
+            continue;
+
+        // Is this party slot currently an active battler on the same side?
+        // If so, defer to in-battle HP (updated immediately on damage).
+        bool32 activeOnSameSide = FALSE;
+        bool32 activeKOd = FALSE;
+        for (u8 b = 0; b < gBattlersCount; b++)
+        {
+            if (GetBattlerSide(b) != thisSide)
+                continue;
+            if (gBattlerPartyIndexes[b] != i)
+                continue;
+            activeOnSameSide = TRUE;
+            if (gBattleMons[b].hp == 0)
+                activeKOd = TRUE;
+            break;
+        }
+
+        if (activeOnSameSide)
+        {
+            if (activeKOd)
+                continue;
+        }
+        else
+        {
+            if (GetMonData(&party[i], MON_DATA_HP) == 0)
+                continue;
+        }
+        alive++;
+    }
+    return alive;
+}
+
 void UpdateNickInHealthbox(u8 healthboxSpriteId, struct Pokemon *mon)
 {
     u32 healthboxSpriteId2 = gSprites[healthboxSpriteId].oam.affineParam;
@@ -1692,14 +1746,27 @@ void UpdateNickInHealthbox(u8 healthboxSpriteId, struct Pokemon *mon)
     switch (gender)
     {
     default:
-        StringCopy(ptr, gText_HealthboxGender_None);
+        ptr = StringCopy(ptr, gText_HealthboxGender_None);
         break;
     case MON_MALE:
-        StringCopy(ptr, gText_HealthboxGender_Male);
+        ptr = StringCopy(ptr, gText_HealthboxGender_Male);
         break;
     case MON_FEMALE:
-        StringCopy(ptr, gText_HealthboxGender_Female);
+        ptr = StringCopy(ptr, gText_HealthboxGender_Female);
         break;
+    }
+
+    // Battle Simulator: in AI-vs-AI sim battles only, append the remaining-
+    // mon count for this battler's side (e.g. "PIKACHU 4"). GetFontIdToFit
+    // below will compress the font when the total runs too wide, so this is
+    // safe across short and long species names. Vanilla battles are untouched.
+    if (IsAiVsAiBattle())
+    {
+        u8 buf[4];
+        u8 alive = Sim_CountAliveOnSide(gSprites[healthboxSpriteId].hMain_Battler);
+        StringAppend(gDisplayedStringBattle, COMPOUND_STRING(" "));
+        ConvertIntToDecimalStringN(buf, alive, STR_CONV_MODE_LEFT_ALIGN, 1);
+        StringAppend(gDisplayedStringBattle, buf);
     }
 
     //  Don't assume that healthbox sprites don't have data in the fields used for sprite printing

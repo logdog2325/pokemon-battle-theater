@@ -8,6 +8,7 @@
 #include "battle_interface.h"
 #include "battle_message.h"
 #include "battle_z_move.h"
+#include "event_data.h"  // v0.48: FlagGet for AI-vs-AI bypass on Z-Power Ring check
 #include "battle_scripts.h"
 #include "graphics.h"
 #include "sprite.h"
@@ -116,7 +117,13 @@ bool32 CanUseZMove(enum BattlerId battler)
     enum BattlerPosition position = GetBattlerPosition(battler);
 
     // Check if Player has Z-Power Ring.
-    if (!TESTING && (position == B_POSITION_PLAYER_LEFT
+    // Battle Simulator v0.48: bypass the Z-Power Ring requirement in AI-vs-AI
+    // mode. The "player side" is AI-controlled so the trainer should be able
+    // to fire their canonical Z-Move regardless of the player's inventory.
+    // Mirrors the same-shape fix in battle_gimmick.c for Dynamax (v0.15).
+    if (!TESTING
+        && !(B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE))
+        && (position == B_POSITION_PLAYER_LEFT
         || (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) && position == B_POSITION_PLAYER_RIGHT))
         && !CheckBagHasItem(ITEM_Z_POWER_RING, 1))
         return FALSE;
@@ -183,7 +190,13 @@ bool32 IsViableZMove(enum BattlerId battler, enum Move move)
 
     enum BattlerPosition position = GetBattlerPosition(battler);
     // Check if Player has Z-Power Ring.
-    if ((position == B_POSITION_PLAYER_LEFT || (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) && position == B_POSITION_PLAYER_RIGHT))
+    // Battle Simulator v0.50.3: same AI-vs-AI bypass as CanUseZMove (v0.48.1).
+    // This is the SECOND Z-Power Ring check — called by AI's ShouldUseZMove
+    // when scoring whether to actually fire the Z-Move. Without this bypass,
+    // the AI sees IsViableZMove==FALSE and picks the regular move, even
+    // though CanUseZMove passed.
+    if (!(B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE))
+        && (position == B_POSITION_PLAYER_LEFT || (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) && position == B_POSITION_PLAYER_RIGHT))
         && !CheckBagHasItem(ITEM_Z_POWER_RING, 1))
     {
         return FALSE;

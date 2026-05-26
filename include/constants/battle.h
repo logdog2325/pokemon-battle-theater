@@ -648,6 +648,12 @@ enum BattleEnvironments
     BATTLE_ENVIRONMENT_DISTORTION_WORLD,
     BATTLE_ENVIRONMENT_SPACE,
     BATTLE_ENVIRONMENT_ULTRA_SPACE,
+    // Battle Simulator: LiYun's fan-made battle BGs (PokeCommunity pack).
+    BATTLE_ENVIRONMENT_LIYUN_INDOOR,
+    BATTLE_ENVIRONMENT_LIYUN_OUTDOOR,
+    BATTLE_ENVIRONMENT_LIYUN_CRAGGY,
+    // Battle Simulator: ChatGPT-generated Battle Theater stadium interior.
+    BATTLE_ENVIRONMENT_BATTLE_THEATER,
     BATTLE_ENVIRONMENT_COUNT,
 };
 

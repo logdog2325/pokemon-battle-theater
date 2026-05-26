@@ -1337,11 +1337,17 @@
 #define FLAG_UNUSED_0x4FF                                           0x4FF // Unused Flag
 
 // Trainer Flags
-// Trainer flags occupy 0x500 - 0x85F, the last 9 of which are unused
+// Trainer flags occupy 0x500 - 0x8FF (v0.9 expansion bumped MAX_TRAINERS_COUNT
+// from 916 to 1024; was 0x500-0x893 prior). Of the 1024 slots, only 907 are
+// currently assigned trainers (TRAINERS_COUNT_EMERALD), leaving 117 free for
+// v0.9 trainer dumps (PWT type experts, Alola League, Rainbow Rocket).
 // See constants/opponents.h. The values there + FLAG_TRAINER_FLAG_START are the flag IDs
+// NOTE: the SYSTEM_FLAGS aliases below carry stale absolute hex names
+// (FLAG_UNUSED_0x9XX). The macros are still correct — only the names are
+// out of date. They are symbolic aliases; no code references the hex part.
 
 #define TRAINER_FLAGS_START                                         0x500
-#define TRAINER_FLAGS_END                                           (TRAINER_FLAGS_START + MAX_TRAINERS_COUNT - 1) // 0x85F
+#define TRAINER_FLAGS_END                                           (TRAINER_FLAGS_START + MAX_TRAINERS_COUNT - 1) // 0x8FF for MAX_TRAINERS_COUNT_EMERALD = 1024
 
 // System Flags
 

@@ -271,6 +271,30 @@ extern const u32 gBattleEnvironmentAnimTilemap_Rayquaza[];
 extern const u16 gBattleEnvironmentPalette_Rayquaza[];
 extern const u16 gBattleEnvironmentPalette_Kyogre[];
 extern const u16 gBattleEnvironmentPalette_Groudon[];
+
+// Battle Simulator: LiYun's fan-made battle BGs (Indoor / Outdoor / Craggy).
+extern const u32 gBattleEnvironmentTiles_LiYunIndoor[];
+extern const u32 gBattleEnvironmentTilemap_LiYunIndoor[];
+extern const u32 gBattleEnvironmentAnimTiles_LiYunIndoor[];
+extern const u32 gBattleEnvironmentAnimTilemap_LiYunIndoor[];
+extern const u16 gBattleEnvironmentPalette_LiYunIndoor[];
+extern const u32 gBattleEnvironmentTiles_LiYunOutdoor[];
+extern const u32 gBattleEnvironmentTilemap_LiYunOutdoor[];
+extern const u32 gBattleEnvironmentAnimTiles_LiYunOutdoor[];
+extern const u32 gBattleEnvironmentAnimTilemap_LiYunOutdoor[];
+extern const u16 gBattleEnvironmentPalette_LiYunOutdoor[];
+extern const u32 gBattleEnvironmentTiles_LiYunCraggy[];
+extern const u32 gBattleEnvironmentTilemap_LiYunCraggy[];
+extern const u32 gBattleEnvironmentAnimTiles_LiYunCraggy[];
+extern const u32 gBattleEnvironmentAnimTilemap_LiYunCraggy[];
+extern const u16 gBattleEnvironmentPalette_LiYunCraggy[];
+
+// Battle Simulator: ChatGPT-generated Battle Theater stadium interior.
+extern const u32 gBattleEnvironmentTiles_BattleTheater[];
+extern const u32 gBattleEnvironmentTilemap_BattleTheater[];
+extern const u32 gBattleEnvironmentAnimTiles_BattleTheater[];
+extern const u32 gBattleEnvironmentAnimTilemap_BattleTheater[];
+extern const u16 gBattleEnvironmentPalette_BattleTheater[];
 extern const u16 gBattleEnvironmentPalette_BuildingGym[];
 extern const u16 gBattleEnvironmentPalette_BuildingLeader[];
 extern const u16 gBattleEnvironmentPalette_StadiumAqua[];

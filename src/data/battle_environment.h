@@ -528,6 +528,64 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .camouflageType = TYPE_PSYCHIC,
         .camouflageBlend = DEFAULT_CAMOUFLAGE_BLEND,
     },
+
+    // Battle Simulator: LiYun's fan-made battle BGs. Falls back to PLAIN's
+    // Nature/Secret Power tie-ins since these aren't tied to real terrain.
+    [BATTLE_ENVIRONMENT_LIYUN_INDOOR] =
+    {
+        .name = _("Theater"),
+        .naturePower = PLAIN_NATURE_POWER,
+        .secretPowerAnimation = PLAIN_SECRET_POWER_ANIMATION,
+        .secretPowerEffect = PLAIN_SECRET_POWER_EFFECT,
+        .camouflageType = PLAIN_CAMOUFLAGE_TYPE,
+        .camouflageBlend = PLAIN_CAMOUFLAGE_BLEND,
+        .entry = ENVIRONMENT_ENTRY(LiYunIndoor),
+        .background = ENVIRONMENT_BACKGROUND(LiYunIndoor),
+        .palette = gBattleEnvironmentPalette_LiYunIndoor,
+        .battleIntroSlide = PLAIN_BATTLE_INTRO_SLIDE,
+    },
+
+    [BATTLE_ENVIRONMENT_LIYUN_OUTDOOR] =
+    {
+        .name = _("Stadium"),
+        .naturePower = PLAIN_NATURE_POWER,
+        .secretPowerAnimation = PLAIN_SECRET_POWER_ANIMATION,
+        .secretPowerEffect = PLAIN_SECRET_POWER_EFFECT,
+        .camouflageType = PLAIN_CAMOUFLAGE_TYPE,
+        .camouflageBlend = PLAIN_CAMOUFLAGE_BLEND,
+        .entry = ENVIRONMENT_ENTRY(LiYunOutdoor),
+        .background = ENVIRONMENT_BACKGROUND(LiYunOutdoor),
+        .palette = gBattleEnvironmentPalette_LiYunOutdoor,
+        .battleIntroSlide = PLAIN_BATTLE_INTRO_SLIDE,
+    },
+
+    [BATTLE_ENVIRONMENT_LIYUN_CRAGGY] =
+    {
+        .name = _("Craggy"),
+        .naturePower = PLAIN_NATURE_POWER,
+        .secretPowerAnimation = PLAIN_SECRET_POWER_ANIMATION,
+        .secretPowerEffect = PLAIN_SECRET_POWER_EFFECT,
+        .camouflageType = PLAIN_CAMOUFLAGE_TYPE,
+        .camouflageBlend = PLAIN_CAMOUFLAGE_BLEND,
+        .entry = ENVIRONMENT_ENTRY(LiYunCraggy),
+        .background = ENVIRONMENT_BACKGROUND(LiYunCraggy),
+        .palette = gBattleEnvironmentPalette_LiYunCraggy,
+        .battleIntroSlide = PLAIN_BATTLE_INTRO_SLIDE,
+    },
+
+    [BATTLE_ENVIRONMENT_BATTLE_THEATER] =
+    {
+        .name = _("Theater"),
+        .naturePower = PLAIN_NATURE_POWER,
+        .secretPowerAnimation = PLAIN_SECRET_POWER_ANIMATION,
+        .secretPowerEffect = PLAIN_SECRET_POWER_EFFECT,
+        .camouflageType = PLAIN_CAMOUFLAGE_TYPE,
+        .camouflageBlend = PLAIN_CAMOUFLAGE_BLEND,
+        .entry = ENVIRONMENT_ENTRY(BattleTheater),
+        .background = ENVIRONMENT_BACKGROUND(BattleTheater),
+        .palette = gBattleEnvironmentPalette_BattleTheater,
+        .battleIntroSlide = PLAIN_BATTLE_INTRO_SLIDE,
+    },
 };
 
 static const struct {

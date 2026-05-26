@@ -254,6 +254,10 @@ static inline const struct Trainer *GetTrainerStructFromId(u16 trainerId)
 {
     u32 sanitizedTrainerId = 0;
     if (gIsDebugBattle) return GetDebugAiTrainer();
+    // v0.51 — custom user-built trainer slots are synthesized from SaveBlock3,
+    // not in the compiled gTrainers[] table.
+    if (trainerId >= TRAINER_SIM_CUSTOM_1 && trainerId <= TRAINER_SIM_CUSTOM_3)
+        return Sim_GetCustomTrainerStruct(trainerId);
     sanitizedTrainerId = SanitizeTrainerId(trainerId);
 
     if (IsPartnerTrainerId(trainerId))

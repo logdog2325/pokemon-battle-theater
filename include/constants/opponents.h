@@ -860,12 +860,380 @@
 #define TRAINER_BRENDAN_PLACEHOLDER         853
 #define TRAINER_MAY_PLACEHOLDER             854
 
+// Battle Simulator: Kanto E4 rematch + Blue variants ported into the Emerald build.
+#define TRAINER_ELITE_FOUR_LORELEI_KANTO    855
+#define TRAINER_ELITE_FOUR_BRUNO_KANTO      856
+#define TRAINER_ELITE_FOUR_AGATHA_KANTO     857
+#define TRAINER_ELITE_FOUR_LANCE_KANTO      858
+#define TRAINER_BLUE_SQUIRTLE               859
+#define TRAINER_BLUE_BULBASAUR              860
+#define TRAINER_BLUE_CHARMANDER             861
+
+// Battle Simulator: Kanto gym leader HGSS-rematch teams.
+#define TRAINER_LEADER_BROCK_REMATCH        862
+#define TRAINER_LEADER_MISTY_REMATCH        863
+#define TRAINER_LEADER_LT_SURGE_REMATCH     864
+#define TRAINER_LEADER_ERIKA_REMATCH        865
+#define TRAINER_LEADER_KOGA_REMATCH         866
+#define TRAINER_LEADER_SABRINA_REMATCH      867
+#define TRAINER_LEADER_BLAINE_REMATCH       868
+
+// Battle Simulator: PWT (BW2 Pokemon World Tournament) teams.
+#define TRAINER_LEADER_BROCK_PWT            869
+#define TRAINER_LEADER_MISTY_PWT            870
+#define TRAINER_LEADER_LT_SURGE_PWT         871
+#define TRAINER_LEADER_ERIKA_PWT            872
+#define TRAINER_LEADER_JANINE_PWT           873
+#define TRAINER_LEADER_SABRINA_PWT          874
+#define TRAINER_LEADER_BLAINE_PWT           875
+#define TRAINER_LEADER_GIOVANNI_PWT         876
+#define TRAINER_ROXANNE_PWT                 877
+#define TRAINER_BRAWLY_PWT                  878
+#define TRAINER_WATTSON_PWT                 879
+#define TRAINER_FLANNERY_PWT                880
+#define TRAINER_NORMAN_PWT                  881
+#define TRAINER_WINONA_PWT                  882
+#define TRAINER_TATE_PWT                    883
+#define TRAINER_LIZA_PWT                    884
+#define TRAINER_JUAN_PWT                    885
+#define TRAINER_BLUE_PWT                    886
+#define TRAINER_LANCE_PWT                   887
+#define TRAINER_STEVEN_PWT                  888
+#define TRAINER_WALLACE_PWT                 889
+#define TRAINER_RED_PWT                     890
+
+// Battle Simulator: Wally's ORAS Victory Road team (Mega Gallade).
+#define TRAINER_WALLY_ORAS                  891
+
+// Battle Simulator: Steven's ORAS Delta Episode team (Mega Metagross).
+#define TRAINER_STEVEN_ORAS                 892
+
+// Battle Simulator: May's ORAS late-game team (Mega Blaziken, player picked Mudkip).
+#define TRAINER_MAY_ORAS                    893
+
+// Battle Simulator: Brendan's ORAS late-game team (Mega Sceptile, player picked Torchic).
+#define TRAINER_BRENDAN_ORAS                894
+
+// Battle Simulator: Hoenn Elite Four ORAS rematch teams.
+#define TRAINER_SIDNEY_ORAS                 895
+#define TRAINER_PHOEBE_ORAS                 896
+#define TRAINER_GLACIA_ORAS                 897
+#define TRAINER_DRAKE_ORAS                  898
+
+// Battle Simulator: Kanto Elite Four LGPE rematch teams (Let's Go Pikachu/Eevee).
+#define TRAINER_LORELEI_LGPE                899
+#define TRAINER_AGATHA_LGPE                 900
+#define TRAINER_LANCE_LGPE                  901
+#define TRAINER_RED_LGPE                    902
+#define TRAINER_BLUE_LGPE                   903
+#define TRAINER_BRUNO_LGPE                  904
+
+// Battle Simulator: Logan — custom Gen 9-style VGC challenger (Pokemon Ranger).
+#define TRAINER_LOGAN                       905
+
+// Battle Simulator: Green from LGPE (Mega Blastoise team).
+#define TRAINER_GREEN_LGPE                  906
+
+// ============================================================================
+// Battle Simulator v0.9: Rainbow Rocket bosses (USUM Episode RR).
+// IDs 907-916. Each has a 5-mon team with cover legendary as ace.
+// Display names capped at 10 chars; US/UM suffix differentiates the two
+// roster versions where applicable.
+// ============================================================================
+#define TRAINER_ARCHIE_RR                   907   // ARCHIE RR  — Kyogre ace
+#define TRAINER_MAXIE_RR                    908   // MAXIE RR   — Groudon ace
+#define TRAINER_CYRUS_RR_US                 909   // CYRUS US   — Palkia ace
+#define TRAINER_CYRUS_RR_UM                 910   // CYRUS UM   — Dialga ace
+#define TRAINER_LYSANDRE_US_RR              911   // LYSAND.US  — Xerneas ace
+#define TRAINER_LYSANDRE_UM_RR              912   // LYSAND.UM  — Yveltal ace
+#define TRAINER_GHETSIS_US_RR               913   // GHETSIS US — Kyurem-W
+#define TRAINER_GHETSIS_UM_RR               914   // GHETSIS UM — Kyurem-B
+#define TRAINER_GIOVANNI_US_RR              915   // GIOVAN.US  — Mewtwo
+#define TRAINER_GIOVANNI_UM_RR              916   // GIOVAN.UM  — Mewtwo (Y variant)
+
+// ============================================================================
+// Battle Simulator v0.9: Alola League (Sun/Moon + USUM trial captains, island
+// kahunas, Elite Four, and champion candidates). IDs 917-931.
+// Trial captains have 3-mon teams; kahunas/E4/champion have 5-6.
+// Note: TRAINER_OLIVIA_ALOLA suffix because TRAINER_OLIVIA already exists
+// at ID 130 (Hoenn Beauty NPC, unrelated to Alola kahuna).
+// ============================================================================
+#define TRAINER_ILIMA                       917   // ILIMA      — Normal trial
+#define TRAINER_LANA                        918   // LANA       — Water trial
+#define TRAINER_KIAWE                       919   // KIAWE      — Fire trial
+#define TRAINER_MALLOW                      920   // MALLOW     — Grass trial
+#define TRAINER_SOPHOCLES                   921   // SOPHOCLES  — Electric trial
+#define TRAINER_ACEROLA                     922   // ACEROLA    — Ghost trial/E4
+#define TRAINER_MINA                        923   // MINA       — Fairy trial
+#define TRAINER_HALA                        924   // HALA       — Fighting kahuna
+#define TRAINER_OLIVIA_ALOLA                925   // OLIVIA A.  — Rock kahuna
+#define TRAINER_NANU                        926   // NANU       — Dark kahuna
+#define TRAINER_HAPU                        927   // HAPU       — Ground kahuna
+#define TRAINER_MOLAYNE                     928   // MOLAYNE    — Steel E4
+#define TRAINER_KAHILI                      929   // KAHILI     — Flying E4
+#define TRAINER_KUKUI                       930   // KUKUI      — Champion (Decidueye starter)
+#define TRAINER_HAU                         931   // HAU        — Rival champion (Primarina starter)
+
+// v0.9 variant addendum: Hau / Kukui / Gladion each have three starter
+// variants in USUM lore. Adding all three of each (Decidueye/Primarina/
+// Incineroar for the trainers; Venusaur/Charizard/Blastoise for Gladion).
+#define TRAINER_KUKUI_PRIMARINA             932   // KUKUI PRI  — Primarina variant
+#define TRAINER_KUKUI_INCINEROAR            933   // KUKUI INC  — Incineroar variant
+#define TRAINER_HAU_DECIDUEYE               934   // HAU DEC    — Decidueye variant
+#define TRAINER_HAU_INCINEROAR              935   // HAU INC    — Incineroar variant
+#define TRAINER_GLADION_VENUSAUR            936   // GLADION V  — Venusaur starter
+#define TRAINER_GLADION_CHARIZARD           937   // GLADION C  — Charizard starter
+#define TRAINER_GLADION_BLASTOISE           938   // GLADION B  — Blastoise starter
+
+// ============================================================================
+// Battle Simulator v0.10: PWT regional gym leaders dump from B2W2 World
+// Tournament. 27 trainers across Johto / Sinnoh / Unova plus 3 champions
+// (Cynthia, Iris, Alder). IDs 939-965.
+// Existing PWT entries (Kanto 869-876, Hoenn 877-884, specials 886-890)
+// are NOT duplicated — those teams already live in trainers.party.
+// ============================================================================
+// Johto PWT (939-946)
+#define TRAINER_CLAIR_PWT                   939
+#define TRAINER_PRYCE_PWT                   940
+#define TRAINER_JASMINE_PWT                 941
+#define TRAINER_CHUCK_PWT                   942
+#define TRAINER_MORTY_PWT                   943
+#define TRAINER_WHITNEY_PWT                 944
+#define TRAINER_BUGSY_PWT                   945
+#define TRAINER_FALKNER_PWT                 946
+// Sinnoh PWT (947-954)
+#define TRAINER_VOLKNER_PWT                 947
+#define TRAINER_ROARK_PWT                   948
+#define TRAINER_GARDENIA_PWT                949
+#define TRAINER_BYRON_PWT                   950
+#define TRAINER_WAKE_PWT                    951   // Crasher Wake
+#define TRAINER_CANDICE_PWT                 952
+#define TRAINER_FANTINA_PWT                 953
+#define TRAINER_MAYLENE_PWT                 954
+// Unova PWT (955-962)
+#define TRAINER_LENORA_PWT                  955
+#define TRAINER_BURGH_PWT                   956
+#define TRAINER_ELESA_PWT                   957
+#define TRAINER_CLAY_PWT                    958
+#define TRAINER_SKYLA_PWT                   959
+#define TRAINER_BRYCEN_PWT                  960
+#define TRAINER_DRAYDEN_PWT                 961
+#define TRAINER_MARLON_PWT                  962
+// PWT Champion-tier extras (963-965)
+#define TRAINER_CYNTHIA_PWT                 963
+#define TRAINER_IRIS_PWT                    964
+#define TRAINER_ALDER_PWT                   965
+
+// Battle Simulator v0.10.2: Blue's HGSS team (his actual Lv 67-72 roster
+// from Pokémon HeartGold/SoulSilver, distinct from the FRLG-ported Lv 72-75
+// "starter variant" teams at IDs 859-861). Champion-tier.
+#define TRAINER_BLUE_HGSS                   966
+
+// Battle Simulator v0.10.3: HGSS Indigo Plateau roster — Silver's two starter-
+// counter teams (Lv 55-60), the eight Johto gym leader HGSS rematches
+// (Lv 48-62), and the Johto Elite Four + Lance HGSS Champion (Lv 58-75).
+// IDs 967-981. All tagged (HGSS) and bucketed into the unified HGSS section.
+#define TRAINER_SILVER_CYND_HGSS            967   // Silver if player chose Cyndaquil (Feraligatr ace)
+#define TRAINER_SILVER_TOTO_HGSS            968   // Silver if player chose Totodile (Meganium ace)
+#define TRAINER_FALKNER_HGSS                969
+#define TRAINER_BUGSY_HGSS                  970
+#define TRAINER_WHITNEY_HGSS                971
+#define TRAINER_MORTY_HGSS                  972
+#define TRAINER_CHUCK_HGSS                  973
+#define TRAINER_JASMINE_HGSS                974
+#define TRAINER_PRYCE_HGSS                  975
+#define TRAINER_CLAIR_HGSS                  976
+#define TRAINER_WILL_HGSS                   977
+#define TRAINER_KOGA_HGSS                   978
+#define TRAINER_BRUNO_HGSS                  979
+#define TRAINER_KAREN_HGSS                  980
+#define TRAINER_LANCE_HGSS                  981
+
+// Battle Simulator v0.10.4: Trace, the Pokemon League Champion of LGPE.
+// Two variants — Pikachu version (Jolteon ace) and Eevee version (Raichu ace).
+// Each mon has a 3-move set (LGPE format). Pidgeot holds Pidgeotite for Mega.
+#define TRAINER_TRACE_LGPE_PIKACHU          982
+#define TRAINER_TRACE_LGPE_EEVEE            983
+
+// Battle Simulator v0.10.4: third Silver HGSS variant (Chikorita path).
+// Same Sneasel/Magneton/Gengar/Crobat/Alakazam base + Typhlosion Lv60 ace.
+#define TRAINER_SILVER_CHIK_HGSS            984
+
+// ============================================================================
+// Battle Simulator v0.11: Pokemon Platinum dump — three Barry rival variants
+// (Lv 79-85 Survival Area teams), eight Battleground gym leader rematches
+// (Lv 61-66), five Stat Trainer Battleground rosters (Lv 61-65), Sinnoh
+// Elite Four rematch teams (higher-level variant Lv 65-75), and Cynthia's
+// Pokemon League rematch team (Lv 74-78). IDs 985-1005.
+// ============================================================================
+#define TRAINER_BARRY_TURTWIG               985   // Barry rival if player chose Turtwig (Infernape ace)
+#define TRAINER_BARRY_CHIMCHAR              986   // Barry rival if player chose Chimchar (Empoleon ace)
+#define TRAINER_BARRY_PIPLUP                987   // Barry rival if player chose Piplup (Torterra ace)
+// Battleground gym leader rematches (988-995)
+#define TRAINER_ROARK_PT                    988
+#define TRAINER_GARDENIA_PT                 989
+#define TRAINER_FANTINA_PT                  990
+#define TRAINER_MAYLENE_PT                  991
+#define TRAINER_WAKE_PT                     992
+#define TRAINER_BYRON_PT                    993
+#define TRAINER_CANDICE_PT                  994
+#define TRAINER_VOLKNER_PT                  995
+// Stat Trainer Battleground rosters (996-1000)
+#define TRAINER_CHERYL_PT                   996
+#define TRAINER_MIRA_PT                     997
+#define TRAINER_RILEY_PT                    998
+#define TRAINER_MARLEY_PT                   999
+#define TRAINER_BUCK_PT                    1000
+// Sinnoh Elite Four rematch (high-level variant) + Cynthia rematch (1001-1005)
+#define TRAINER_AARON_PT                   1001
+#define TRAINER_BERTHA_PT                  1002
+#define TRAINER_FLINT_PT                   1003
+#define TRAINER_LUCIAN_PT                  1004
+#define TRAINER_CYNTHIA_PT                 1005   // Cynthia Pokemon League rematch (Platinum)
+
+// ============================================================================
+// Battle Simulator v0.12: Pokemon BDSP (Brilliant Diamond / Shining Pearl)
+// remake dump — 3 Barry BDSP variants, 8 BDSP gym leader rematches, Sinnoh
+// E4 BDSP, Cynthia BDSP, plus the BDSP Lucas/Dawn 3 starter variants each
+// (the Battleground Lv 68-74 rematch tier). IDs 1006-1027. All 22 are
+// tagged (BDSP) and grouped into a single BDSP picker section.
+// ============================================================================
+#define TRAINER_BARRY_BDSP_TURTWIG          1006
+#define TRAINER_BARRY_BDSP_CHIMCHAR         1007
+#define TRAINER_BARRY_BDSP_PIPLUP           1008
+#define TRAINER_ROARK_BDSP                  1009
+#define TRAINER_GARDENIA_BDSP               1010
+#define TRAINER_MAYLENE_BDSP                1011
+#define TRAINER_WAKE_BDSP                   1012
+#define TRAINER_FANTINA_BDSP                1013
+#define TRAINER_BYRON_BDSP                  1014
+#define TRAINER_CANDICE_BDSP                1015
+#define TRAINER_VOLKNER_BDSP                1016
+#define TRAINER_AARON_BDSP                  1017
+#define TRAINER_BERTHA_BDSP                 1018
+#define TRAINER_FLINT_BDSP                  1019
+#define TRAINER_LUCIAN_BDSP                 1020
+#define TRAINER_CYNTHIA_BDSP                1021
+#define TRAINER_LUCAS_BDSP_TURTWIG          1022
+#define TRAINER_LUCAS_BDSP_CHIMCHAR         1023
+// v0.13.1 bugfix: ID 1024 (= 2^10) appears to be a bad slot in the compiled
+// gTrainers array — when accessed it returns garbage data (sprite glitch,
+// wrong team, name renders as a single "Ê" / 0x07 byte). Root cause unclear
+// (possibly an arm-none-eabi-gcc init bug on the 1024-th designated index).
+// Workaround: skip ID 1024 entirely and shift Lucas-BE + Dawn entries up by 1.
+#define TRAINER_LUCAS_BDSP_PIPLUP           1025
+#define TRAINER_DAWN_BDSP_TURTWIG           1026
+#define TRAINER_DAWN_BDSP_CHIMCHAR          1027
+#define TRAINER_DAWN_BDSP_PIPLUP            1028
+
+// ============================================================================
+// Battle Simulator v0.14: Sword/Shield Pokemon Trainer Tournament dump.
+// 25 SwSh trainers — Champion Leon's 3 starter-counter variants, Hop's 6
+// (3 starters × Sword/Shield ace), Mustard's 2 (Single/Rapid-Strike Urshifu),
+// rivals Marnie + Bede, 9 Galar gym leaders, 2 Isle of Armor masters (Klara/
+// Avery), and Crown Tundra explorer Peony. IDs 1029-1053.
+// ============================================================================
+#define TRAINER_LEON_GROOKEY                1029   // Leon vs Grookey player (Cinderace 5th)
+#define TRAINER_LEON_SCORBUNNY              1030   // Leon vs Scorbunny (Inteleon 5th)
+#define TRAINER_LEON_SOBBLE                 1031   // Leon vs Sobble (Rillaboom 5th)
+#define TRAINER_HOP_GR_SW                   1032   // Hop Grookey-path / Sword (Zamazenta ace)
+#define TRAINER_HOP_GR_SH                   1033   // Hop Grookey-path / Shield (Zacian ace)
+#define TRAINER_HOP_SC_SW                   1034   // Hop Scorbunny / Sword
+#define TRAINER_HOP_SC_SH                   1035   // Hop Scorbunny / Shield
+#define TRAINER_HOP_SO_SW                   1036   // Hop Sobble / Sword
+#define TRAINER_HOP_SO_SH                   1037   // Hop Sobble / Shield
+#define TRAINER_MUSTARD_SINGLE              1038   // Mustard Single-Strike Urshifu
+#define TRAINER_MUSTARD_RAPID               1039   // Mustard Rapid-Strike Urshifu
+#define TRAINER_MARNIE                      1040
+#define TRAINER_BEDE                        1041
+#define TRAINER_MILO_GYM                    1042   // Grass leader (renamed to avoid existing TRAINER_MILO)
+#define TRAINER_NESSA                       1043
+#define TRAINER_KABU                        1044
+#define TRAINER_BEA                         1045
+#define TRAINER_ALLISTER                    1046
+#define TRAINER_GORDIE                      1047
+#define TRAINER_MELONY                      1048
+#define TRAINER_PIERS                       1049
+#define TRAINER_RAIHAN                      1050
+#define TRAINER_KLARA                       1051
+#define TRAINER_AVERY                       1052
+#define TRAINER_PEONY                       1053
+#define TRAINER_TAYLOR_BRO                  1054  // Custom challenger (rain team, Drake sprite) — name collision avoided with base-game TRAINER_TAYLOR(=225)
+// v0.40 — Unova BW/B2W2 cast
+#define TRAINER_N_ZEKROM_BW                 1055
+#define TRAINER_N_RESHIRAM_BW               1056
+#define TRAINER_ALDER_BW                    1057
+#define TRAINER_CHEREN_EMBOAR_BW            1058  // player Snivy variant
+#define TRAINER_CHEREN_SAMUROTT_BW          1059  // player Tepig variant
+#define TRAINER_CHEREN_SERPERIOR_BW         1060  // player Oshawott variant
+#define TRAINER_BIANCA_SAMUROTT_BW          1061  // player Snivy variant
+#define TRAINER_BIANCA_SERPERIOR_BW         1062  // player Tepig variant
+#define TRAINER_BIANCA_EMBOAR_BW            1063  // player Oshawott variant
+#define TRAINER_HUGH_EMBOAR_BW              1064  // BW2 player Snivy variant
+#define TRAINER_HUGH_SAMUROTT_BW            1065  // BW2 player Tepig variant
+#define TRAINER_HUGH_SERPERIOR_BW           1066  // BW2 player Oshawott variant
+#define TRAINER_SHAUNTAL_BW                 1067  // Unova E4 (Ghost)
+#define TRAINER_MARSHAL_BW                  1068  // Unova E4 (Fighting)
+#define TRAINER_GRIMSLEY_BW                 1069  // Unova E4 (Dark)
+#define TRAINER_CAITLIN_BW                  1070  // Unova E4 (Psychic)
+#define TRAINER_GHETSIS_BW                  1071  // Team Plasma boss
+#define TRAINER_COLRESS_BW                  1072  // Plasma scientist (Steel/Electric)
+// v0.48 — Missing Alola Battle Tree / USUM challengers
+#define TRAINER_FABA_SM                     1073  // Aether scientist (Psychic)
+#define TRAINER_DEXIO_SM                    1074  // Sina's partner (Psychic + Zygarde-10%)
+#define TRAINER_PLUMERIA_SM                 1075  // Team Skull admin (Poison)
+#define TRAINER_RYUKI_SM                    1076  // Dragon-type challenger
+#define TRAINER_GUZMA_SM                    1077  // Team Skull boss (Bug)
+#define TRAINER_LUSAMINE_SM                 1078  // Aether president
+#define TRAINER_TRISTAN_SM                  1079  // Battle Royale challenger
+#define TRAINER_BLUE_USUM                   1080  // Alola Battle Tree Blue (Lv 69)
+#define TRAINER_RED_USUM                    1081  // Alola Battle Tree Red (Lv 70-74)
+#define TRAINER_ANABEL_USUM                 1082  // Alola Battle Tree Anabel (Lv 61)
+// v0.49 — XY (Kalos) trainers
+#define TRAINER_DIANTHA_XY                  1083  // XY Champion (Mega Gardevoir ace)
+#define TRAINER_SERENA_XY                   1084  // XY female rival (Mega Absol + Delphox)
+#define TRAINER_CALEM_XY                    1085  // XY male rival (Mega Absol + Greninja)
+// v0.50 — Anime
+#define TRAINER_ASH_WORLD_CHAMPION          1086  // Z-Move + Mega + Gmax Gengar all-in-one
+// v0.51 — Custom user-built trainer slots (saved to SaveBlock3)
+#define TRAINER_SIM_CUSTOM_1                1087
+#define TRAINER_SIM_CUSTOM_2                1088
+#define TRAINER_SIM_CUSTOM_3                1089
+// v0.53 — Legends Arceus (Hisui)
+// Placed after the custom slots so existing TRAINER_SIM_CUSTOM_* IDs in
+// user saveblocks don't shift. Volo runs the climax 6-mon team (Giratina-
+// Origin ace — engine party-size cap is 6, so the second Giratina form
+// from his story climax is dropped). Adaman + Irida bring Sinnoh signature
+// trios with Dialga/Palkia-Origin aces. Ingo runs a Hisuian-forms team.
+// Akari is the playable PC rival.
+#define TRAINER_VOLO_LA                     1090
+#define TRAINER_ADAMAN_LA                   1091
+#define TRAINER_IRIDA_LA                    1092
+#define TRAINER_INGO_LA                     1093
+#define TRAINER_AKARI_LA                    1094
+// v0.53.2 — additional Legends Arceus trainers from canonical LA rosters.
+#define TRAINER_KAMADO_LA                   1095
+#define TRAINER_ZISU_LA                     1096
+#define TRAINER_BENI_LA                     1097
+#define TRAINER_REI_LA                      1098
+
 // NOTE: Because each Trainer uses a flag to determine when they are defeated, there is only space for 9 additional trainers before trainer flag space overflows
 //       More space can be made by shifting flags around in constants/flags.h or changing how trainer flags are handled
 //       MAX_TRAINERS_COUNT can be increased but will take up additional saveblock space
+//
+// Battle Simulator v0.9: bumped MAX_TRAINERS_COUNT_EMERALD 916 -> 1024 to
+// make room for PWT Type Experts (~40), Alola League (~30), and Rainbow
+// Rocket bosses (~10). 117 free trainer-ID slots after this bump. Full
+// rollout plan + ID block reservations documented in src/debug.c near
+// sSimCups (search "v0.9 PREP: Flag-Space Expansion Plan").
+//
+// Saveblock impact: SaveBlock1.flags[] grows by ROUND_BITS_TO_BYTES(108) =
+// 14 bytes. STATIC_ASSERT in include/global.h enforces total SaveBlock1
+// size stays within SECTOR_DATA_SIZE * 4 (15,872 bytes); the build will
+// fail loudly if we ever overflow.
 
-#define TRAINERS_COUNT_EMERALD     855
-#define MAX_TRAINERS_COUNT_EMERALD 864
+#define TRAINERS_COUNT_EMERALD     1099
+#define MAX_TRAINERS_COUNT_EMERALD 1100
 
 #if IS_FRLG
 #define TRAINERS_COUNT                      TRAINERS_COUNT_FRLG

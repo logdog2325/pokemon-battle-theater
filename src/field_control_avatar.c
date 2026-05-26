@@ -30,6 +30,7 @@
 #include "script.h"
 #include "secret_base.h"
 #include "sound.h"
+#include "m4a.h"
 #include "start_menu.h"
 #include "trainer_see.h"
 #include "trainer_hill.h"
@@ -237,6 +238,33 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
 
     if (input->pressedRButton && TryStartDexNavSearch())
         return TRUE;
+
+    if (gSimAutoOpenPending && DEBUG_OVERWORLD_MENU && !DEBUG_OVERWORLD_IN_MENU)
+    {
+        gSimAutoOpenPending = FALSE;
+        PlaySE(SE_WIN_OPEN);
+        FreezeObjectEvents();
+        // Battle Simulator: swap the overworld map BGM for the Battle Dome
+        // lobby track when the trainer picker auto-opens after the title screen.
+        m4aSongNumStart(MUS_B_DOME_LOBBY);
+        // v0.52: boot lands on the Build Trainer / Run Simulation wrapper.
+        // "Run Simulation" inside the wrapper opens the Battle Theater picker.
+        Debug_ShowTrainersWrapper();
+        return TRUE;
+    }
+
+    // v0.52.5 — Re-enter the Build Trainer slot edit menu after returning
+    // from the naming screen (which switched CB2 away from the debug menu).
+    // sBuildTrainerActiveSlot is preserved in EWRAM so we land on the same
+    // slot the user was editing.
+    if (gSimBuildTrainerReopenSlot && DEBUG_OVERWORLD_MENU && !DEBUG_OVERWORLD_IN_MENU)
+    {
+        gSimBuildTrainerReopenSlot = FALSE;
+        PlaySE(SE_WIN_OPEN);
+        FreezeObjectEvents();
+        Debug_ReopenBuildTrainerSlotMenu();
+        return TRUE;
+    }
 
     if (input->input_field_1_2 && DEBUG_OVERWORLD_MENU && !DEBUG_OVERWORLD_IN_MENU)
     {

@@ -80,6 +80,13 @@ enum BattleController
     BATTLE_CONTROLLER_RECORDED_PARTNER,
     BATTLE_CONTROLLER_RECORDED_OPPONENT,
     BATTLE_CONTROLLER_OAK_OLD_MAN,
+    // Battle Simulator v0.47: dedicated controller for the AI-controlled player
+    // slot in singles AI-vs-AI mode. Behaves like PlayerPartner (AI logic, draws
+    // on player side) but classified as Player not Partner so BufferStringBattle
+    // routes PRINTSTRING through player-substitution arms — partner arms call
+    // GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT) which returns gBattlersCount
+    // in singles, leading to invalid placeholder expansion + crash.
+    BATTLE_CONTROLLER_AI_SINGLES,
     BATTLE_CONTROLLERS_COUNT,
 };
 
@@ -431,6 +438,10 @@ void OpponentHandleTrainerSlide(enum BattlerId battler);
 void Controller_PlayerPartnerShowIntroHealthbox(enum BattlerId battler); // Also used by the link partner.
 void SetControllerToPlayerPartner(enum BattlerId battler);
 void PlayerPartnerBufferExecCompleted(enum BattlerId battler);
+
+// Battle Simulator v0.47: AI-controlled player slot in singles AI-vs-AI.
+void SetControllerToAiSingles(enum BattlerId battler);
+void AiSinglesBufferExecCompleted(enum BattlerId battler);
 
 // safari controller
 void SetControllerToSafari(enum BattlerId battler);

@@ -2085,7 +2085,11 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
             }
             else
             {
-                fprintf(f, "            .dynamaxLevel = MAX_DYNAMAX_LEVEL,\n");
+                // Default Dynamax Level to 0 so only trainers that explicitly
+                // opt in (SwSh roster) can Dynamax/Gigantamax their canonical
+                // targets. Previously this defaulted to MAX_DYNAMAX_LEVEL,
+                // which made every mon in the AI-vs-AI sim Dynamax-eligible.
+                fprintf(f, "            .dynamaxLevel = 0,\n");
             }
 
             if (pokemon->gigantamax_factor_line)

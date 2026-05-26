@@ -1,6 +1,7 @@
 #include "global.h"
 #include "malloc.h"
 #include "apprentice.h"
+#include "debug.h"
 #include "battle.h"
 #include "battle_ai_util.h"
 #include "battle_anim.h"
@@ -5757,6 +5758,11 @@ bool32 IsSpeciesInHoennDex(u16 species)
 
 u16 GetBattleBGM(void)
 {
+    // Battle Simulator: every AI-vs-AI sim battle gets a dramatic track picked
+    // by Sim_GetBattleMusic (FRLG Champion theme for top-tier matchups, etc.).
+    // Falls through to the engine default for non-sim battles.
+    if (B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE))
+        return Sim_GetBattleMusic();
     if (gBattleTypeFlags & BATTLE_TYPE_LEGENDARY)
     {
         switch (GetMonData(&gEnemyParty[0], MON_DATA_SPECIES))

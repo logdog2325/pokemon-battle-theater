@@ -3536,7 +3536,12 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
 
                     if (moveTarget == TARGET_FOES_AND_ALLY)
                     {
-                        ADJUST_SCORE(DECENT_EFFECT);
+                        // Battle Simulator: bumped from DECENT_EFFECT to BEST_EFFECT
+                        // so Discharge reliably outscores Volt Switch when partner
+                        // has Lightning Rod / Motor Drive / Volt Absorb. The pivot
+                        // value of Volt Switch was previously outweighing the
+                        // tiny +2 partner-charge bonus, missing the synergy.
+                        ADJUST_SCORE(BEST_EFFECT);
                     }
                     else if (ShouldTriggerAbility(battlerAtk, battlerAtkPartner, atkPartnerAbility))
                     {
@@ -4786,6 +4791,51 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
         case SHOULD_PIVOT:
             ADJUST_SCORE(BEST_EFFECT);
             break;
+        }
+        // Battle Simulator: penalize an electric pivot move (Volt Switch) when
+        // our partner has Lightning Rod / Volt Absorb / Motor Drive. Using a
+        // spread electric move instead (Discharge) charges the partner up and
+        // is almost always preferable in that matchup. v0.36: also detect
+        // Mega-Stone-holders whose post-Mega ability is one of those (e.g.
+        // Sceptile + Sceptilite -> Mega Sceptile w/ Lightning Rod). The AI
+        // scores moves BEFORE Mega Evolution happens, so the live ability is
+        // still pre-Mega (Overgrow for Sceptile). We have to peek at the
+        // form-change target to apply the synergy on turn 1.
+        if (GetMoveType(move) == TYPE_ELECTRIC && IsDoubleBattle()
+            && IsBattlerAlive(BATTLE_PARTNER(battlerAtk)))
+        {
+            enum BattlerId partner = BATTLE_PARTNER(battlerAtk);
+            enum Ability partnerAbility = aiData->abilities[partner];
+
+            // Check pre-Mega ability first.
+            bool32 absorbsElectric = (partnerAbility == ABILITY_LIGHTNING_ROD
+                                   || partnerAbility == ABILITY_VOLT_ABSORB
+                                   || partnerAbility == ABILITY_MOTOR_DRIVE);
+
+            // If partner is holding a Mega Stone, check the Mega form's
+            // ability too. Sceptile (Overgrow) + Sceptilite -> Sceptile-Mega
+            // (Lightning Rod) is the canonical case.
+            if (!absorbsElectric)
+            {
+                enum HoldEffect partnerHE = GetItemHoldEffect(gBattleMons[partner].item);
+                if (partnerHE == HOLD_EFFECT_MEGA_STONE)
+                {
+                    u32 megaSpecies = GetBattleFormChangeTargetSpecies(partner,
+                                            FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,
+                                            partnerAbility);
+                    if (megaSpecies != gBattleMons[partner].species)
+                    {
+                        enum Ability megaAbility = gSpeciesInfo[megaSpecies].abilities[0];
+                        if (megaAbility == ABILITY_LIGHTNING_ROD
+                         || megaAbility == ABILITY_VOLT_ABSORB
+                         || megaAbility == ABILITY_MOTOR_DRIVE)
+                            absorbsElectric = TRUE;
+                    }
+                }
+            }
+
+            if (absorbsElectric)
+                ADJUST_SCORE(-6);
         }
         break;
     case EFFECT_BATON_PASS:
@@ -6285,6 +6335,26 @@ static s32 AI_CheckViability(enum BattlerId battlerAtk, enum BattlerId battlerDe
     ADJUST_SCORE(AI_CalcMoveEffectScore(battlerAtk, battlerDef, move, aiData));
     ADJUST_SCORE(AI_CalcAdditionalEffectScore(battlerAtk, battlerDef, move, aiData));
     ADJUST_SCORE(AI_CalcHoldEffectMoveScore(battlerAtk, battlerDef, move, aiData));
+
+    // Battle Simulator v0.50.7/v0.50.8: Z-Move trigger bonus. If this move
+    // unlocks a Z-Move (signature OR type-based), bump the score so the AI
+    // prefers the trigger move. Without this, mons with multi-typed movesets
+    // could score a non-trigger move higher and never fire their Z (e.g.
+    // Pikachu picking Electroweb over Thunderbolt with Pikashunium Z, or
+    // Komala picking Wood Hammer over Slam with Normalium Z).
+    // Signature Z-Moves (10M Volt Thunderbolt, Sinister Arrow Raid, etc.)
+    // get a larger bias because they're anime-flavor showpieces; type-based
+    // Z's get a smaller nudge so type-coverage logic still matters.
+    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE
+     && !HasTrainerUsedGimmick(battlerAtk, GIMMICK_Z_MOVE))
+    {
+        enum Move species = gBattleMons[battlerAtk].species;
+        enum Item item = gBattleMons[battlerAtk].item;
+        if (GetSignatureZMove(move, species, item) != MOVE_NONE)
+            ADJUST_SCORE(PERFECT_EFFECT);  // +10 for signature (always preferred)
+        else if (GetUsableZMove(battlerAtk, move) != MOVE_NONE)
+            ADJUST_SCORE(GOOD_EFFECT);     // +3 for type-based (nudge, not dominate)
+    }
 
     return score;
 }

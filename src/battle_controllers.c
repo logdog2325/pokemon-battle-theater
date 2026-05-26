@@ -65,7 +65,10 @@ bool32 IsAiVsAiBattle(void)
 bool32 BattlerIsPlayer(enum BattlerId battlerId)
 {
     return (gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_PLAYER
-         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_PLAYER);
+         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_PLAYER
+         // v0.47: AiSingles classifies as Player so BufferStringBattle routes
+         // PRINTSTRING through player-substitution arms (no partner reads).
+         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_AI_SINGLES);
 }
 
 bool32 BattlerIsPartner(enum BattlerId battlerId)
@@ -106,6 +109,7 @@ bool32 BattlerHasAi(enum BattlerId battlerId)
     {
     case BATTLE_CONTROLLER_OPPONENT:
     case BATTLE_CONTROLLER_PLAYER_PARTNER:
+    case BATTLE_CONTROLLER_AI_SINGLES:  // v0.47: AiSingles is AI-controlled.
     case BATTLE_CONTROLLER_SAFARI:
     case BATTLE_CONTROLLER_WALLY:
         return TRUE;
@@ -262,7 +266,11 @@ static void InitBtlControllersInternal(void)
             else if (IS_FRLG && (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE))
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_0]] = SetControllerToOakOrOldMan;
             else if (isAIvsAI)
-                gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_0)] = SetControllerToPlayerPartner;
+                // v0.47: singles AI-vs-AI uses the custom AiSingles controller so
+                // PRINTSTRING substitutions route through player arms (not partner
+                // arms that read invalid B_POSITION_PLAYER_RIGHT state).
+                gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_0)] =
+                    isDouble ? SetControllerToPlayerPartner : SetControllerToAiSingles;
             else
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_0)] = SetControllerToPlayer;
 
@@ -278,41 +286,53 @@ static void InitBtlControllersInternal(void)
             else
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_1)] = SetControllerToOpponent;
 
-            // Player 2
-            if (IsMultibattleTest() && isRecordedLink)
+            // Battle Simulator v0.45.1: only set up B_BATTLER_2/B_BATTLER_3
+            // controllers in actual double battles. In singles, gBattlerPositions[2]
+            // and gBattlerPositions[3] are never initialized (the `if (isDouble)`
+            // block at line 227 sets them only in doubles), so writes to
+            // gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] hit a
+            // stale/garbage index and corrupt unrelated function-pointer slots —
+            // producing the "Jumped to invalid address: E3A02004" crash that
+            // gated singles AI-vs-AI. The previous force-doubles workaround
+            // hid this; with singles now actually running, the gate is required.
+            if (isDouble)
             {
-                gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToRecordedPartner;
-            }
-            else if (IsMultibattleTest() && isRecorded && !isRecordedLink)
-            { // Sets to PlayerPartner if EXPECT_XXXX used in test for partner trainer, else sets to RecordedPartner.
-#if TESTING
-                if (gBattleTestRunnerState->data.expectedAiActions[B_BATTLER_2][0].actionSet == TRUE)
-                    gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToPlayerPartner;
-                else
-#endif
+                // Player 2
+                if (IsMultibattleTest() && isRecordedLink)
+                {
                     gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToRecordedPartner;
-            }
-            else if ((isInGamePartner && !isRecorded)
-                    || isAIvsAI)
-            {
-                gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToPlayerPartner;
-            }
-            else if (isRecorded)
-            {
-                gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToRecordedPlayer;
-            }
-            else
-            {
-                gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToPlayer;
-            }
+                }
+                else if (IsMultibattleTest() && isRecorded && !isRecordedLink)
+                { // Sets to PlayerPartner if EXPECT_XXXX used in test for partner trainer, else sets to RecordedPartner.
+#if TESTING
+                    if (gBattleTestRunnerState->data.expectedAiActions[B_BATTLER_2][0].actionSet == TRUE)
+                        gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToPlayerPartner;
+                    else
+#endif
+                        gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToRecordedPartner;
+                }
+                else if ((isInGamePartner && !isRecorded)
+                        || isAIvsAI)
+                {
+                    gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToPlayerPartner;
+                }
+                else if (isRecorded)
+                {
+                    gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToRecordedPlayer;
+                }
+                else
+                {
+                    gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToPlayer;
+                }
 
-            // Opponent 2
-            if (IsMultibattleTest() && isRecordedLink)
-                gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_3)] = SetControllerToRecordedOpponent;
-            else if (isInGamePartner || !isRecorded || isMulti || !isRecordedLink)
-                gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_3)] = SetControllerToOpponent;
-            else
-                gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_3)] = SetControllerToRecordedOpponent;
+                // Opponent 2
+                if (IsMultibattleTest() && isRecordedLink)
+                    gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_3)] = SetControllerToRecordedOpponent;
+                else if (isInGamePartner || !isRecorded || isMulti || !isRecordedLink)
+                    gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_3)] = SetControllerToOpponent;
+                else
+                    gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_3)] = SetControllerToRecordedOpponent;
+            }
         }
 
         bool32 bufferPartyOrders;
@@ -426,6 +446,12 @@ static inline bool32 IsControllerOpponent(enum BattlerId battler)
 static inline bool32 IsControllerPlayerPartner(enum BattlerId battler)
 {
     return (gBattlerControllerEndFuncs[battler] == PlayerPartnerBufferExecCompleted);
+}
+
+// Battle Simulator v0.47: AI player slot in singles AI-vs-AI.
+static inline bool32 IsControllerAiSingles(enum BattlerId battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == AiSinglesBufferExecCompleted);
 }
 
 static inline bool32 IsControllerWally(enum BattlerId battler)
@@ -2380,6 +2406,7 @@ void BtlController_HandleSwitchInAnim(enum BattlerId battler)
 {
     bool32 isPlayerSide = (IsControllerPlayer(battler)
                         || IsControllerPlayerPartner(battler)
+                        || IsControllerAiSingles(battler)
                         || IsControllerRecordedPlayer(battler)
                         || IsControllerRecordedPartner(battler)
                         || IsControllerLinkPartner(battler));
@@ -2456,7 +2483,10 @@ void BtlController_HandleDrawTrainerPic(enum BattlerId battler, enum TrainerPicI
 
             gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = IndexOfSpritePaletteTag(gTrainerSprites[trainerPicId].palette.tag);
             gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.affineMode = ST_OAM_AFFINE_OFF;
-            gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].hFlip = 1;
+            // Battle Simulator: don't h-flip in AI-vs-AI — that flip is for ally-trainer scenes,
+            // not for showing a regular trainer's front pic on the player side.
+            if (!IsAiVsAiBattle())
+                gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].hFlip = 1;
             gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].y2 = 48;
         }
         else
@@ -2571,6 +2601,25 @@ void BtlController_HandleFaintAnimation(enum BattlerId battler)
             }
             // The player's sprite callback just slides the mon, the opponent's removes the sprite.
             // The player's sprite is removed in Controller_FaintPlayerMon. Controller_FaintOpponentMon only removes the healthbox once the sprite is removed by SpriteCB_FaintOpponentMon.
+
+            // Battle Simulator: in AI-vs-AI doubles, the surviving same-side
+            // partner's healthbox needs its remaining-mon count refreshed so
+            // the "PIKACHU 3" tracker drops to reflect the just-fainted ally.
+            // The faint mon's own healthbox is going invisible above so we
+            // only touch its partner. Sim_CountAliveOnSide reads gBattleMons
+            // HP for active battlers, so the count is already correct here.
+            if (IsAiVsAiBattle() && IsDoubleBattle())
+            {
+                enum BattlerId partner = BATTLE_PARTNER(battler);
+                if (partner < gBattlersCount
+                 && gBattleMons[partner].hp != 0
+                 && IsValidForBattle(GetBattlerMon(partner)))
+                {
+                    UpdateHealthboxAttribute(gHealthboxSpriteIds[partner],
+                                             GetBattlerMon(partner),
+                                             HEALTHBOX_NICK);
+                }
+            }
         }
     }
     AnimateMonAfterKnockout(battler);
@@ -2852,6 +2901,11 @@ void BtlController_HandleIntroTrainerBallThrow(enum BattlerId battler, u16 tagTr
 {
     u8 taskId;
     enum BattleSide side = GetBattlerSide(battler);
+    // Battle Simulator: AI-vs-AI shows a FRONT-facing trainer pic on the player slot.
+    // The pic still belongs to the player SIDE (slide off-left, callback must load the mon
+    // back sprite), but the back-pic-only slide-in animation (anim 2) must be skipped —
+    // a front pic doesn't have that anim and would crash.
+    bool32 isAiPlayerSide = (side == B_SIDE_PLAYER) && IsAiVsAiBattle();
 
     SetSpritePrimaryCoordsFromSecondaryCoords(&gSprites[gBattleStruct->trainerSlideSpriteIds[battler]]);
     if (side == B_SIDE_PLAYER)
@@ -2872,7 +2926,10 @@ void BtlController_HandleIntroTrainerBallThrow(enum BattlerId battler, u16 tagTr
     if (side == B_SIDE_PLAYER)
     {
         StoreSpriteCallbackInData6(&gSprites[gBattleStruct->trainerSlideSpriteIds[battler]], SpriteCB_FreePlayerSpriteLoadMonSprite);
-        StartSpriteAnim(&gSprites[gBattleStruct->trainerSlideSpriteIds[battler]], ShouldDoSlideInAnim(battler) ? 2 : 1);
+        if (isAiPlayerSide)
+            StartSpriteAnim(&gSprites[gBattleStruct->trainerSlideSpriteIds[battler]], 0);
+        else
+            StartSpriteAnim(&gSprites[gBattleStruct->trainerSlideSpriteIds[battler]], ShouldDoSlideInAnim(battler) ? 2 : 1);
     }
     else
     {
@@ -3237,7 +3294,22 @@ void BtlController_HandleSwitchInTryShinyAnim(enum BattlerId battler)
         if (GetBattlerSide(battler) == B_SIDE_OPPONENT)
             SetBattlerShadowSpriteCallback(battler, GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES));
 
-        if (IsControllerPlayer(battler))
+        // Battle Simulator: AI-vs-AI uses PlayerPartner controller on the player slot,
+        // so the original IsControllerPlayer check misses us — fall back to "is on player side"
+        // so the player-side healthbox setup runs and post-switch state is correct.
+        // v0.45.3: the AI-vs-AI player-side path was firing StartHealthboxSlideIn
+        // synchronously here, while the ball-release sprite (gBattleControllerData)
+        // was still in flight. The opponent path defers slide-in to
+        // BtlController_HandleSwitchInShowHealthbox which waits for shiny-anim
+        // completion before touching the healthbox. Singles AI-vs-AI player-side
+        // post-KO crashes pointed to that timing mismatch. Route AI-vs-AI player
+        // through the same deferred path the opponent uses — slide-in still
+        // happens, just after the new mon's sprite finishes settling.
+        if (IsAiVsAiBattle() && IsOnPlayerSide(battler) && !IsControllerPlayer(battler))
+        {
+            gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInShowHealthbox;
+        }
+        else if (IsControllerPlayer(battler) || (IsOnPlayerSide(battler) && IsAiVsAiBattle()))
         {
             UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetBattlerMon(battler), HEALTHBOX_ALL);
             StartHealthboxSlideIn(battler);

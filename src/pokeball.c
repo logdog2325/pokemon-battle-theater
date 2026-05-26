@@ -1343,7 +1343,16 @@ void StartHealthboxSlideIn(enum BattlerId battler)
         healthboxSprite->x2 = -healthboxSprite->x2;
         healthboxSprite->y2 = -healthboxSprite->y2;
     }
-    gSprites[healthboxSprite->data[5]].callback(&gSprites[healthboxSprite->data[5]]);
+    // Battle Simulator v0.45: in singles, the original code called the
+    // partner-healthbox cross-link callback at gSprites[data[5]] — but data[5]
+    // in singles points at the healthBAR sprite (set by CreateBattlerHealthboxSprites
+    // in battle_interface.c:678), and on the second send-out after a KO that
+    // healthbar may have been freed/recycled so its callback is garbage. This
+    // produced the "Jumped to invalid address: 0x2004E3A0" crash that gated
+    // AI-vs-AI singles. Only call the cross-link in real double battles, where
+    // data[5] is the partner-healthbox right-half (created fresh per battler).
+    if (IsDoubleBattle())
+        gSprites[healthboxSprite->data[5]].callback(&gSprites[healthboxSprite->data[5]]);
     if (GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT && !gTestRunnerHeadless)
         healthboxSprite->callback = SpriteCB_HealthboxSlideInDelayed;
 }

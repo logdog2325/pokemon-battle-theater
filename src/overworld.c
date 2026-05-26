@@ -3,6 +3,7 @@
 #include "battle_pyramid.h"
 #include "battle_setup.h"
 #include "battle_util.h"
+#include "debug.h"
 #include "berry.h"
 #include "bg.h"
 #include "cable_club.h"
@@ -1885,7 +1886,12 @@ void CB2_NewGame(void)
     PlayTimeCounter_Start();
     ScriptContext_Init();
     UnlockPlayerFieldControls();
-    if (IS_FRLG)
+    // Battle Simulator: skip the truck cutscene + jingle when auto-launching into
+    // the picker — we never enter MAP_INSIDE_OF_TRUCK, so the truck handler would
+    // run a stale animation/sound in whatever map we did warp to.
+    if (gSimAutoOpenPending)
+        gFieldCallback = FieldCB_WarpExitFadeFromBlack;
+    else if (IS_FRLG)
         gFieldCallback = FieldCB_WarpExitFadeFromBlack;
     else
         gFieldCallback = ExecuteTruckSequence;

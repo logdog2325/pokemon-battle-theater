@@ -536,23 +536,60 @@ static void CB2_InitBattleInternal(void)
     }
     else
     {
-        gBattle_WIN0V = WIN_RANGE(DISPLAY_HEIGHT / 2, DISPLAY_HEIGHT / 2 + 1);
-        ScanlineEffect_Clear();
-        if (B_FAST_INTRO_NO_SLIDE == FALSE && !gTestRunnerHeadless)
+        // Battle Simulator: in AI-vs-AI mode, skip the intro slide-in setup
+        // entirely. The default flow leaves WIN0V at a 1-pixel center strip
+        // (line 539's WIN_RANGE) which the intro animation gradually expands
+        // to fullscreen. If we skip the intro, the window never expands and
+        // BG3 only renders in that 1-pixel slot -- the rest of the screen is
+        // outside the window, showing only what WINOUT permits (which the
+        // intro never reconfigures from its starting state). The visible
+        // result is the "horizontal black bars" stripe pattern: alternating
+        // bands of visible BG3 (where the window briefly was) and black
+        // (where it never reached). Fix: force WIN0V to fullscreen and skip
+        // both the HDMA setup and the BG3HOFS scanline animation in sim mode.
+        bool32 simAiVsAi = (B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE));
+        if (simAiVsAi)
         {
-            for (i = 0; i < DISPLAY_HEIGHT / 2; i++)
+            // v0.28: triple-defense. Replicate BattleIntroSlideEnd's full
+            // register state AND additionally clear DISPCNT_WIN0_ON / WIN1_ON
+            // so the window registers are functionally inactive regardless of
+            // what other code paths write to them. If the window is disabled
+            // entirely, WININ/WINOUT/WIN0V become "don't care" and BG3 renders
+            // unmasked everywhere.
+            gBattle_WIN0V = WIN_RANGE(0, DISPLAY_HEIGHT);
+            SetGpuReg(REG_OFFSET_WIN0V, WIN_RANGE(0, DISPLAY_HEIGHT));
+            SetGpuReg(REG_OFFSET_WININ,
+                      WININ_WIN0_BG_ALL | WININ_WIN0_OBJ | WININ_WIN0_CLR
+                    | WININ_WIN1_BG_ALL | WININ_WIN1_OBJ | WININ_WIN1_CLR);
+            SetGpuReg(REG_OFFSET_WINOUT,
+                      WINOUT_WIN01_BG_ALL | WINOUT_WIN01_OBJ | WINOUT_WIN01_CLR
+                    | WINOUT_WINOBJ_BG_ALL | WINOUT_WINOBJ_OBJ | WINOUT_WINOBJ_CLR);
+            SetGpuReg(REG_OFFSET_BLDCNT, 0);
+            SetGpuReg(REG_OFFSET_BLDALPHA, 0);
+            SetGpuReg(REG_OFFSET_BLDY, 0);
+            SetGpuReg(REG_OFFSET_BG3HOFS, 0);
+            ScanlineEffect_Clear();
+        }
+        else
+        {
+            gBattle_WIN0V = WIN_RANGE(DISPLAY_HEIGHT / 2, DISPLAY_HEIGHT / 2 + 1);
+            ScanlineEffect_Clear();
+            if (B_FAST_INTRO_NO_SLIDE == FALSE && !gTestRunnerHeadless)
             {
-                gScanlineEffectRegBuffers[0][i] = 0xF0;
-                gScanlineEffectRegBuffers[1][i] = 0xF0;
-            }
+                for (i = 0; i < DISPLAY_HEIGHT / 2; i++)
+                {
+                    gScanlineEffectRegBuffers[0][i] = 0xF0;
+                    gScanlineEffectRegBuffers[1][i] = 0xF0;
+                }
 
-            for (; i < DISPLAY_HEIGHT; i++)
-            {
-                gScanlineEffectRegBuffers[0][i] = 0xFF10;
-                gScanlineEffectRegBuffers[1][i] = 0xFF10;
-            }
+                for (; i < DISPLAY_HEIGHT; i++)
+                {
+                    gScanlineEffectRegBuffers[0][i] = 0xFF10;
+                    gScanlineEffectRegBuffers[1][i] = 0xFF10;
+                }
 
-            ScanlineEffect_SetParams(sIntroScanlineParams16Bit);
+                ScanlineEffect_SetParams(sIntroScanlineParams16Bit);
+            }
         }
     }
 
@@ -567,18 +604,44 @@ static void CB2_InitBattleInternal(void)
     gBattle_BG3_Y = 0;
 
     if (!DEBUG_OVERWORLD_MENU || (DEBUG_OVERWORLD_MENU && !gIsDebugBattle))
-        gBattleEnvironment = BattleSetup_GetEnvironmentId();
+    {
+        // Battle Simulator: in AI-vs-AI mode, Sim_SetupMatchRound already picked
+        // the environment (BATTLE_ENVIRONMENT_BATTLE_THEATER by default). Without
+        // this guard, BattleSetup_GetEnvironmentId() would clobber it with the
+        // map-based default (whichever BUILDING/PLAIN matches the trigger map),
+        // which is why every prior "custom BG" attempt rendered as Building's
+        // cream interior regardless of what gBattleEnvironmentInfo had.
+        if (!(B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE)))
+            gBattleEnvironment = BattleSetup_GetEnvironmentId();
+    }
     if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
         gBattleEnvironment = BATTLE_ENVIRONMENT_BUILDING;
     if (TestRunner_Battle_GetForcedEnvironment())
         gBattleEnvironment = TestRunner_Battle_GetForcedEnvironment() - 1;
 
     InitBattleBgsVideo();
+    // Battle Simulator: in sim mode disable the window entirely + nuke the
+    // BG1 and BG2 tilemaps. The horizontal "wood-grain stripes" we kept seeing
+    // were BG2 (priority 1, ABOVE BG3 priority 3) rendering its uninitialized
+    // tilemap content using the entry tile data the engine loaded into
+    // BG_CHAR_ADDR(1). battle_intro.c:494 clears these in the intro task we
+    // skip - so we replicate that clear here. Skip DrawBattleEntryBackground
+    // too since it would otherwise load my anim tilemap into BG1 (BG_SCREEN_ADDR(28))
+    // and we don't need the intro slide-in graphics for a static sim BG.
+    bool32 simAiVsAi2 = (B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE));
+    if (simAiVsAi2)
+        ClearGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_WIN0_ON | DISPCNT_WIN1_ON);
     LoadBattleTextboxAndBackground();
     ResetSpriteData();
     ResetTasks();
-    if (B_FAST_INTRO_NO_SLIDE == FALSE && !gTestRunnerHeadless)
+    if (B_FAST_INTRO_NO_SLIDE == FALSE && !gTestRunnerHeadless && !simAiVsAi2)
         DrawBattleEntryBackground();
+    if (simAiVsAi2)
+    {
+        // Wipe BG1 + BG2 tilemap VRAM so only BG3 (our theater) is visible.
+        CpuFill32(0, (void *)BG_SCREEN_ADDR(28), BG_SCREEN_SIZE);
+        CpuFill32(0, (void *)BG_SCREEN_ADDR(30), BG_SCREEN_SIZE);
+    }
     FreeAllSpritePalettes();
     gReservedSpritePaletteCount = MAX_BATTLERS_COUNT;
     SetVBlankCallback(VBlankCB_Battle);
@@ -1948,8 +2011,55 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             monsCount = trainer->partySize;
         }
 
+        // Battle Simulator: VGC mode caps in-battle party to 4 (bring 6 pick 4).
+        // The trainer template still has 6 mons; we just hand only 4 to the engine.
+        if (B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE)
+            && gSimVGCMode && monsCount > 4)
+            monsCount = 4;
+
         u32 monIndices[monsCount];
         DoTrainerPartyPool(trainer, monIndices, monsCount, battleTypeFlags);
+
+        // Battle Simulator: when an AI-vs-AI sim is active, override the default
+        // 0..N-1 picks. Preferred path: Sim_PrepareTeamPicks pre-computed a
+        // matchup-aware row in the pick queue (team preview / VGC). Fallback:
+        // ace-priority sort (N highest-level mons) so the trainer's ace still
+        // shows up first when team preview isn't applicable.
+        if (B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE)
+            && monsCount < trainer->partySize)
+        {
+            u8 pickRow[6];
+            if (Sim_ConsumeNextPickRow(pickRow, monsCount))
+            {
+                for (i = 0; i < monsCount; i++)
+                    monIndices[i] = pickRow[i];
+            }
+            else
+            {
+                for (i = 0; i < monsCount; i++)
+                    monIndices[i] = i;
+                // Selection sort: for each output slot, find the partySize index with
+                // the highest level that isn't already in monIndices.
+                for (i = 0; i < monsCount; i++)
+                {
+                    u32 bestIdx = monIndices[i];
+                    u32 bestLvl = trainer->party[bestIdx].lvl;
+                    for (u32 cand = 0; cand < trainer->partySize; cand++)
+                    {
+                        u32 already = 0;
+                        for (u32 k = 0; k < i; k++)
+                            if (monIndices[k] == cand) { already = 1; break; }
+                        if (already) continue;
+                        if (trainer->party[cand].lvl > bestLvl)
+                        {
+                            bestLvl = trainer->party[cand].lvl;
+                            bestIdx = cand;
+                        }
+                    }
+                    monIndices[i] = bestIdx;
+                }
+            }
+        }
 
         for (i = 0; i < monsCount; i++)
         {
@@ -1980,7 +2090,18 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
                 otId.method = OT_ID_PRESET;
                 otId.value = HIHALF(personalityValue) ^ LOHALF(personalityValue);
             }
-            CreateMon(&party[i], partyData[monIndex].species, partyData[monIndex].lvl, personalityValue, otId);
+            {
+                u32 monLevel = partyData[monIndex].lvl;
+                // Battle Simulator: normalize all mons to the sim level cap (when set).
+                // v0.52.15 — also apply in pilot mode (gSimPilotMode), since
+                // pilot mode intentionally skips B_FLAG_AI_VS_AI_BATTLE to give
+                // the player human controls but should still respect the cap.
+                if (gSimLevelCap > 0
+                    && ((B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE))
+                        || gSimPilotMode))
+                    monLevel = gSimLevelCap;
+                CreateMon(&party[i], partyData[monIndex].species, monLevel, personalityValue, otId);
+            }
             SetMonData(&party[i], MON_DATA_HELD_ITEM, &partyData[monIndex].heldItem);
 
             CustomTrainerPartyAssignMoves(&party[i], &partyData[monIndex]);
@@ -2003,7 +2124,13 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
                     if (speciesInfo->abilities[abilityNum] == partyData[monIndex].ability)
                         break;
                 }
-                assertf(abilityNum < maxAbilityNum, "illegal ability %S for %S", gAbilitiesInfo[partyData[monIndex].ability].name, speciesInfo->speciesName);
+                // Battle Simulator v0.40: relaxed the legality assert so trainer-set
+                // abilities that aren't in the species' normal ability list don't
+                // crash the ROM (canonical BW/B2W2 trainers use ability slots that
+                // pokeemerald's species table doesn't always expose). Default to
+                // ability index 0 if the requested ability isn't found.
+                if (abilityNum >= maxAbilityNum)
+                    abilityNum = 0;
             }
             else if (B_TRAINER_MON_RANDOM_ABILITY)
             {

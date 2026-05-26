@@ -112,6 +112,19 @@ void SetControllerToPlayerPartner(enum BattlerId battler)
     gBattlerControllerFuncs[battler] = PlayerPartnerBufferRunCommand;
 }
 
+// Battle Simulator v0.47: AI controller for the player slot in singles AI-vs-AI.
+// Reuses the PlayerPartner dispatch table and end-func body (renamed via
+// AiSinglesBufferExecCompleted) but registers under a distinct enum so
+// BattlerIsPlayer() returns TRUE — routing PRINTSTRING substitution through
+// the player-side arms instead of the partner-side arms that read invalid
+// B_POSITION_PLAYER_RIGHT state in singles.
+void SetControllerToAiSingles(enum BattlerId battler)
+{
+    gBattlerBattleController[battler] = BATTLE_CONTROLLER_AI_SINGLES;
+    gBattlerControllerEndFuncs[battler] = AiSinglesBufferExecCompleted;
+    gBattlerControllerFuncs[battler] = PlayerPartnerBufferRunCommand;
+}
+
 static void PlayerPartnerBufferRunCommand(enum BattlerId battler)
 {
     if (IsBattleControllerActiveOnLocal(battler))
@@ -173,6 +186,9 @@ void Controller_PlayerPartnerShowIntroHealthbox(enum BattlerId battler)
 
         DestroySprite(&gSprites[gBattleControllerData[battler]]);
         UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetBattlerMon(battler), HEALTHBOX_ALL);
+        // v0.45: the cross-link callback crash that necessitated this AI-vs-AI
+        // singles bypass is now fixed at the root in pokeball.c — slide-in is
+        // safe for both singles and doubles AI-vs-AI.
         StartHealthboxSlideIn(battler);
         SetHealthboxSpriteVisible(gHealthboxSpriteIds[battler]);
 
@@ -196,6 +212,15 @@ void PlayerPartnerBufferExecCompleted(enum BattlerId battler)
     {
         MarkBattleControllerIdleOnLocal(battler);
     }
+}
+
+// Battle Simulator v0.47: end-func for the AiSingles controller. Same body as
+// PlayerPartnerBufferExecCompleted but uses a distinct function pointer so
+// identity helpers (IsControllerAiSingles / BattlerIsPlayer) can distinguish it.
+void AiSinglesBufferExecCompleted(enum BattlerId battler)
+{
+    gBattlerControllerFuncs[battler] = PlayerPartnerBufferRunCommand;
+    MarkBattleControllerIdleOnLocal(battler);
 }
 
 static enum TrainerPicID PlayerPartnerGetTrainerBackPicId(enum DifficultyLevel difficulty)

@@ -80,8 +80,13 @@ bool32 CanDynamax(enum BattlerId battler)
         return FALSE;
 
     // Check if Player has a Dynamax Band.
-    if (!TESTING && (GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT
-        || (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT)))
+    // Battle Simulator: skip the Dynamax Band + flag checks when the player
+    // side is AI-controlled (B_FLAG_AI_VS_AI_BATTLE). The sim trainer's mon
+    // either has dynamaxLevel > 0 set in trainer.party (and should dynamax)
+    // or it doesn't (and won't). The Band/flag gating is for normal play.
+    if (!TESTING && !(B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE))
+        && (GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT
+            || (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT)))
     {
         if (!CheckBagHasItem(ITEM_DYNAMAX_BAND, 1))
             return FALSE;
