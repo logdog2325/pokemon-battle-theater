@@ -46,6 +46,24 @@ for the `.bps` patch and end-user docs.
 - Custom singles AI controller (fixes vanilla post-KO crash)
 - Affection and Terastallization disabled
 
+## Known bugs (v1.0)
+
+Cosmetic issues that don't affect battle behavior — being fixed for v1.1:
+
+- **Player trainer name** sometimes renders with glitched / corrupted
+  characters in battle dialogue.
+- **Trainer picker menu** occasionally shows funky text on certain
+  entries when scrolling. Closing and reopening the picker normalizes it.
+
+## Roadmap
+
+- **v1.1** — fix the trainer-name + picker-text glitches
+- **v1.2** — add Gen 9 (Paldea) trainers: Nemona, Geeta, Penny,
+  Larry, Iono, Grusha, Brassius, etc.
+- **v1.3** — re-enable Terastallization with proper AI bias tuning
+  (currently disabled because pre-gen-9 trainers don't have Tera types
+  declared, which made matchups chaotic)
+
 ## Building from source
 
 You'll need [devkitARM](https://devkitpro.org/) and the standard
