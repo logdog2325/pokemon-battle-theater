@@ -1,15 +1,15 @@
-# pokebattlesim
+# Pokemon Battle Theater
 
 <p align="center">
-  <img src="docs/hero_title.png" alt="Battle Theater — AI vs AI Simulator" width="600">
+  <img src="docs/hero_title.png" alt="Pokemon Battle Theater — AI vs AI Simulator" width="600">
 </p>
 
-An AI-vs-AI Pokémon battle simulator built on
+An AI vs AI Pokemon battle simulator built on
 [pokeemerald-expansion 1.15.2](https://github.com/rh-hideout/pokeemerald-expansion).
-Pit any two trainers from the mainline games (Gens 1–9) against each other,
+Pit any two trainers from the mainline games (Gens 1-9) against each other,
 or pilot one side via Pilot Mode.
 
-**Releases:** see the [Releases page](https://github.com/logdog2325/pokebattlesim/releases)
+**Releases:** see the [Releases page](https://github.com/logdog2325/pokemon-battle-theater/releases)
 for the `.bps` patch and end-user docs.
 
 ---
@@ -70,8 +70,8 @@ You'll need [devkitARM](https://devkitpro.org/) and the standard
 pokeemerald-expansion toolchain. Then:
 
 ```sh
-git clone https://github.com/logdog2325/pokebattlesim.git
-cd pokebattlesim
+git clone https://github.com/logdog2325/pokemon-battle-theater.git
+cd pokemon-battle-theater
 make -j4   # produces pokeemerald.gba
 ```
 
@@ -86,7 +86,7 @@ your modded ROM against vanilla Emerald (USA, MD5
 `605b89b67018abcea91e693a4dd25be3`), and distribute just the `.bps`.
 
 ```sh
-flips --create --bps vanilla-emerald.gba pokeemerald.gba pokebattlesim.bps
+flips --create --bps vanilla-emerald.gba pokeemerald.gba pokemon-battle-theater.bps
 ```
 
 ## Upstream
