@@ -32,6 +32,7 @@
 #include "battle_message.h"
 #include "battle_ai_main.h"
 #include "battle_ai_util.h"
+#include "debug.h"
 #include "event_data.h"
 #include "link.h"
 #include "malloc.h"
@@ -593,6 +594,14 @@ bool32 TryRunFromBattle(enum BattlerId battler)
     }
     else if (gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_TRAINER_HILL) && gBattleTypeFlags & BATTLE_TYPE_TRAINER)
     {
+        // v1.4 — block Run in AI sim battles (which reuse the TRAINER_HILL
+        // flag for engine plumbing). Otherwise pilot-mode players could bail
+        // out of a battle, drop back to the Battle Tower lobby overworld,
+        // and use the debug menu to fly to the Battle Frontier or anywhere
+        // else — escaping the sim flow entirely. gIsDebugBattle distinguishes
+        // our sim battles from vanilla Trainer Hill challenges.
+        if (gIsDebugBattle)
+            return effect;  // effect stays 0 → run fails, "Can't escape!" prints
         effect++;
     }
     else if (CanPlayerForfeitNormalTrainerBattle())

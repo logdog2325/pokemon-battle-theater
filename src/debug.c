@@ -58,6 +58,7 @@
 #include "random.h"
 #include "region_map.h"
 #include "rtc.h"
+#include "save.h"
 #include "script.h"
 #include "script_pokemon_util.h"
 #include "sound.h"
@@ -3177,8 +3178,14 @@ static void DebugAction_BuildTrainer_ResetSlot(u8 taskId)
 // v0.52 Phase 2 — Pop back to the Build Trainer slot picker from the
 // per-slot edit menu. Resets listId so the Build Trainer slot-1/2/3 picker
 // renders as a plain static menu (it doesn't need dynamic values).
+//
+// v1.4 — also flushes SaveBlock3 to flash on exit. Any slot-level edits
+// (name, sprite, Copy-Preset) that didn't already hit CommitWorkBufferToSaveblock
+// get persisted here. Silent save (no SE/popup) since "Back" should feel
+// instantaneous.
 static void DebugAction_BuildTrainer_BackToWrapper(u8 taskId)
 {
+    TrySavingData(SAVE_NORMAL);
     Debug_DestroyMenu(taskId);
     sDebugMenuListData->listId = 0;
     Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_BuildTrainer);
@@ -3574,6 +3581,11 @@ static void BuildTrainer_CommitWorkBufferToSaveblock(void)
     if (sBuildTrainerActiveMon >= slot->monCount)
         slot->monCount = sBuildTrainerActiveMon + 1;
     slot->inUse = 1;
+    // v1.4 — flush SaveBlock3 to flash so edits persist across power-off.
+    // The mon-commit path is the canonical "user just confirmed a mon edit"
+    // hook; saving here means every confirmed edit becomes durable. Silent
+    // save (no UI popup) to keep editor flow uninterrupted.
+    TrySavingData(SAVE_NORMAL);
 }
 
 // v1.1 — Copy a preset trainer's full team into the active custom slot.
@@ -3687,6 +3699,9 @@ static void DebugAction_BuildTrainer_SaveSlot(u8 taskId)
     slot->inUse = 1;
     if (slot->monCount == 0)
         slot->monCount = 1;  // ensure at least placeholder Magikarp shows in battle
+    // v1.4 — flush SaveBlock3 for slot-level metadata edits (name/sprite/
+    // Copy-Preset) that don't go through CommitWorkBufferToSaveblock.
+    TrySavingData(SAVE_NORMAL);
     PlaySE(SE_SUCCESS);
 }
 
