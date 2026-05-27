@@ -849,6 +849,14 @@ EWRAM_DATA bool8 gSimAutoOpenPending = FALSE;
 // from DoNamingScreen. sBuildTrainerActiveSlot already persists in EWRAM so
 // the slot index round-trips automatically.
 EWRAM_DATA bool8 gSimBuildTrainerReopenSlot = FALSE;
+// v1.3 — set TRUE before DoNamingScreen(NAMING_SCREEN_TEAMCODE, ...) launches.
+// field_control_avatar's input poll sees this flag, reads sSimTeamCodeBuffer,
+// runs Sim_DecodeTeamCode, copies the result into sBuildTrainerWorkMon, and
+// re-opens the per-mon editor. Separate flag from gSimBuildTrainerReopenSlot
+// because the destination menu (Mon editor vs Slot menu) differs.
+EWRAM_DATA bool8 gSimImportCodePending = FALSE;
+// Buffer the naming screen writes into. Up to 30 chars + EOS + slack.
+EWRAM_DATA u8 gSimTeamCodeBuffer[32] = {0};
 // v0.52.15 — TRUE while a sim battle is running in pilot mode. battle_main.c
 // reads this to apply the level cap, since the AI-vs-AI flag (the cap's
 // existing gate) is intentionally skipped in pilot mode.
@@ -992,10 +1000,11 @@ static void DebugAction_BuildTrainer_OpenMon6(u8 taskId);
 static void DebugAction_BuildTrainer_SaveSlot(u8 taskId);
 static void DebugAction_BuildTrainer_MonSaveBack(u8 taskId);
 static void DebugAction_BuildTrainer_MonCancel(u8 taskId);
-// v1.2 — Pulled from release. Forward decl removed to silence unused-static
-// warnings; OpenImportCode and friends sit in dead code below until v1.3
-// rewires the keyboard charset.
-// static void DebugAction_BuildTrainer_OpenImportCode(u8 taskId);
+// v1.3 — Showdown team-code import. Pushes the user into the naming screen
+// (NAMING_SCREEN_TEAMCODE template) with a 30-char buffer; on confirm,
+// field_control_avatar runs Sim_DecodeTeamCode and re-opens the per-mon
+// editor with imported values.
+static void DebugAction_BuildTrainer_OpenImportCode(u8 taskId);
 static void DebugAction_BuildTrainer_EditLevel(u8 taskId);
 static void DebugAction_BuildTrainer_EditNature(u8 taskId);
 static void DebugAction_BuildTrainer_EditGender(u8 taskId);
@@ -1569,14 +1578,13 @@ static const struct DebugMenuOption sDebugMenu_Actions_BuildTrainerMon[] =
     // v0.52.4 — toggle shiny rendering for this mon (engine uses isShiny to
     // generate an OT ID that XORs to a shiny personality).
     { COMPOUND_STRING("Shiny: {STR_VAR_1}"),       DebugAction_BuildTrainer_EditShiny,    },
-    // v1.2 — "Import from code…" row was added then pulled before release
-    // because the on-screen keyboard renders the base64 alphabet through the
-    // GBA's text font slots, which doesn't map ASCII → letters. The widget
-    // displays unreadable symbol glyphs instead of A-Z 0-9. The decoder +
-    // web encoder are still shipped (tools/team-codes/) and verified via
-    // Python round-trip; v1.3 needs to translate the keyboard chars through
-    // CHAR_A / CHAR_B / ... before re-enabling this row.
-    //    { COMPOUND_STRING("Import from code…"),      DebugAction_BuildTrainer_OpenImportCode },
+    // v1.3 — Showdown team-code import. Reuses the existing pokeemerald
+    // naming screen (NAMING_SCREEN_TEAMCODE) instead of a from-scratch
+    // keyboard, so the GBA's CHAR_* charset handles font rendering natively.
+    // On confirm, gSimImportCodePending flag drives a field_control_avatar
+    // hook that decodes the buffer via Sim_DecodeTeamCode and re-opens this
+    // per-mon editor with the imported values populated.
+    { COMPOUND_STRING("Import from code…"),        DebugAction_BuildTrainer_OpenImportCode },
     { COMPOUND_STRING("Save & Back"),              DebugAction_BuildTrainer_MonSaveBack,  },
     { COMPOUND_STRING("Cancel"),                   DebugAction_BuildTrainer_MonCancel,    },
     { NULL }
@@ -6327,16 +6335,78 @@ static const struct Trainer *Sim_GetTrainerStruct(s32 id)
 }
 
 // =============================================================================
-// v1.2 — Team-code keyboard widget  [DISABLED — re-enable in v1.3]
+// v1.3 — Team-code import via NAMING_SCREEN_TEAMCODE
 // =============================================================================
-// PULLED FROM v1.2 RELEASE: the keyboard renders every char through the GBA's
-// text font slots, which uses Pokemon's custom CHAR_* charset, not ASCII. So
-// 'A' (0x41) renders as whatever symbol the GBA font has at index 0x41 —
-// male/female symbols, the PK monogram, garbage glyphs. v1.3 needs to map
-// sCodeKeyboardChars[] through CHAR_A / CHAR_B / ... etc. before printing.
-//
-// Code is wrapped in #if 0 / #endif so the block survives in source but
-// doesn't trip unused-static warnings or bloat the ROM.
+// The v1.2 attempt at a from-scratch keyboard widget shipped unreadable glyphs
+// because pokeemerald's text engine speaks CHAR_* (custom Pokemon charset),
+// not ASCII. v1.3 sidesteps that by reusing the existing naming screen —
+// it already maps the Pokemon charset to letters, has cursor logic, page
+// swap (uppercase / lowercase / symbols), backspace, OK/Cancel. We added
+// `_` to the symbols page and a NAMING_SCREEN_TEAMCODE template with 30-char
+// maxChars. The flow:
+//   1. User picks "Import from code…" in the per-mon editor
+//   2. We tear down the debug menu, set gSimImportCodePending = TRUE, and
+//      hand control to DoNamingScreen
+//   3. User types the PB...code with A-Z / a-z / 0-9 / - / _ across the 3
+//      keyboard pages, presses START (OK button) to confirm
+//   4. Naming screen writes the typed string into gSimTeamCodeBuffer and
+//      returns to the field via CB2_ReturnToField
+//   5. field_control_avatar sees gSimImportCodePending, calls
+//      Debug_DecodeImportedTeamCode below, which validates the code,
+//      writes into sBuildTrainerWorkMon, and re-opens the per-mon editor.
+//   On decode failure the slot is untouched and the error is shown via the
+//   menu re-open's first redraw (the per-mon row labels show the previous
+//   work-buffer state, so the user sees nothing changed).
+
+static void DebugAction_BuildTrainer_OpenImportCode(u8 taskId)
+{
+    PlaySE(SE_SELECT);
+    // Start with an empty buffer so the naming screen's existing-string copy
+    // path doesn't pre-fill with garbage. User types the full PB-prefix.
+    memset(gSimTeamCodeBuffer, EOS, sizeof(gSimTeamCodeBuffer));
+    // Tear down the debug menu before switching CB2 to the naming screen.
+    // The work buffer in sBuildTrainerWorkMon and the active mon/slot indices
+    // both live in EWRAM so they survive the round-trip.
+    Debug_DestroyMenu_Full(taskId);
+    gSimImportCodePending = TRUE;
+    // v1.3 — Ditto's the icon. You're pasting a code that turns into a
+    // Pokémon; Ditto literally transforms into other Pokémon. Thematic
+    // match + a single consistent icon across every import screen.
+    // iconFunction=3 in sTeamCodeScreenTemplate hands this off to the same
+    // Pokémon-icon renderer that NAMING_SCREEN_CAUGHT_MON uses.
+    DoNamingScreen(NAMING_SCREEN_TEAMCODE, gSimTeamCodeBuffer,
+                   SPECIES_DITTO, 0, 0, CB2_ReturnToField);
+}
+
+// Called from field_control_avatar after the naming screen returns. Decodes
+// the buffer, writes into the work mon on success, then re-opens the per-mon
+// editor. On failure the work buffer is unchanged.
+void Debug_DecodeImportedTeamCodeAndReopen(void)
+{
+    struct SimCustomTrainerMon mon;
+    enum SimTeamCodeResult res = Sim_DecodeTeamCode(gSimTeamCodeBuffer, &mon);
+    if (res == SIM_CODE_OK)
+    {
+        sBuildTrainerWorkMon = mon;
+        BuildTrainer_CommitWorkBufferToSaveblock();
+        PlaySE(SE_SUCCESS);
+    }
+    else
+    {
+        PlaySE(SE_FAILURE);
+    }
+    // Re-open the per-mon editor by simulating the OpenMonEditor path.
+    // sDebugMenuListData was freed by Debug_DestroyMenu_Full when we left for
+    // the naming screen, so allocate fresh + reload the work buffer.
+    sDebugMenuListData = AllocZeroed(sizeof(*sDebugMenuListData));
+    sDebugMenuListData->listId = DEBUG_LISTID_BUILD_TRAINER_MON;
+    BuildTrainer_LoadWorkBufferFromSaveblock();
+    Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_BuildTrainerMon);
+}
+
+// v1.2 dead-code keyboard widget block kept under #if 0 below in case the
+// from-scratch approach is ever needed (e.g. for a feature the naming screen
+// can't support). Skip to the next === banner.
 #if 0
 // On-screen base64 keyboard for the "Import from code…" row in the per-mon
 // editor. The user types a "PB..." code (typ. 24-34 chars) using D-pad +

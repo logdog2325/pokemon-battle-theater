@@ -159,7 +159,9 @@ struct NamingScreenData
     u8 tilemapBuffer1[0x800];
     u8 tilemapBuffer2[0x800];
     u8 tilemapBuffer3[0x800];
-    u8 textBuffer[16];
+    // v1.3 — bumped 16 → 32 to fit the team-code import buffer
+    // (NAMING_SCREEN_TEAMCODE uses maxChars=30 + EOS + slack).
+    u8 textBuffer[32];
     u8 tileBuffer[0x600];
     u8 state;
     u8 windows[WIN_COUNT];
@@ -251,15 +253,25 @@ static const struct WindowTemplate sWindowTemplates[WIN_COUNT + 1] =
         .paletteNum = 10,
         .baseBlock = 0x0C8
     },
+    // v1.3 — widened from tilemapLeft=8 width=17 (136px @ x=64) to
+    // tilemapLeft=2 width=27 (216px @ x=16) so NAMING_SCREEN_TEAMCODE's
+    // 24-char buffer renders without clipping. Existing screens (PLAYER/BOX/
+    // CODE/WALDA at maxChars 7-15) are unaffected because inputCharBaseXPos
+    // is computed in screen coords and the window-local offset below tracks
+    // the new tilemapLeft.
     [WIN_TEXT_ENTRY] = {
         .bg = 3,
-        .tilemapLeft = 8,
+        .tilemapLeft = 2,
         .tilemapTop = 6,
-        .width = 17,
+        .width = 27,
         .height = 2,
         .paletteNum = 10,
         .baseBlock = 0x030
     },
+    // v1.3 — baseBlock bumped 0x052 → 0x066 because WIN_TEXT_ENTRY grew from
+    // 34 tiles (0x22) to 54 tiles (0x36) and was overflowing into this
+    // window's tile region. Symptom was glitched title text + ghost copies
+    // of typed chars appearing in the title row.
     [WIN_TEXT_ENTRY_BOX] = {
         .bg = 3,
         .tilemapLeft = 8,
@@ -267,8 +279,10 @@ static const struct WindowTemplate sWindowTemplates[WIN_COUNT + 1] =
         .width = 17,
         .height = 2,
         .paletteNum = 10,
-        .baseBlock = 0x052
+        .baseBlock = 0x066
     },
+    // v1.3 — baseBlock bumped 0x074 → 0x088 to keep WIN_TEXT_ENTRY_BOX's
+    // 34 tiles from spilling into here after its own baseBlock bump.
     [WIN_BANNER] = {
         .bg = 0,
         .tilemapLeft = 0,
@@ -276,7 +290,7 @@ static const struct WindowTemplate sWindowTemplates[WIN_COUNT + 1] =
         .width = DISPLAY_TILE_WIDTH,
         .height = 2,
         .paletteNum = 11,
-        .baseBlock = 0x074
+        .baseBlock = 0x088
     },
     DUMMY_WIN_TEMPLATE
 };
@@ -1795,6 +1809,9 @@ static void (*const sDrawTextEntryBoxFuncs[])(void) =
     [NAMING_SCREEN_NICKNAME]   = DrawMonTextEntryBox,
     [NAMING_SCREEN_WALDA]      = DrawNormalTextEntryBox,
     [NAMING_SCREEN_CODE]       = DrawNormalTextEntryBox,
+    // v1.3 — Pokemon Battle Theater team-code import reuses the same
+    // underline-per-slot rendering as PLAYER/BOX/CODE/etc.
+    [NAMING_SCREEN_TEAMCODE]   = DrawNormalTextEntryBox,
     [NAMING_SCREEN_RIVAL]      = DrawNormalTextEntryBox
 };
 
@@ -1971,7 +1988,11 @@ static void DrawTextEntry(void)
     u8 temp[2];
     u16 extraWidth;
     u8 maxChars = sNamingScreen->template->maxChars;
-    u16 x = sNamingScreen->inputCharBaseXPos - 0x40;
+    // v1.3 — was -0x40 (window's old tilemapLeft=8 in pixel coords). Bumped
+    // to -0x10 to match the new tilemapLeft=2. inputCharBaseXPos is still in
+    // screen coords; subtracting the window's pixel offset converts to
+    // window-local x for AddTextPrinterParameterized.
+    u16 x = sNamingScreen->inputCharBaseXPos - 0x10;
 
     FillWindowPixelBuffer(sNamingScreen->windows[WIN_TEXT_ENTRY], PIXEL_FILL(1));
 
@@ -2202,6 +2223,30 @@ static const struct NamingScreenTemplate sCodeScreenTemplate =
     .title = COMPOUND_STRING("Enter code:"),
 };
 
+// v1.3 — Pokemon Battle Theater team code entry. maxChars=24 was tuned from
+// the v1.3 visual test: at 30 chars the leftmost ~3 underscores were clipped
+// behind the window's left border tile (inputCharBaseXPos = 6 sits inside
+// the tile-window inset). At 24 chars the input box is centered at x=30
+// → x=222 with clean ~18px margins on both sides.
+//
+// 24 chars matches the typical v2 team-code length. Codes longer than 24
+// (full-custom EV/IV spreads) need the web encoder to warn + the user to
+// simplify the spread before typing.
+//
+// iconFunction = 3 reuses the Pokémon-icon style from CAUGHT_MON / NICKNAME
+// so the screen shows Ditto (passed in via DoNamingScreen's monSpecies arg)
+// — thematic match for "paste a code that transforms into a Pokémon."
+static const struct NamingScreenTemplate sTeamCodeScreenTemplate =
+{
+    .copyExistingString = FALSE,
+    .maxChars = 24,
+    .iconFunction = 3,                 // Pokémon icon (uses monSpecies arg)
+    .addGenderIcon = FALSE,
+    .initialPage = KBPAGE_LETTERS_UPPER,
+    .unused = 35,
+    .title = COMPOUND_STRING("Paste team code:"),
+};
+
 static const struct NamingScreenTemplate sRivalNamingScreenTemplate =
 {
     .copyExistingString = FALSE,
@@ -2221,6 +2266,7 @@ static const struct NamingScreenTemplate *const sNamingScreenTemplates[] =
     [NAMING_SCREEN_WALDA]      = &sWaldaWordsScreenTemplate,
     [NAMING_SCREEN_CODE]       = &sCodeScreenTemplate,
     [NAMING_SCREEN_RIVAL]      = &sRivalNamingScreenTemplate,
+    [NAMING_SCREEN_TEAMCODE]   = &sTeamCodeScreenTemplate,
 };
 
 static const struct OamData sOam_8x8 =

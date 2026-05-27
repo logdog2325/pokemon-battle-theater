@@ -337,11 +337,13 @@ function encodeMon(mon) {
   return body;
 }
 
-// URL-safe base64, no padding.
+// Custom base64, no padding. URL-safe alphabet with `.` substituted for `_`
+// so the in-ROM naming screen (which aliases CHAR_UNDERSCORE → CHAR_HYPHEN)
+// can read codes unambiguously. The C decoder reverses this on the GBA side.
 function base64UrlEncode(bytes) {
   let bin = "";
   for (const b of bytes) bin += String.fromCharCode(b);
-  return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  return btoa(bin).replace(/\+/g, "-").replace(/\//g, ".").replace(/=+$/, "");
 }
 
 function encodeCode(mon) {
@@ -387,10 +389,20 @@ function render() {
   attachCopyHandlers();
 }
 
+// v1.3 — Codes longer than 24 chars don't fit the in-ROM keyboard's input
+// box (centered at maxChars=24). Flag the overflow so the user knows to
+// simplify the EV/IV spread (drop one stat investment, or round EVs to
+// multiples of 4) until the code fits.
+const ROM_MAX_CODE_LEN = 24;
+
 function rowHtml(label, code, errKind) {
   const isErr = !!errKind;
-  const cls = isErr ? "code-row err" : "code-row";
-  const meta = isErr ? errKind : `${code.length} chars`;
+  const tooLong = !isErr && code.length > ROM_MAX_CODE_LEN;
+  const cls = isErr ? "code-row err" : (tooLong ? "code-row err" : "code-row");
+  let meta;
+  if (isErr) meta = errKind;
+  else if (tooLong) meta = `${code.length} chars — too long for ROM (max ${ROM_MAX_CODE_LEN})`;
+  else meta = `${code.length} chars`;
   const btn = isErr
     ? `<button class="copy-btn" disabled>copy</button>`
     : `<button class="copy-btn" data-code="${escapeAttr(code)}">copy</button>`;

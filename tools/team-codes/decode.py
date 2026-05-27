@@ -31,6 +31,8 @@ def decode_payload(code: str) -> bytes:
     if not code.startswith("PB"):
         raise DecodeError("Code is missing the 'PB' prefix.")
     b64 = code[2:]
+    # v1.3 — reverse the `_` → `.` swap done by the encoder
+    b64 = b64.replace(".", "_")
     # Restore base64 padding (urlsafe_b64decode requires `=` padding)
     padding = "=" * ((4 - len(b64) % 4) % 4)
     try:

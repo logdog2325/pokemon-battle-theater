@@ -37,6 +37,13 @@ extern EWRAM_DATA bool8 gSimPilotMode;
 // across the round-trip).
 extern EWRAM_DATA bool8 gSimBuildTrainerReopenSlot;
 void Debug_ReopenBuildTrainerSlotMenu(void);
+// v1.3 — team-code import flag + handler. Set TRUE before launching
+// NAMING_SCREEN_TEAMCODE; field_control_avatar's input poll consumes the
+// flag, calls the handler, and the handler decodes the buffer + re-opens
+// the per-mon editor with the imported values.
+extern EWRAM_DATA bool8 gSimImportCodePending;
+extern EWRAM_DATA u8 gSimTeamCodeBuffer[32];
+void Debug_DecodeImportedTeamCodeAndReopen(void);
 extern EWRAM_DATA s16 gSimLevelCap;
 extern EWRAM_DATA u8 gSimBestOf;
 extern EWRAM_DATA u8 gSimT1Wins;

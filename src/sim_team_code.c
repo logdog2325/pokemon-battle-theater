@@ -44,15 +44,33 @@
 #define MIN_CODE_LENGTH         14
 
 // =============================================================================
-// URL-safe base64 char → 6-bit value lookup. Returns 0xFF on invalid char.
+// Base64 char → 6-bit value lookup. Returns 0xFF on invalid char.
 // =============================================================================
+// v1.3 — Custom alphabet uses `.` instead of standard URL-safe base64's `_`.
+// Reason: pokeemerald's charmap.txt aliases CHAR_UNDERSCORE and CHAR_HYPHEN
+// to the same byte (0xAE), so typing `_` and `-` would be indistinguishable
+// in the input buffer. CHAR_PERIOD (0xAD) is distinct from CHAR_HYPHEN, so
+// swapping the 63rd alphabet char to `.` gives us 64 distinguishable codes
+// using only chars that already appear on the vanilla naming screen.
+//
+// Pokemon-charset (CHAR_*) bytes are also accepted here, so the same lookup
+// handles both the ASCII codes emitted by encoder.py / encoder.html AND the
+// CHAR_*-encoded bytes the naming screen writes. See the byte-range
+// comments below for the CHAR_* alias values.
 static u8 Base64DecodeChar(u8 c)
 {
+    // ASCII path (encoder.py / encoder.html → web pastes)
     if (c >= 'A' && c <= 'Z') return c - 'A';
     if (c >= 'a' && c <= 'z') return c - 'a' + 26;
     if (c >= '0' && c <= '9') return c - '0' + 52;
     if (c == '-')             return 62;
-    if (c == '_')             return 63;
+    if (c == '.')             return 63;
+    // Pokemon CHAR_* path (naming screen → in-ROM input)
+    if (c >= 0xBB && c <= 0xD4) return c - 0xBB;          // CHAR_A..CHAR_Z
+    if (c >= 0xD5 && c <= 0xEE) return c - 0xD5 + 26;     // CHAR_a..CHAR_z
+    if (c >= 0xA1 && c <= 0xAA) return c - 0xA1 + 52;     // CHAR_0..CHAR_9
+    if (c == 0xAE)              return 62;                // CHAR_HYPHEN / CHAR_DASH (aliased)
+    if (c == 0xAD)              return 63;                // CHAR_PERIOD
     return 0xFF;
 }
 
@@ -128,14 +146,25 @@ enum SimTeamCodeResult Sim_DecodeTeamCode(const u8 *code, struct SimCustomTraine
     if (code == NULL || out == NULL)
         return SIM_CODE_BAD_PREFIX;
 
-    // Verify magic prefix.
-    if (code[0] != SIM_TEAM_CODE_MAGIC_0 || code[1] != SIM_TEAM_CODE_MAGIC_1)
+    // Verify magic prefix. Accept both ASCII "PB" (encoder.py / web paste)
+    // and Pokemon-charset "PB" (CHAR_P=0xCA, CHAR_B=0xBC) from the naming
+    // screen so the same decoder handles both input paths.
+    bool32 prefixOk = (code[0] == SIM_TEAM_CODE_MAGIC_0 && code[1] == SIM_TEAM_CODE_MAGIC_1)
+                   || (code[0] == 0xCA              && code[1] == 0xBC);
+    if (!prefixOk)
         return SIM_CODE_BAD_PREFIX;
 
-    // Measure the base64 body (everything after "PB").
+    // Measure the base64 body (everything after "PB"). Terminators we accept:
+    //   '\0'  — ASCII string from encoder.py / web encoder paste
+    //   0xFF  — EOS byte the pokeemerald naming screen writes
+    //   0x00  — also commonly used to pad unset buffer bytes
     u32 srcLen = 0;
-    while (code[2 + srcLen] != '\0' && srcLen < 64)
+    while (srcLen < 64)
+    {
+        u8 ch = code[2 + srcLen];
+        if (ch == '\0' || ch == 0xFF) break;
         srcLen++;
+    }
     if (srcLen + 2 < MIN_CODE_LENGTH)
         return SIM_CODE_TOO_SHORT;
 

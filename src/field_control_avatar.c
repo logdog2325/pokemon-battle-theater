@@ -239,6 +239,39 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     if (input->pressedRButton && TryStartDexNavSearch())
         return TRUE;
 
+    // v1.3 — Specific reopen flags (slot menu / per-mon editor + decode) must
+    // be checked BEFORE the generic gSimAutoOpenPending wrapper auto-open.
+    // Debug_DestroyMenu_Full sets gSimAutoOpenPending=TRUE whenever it's
+    // called in the lobby, so leaving the menu via DoNamingScreen arms BOTH
+    // the wrapper auto-open AND the specific reopen. Without reordering, the
+    // wrapper wins and the user lands one menu level too far out.
+    // Each branch also clears gSimAutoOpenPending so it doesn't fire on the
+    // next tick after the specific menu opens.
+
+    // v0.52.5 — Re-enter the Build Trainer slot edit menu after returning
+    // from the naming screen (the Name editor on the slot menu).
+    if (gSimBuildTrainerReopenSlot && DEBUG_OVERWORLD_MENU && !DEBUG_OVERWORLD_IN_MENU)
+    {
+        gSimBuildTrainerReopenSlot = FALSE;
+        gSimAutoOpenPending = FALSE;  // suppress the wrapper auto-open
+        PlaySE(SE_WIN_OPEN);
+        FreezeObjectEvents();
+        Debug_ReopenBuildTrainerSlotMenu();
+        return TRUE;
+    }
+
+    // v1.3 — Team-code import re-entry. Lands the user back on the per-mon
+    // editor with the decoded code applied to sBuildTrainerWorkMon.
+    if (gSimImportCodePending && DEBUG_OVERWORLD_MENU && !DEBUG_OVERWORLD_IN_MENU)
+    {
+        gSimImportCodePending = FALSE;
+        gSimAutoOpenPending = FALSE;  // suppress the wrapper auto-open
+        PlaySE(SE_WIN_OPEN);
+        FreezeObjectEvents();
+        Debug_DecodeImportedTeamCodeAndReopen();
+        return TRUE;
+    }
+
     if (gSimAutoOpenPending && DEBUG_OVERWORLD_MENU && !DEBUG_OVERWORLD_IN_MENU)
     {
         gSimAutoOpenPending = FALSE;
@@ -250,19 +283,6 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
         // v0.52: boot lands on the Build Trainer / Run Simulation wrapper.
         // "Run Simulation" inside the wrapper opens the Battle Theater picker.
         Debug_ShowTrainersWrapper();
-        return TRUE;
-    }
-
-    // v0.52.5 — Re-enter the Build Trainer slot edit menu after returning
-    // from the naming screen (which switched CB2 away from the debug menu).
-    // sBuildTrainerActiveSlot is preserved in EWRAM so we land on the same
-    // slot the user was editing.
-    if (gSimBuildTrainerReopenSlot && DEBUG_OVERWORLD_MENU && !DEBUG_OVERWORLD_IN_MENU)
-    {
-        gSimBuildTrainerReopenSlot = FALSE;
-        PlaySE(SE_WIN_OPEN);
-        FreezeObjectEvents();
-        Debug_ReopenBuildTrainerSlotMenu();
         return TRUE;
     }
 

@@ -447,7 +447,14 @@ def encode_mon(mon: Mon) -> bytes:
 
 def encode_code(mon: Mon) -> str:
     payload = encode_mon(mon)
+    # v1.3 — Custom 64-char alphabet uses '.' instead of '_' for the 63rd
+    # value. pokeemerald's charmap aliases CHAR_UNDERSCORE and CHAR_HYPHEN
+    # to the same byte, so the in-ROM naming screen can't distinguish them.
+    # CHAR_PERIOD is a distinct byte AND is already on the vanilla keyboard
+    # (column 7 of the uppercase/lowercase letter pages), so swapping `_`
+    # → `.` lets us reuse the unmodified naming screen.
     b64 = base64.urlsafe_b64encode(payload).rstrip(b"=").decode("ascii")
+    b64 = b64.replace("_", ".")
     return "PB" + b64
 
 
