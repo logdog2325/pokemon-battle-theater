@@ -992,9 +992,10 @@ static void DebugAction_BuildTrainer_OpenMon6(u8 taskId);
 static void DebugAction_BuildTrainer_SaveSlot(u8 taskId);
 static void DebugAction_BuildTrainer_MonSaveBack(u8 taskId);
 static void DebugAction_BuildTrainer_MonCancel(u8 taskId);
-// v1.2 — Showdown team-code import. Opens an on-screen keyboard, decodes the
-// typed string into sBuildTrainerWorkMon on confirm.
-static void DebugAction_BuildTrainer_OpenImportCode(u8 taskId);
+// v1.2 — Pulled from release. Forward decl removed to silence unused-static
+// warnings; OpenImportCode and friends sit in dead code below until v1.3
+// rewires the keyboard charset.
+// static void DebugAction_BuildTrainer_OpenImportCode(u8 taskId);
 static void DebugAction_BuildTrainer_EditLevel(u8 taskId);
 static void DebugAction_BuildTrainer_EditNature(u8 taskId);
 static void DebugAction_BuildTrainer_EditGender(u8 taskId);
@@ -1568,10 +1569,14 @@ static const struct DebugMenuOption sDebugMenu_Actions_BuildTrainerMon[] =
     // v0.52.4 — toggle shiny rendering for this mon (engine uses isShiny to
     // generate an OT ID that XORs to a shiny personality).
     { COMPOUND_STRING("Shiny: {STR_VAR_1}"),       DebugAction_BuildTrainer_EditShiny,    },
-    // v1.2 — Showdown team-code import. Opens a base64-only keyboard; on
-    // confirm, the typed PB-prefixed code is decoded and overwrites the
-    // current per-mon work buffer.
-    { COMPOUND_STRING("Import from code…"),        DebugAction_BuildTrainer_OpenImportCode },
+    // v1.2 — "Import from code…" row was added then pulled before release
+    // because the on-screen keyboard renders the base64 alphabet through the
+    // GBA's text font slots, which doesn't map ASCII → letters. The widget
+    // displays unreadable symbol glyphs instead of A-Z 0-9. The decoder +
+    // web encoder are still shipped (tools/team-codes/) and verified via
+    // Python round-trip; v1.3 needs to translate the keyboard chars through
+    // CHAR_A / CHAR_B / ... before re-enabling this row.
+    //    { COMPOUND_STRING("Import from code…"),      DebugAction_BuildTrainer_OpenImportCode },
     { COMPOUND_STRING("Save & Back"),              DebugAction_BuildTrainer_MonSaveBack,  },
     { COMPOUND_STRING("Cancel"),                   DebugAction_BuildTrainer_MonCancel,    },
     { NULL }
@@ -3764,25 +3769,26 @@ static void DebugAction_BuildTrainer_EditShiny(u8 taskId)
 
 // Open the per-stat EV editor. Tears down the per-mon list and shows the
 // EVs menu with listId 5 so each row formats the current stat value.
+//
+// v1.2 — DON'T pop Mon before pushing EVs. v1.1.1 did that thinking it would
+// prevent stack growth, but it meant the callback stack went
+// [BT, Slot, EVs] instead of [BT, Slot, Mon, EVs] — so when the user pressed
+// B (or hit the Back row), they'd return to Slot instead of Mon. The right
+// fix for stack growth is in EVs_Back / the generic B handler: pop the EVs
+// entry and use Debug_ShowMenu(handler, NULL) so it reads Mon from the now-
+// top callback stack entry without re-pushing.
 static void DebugAction_BuildTrainer_OpenEVsMenu(u8 taskId)
 {
     Debug_DestroyMenu(taskId);
-    // v1.1.1 — pop the Mon entry off the callback stack BEFORE Debug_ShowMenu
-    // pushes EVs. Without this, every Mon→EV→Back cycle leaves a duplicate
-    // Mon entry on the 8-deep stack, eventually causing Debug_SaveCallbackMenu
-    // to silently fail and Debug_GetCurrentCallbackMenu to return stale items
-    // — the "screen goes blank" symptom on EV/IV exit.
-    Debug_RemoveCallbackMenu();
     sDebugMenuListData->listId = DEBUG_LISTID_BUILD_TRAINER_EVS;
     Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_BuildTrainerEVs);
 }
 
-// Open the per-stat IV editor (listId 6).
+// Open the per-stat IV editor (listId 6). See OpenEVsMenu comment for why
+// we leave Mon on the callback stack instead of popping it.
 static void DebugAction_BuildTrainer_OpenIVsMenu(u8 taskId)
 {
     Debug_DestroyMenu(taskId);
-    // v1.1.1 — mirror EVs path: pop Mon before pushing IVs.
-    Debug_RemoveCallbackMenu();
     sDebugMenuListData->listId = DEBUG_LISTID_BUILD_TRAINER_IVS;
     Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_BuildTrainerIVs);
 }
@@ -3823,23 +3829,19 @@ static void DebugAction_BuildTrainer_EVs_Reset(u8 taskId)
 
 static void DebugAction_BuildTrainer_EVs_Back(u8 taskId)
 {
-    // v1.1.1 — Bulletproof EV-back flow:
-    // 1. Commit EV edits to saveblock so they persist even if anything below
-    //    misbehaves and the work buffer gets reloaded.
-    // 2. Tear down the EV menu window/task.
-    // 3. Pop EVs off the callback stack.
-    // 4. Reload work buffer from the just-committed saveblock data so the
-    //    per-mon generator reads guaranteed-valid state — matches the working
-    //    BuildTrainer_OpenMonEditor pattern exactly. (Earlier v1.1 attempt
-    //    left the in-memory work buffer alone, which was the path producing
-    //    the blank-values rendering.)
-    // 5. Open the Mon editor; listId switch in Debug_ShowMenu regenerates.
-    BuildTrainer_CommitWorkBufferToSaveblock();
+    // v1.2 — Match the generic B-button handler exactly. Stack flow:
+    // before EV-open: [BT, Slot, Mon]
+    // after EV-open : [BT, Slot, Mon, EVs]
+    // after Back    : pop EVs → [BT, Slot, Mon], read Mon from stack top
+    //                 (items=NULL means Debug_ShowMenu uses callback top),
+    //                 so we don't re-push Mon and the stack stays clean.
+    // EV cycle handlers write straight to sBuildTrainerWorkMon, so no
+    // commit/reload is needed here — the work buffer persists across menu
+    // opens until Save & Back commits it in the per-mon editor.
     Debug_DestroyMenu(taskId);
     Debug_RemoveCallbackMenu();
-    BuildTrainer_LoadWorkBufferFromSaveblock();
     sDebugMenuListData->listId = DEBUG_LISTID_BUILD_TRAINER_MON;
-    Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_BuildTrainerMon);
+    Debug_ShowMenu(DebugTask_HandleMenuInput_General, NULL);
 }
 
 // Cycle one IV stat by +1. Wraps 0..31 (5-bit cap).
@@ -3878,13 +3880,11 @@ static void DebugAction_BuildTrainer_IVs_ZeroAll(u8 taskId)
 
 static void DebugAction_BuildTrainer_IVs_Back(u8 taskId)
 {
-    // v1.1.1 — mirror EVs_Back commit+reload pattern. See EVs_Back comment.
-    BuildTrainer_CommitWorkBufferToSaveblock();
+    // v1.2 — mirror EVs_Back. See its comment for the stack-flow explanation.
     Debug_DestroyMenu(taskId);
     Debug_RemoveCallbackMenu();
-    BuildTrainer_LoadWorkBufferFromSaveblock();
     sDebugMenuListData->listId = DEBUG_LISTID_BUILD_TRAINER_MON;
-    Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_BuildTrainerMon);
+    Debug_ShowMenu(DebugTask_HandleMenuInput_General, NULL);
 }
 
 // =============================================================================
@@ -6327,8 +6327,17 @@ static const struct Trainer *Sim_GetTrainerStruct(s32 id)
 }
 
 // =============================================================================
-// v1.2 — Team-code keyboard widget
+// v1.2 — Team-code keyboard widget  [DISABLED — re-enable in v1.3]
 // =============================================================================
+// PULLED FROM v1.2 RELEASE: the keyboard renders every char through the GBA's
+// text font slots, which uses Pokemon's custom CHAR_* charset, not ASCII. So
+// 'A' (0x41) renders as whatever symbol the GBA font has at index 0x41 —
+// male/female symbols, the PK monogram, garbage glyphs. v1.3 needs to map
+// sCodeKeyboardChars[] through CHAR_A / CHAR_B / ... etc. before printing.
+//
+// Code is wrapped in #if 0 / #endif so the block survives in source but
+// doesn't trip unused-static warnings or bloat the ROM.
+#if 0
 // On-screen base64 keyboard for the "Import from code…" row in the per-mon
 // editor. The user types a "PB..." code (typ. 24-34 chars) using D-pad +
 // A/B/L/R/START/SELECT. On START we decode via Sim_DecodeTeamCode and
@@ -6564,6 +6573,7 @@ static void DebugAction_BuildTrainer_OpenImportCode(u8 taskId)
     CodeKeyboard_Draw(windowId);
     CopyWindowToVram(windowId, COPYWIN_FULL);
 }
+#endif  // v1.2 keyboard widget disabled until v1.3 charmap fix
 
 // =============================================================================
 // v0.51 — Custom user-built trainer slots
