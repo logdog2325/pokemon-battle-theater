@@ -324,37 +324,91 @@ function parseStatLine(value, dest) {
   }
 }
 
-// Pack a Mon into bytes per SPEC.md v1 format.
-function encodeMon(mon) {
-  const bytes = [];
-  bytes.push(FORMAT_VERSION);
-  bytes.push(mon.species & 0xFF, (mon.species >> 8) & 0xFF);
-  bytes.push(mon.heldItem & 0xFF, (mon.heldItem >> 8) & 0xFF);
-  const packed = (mon.nature & 0x1F)
-               | ((mon.abilitySlot & 0x03) << 5)
-               | ((mon.shiny ? 1 : 0) << 7);
-  bytes.push(packed);
-  bytes.push(Math.max(1, Math.min(100, mon.level)));
-  bytes.push(mon.gender & 0x03);
-  for (let i = 0; i < 4; i++) {
-    bytes.push(mon.moves[i] & 0xFF, (mon.moves[i] >> 8) & 0xFF);
+// Bit-stream writer (MSB-first within each byte). See SPEC.md v2.
+function BitWriter() {
+  this.buf = [];
+  this.cur = 0;
+  this.curBits = 0;
+}
+BitWriter.prototype.write = function(value, nBits) {
+  if (value < 0 || value >= (1 << nBits)) {
+    throw new Error(`Value ${value} doesn't fit in ${nBits} bits`);
   }
+  for (let i = nBits - 1; i >= 0; i--) {
+    const bit = (value >> i) & 1;
+    this.cur = ((this.cur << 1) | bit) & 0xFF;
+    this.curBits++;
+    if (this.curBits === 8) {
+      this.buf.push(this.cur);
+      this.cur = 0;
+      this.curBits = 0;
+    }
+  }
+};
+BitWriter.prototype.finish = function() {
+  if (this.curBits) {
+    this.cur = (this.cur << (8 - this.curBits)) & 0xFF;
+    this.buf.push(this.cur);
+    this.cur = 0;
+    this.curBits = 0;
+  }
+  return this.buf;
+};
+
+// Pack a Mon into bytes per SPEC.md v2 (bit-stream) format.
+function encodeMon(mon) {
+  if (mon.species >= (1 << 11)) throw new Error(`species ${mon.species} >= 2048`);
+  if (mon.heldItem >= (1 << 10)) throw new Error(`item ${mon.heldItem} >= 1024`);
+
+  const w = new BitWriter();
+  w.write(FORMAT_VERSION, 4);
+  w.write(mon.species, 11);
+  w.write(mon.heldItem, 10);
+  w.write(mon.nature & 0x1F, 5);
+  w.write(mon.abilitySlot & 0x03, 2);
+  w.write(mon.shiny ? 1 : 0, 1);
+  w.write(Math.max(1, Math.min(100, mon.level)), 7);
+  w.write(mon.gender & 0x03, 2);
+
+  // Move count + moves
+  let moveCount = 0;
+  for (let i = 0; i < 4; i++) if (mon.moves[i] !== 0) moveCount++;
+  w.write(moveCount, 3);
+  let written = 0;
+  for (let i = 0; i < 4; i++) {
+    if (mon.moves[i] === 0) continue;
+    if (mon.moves[i] >= (1 << 11)) throw new Error(`move ${mon.moves[i]} >= 2048`);
+    w.write(mon.moves[i], 11);
+    written++;
+    if (written >= moveCount) break;
+  }
+
+  // EV mask + non-zero EVs
   let evMask = 0;
   for (let i = 0; i < 6; i++) if (mon.evs[i] !== 0) evMask |= (1 << i);
-  bytes.push(evMask);
+  w.write(evMask, 6);
   for (let i = 0; i < 6; i++) {
-    if (evMask & (1 << i)) bytes.push(Math.min(252, mon.evs[i]));
+    if (evMask & (1 << i)) w.write(Math.min(252, mon.evs[i]), 8);
   }
+
+  // IV "has deviations" flag — saves 5 bits per mon for default all-31 IVs
   let ivMask = 0;
   for (let i = 0; i < 6; i++) if (mon.ivs[i] !== 31) ivMask |= (1 << i);
-  bytes.push(ivMask);
-  for (let i = 0; i < 6; i++) {
-    if (ivMask & (1 << i)) bytes.push(Math.min(31, mon.ivs[i]));
+  if (ivMask === 0) {
+    w.write(0, 1);
+  } else {
+    w.write(1, 1);
+    w.write(ivMask, 6);
+    for (let i = 0; i < 6; i++) {
+      if (ivMask & (1 << i)) w.write(Math.min(31, mon.ivs[i]), 5);
+    }
   }
+
+  const body = w.finish();
   let chk = 0;
-  for (const b of bytes) chk ^= b;
-  bytes.push(chk);
-  return bytes;
+  for (const b of body) chk ^= b;
+  body.push(chk);
+  return body;
 }
 
 // URL-safe base64, no padding.

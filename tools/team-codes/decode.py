@@ -19,7 +19,7 @@ import sys
 # Re-use the same name-table lookups from encode.py.
 from encode import (
     FORMAT_VERSION, NATURES, STAT_ORDER, Mon, _tables, _load_defines,
-    REPO_ROOT,
+    REPO_ROOT, BitReader,
 )
 
 
@@ -40,43 +40,44 @@ def decode_payload(code: str) -> bytes:
 
 
 def decode_mon(code: str) -> Mon:
+    """Decode a PB<base64> code into a Mon (v2 bit-stream format)."""
     payload = decode_payload(code)
-    if len(payload) < 19:
-        raise DecodeError(f"Payload too short ({len(payload)} bytes; need ≥19).")
-    # Verify checksum
+    if len(payload) < 9:
+        raise DecodeError(f"Payload too short ({len(payload)} bytes; need ≥9).")
+    body, checksum = payload[:-1], payload[-1]
+    # Verify checksum: XOR of body bytes (including trailing zero-pad)
     chk = 0
-    for b in payload[:-1]:
+    for b in body:
         chk ^= b
-    if chk != payload[-1]:
-        raise DecodeError(f"Checksum mismatch (computed {chk:#x}, stored {payload[-1]:#x}).")
+    if chk != checksum:
+        raise DecodeError(f"Checksum mismatch (computed {chk:#x}, stored {checksum:#x}).")
 
-    pos = 0
-    version = payload[pos]; pos += 1
+    r = BitReader(body)
+    version = r.read(4)
     if version > FORMAT_VERSION:
         raise DecodeError(f"Unsupported format version {version} (this decoder knows ≤{FORMAT_VERSION}).")
 
     mon = Mon()
-    mon.species = int.from_bytes(payload[pos:pos+2], "little"); pos += 2
-    mon.held_item = int.from_bytes(payload[pos:pos+2], "little"); pos += 2
-    packed = payload[pos]; pos += 1
-    mon.nature = packed & 0x1F
-    mon.ability_slot = (packed >> 5) & 0x03
-    mon.shiny = bool((packed >> 7) & 0x01)
-    mon.level = payload[pos]; pos += 1
-    mon.gender = payload[pos] & 0x03; pos += 1
+    mon.species = r.read(11)
+    mon.held_item = r.read(10)
+    mon.nature = r.read(5)
+    mon.ability_slot = r.read(2)
+    mon.shiny = bool(r.read(1))
+    mon.level = r.read(7)
+    mon.gender = r.read(2)
+    move_count = r.read(3)
     for i in range(4):
-        mon.moves[i] = int.from_bytes(payload[pos:pos+2], "little"); pos += 2
-    ev_mask = payload[pos]; pos += 1
+        mon.moves[i] = r.read(11) if i < move_count else 0
+    ev_mask = r.read(6)
     for i in range(6):
-        if ev_mask & (1 << i):
-            mon.evs[i] = payload[pos]; pos += 1
-        else:
-            mon.evs[i] = 0
-    iv_mask = payload[pos]; pos += 1
-    for i in range(6):
-        if iv_mask & (1 << i):
-            mon.ivs[i] = payload[pos]; pos += 1
-        else:
+        mon.evs[i] = r.read(8) if (ev_mask & (1 << i)) else 0
+    iv_has_deviations = r.read(1)
+    if iv_has_deviations:
+        iv_mask = r.read(6)
+        for i in range(6):
+            mon.ivs[i] = r.read(5) if (iv_mask & (1 << i)) else 31
+    else:
+        for i in range(6):
             mon.ivs[i] = 31
     return mon
 

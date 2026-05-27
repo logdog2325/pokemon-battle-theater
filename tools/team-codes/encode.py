@@ -23,7 +23,59 @@ import sys
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]
 
 # Format version emitted. Decoder bumps version when it sees this byte.
-FORMAT_VERSION = 1
+# v2 = bit-packed payload (saves ~25% vs v1's byte-aligned format).
+FORMAT_VERSION = 2
+
+
+# ---------------------------------------------------------------------------
+# Bit stream — MSB-first writer / reader. Used by the v2 encoder for compact
+# field packing. The first bit of the payload is bit 7 of byte 0.
+# ---------------------------------------------------------------------------
+
+class BitWriter:
+    def __init__(self):
+        self.buf = bytearray()
+        self.cur = 0   # accumulating byte
+        self.cur_bits = 0  # bits already written into self.cur (high-to-low)
+
+    def write(self, value: int, n_bits: int) -> None:
+        if value < 0 or value >= (1 << n_bits):
+            raise ValueError(f"Value {value} doesn't fit in {n_bits} bits")
+        # Write high bits of `value` first
+        for i in range(n_bits - 1, -1, -1):
+            bit = (value >> i) & 1
+            self.cur = (self.cur << 1) | bit
+            self.cur_bits += 1
+            if self.cur_bits == 8:
+                self.buf.append(self.cur)
+                self.cur = 0
+                self.cur_bits = 0
+
+    def finish(self) -> bytes:
+        if self.cur_bits:
+            self.cur <<= (8 - self.cur_bits)  # zero-pad the last byte
+            self.buf.append(self.cur)
+            self.cur = 0
+            self.cur_bits = 0
+        return bytes(self.buf)
+
+
+class BitReader:
+    def __init__(self, data: bytes):
+        self.data = data
+        self.pos = 0  # bit position (0 = bit 7 of byte 0)
+
+    def read(self, n_bits: int) -> int:
+        value = 0
+        for _ in range(n_bits):
+            byte_idx = self.pos // 8
+            bit_idx = 7 - (self.pos % 8)
+            if byte_idx >= len(self.data):
+                raise ValueError("Bit stream underflow")
+            bit = (self.data[byte_idx] >> bit_idx) & 1
+            value = (value << 1) | bit
+            self.pos += 1
+        return value
 
 # Stat index order, matches SimCustomTrainerMon.evs[] / ivs[] layout
 # (HP / Atk / Def / SpA / SpD / Spe). See include/global.h.
@@ -330,42 +382,67 @@ def _parse_stat_line(value: str, dest: list[int]):
 # ---------------------------------------------------------------------------
 
 def encode_mon(mon: Mon) -> bytes:
-    """Pack a Mon into the v1 binary layout (see SPEC.md)."""
-    out = bytearray()
-    out.append(FORMAT_VERSION)
-    out += mon.species.to_bytes(2, "little")
-    out += mon.held_item.to_bytes(2, "little")
-    # Packed: nature (5b) + ability slot (2b) + shiny (1b)
-    packed = (mon.nature & 0x1F) | ((mon.ability_slot & 0x03) << 5) | ((1 if mon.shiny else 0) << 7)
-    out.append(packed)
-    out.append(max(1, min(100, mon.level)))
-    out.append(mon.gender & 0x03)
-    for i in range(4):
-        out += mon.moves[i].to_bytes(2, "little")
+    """Pack a Mon into the v2 bit-stream layout (see SPEC.md).
+
+    Returns the byte string: [bit_stream_bytes...] + [checksum_byte].
+    """
+    if mon.species >= (1 << 11):
+        raise ValueError(f"species {mon.species} doesn't fit in 11 bits (cap 2047)")
+    if mon.held_item >= (1 << 10):
+        raise ValueError(f"item {mon.held_item} doesn't fit in 10 bits (cap 1023)")
+
+    w = BitWriter()
+    w.write(FORMAT_VERSION, 4)
+    w.write(mon.species, 11)
+    w.write(mon.held_item, 10)
+    w.write(mon.nature & 0x1F, 5)
+    w.write(mon.ability_slot & 0x03, 2)
+    w.write(1 if mon.shiny else 0, 1)
+    w.write(max(1, min(100, mon.level)), 7)
+    w.write(mon.gender & 0x03, 2)
+    # Move count + moves
+    move_count = sum(1 for m in mon.moves if m != 0)
+    w.write(move_count, 3)
+    written_moves = 0
+    for m in mon.moves:
+        if m == 0:
+            continue
+        if m >= (1 << 11):
+            raise ValueError(f"move {m} doesn't fit in 11 bits (cap 2047)")
+        w.write(m, 11)
+        written_moves += 1
+        if written_moves >= move_count:
+            break
     # EV mask + non-zero EVs
     ev_mask = 0
     for i in range(6):
         if mon.evs[i] != 0:
             ev_mask |= 1 << i
-    out.append(ev_mask)
+    w.write(ev_mask, 6)
     for i in range(6):
         if ev_mask & (1 << i):
-            out.append(min(252, mon.evs[i]))
-    # IV mask + non-31 IVs
+            w.write(min(252, mon.evs[i]), 8)
+    # IV "has deviations" flag — saves 5 bits per mon for the common case
+    # of all-31 IVs.
     iv_mask = 0
     for i in range(6):
         if mon.ivs[i] != 31:
             iv_mask |= 1 << i
-    out.append(iv_mask)
-    for i in range(6):
-        if iv_mask & (1 << i):
-            out.append(min(31, mon.ivs[i]))
-    # Checksum: XOR of every byte so far
+    if iv_mask == 0:
+        w.write(0, 1)
+    else:
+        w.write(1, 1)
+        w.write(iv_mask, 6)
+        for i in range(6):
+            if iv_mask & (1 << i):
+                w.write(min(31, mon.ivs[i]), 5)
+
+    body = w.finish()
+    # Checksum: XOR of every body byte (including the trailing zero-pad).
     chk = 0
-    for b in out:
+    for b in body:
         chk ^= b
-    out.append(chk)
-    return bytes(out)
+    return body + bytes([chk])
 
 
 def encode_code(mon: Mon) -> str:
