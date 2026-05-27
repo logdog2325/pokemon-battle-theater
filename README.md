@@ -33,9 +33,12 @@ for the `.bps` patch and end-user docs.
 - ~120 curated rosters spanning Kanto / Johto / Hoenn / Sinnoh / Unova /
   Kalos / Alola / Galar / Hisui, plus the PWT and Ash's anime World
   Champion team
+- **Hold L or R in the trainer picker to jump to the previous / next
+  region** — fastest way to skip past the ~250 trainer entries instead of
+  scrolling one at a time
 - 9-trainer Legends Arceus section (Volo, Adaman, Irida, Ingo, Akari,
   Kamado, Zisu, Beni, Rei)
-- Custom Trainer slots with full PKHeX-style editor (sprite / name /
+- 6 Custom Trainer slots with full PKHeX-style editor (sprite / name /
   species / item / ability / EVs / IVs / moves / nature / gender / shiny)
 - Tournament mode (8-trainer single-elim brackets across all regions)
 - Best-of-N matches with adaptive picks

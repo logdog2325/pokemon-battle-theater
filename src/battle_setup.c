@@ -1444,6 +1444,10 @@ static void CB2_EndDebugBattle(void)
         // v0.52.15 — clear pilot mode so the next round picks it up fresh
         // from Sim_SetupMatchRound's snapshot (or live menu state).
         gSimPilotMode = FALSE;
+        // v1.1 — restore the user's real playerName (overwritten in
+        // Sim_OverridePlayerName during sim setup so dialogue showed the
+        // player AI trainer's name instead of the user's overworld name).
+        Sim_RestorePlayerName();
         SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
         return;
     }

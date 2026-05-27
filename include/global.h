@@ -255,7 +255,10 @@ struct NPCFollower
 // Battle Simulator v0.51: custom trainer slots. Saved to SaveBlock3 (much
 // less crowded than SaveBlock1). Each slot stores up to 6 mons + a name.
 // Flat layout (no pointers) so it survives saveblock serialization.
-#define SIM_NUM_CUSTOM_TRAINERS 3
+// v1.1: bumped 3 → 6. Community ask for more slots so users can save more
+// builds (e.g. a doubles team + a singles team + a VGC team) without having
+// to overwrite each other. Each slot is ~192 bytes in SaveBlock3.
+#define SIM_NUM_CUSTOM_TRAINERS 6
 #define SIM_CUSTOM_TRAINER_NAME_LEN 10  // matches TRAINER_NAME_LENGTH (max chars before EOS)
 
 struct SimCustomTrainerMon

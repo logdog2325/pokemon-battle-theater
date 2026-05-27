@@ -310,6 +310,52 @@ void BattleAI_SetupFlags(void)
         gAiThinkingStruct->aiFlags[B_BATTLER_2] = aiFlags;
         gAiThinkingStruct->aiFlags[B_BATTLER_0] = aiFlags;
     }
+
+    // v1.1.1 — Battle Theater "max smart AI" override.
+    // 60% of trainers in trainers.party have ONLY AI_FLAG_CHECK_BAD_MOVE, which
+    // is barely AI at all (no KO prioritization, no viability scoring, no
+    // switching). For the AI-vs-AI sim the user wants competitive battles, so
+    // we OR in the full smart-trainer stack on every battler. Both sides cheat
+    // equally with OMNISCIENT so it's fair.
+    //
+    // Explicit picks:
+    //   BASIC_TRAINER  - CHECK_BAD_MOVE + TRY_TO_FAINT + CHECK_VIABILITY (foundation)
+    //   SMART_SWITCHING- thorough switch-out logic (auto-adds SMART_MON_CHOICES)
+    //   OMNISCIENT     - sees opponent moves/items/abilities (cheats — but both sides do)
+    //   HP_AWARE       - manages HP, doesn't waste setup when low
+    //   PP_STALL_PREVENTION - tracks switches into immune mons
+    //   TRY_TO_2HKO    - score bonus for 2HKO moves (faster KOs)
+    //   WEIGH_ABILITY_PREDICTION - predicts opponent abilities
+    //   PREDICT_SWITCH + PREDICT_INCOMING_MON + PREDICT_MOVE - full prediction suite
+    //   SMART_TERA     - smart tera decisions (no-op since Tera disabled, but harmless)
+    //   RANDOMIZE_SWITCHIN - adds variety so the AI doesn't always pick the same
+    //                        switch candidate
+    //
+    // Skipped on purpose:
+    //   RISKY          - too unpredictable / can suicide
+    //   STALL          - TODO in upstream, not finished
+    //   CONSERVATIVE   - too cautious, conflicts with viability scoring
+    //   SEQUENCE_SWITCHING - opposite of smart (uses party order)
+    //   PREFER_HIGHEST_DAMAGE_MOVE - conflicts with viability scoring
+    if (IsAiVsAiBattle())
+    {
+        u64 smartBoost = AI_FLAG_BASIC_TRAINER
+                       | AI_FLAG_SMART_SWITCHING
+                       | AI_FLAG_OMNISCIENT
+                       | AI_FLAG_HP_AWARE
+                       | AI_FLAG_PP_STALL_PREVENTION
+                       | AI_FLAG_TRY_TO_2HKO
+                       | AI_FLAG_WEIGH_ABILITY_PREDICTION
+                       | AI_FLAG_PREDICT_SWITCH
+                       | AI_FLAG_PREDICT_INCOMING_MON
+                       | AI_FLAG_PREDICT_MOVE
+                       | AI_FLAG_SMART_TERA
+                       | AI_FLAG_RANDOMIZE_SWITCHIN;
+        gAiThinkingStruct->aiFlags[B_BATTLER_0] |= smartBoost;
+        gAiThinkingStruct->aiFlags[B_BATTLER_1] |= smartBoost;
+        gAiThinkingStruct->aiFlags[B_BATTLER_2] |= smartBoost;
+        gAiThinkingStruct->aiFlags[B_BATTLER_3] |= smartBoost;
+    }
 }
 
 void BattleAI_SetupAIData(u8 defaultScoreMoves, enum BattlerId battler)

@@ -173,6 +173,11 @@ enum DebugTrainerSelection
     TRAINERS_DEBUG_SELECTION_TRAINER2,
     TRAINERS_DEBUG_SELECTION_PARTNER,
     TRAINERS_DEBUG_SELECTION_PLAYER,
+    // v1.1 — picker is being used as the "copy preset team into active custom
+    // slot" source instead of one of the sim battle slots. Confirm copies the
+    // selected trainer's full party into gSaveBlock3Ptr->simCustomTrainers
+    // [sBuildTrainerActiveSlot]; cancel returns to the slot menu unchanged.
+    TRAINERS_DEBUG_SELECTION_COPY_TO_CUSTOM,
 };
 
 // Battle Simulator: tier color prefix for picker display.
@@ -436,8 +441,10 @@ static const u8 *GetSimSourceSuffix(u16 trainerId)
     // v0.50 Anime — Ash's World Champion team.
     if (trainerId == 1086)
         return sSimSourceSuffixAnime;
-    // v0.51 Custom — user-built trainer slots.
-    if (trainerId >= TRAINER_SIM_CUSTOM_1 && trainerId <= TRAINER_SIM_CUSTOM_3)
+    // v0.51 Custom — user-built trainer slots. v1.1: slots 4-6 (1099-1101)
+    // sit AFTER the LA block, so the range is discontiguous.
+    if ((trainerId >= TRAINER_SIM_CUSTOM_1 && trainerId <= TRAINER_SIM_CUSTOM_3)
+     || (trainerId >= TRAINER_SIM_CUSTOM_4 && trainerId <= TRAINER_SIM_CUSTOM_6))
         return sSimSourceSuffixCustom;
     return sSimSourceSuffixNone;
 }
@@ -530,8 +537,9 @@ static const u16 sSimulatorRoster[] = {
     1083, 1084, 1085,                                    // v0.49: Diantha / Serena / Calem
     // ---- Anime section ----
     1086,                                                // v0.50: Ash World Champion (Z + Mega + Gmax)
-    // ---- Custom section (user-built trainers, v0.51) ----
-    1087, 1088, 1089,                                    // Custom 1/2/3
+    // ---- Custom section (user-built trainers, v0.51 + v1.1) ----
+    1087, 1088, 1089,                                    // Custom 1/2/3 (v0.51)
+    1099, 1100, 1101,                                    // Custom 4/5/6 (v1.1)
     // ---- Legends Arceus section (v0.53) — placed AFTER custom slots so
     //      adding them didn't shift TRAINER_SIM_CUSTOM_* IDs and break
     //      existing user saveblocks. Volo is the climax sweeper (Giratina-
@@ -820,7 +828,11 @@ struct DebugMenuListData
 {
     const struct DebugMenuOption *subMenuItems[DEBUG_MAX_SUB_MENU_LEVELS];
     struct ListMenuItem listItems[DEBUG_MAX_MENU_ITEMS + 1];
-    u8 itemNames[DEBUG_MAX_MENU_ITEMS + 1][26];
+    // v1.1: bumped 26 → 40. Player AI line "Player AI: {COLOR YELLOW}WALLACE (EMRQ)"
+    // is ~28 bytes (3-byte color escape + 7-char name + 7-char source suffix),
+    // overflowed the 26-byte slot and corrupted the next entry. 40 bytes covers
+    // even worst-case lines like "Co-op Partner: {COLOR YELLOW}HUGH SCHOOLMATE (B2W2)".
+    u8 itemNames[DEBUG_MAX_MENU_ITEMS + 1][40];
     u8 listId;
     s16 data[8];
 };
@@ -957,6 +969,10 @@ static void DebugAction_OpenSubMenuBuildTrainer(u8 taskId, const struct DebugMen
 static void DebugAction_BuildTrainer_OpenSlot1(u8 taskId);
 static void DebugAction_BuildTrainer_OpenSlot2(u8 taskId);
 static void DebugAction_BuildTrainer_OpenSlot3(u8 taskId);
+// v1.1 — 3 additional custom slots (community ask for more save room).
+static void DebugAction_BuildTrainer_OpenSlot4(u8 taskId);
+static void DebugAction_BuildTrainer_OpenSlot5(u8 taskId);
+static void DebugAction_BuildTrainer_OpenSlot6(u8 taskId);
 static void DebugAction_BuildTrainer_ResetSlot(u8 taskId);
 static void DebugAction_BuildTrainer_BackToWrapper(u8 taskId);
 // v0.52.5 — slot-level identity (trainer name + sprite class). Name uses
@@ -1023,7 +1039,7 @@ static u8 Debug_GenerateListBuildTrainerIVsMenu(void);
 #define DEBUG_LISTID_BUILD_TRAINER_EVS  5
 #define DEBUG_LISTID_BUILD_TRAINER_IVS  6
 
-static EWRAM_DATA u8 sBuildTrainerActiveSlot = 0;  // 0-2 = which slot is being edited
+static EWRAM_DATA u8 sBuildTrainerActiveSlot = 0;  // 0-5 = which slot is being edited (v1.1 bumped 0-2 → 0-5)
 static EWRAM_DATA u8 sBuildTrainerActiveMon = 0;   // 0-5 = which Pokémon in slot
 static EWRAM_DATA struct SimCustomTrainerMon sBuildTrainerWorkMon = {0};  // working buffer; committed on Save
 // v0.52.3 — Picker state. Set when a picker opens so Cancel (B) can restore the
@@ -1603,6 +1619,11 @@ static const struct DebugMenuOption sDebugMenu_Actions_BuildTrainerSlot[] =
     { COMPOUND_STRING("Pokémon 4: {STR_VAR_1}"), DebugAction_BuildTrainer_OpenMon4,        },
     { COMPOUND_STRING("Pokémon 5: {STR_VAR_1}"), DebugAction_BuildTrainer_OpenMon5,        },
     { COMPOUND_STRING("Pokémon 6: {STR_VAR_1}"), DebugAction_BuildTrainer_OpenMon6,        },
+    // v1.1 — Copy a preset trainer's full team into this slot, then edit
+    // individual mons from the per-Pokémon rows above. Reuses the regular
+    // trainer picker via DebugAction_Trainers_ChooseTrainer with the
+    // COPY_TO_CUSTOM token; A confirms the copy, B cancels.
+    { COMPOUND_STRING("Copy preset team…"),      DebugAction_Trainers_ChooseTrainer, (void *)TRAINERS_DEBUG_SELECTION_COPY_TO_CUSTOM },
     { COMPOUND_STRING("Save Slot"),              DebugAction_BuildTrainer_SaveSlot,        },
     { COMPOUND_STRING("Reset Slot"),             DebugAction_BuildTrainer_ResetSlot,       },
     { COMPOUND_STRING("Back"),                   DebugAction_BuildTrainer_BackToWrapper,   },
@@ -1615,6 +1636,9 @@ static const struct DebugMenuOption sDebugMenu_Actions_BuildTrainer[] =
     { COMPOUND_STRING("Custom 1"),       DebugAction_BuildTrainer_OpenSlot1,       },
     { COMPOUND_STRING("Custom 2"),       DebugAction_BuildTrainer_OpenSlot2,       },
     { COMPOUND_STRING("Custom 3"),       DebugAction_BuildTrainer_OpenSlot3,       },
+    { COMPOUND_STRING("Custom 4"),       DebugAction_BuildTrainer_OpenSlot4,       },
+    { COMPOUND_STRING("Custom 5"),       DebugAction_BuildTrainer_OpenSlot5,       },
+    { COMPOUND_STRING("Custom 6"),       DebugAction_BuildTrainer_OpenSlot6,       },
     { NULL }
 };
 
@@ -3093,6 +3117,9 @@ static void DebugAction_BuildTrainer_OpenSlotN(u8 taskId, u8 slot)
 static void DebugAction_BuildTrainer_OpenSlot1(u8 taskId) { DebugAction_BuildTrainer_OpenSlotN(taskId, 0); }
 static void DebugAction_BuildTrainer_OpenSlot2(u8 taskId) { DebugAction_BuildTrainer_OpenSlotN(taskId, 1); }
 static void DebugAction_BuildTrainer_OpenSlot3(u8 taskId) { DebugAction_BuildTrainer_OpenSlotN(taskId, 2); }
+static void DebugAction_BuildTrainer_OpenSlot4(u8 taskId) { DebugAction_BuildTrainer_OpenSlotN(taskId, 3); }
+static void DebugAction_BuildTrainer_OpenSlot5(u8 taskId) { DebugAction_BuildTrainer_OpenSlotN(taskId, 4); }
+static void DebugAction_BuildTrainer_OpenSlot6(u8 taskId) { DebugAction_BuildTrainer_OpenSlotN(taskId, 5); }
 
 // v0.52 Phase 2 — Wipe the active custom-trainer slot's saveblock entry.
 // Sets inUse=0 so Sim_GetCustomTrainerStruct falls back to the placeholder
@@ -3223,13 +3250,110 @@ static const struct BuildTrainerPicLabel sBuildTrainerPicLabels[] =
     { TRAINER_PIC_FRONT_STEVEN,                COMPOUND_STRING("Steven") },
     { TRAINER_PIC_FRONT_RED,                   COMPOUND_STRING("Red") },
     { TRAINER_PIC_FRONT_LEAF,                  COMPOUND_STRING("Leaf") },
+    // v1.1 — Hoenn team grunts / admins, interviewer
+    { TRAINER_PIC_FRONT_AQUA_GRUNT_M,          COMPOUND_STRING("Aqua Grunt M") },
+    { TRAINER_PIC_FRONT_AQUA_GRUNT_F,          COMPOUND_STRING("Aqua Grunt F") },
+    { TRAINER_PIC_FRONT_MAGMA_GRUNT_M,         COMPOUND_STRING("Magma GrntM") },
+    { TRAINER_PIC_FRONT_MAGMA_GRUNT_F,         COMPOUND_STRING("Magma GrntF") },
+    { TRAINER_PIC_FRONT_AQUA_ADMIN_M,          COMPOUND_STRING("Aqua Admin M") },
+    { TRAINER_PIC_FRONT_AQUA_ADMIN_F,          COMPOUND_STRING("Aqua Admin F") },
+    { TRAINER_PIC_FRONT_MAGMA_ADMIN,           COMPOUND_STRING("Magma Admin") },
+    { TRAINER_PIC_FRONT_INTERVIEWER,           COMPOUND_STRING("Interviewer") },
+    // v1.1 — Hoenn triathletes (cycling / running / swimming)
+    { TRAINER_PIC_FRONT_CYCLING_TRIATHLETE_M,  COMPOUND_STRING("Cycling M") },
+    { TRAINER_PIC_FRONT_CYCLING_TRIATHLETE_F,  COMPOUND_STRING("Cycling F") },
+    { TRAINER_PIC_FRONT_RUNNING_TRIATHLETE_M,  COMPOUND_STRING("Running M") },
+    { TRAINER_PIC_FRONT_RUNNING_TRIATHLETE_F,  COMPOUND_STRING("Running F") },
+    { TRAINER_PIC_FRONT_SWIMMING_TRIATHLETE_M, COMPOUND_STRING("Swim Tri M") },
+    { TRAINER_PIC_FRONT_SWIMMING_TRIATHLETE_F, COMPOUND_STRING("Swim Tri F") },
+    // v1.1 — Hoenn couples / pairs
+    { TRAINER_PIC_FRONT_YOUNG_COUPLE,          COMPOUND_STRING("Young Couple") },
+    { TRAINER_PIC_FRONT_OLD_COUPLE,            COMPOUND_STRING("Old Couple") },
+    { TRAINER_PIC_FRONT_SIS_AND_BRO,           COMPOUND_STRING("Sis & Bro") },
+    // v1.1 — Emerald Battle Frontier brains
+    { TRAINER_PIC_FRONT_SALON_MAIDEN_ANABEL,   COMPOUND_STRING("Anabel BF") },
+    { TRAINER_PIC_FRONT_DOME_ACE_TUCKER,       COMPOUND_STRING("Tucker") },
+    { TRAINER_PIC_FRONT_PALACE_MAVEN_SPENSER,  COMPOUND_STRING("Spenser") },
+    { TRAINER_PIC_FRONT_ARENA_TYCOON_GRETA,    COMPOUND_STRING("Greta") },
+    { TRAINER_PIC_FRONT_FACTORY_HEAD_NOLAND,   COMPOUND_STRING("Noland") },
+    { TRAINER_PIC_FRONT_PIKE_QUEEN_LUCY,       COMPOUND_STRING("Lucy") },
+    { TRAINER_PIC_FRONT_PYRAMID_KING_BRANDON,  COMPOUND_STRING("Brandon") },
+    // v1.1 — Ruby/Sapphire-style player sprites
+    { TRAINER_PIC_FRONT_RS_BRENDAN,            COMPOUND_STRING("RS Brendan") },
+    { TRAINER_PIC_FRONT_RS_MAY,                COMPOUND_STRING("RS May") },
+    // v1.1 — FRLG variants of Hoenn-shared classes (suffix "FR" disambiguates)
+    { TRAINER_PIC_FRONT_POKEMON_RANGER_M_FRLG, COMPOUND_STRING("Ranger M FR") },
+    { TRAINER_PIC_FRONT_AROMA_LADY_FRLG,       COMPOUND_STRING("Aroma F FR") },
+    { TRAINER_PIC_FRONT_YOUNGSTER_FRLG,        COMPOUND_STRING("Young FR") },
+    { TRAINER_PIC_FRONT_BUG_CATCHER_FRLG,      COMPOUND_STRING("BugCtch FR") },
+    { TRAINER_PIC_FRONT_LASS_FRLG,             COMPOUND_STRING("Lass FR") },
+    { TRAINER_PIC_FRONT_SAILOR_FRLG,           COMPOUND_STRING("Sailor FR") },
+    { TRAINER_PIC_FRONT_CAMPER_FRLG,           COMPOUND_STRING("Camper FR") },
+    { TRAINER_PIC_FRONT_PICNICKER_FRLG,        COMPOUND_STRING("Picnic FR") },
+    { TRAINER_PIC_FRONT_POKEMANIAC_FRLG,       COMPOUND_STRING("PkmMan FR") },
+    { TRAINER_PIC_FRONT_HIKER_FRLG,            COMPOUND_STRING("Hiker FR") },
+    { TRAINER_PIC_FRONT_FISHERMAN_FRLG,        COMPOUND_STRING("Fish FR") },
+    { TRAINER_PIC_FRONT_SWIMMER_M_FRLG,        COMPOUND_STRING("Swim M FR") },
+    { TRAINER_PIC_FRONT_BEAUTY_FRLG,           COMPOUND_STRING("Beauty FR") },
+    { TRAINER_PIC_FRONT_SWIMMER_F_FRLG,        COMPOUND_STRING("Swim F FR") },
+    { TRAINER_PIC_FRONT_PSYCHIC_M_FRLG,        COMPOUND_STRING("Psy M FR") },
+    { TRAINER_PIC_FRONT_BIRD_KEEPER_FRLG,      COMPOUND_STRING("Bird FR") },
+    { TRAINER_PIC_FRONT_BLACK_BELT_FRLG,       COMPOUND_STRING("BBelt FR") },
+    { TRAINER_PIC_FRONT_COOLTRAINER_M_FRLG,    COMPOUND_STRING("Cool M FR") },
+    { TRAINER_PIC_FRONT_COOLTRAINER_F_FRLG,    COMPOUND_STRING("Cool F FR") },
+    { TRAINER_PIC_FRONT_GENTLEMAN_FRLG,        COMPOUND_STRING("Gent FR") },
+    { TRAINER_PIC_FRONT_TWINS_FRLG,            COMPOUND_STRING("Twins FR") },
+    { TRAINER_PIC_FRONT_YOUNG_COUPLE_FRLG,     COMPOUND_STRING("Couple FR") },
+    { TRAINER_PIC_FRONT_SIS_AND_BRO_FRLG,      COMPOUND_STRING("S&B FR") },
+    { TRAINER_PIC_FRONT_PSYCHIC_F_FRLG,        COMPOUND_STRING("Psy F FR") },
+    { TRAINER_PIC_FRONT_TUBER_F_FRLG,          COMPOUND_STRING("Tuber F FR") },
+    { TRAINER_PIC_FRONT_POKEMON_RANGER_F_FRLG, COMPOUND_STRING("Ranger F FR") },
+    { TRAINER_PIC_FRONT_RUIN_MANIAC_FRLG,      COMPOUND_STRING("Ruin FR") },
+    { TRAINER_PIC_FRONT_LADY_FRLG,             COMPOUND_STRING("Lady FR") },
+    { TRAINER_PIC_FRONT_POKEMON_BREEDER_FRLG,  COMPOUND_STRING("Breeder FR") },
+    // v1.1 — FRLG-unique classes (no Hoenn counterpart, no suffix needed)
+    { TRAINER_PIC_FRONT_SUPER_NERD_FRLG,       COMPOUND_STRING("Super Nerd") },
+    { TRAINER_PIC_FRONT_BIKER_FRLG,            COMPOUND_STRING("Biker") },
+    { TRAINER_PIC_FRONT_BURGLAR_FRLG,          COMPOUND_STRING("Burglar") },
+    { TRAINER_PIC_FRONT_ENGINEER_FRLG,         COMPOUND_STRING("Engineer") },
+    { TRAINER_PIC_FRONT_CUE_BALL_FRLG,         COMPOUND_STRING("Cue Ball") },
+    { TRAINER_PIC_FRONT_GAMER_FRLG,            COMPOUND_STRING("Gamer") },
+    { TRAINER_PIC_FRONT_ROCKER_FRLG,           COMPOUND_STRING("Rocker") },
+    { TRAINER_PIC_FRONT_JUGGLER_FRLG,          COMPOUND_STRING("Juggler") },
+    { TRAINER_PIC_FRONT_TAMER_FRLG,            COMPOUND_STRING("Tamer") },
+    { TRAINER_PIC_FRONT_SCIENTIST_FRLG,        COMPOUND_STRING("Scientist") },
+    { TRAINER_PIC_FRONT_CHANNELER_FRLG,        COMPOUND_STRING("Channeler") },
+    { TRAINER_PIC_FRONT_COOL_COUPLE_FRLG,      COMPOUND_STRING("Cool Couple") },
+    { TRAINER_PIC_FRONT_CRUSH_KIN_FRLG,        COMPOUND_STRING("Crush Kin") },
+    { TRAINER_PIC_FRONT_CRUSH_GIRL_FRLG,       COMPOUND_STRING("Crush Girl") },
+    { TRAINER_PIC_FRONT_PAINTER_FRLG,          COMPOUND_STRING("Painter") },
+    // v1.1 — FRLG named NPCs (rivals, gym leaders, E4, Giovanni, Oak, Team Rocket)
+    { TRAINER_PIC_FRONT_RIVAL_EARLY_FRLG,      COMPOUND_STRING("Rival Early") },
+    { TRAINER_PIC_FRONT_RIVAL_LATE_FRLG,       COMPOUND_STRING("Rival Late") },
+    { TRAINER_PIC_FRONT_CHAMPION_RIVAL_FRLG,   COMPOUND_STRING("Champ Blue") },
+    { TRAINER_PIC_FRONT_PROFESSOR_OAK_FRLG,    COMPOUND_STRING("Prof Oak") },
+    { TRAINER_PIC_FRONT_LEADER_GIOVANNI_FRLG,  COMPOUND_STRING("Ldr Giovanni") },
+    { TRAINER_PIC_FRONT_LEADER_BROCK_FRLG,     COMPOUND_STRING("Ldr Brock") },
+    { TRAINER_PIC_FRONT_LEADER_MISTY_FRLG,     COMPOUND_STRING("Ldr Misty") },
+    { TRAINER_PIC_FRONT_LEADER_LT_SURGE_FRLG,  COMPOUND_STRING("Ldr Surge") },
+    { TRAINER_PIC_FRONT_LEADER_ERIKA_FRLG,     COMPOUND_STRING("Ldr Erika") },
+    { TRAINER_PIC_FRONT_LEADER_KOGA_FRLG,      COMPOUND_STRING("Ldr Koga") },
+    { TRAINER_PIC_FRONT_LEADER_BLAINE_FRLG,    COMPOUND_STRING("Ldr Blaine") },
+    { TRAINER_PIC_FRONT_LEADER_SABRINA_FRLG,   COMPOUND_STRING("Ldr Sabrina") },
+    { TRAINER_PIC_FRONT_ELITE_FOUR_LORELEI_FRLG, COMPOUND_STRING("E4 Lorelei") },
+    { TRAINER_PIC_FRONT_ELITE_FOUR_BRUNO_FRLG, COMPOUND_STRING("E4 Bruno") },
+    { TRAINER_PIC_FRONT_ELITE_FOUR_AGATHA_FRLG,COMPOUND_STRING("E4 Agatha") },
+    { TRAINER_PIC_FRONT_ELITE_FOUR_LANCE_FRLG, COMPOUND_STRING("E4 Lance") },
+    { TRAINER_PIC_FRONT_ROCKET_GRUNT_M_FRLG,   COMPOUND_STRING("Rocket M") },
+    { TRAINER_PIC_FRONT_ROCKET_GRUNT_F_FRLG,   COMPOUND_STRING("Rocket F") },
 };
 
 static void Debug_Display_BuildTrainerPic(u16 picId, u8 windowId)
 {
     const u8 *className = NULL;
-    // Linear scan of ~65 entries — well under any conceivable performance
-    // bound, and crucially does NOT touch the gTrainers[][1090] table.
+    // Linear scan of ~155 entries (v1.1 expansion — full TRAINER_PIC_FRONT_*
+    // coverage) — still well under any conceivable performance bound, and
+    // crucially does NOT touch the gTrainers[][1090] table.
     for (u32 i = 0; i < ARRAY_COUNT(sBuildTrainerPicLabels); i++)
     {
         if (sBuildTrainerPicLabels[i].picId == picId)
@@ -3412,6 +3536,88 @@ static void BuildTrainer_CommitWorkBufferToSaveblock(void)
     slot->inUse = 1;
 }
 
+// v1.1 — Copy a preset trainer's full team into the active custom slot.
+// Community ask: lets the user start from "Cynthia's team" or "Volo's team"
+// and edit individual mons instead of rebuilding from scratch. Wipes the
+// current slot first.
+//
+// IV order conversion: TrainerMon's packed u32 `iv` uses engine order
+// (HP/Atk/Def/Spe/SpA/SpD). SimCustomTrainerMon's `ivs[6]` uses sim order
+// (HP/Atk/Def/SpA/SpD/Spe) to mirror the EV array. EV order matches between
+// both structs (engine HP/Atk/Def/SpA/SpD/Spe per battle_main.c L2111-2116).
+//
+// Returns FALSE if the trainer ID is invalid / has no party; caller can
+// SE_FAILURE on FALSE so the user knows the copy didn't take.
+static bool32 BuildTrainer_CopyFromTrainer(u16 trainerId)
+{
+    const struct Trainer *src = GetTrainerStructFromId(trainerId);
+    if (src == NULL || src->party == NULL || src->partySize == 0)
+        return FALSE;
+    struct SimCustomTrainer *slot = &gSaveBlock3Ptr->simCustomTrainers[sBuildTrainerActiveSlot];
+    memset(slot, 0, sizeof(*slot));
+    // Trainer name → slot name (truncate at SIM_CUSTOM_TRAINER_NAME_LEN).
+    for (u8 i = 0; i < SIM_CUSTOM_TRAINER_NAME_LEN; i++)
+    {
+        u8 c = src->trainerName[i];
+        slot->name[i] = c;
+        if (c == EOS) break;
+    }
+    slot->name[SIM_CUSTOM_TRAINER_NAME_LEN] = EOS;
+    slot->trainerPic = src->trainerPic;
+    u8 partySize = (src->partySize > 6) ? 6 : src->partySize;
+    slot->monCount = partySize;
+    for (u8 i = 0; i < partySize; i++)
+    {
+        const struct TrainerMon *psrc = &src->party[i];
+        struct SimCustomTrainerMon *pdst = &slot->mons[i];
+        memset(pdst, 0, sizeof(*pdst));
+        pdst->species  = psrc->species;
+        pdst->heldItem = psrc->heldItem;
+        for (u8 j = 0; j < 4; j++)
+            pdst->moves[j] = psrc->moves[j];
+        pdst->nature   = psrc->nature;
+        pdst->gender   = psrc->gender;   // 0=Any/Genderless, 1=Male, 2=Female
+        pdst->shiny    = psrc->isShiny;
+        pdst->level    = (psrc->lvl == 0) ? 50 : psrc->lvl;
+        // abilityNum default: 0 (primary ability). The TrainerMon stores the
+        // resolved Ability enum, not the slot index, so a full reverse-lookup
+        // would need per-species iteration. Defaulting to 0 keeps the copy
+        // functional; user can A-cycle through the per-mon editor's Ability
+        // row to find the original.
+        pdst->abilityNum = 0;
+        // IV unpack (engine order → sim order).
+        u32 packedIv = psrc->iv;
+        u8 hp  = (packedIv >> 0)  & 0x1F;
+        u8 atk = (packedIv >> 5)  & 0x1F;
+        u8 def = (packedIv >> 10) & 0x1F;
+        u8 spe = (packedIv >> 15) & 0x1F;
+        u8 spa = (packedIv >> 20) & 0x1F;
+        u8 spd = (packedIv >> 25) & 0x1F;
+        // If the trainer entry left iv=0, that means "default perfect 31s"
+        // in the .party convention. Preserve that intent.
+        if (packedIv == 0)
+        {
+            for (u8 j = 0; j < 6; j++) pdst->ivs[j] = 31;
+        }
+        else
+        {
+            pdst->ivs[0] = hp;
+            pdst->ivs[1] = atk;
+            pdst->ivs[2] = def;
+            pdst->ivs[3] = spa;
+            pdst->ivs[4] = spd;
+            pdst->ivs[5] = spe;
+        }
+        // EVs: ev is a const u8* (may be NULL = all-zero). Same order as sim.
+        if (psrc->ev != NULL)
+        {
+            for (u8 j = 0; j < 6; j++) pdst->evs[j] = psrc->ev[j];
+        }
+    }
+    slot->inUse = 1;
+    return TRUE;
+}
+
 // Open the per-mon editor for the given Pokémon index (0-5).
 // v0.52.3 — Uses listId 4 so each row is generated through
 // Debug_GenerateListBuildTrainerMonMenu, which formats the current work-buffer
@@ -3534,6 +3740,12 @@ static void DebugAction_BuildTrainer_EditShiny(u8 taskId)
 static void DebugAction_BuildTrainer_OpenEVsMenu(u8 taskId)
 {
     Debug_DestroyMenu(taskId);
+    // v1.1.1 — pop the Mon entry off the callback stack BEFORE Debug_ShowMenu
+    // pushes EVs. Without this, every Mon→EV→Back cycle leaves a duplicate
+    // Mon entry on the 8-deep stack, eventually causing Debug_SaveCallbackMenu
+    // to silently fail and Debug_GetCurrentCallbackMenu to return stale items
+    // — the "screen goes blank" symptom on EV/IV exit.
+    Debug_RemoveCallbackMenu();
     sDebugMenuListData->listId = DEBUG_LISTID_BUILD_TRAINER_EVS;
     Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_BuildTrainerEVs);
 }
@@ -3542,6 +3754,8 @@ static void DebugAction_BuildTrainer_OpenEVsMenu(u8 taskId)
 static void DebugAction_BuildTrainer_OpenIVsMenu(u8 taskId)
 {
     Debug_DestroyMenu(taskId);
+    // v1.1.1 — mirror EVs path: pop Mon before pushing IVs.
+    Debug_RemoveCallbackMenu();
     sDebugMenuListData->listId = DEBUG_LISTID_BUILD_TRAINER_IVS;
     Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_BuildTrainerIVs);
 }
@@ -3582,7 +3796,21 @@ static void DebugAction_BuildTrainer_EVs_Reset(u8 taskId)
 
 static void DebugAction_BuildTrainer_EVs_Back(u8 taskId)
 {
+    // v1.1.1 — Bulletproof EV-back flow:
+    // 1. Commit EV edits to saveblock so they persist even if anything below
+    //    misbehaves and the work buffer gets reloaded.
+    // 2. Tear down the EV menu window/task.
+    // 3. Pop EVs off the callback stack.
+    // 4. Reload work buffer from the just-committed saveblock data so the
+    //    per-mon generator reads guaranteed-valid state — matches the working
+    //    BuildTrainer_OpenMonEditor pattern exactly. (Earlier v1.1 attempt
+    //    left the in-memory work buffer alone, which was the path producing
+    //    the blank-values rendering.)
+    // 5. Open the Mon editor; listId switch in Debug_ShowMenu regenerates.
+    BuildTrainer_CommitWorkBufferToSaveblock();
     Debug_DestroyMenu(taskId);
+    Debug_RemoveCallbackMenu();
+    BuildTrainer_LoadWorkBufferFromSaveblock();
     sDebugMenuListData->listId = DEBUG_LISTID_BUILD_TRAINER_MON;
     Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_BuildTrainerMon);
 }
@@ -3623,7 +3851,11 @@ static void DebugAction_BuildTrainer_IVs_ZeroAll(u8 taskId)
 
 static void DebugAction_BuildTrainer_IVs_Back(u8 taskId)
 {
+    // v1.1.1 — mirror EVs_Back commit+reload pattern. See EVs_Back comment.
+    BuildTrainer_CommitWorkBufferToSaveblock();
     Debug_DestroyMenu(taskId);
+    Debug_RemoveCallbackMenu();
+    BuildTrainer_LoadWorkBufferFromSaveblock();
     sDebugMenuListData->listId = DEBUG_LISTID_BUILD_TRAINER_MON;
     Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_BuildTrainerMon);
 }
@@ -4832,7 +5064,16 @@ static void Debug_Trainers_ResetTrainersData(void)
     sDebugMenuListData->data[3] = -1;
     sDebugMenuListData->data[4] = PARTNER_NONE;     // Co-op Partner
     sDebugMenuListData->data[5] = FALSE;            // Double Battle toggle
+    // v1.1: Player AI default. Dev builds pin Logan so his team is one A-press
+    // away. RELEASE_BUILD strips Logan from sSimulatorRoster — defaulting to him
+    // there would land on a trainer that isn't in the visible picker (jumps out
+    // of bounds + corrupts the displayed label). Use TRAINER_NONE for release so
+    // the player explicitly picks their side.
+#ifdef RELEASE_BUILD
+    sDebugMenuListData->data[6] = TRAINER_NONE;
+#else
     sDebugMenuListData->data[6] = TRAINER_LOGAN;    // Player AI (pinned)
+#endif
     sDebugMenuListData->data[7] = FALSE;            // v0.51.1 Pilot Mode toggle
 }
 
@@ -5098,8 +5339,8 @@ static const u8 sSimulatorRosterSectionStarts[] = {
     222 + CUSTOM_OFFSET,     // BW — N x2 + Alder + Cheren x3 + Bianca x3 + Hugh x3 + Unova E4 + Ghetsis + Colress (18)
     240 + CUSTOM_OFFSET,     // XY — Diantha/Serena/Calem (3)
     243 + CUSTOM_OFFSET,     // Anime — Ash World Champion (1)
-    244 + CUSTOM_OFFSET,     // Custom — v0.51 user-built slots (3)
-    247 + CUSTOM_OFFSET,     // Legends Arceus — v0.53 Volo/Adaman/Irida/Ingo/Akari + v0.53.2 Kamado/Zisu/Beni/Rei (9)
+    244 + CUSTOM_OFFSET,     // Custom — v0.51 + v1.1 user-built slots (6: 3 original + 3 added)
+    250 + CUSTOM_OFFSET,     // Legends Arceus — v0.53 Volo/Adaman/Irida/Ingo/Akari + v0.53.2 Kamado/Zisu/Beni/Rei (9)
 };
 #define SIMULATOR_ROSTER_SECTION_COUNT (sizeof(sSimulatorRosterSectionStarts) / sizeof(sSimulatorRosterSectionStarts[0]))
 
@@ -5161,22 +5402,33 @@ static void DebugAction_ChooseTrainerID_Select(u8 taskId)
     bool32 isSimSlot = (gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_PLAYER
                      || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_TRAINER1
                      || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_TRAINER2
-                     || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_PARTNER);
+                     || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_PARTNER
+                     // v1.1 — copy-to-custom uses the same roster scroll +
+                     // L/R section jump UX as the sim slot pickers.
+                     || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_COPY_TO_CUSTOM);
+    // v1.1 — copy mode is read-only against sDebugMenuListData->data[] (it
+    // never writes back into a sim slot); cached separately so the scroll
+    // handlers can skip the data[X] = tInput write for COPY entries.
+    bool32 isCopyMode = (gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_COPY_TO_CUSTOM);
     if (isSimSlot && (JOY_NEW(L_BUTTON) || JOY_NEW(R_BUTTON)))
     {
         PlaySE(SE_SELECT);
         s32 dir = JOY_NEW(R_BUTTON) ? 1 : -1;
         gTasks[taskId].tInput = SimulatorRoster_JumpSection(gTasks[taskId].tInput, dir);
-        switch (gTasks[taskId].tSelection)
+        if (!isCopyMode)  // v1.1 — copy mode never writes back into sim slots
         {
-        case TRAINERS_DEBUG_SELECTION_TRAINER1:
-            sDebugMenuListData->data[0] = gTasks[taskId].tInput; break;
-        case TRAINERS_DEBUG_SELECTION_TRAINER2:
-            sDebugMenuListData->data[2] = gTasks[taskId].tInput; break;
-        case TRAINERS_DEBUG_SELECTION_PARTNER:
-            sDebugMenuListData->data[4] = gTasks[taskId].tInput; break;
-        case TRAINERS_DEBUG_SELECTION_PLAYER:
-            sDebugMenuListData->data[6] = gTasks[taskId].tInput; break;
+            switch (gTasks[taskId].tSelection)
+            {
+            case TRAINERS_DEBUG_SELECTION_TRAINER1:
+                sDebugMenuListData->data[0] = gTasks[taskId].tInput; break;
+            case TRAINERS_DEBUG_SELECTION_TRAINER2:
+                sDebugMenuListData->data[2] = gTasks[taskId].tInput; break;
+            case TRAINERS_DEBUG_SELECTION_PARTNER:
+                sDebugMenuListData->data[4] = gTasks[taskId].tInput; break;
+            case TRAINERS_DEBUG_SELECTION_PLAYER:
+                sDebugMenuListData->data[6] = gTasks[taskId].tInput; break;
+            default: break;
+            }
         }
         Debug_Display_TrainerID(gTasks[taskId].tInput, gTasks[taskId].tSelection, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
         // Intentionally do not fall through to DPAD handling for this frame.
@@ -5230,7 +5482,17 @@ static void DebugAction_ChooseTrainerID_Select(u8 taskId)
     if (JOY_NEW(A_BUTTON) || JOY_NEW(B_BUTTON))
     {
         PlaySE(SE_SELECT);
-        if (gTasks[taskId].tInput != gTasks[taskId].tInitial)
+        // v1.1 — copy-to-custom commits on A, cancels on B, and returns to the
+        // slot menu instead of the sim menu.
+        bool32 isCopyConfirm = (gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_COPY_TO_CUSTOM);
+        if (isCopyConfirm && JOY_NEW(A_BUTTON))
+        {
+            if (BuildTrainer_CopyFromTrainer((u16)gTasks[taskId].tInput))
+                PlaySE(SE_SUCCESS);
+            else
+                PlaySE(SE_FAILURE);
+        }
+        if (!isCopyConfirm && gTasks[taskId].tInput != gTasks[taskId].tInitial)
         {
             sDebugMenuListData->data[3] = FALSE;
             sDebugMenuListData->data[1] = -1;
@@ -5241,9 +5503,17 @@ static void DebugAction_ChooseTrainerID_Select(u8 taskId)
         RemoveWindow(gTasks[taskId].tSubWindowId);
         DestroyListMenuTask(gTasks[taskId].tMenuTaskId, NULL, NULL);
         DestroyTask(taskId);
-        sDebugMenuListData->listId = 2;
         Debug_RemoveCallbackMenu();
-        Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_Trainers);
+        if (isCopyConfirm)
+        {
+            sDebugMenuListData->listId = DEBUG_LISTID_BUILD_TRAINER_SLOT;
+            Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_BuildTrainerSlot);
+        }
+        else
+        {
+            sDebugMenuListData->listId = 2;
+            Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_Trainers);
+        }
     }
 }
 
@@ -5278,6 +5548,12 @@ static void DebugAction_Trainers_ChooseTrainer(u8 taskId, u32 selection)
         break;
     case TRAINERS_DEBUG_SELECTION_PLAYER:
         gTasks[taskId].tInput = sDebugMenuListData->data[6];
+        break;
+    case TRAINERS_DEBUG_SELECTION_COPY_TO_CUSTOM:
+        // v1.1 — copy picker has no "saved selection" to restore. Land on the
+        // first roster trainer so L/R section-jump and D-pad scroll work
+        // immediately.
+        gTasks[taskId].tInput = sSimulatorRoster[0];
         break;
     }
     gTasks[taskId].tInitial = gTasks[taskId].tInput;
@@ -6005,7 +6281,17 @@ static EWRAM_DATA struct Trainer sSimCustomTrainerStructs[SIM_NUM_CUSTOM_TRAINER
 
 const struct Trainer *Sim_GetCustomTrainerStruct(u16 trainerId)
 {
-    u8 slot = trainerId - TRAINER_SIM_CUSTOM_1;
+    // v1.1 — slots 1-3 are at TRAINER_SIM_CUSTOM_1..3 (1087-1089). Slots 4-6
+    // jumped to TRAINER_SIM_CUSTOM_4..6 (1099-1101) so legacy save data for
+    // slots 1-3 didn't shift when the LA trainers were inserted. Map both
+    // windows back to a contiguous 0-5 saveblock index.
+    u8 slot;
+    if (trainerId >= TRAINER_SIM_CUSTOM_1 && trainerId <= TRAINER_SIM_CUSTOM_3)
+        slot = trainerId - TRAINER_SIM_CUSTOM_1;
+    else if (trainerId >= TRAINER_SIM_CUSTOM_4 && trainerId <= TRAINER_SIM_CUSTOM_6)
+        slot = (trainerId - TRAINER_SIM_CUSTOM_4) + 3;
+    else
+        return NULL;
     if (slot >= SIM_NUM_CUSTOM_TRAINERS)
         return NULL;
 
@@ -6027,9 +6313,11 @@ const struct Trainer *Sim_GetCustomTrainerStruct(u16 trainerId)
     }
     else
     {
-        // "CUSTOM 1/2/3" default name when slot is unconfigured
+        // "CUSTOM 1/2/3/4/5/6" default name when slot is unconfigured.
+        // v1.1: expanded to 6 entries to match SIM_NUM_CUSTOM_TRAINERS bump.
         static const u8 sDefaultNames[SIM_NUM_CUSTOM_TRAINERS][9] = {
             _("CUSTOM 1"), _("CUSTOM 2"), _("CUSTOM 3"),
+            _("CUSTOM 4"), _("CUSTOM 5"), _("CUSTOM 6"),
         };
         StringCopy(t->trainerName, sDefaultNames[slot]);
     }
@@ -6227,6 +6515,75 @@ bool32 Sim_ConsumeNextPickRow(u8 *outIndices, u8 maxIndices)
 
 // Battle Simulator: build battle params + parties for one round of an AI-vs-AI sim.
 // Shared between the picker's "Try Battle" action and the Best-Of-N auto-rematch
+// =============================================================================
+// v1.1 — Player name override for AI-vs-AI sim battles.
+// =============================================================================
+// Battle dialogue reads gSaveBlock2Ptr->playerName for every "[Player] sent
+// out X!" / "[Player] is about to use Y!" line. In AI-vs-AI sim mode the
+// player slot is actually a curated trainer (Logan, Cynthia, Volo, etc.), so
+// the user expects to see THAT trainer's name in the dialogue — not whatever
+// name happens to be sitting in SaveBlock2.
+//
+// Worse: this ROM boots straight into the Battle Tower lobby without a
+// naming-screen step, so a fresh save's playerName is whatever uninitialized
+// EWRAM bytes were sitting in that slot at boot (renders as glitched / random
+// characters in dialogue — the "Known bug" in the README).
+//
+// Fix: snapshot the existing playerName at sim battle start, overwrite with
+// the player AI trainer's name, restore at battle end. Pilot mode keeps the
+// user's name (they're actively piloting — their name is correct).
+static EWRAM_DATA u8 sSimSavedPlayerName[PLAYER_NAME_LENGTH + 1] = {0};
+static EWRAM_DATA bool8 sSimPlayerNameOverridden = FALSE;
+
+void Sim_OverridePlayerName(u16 playerSideId, bool32 pilotMode)
+{
+    // Don't override twice (paranoid: a future code path could call this from
+    // inside an active sim).
+    if (sSimPlayerNameOverridden)
+        return;
+    // Always snapshot so restore is safe — even in pilot mode, we may need to
+    // patch a corrupted default name in-place.
+    for (u32 i = 0; i < PLAYER_NAME_LENGTH + 1; i++)
+        sSimSavedPlayerName[i] = gSaveBlock2Ptr->playerName[i];
+    sSimPlayerNameOverridden = TRUE;
+
+    if (pilotMode)
+    {
+        // Pilot mode: user is actively playing — use their name. But if it's
+        // empty / uninitialized (first byte 0x00 or 0xFF), fall back to a
+        // sane default so dialogue isn't glitched.
+        u8 first = gSaveBlock2Ptr->playerName[0];
+        if (first == 0x00 || first == EOS)
+        {
+            static const u8 sDefaultPlayerName[] = _("PLAYER");
+            StringCopyN(gSaveBlock2Ptr->playerName, sDefaultPlayerName, PLAYER_NAME_LENGTH);
+            gSaveBlock2Ptr->playerName[PLAYER_NAME_LENGTH] = EOS;
+        }
+        return;
+    }
+    // AI-vs-AI: copy the player AI trainer's name into playerName. Trainer
+    // names are up to TRAINER_NAME_LENGTH (10) but playerName is only
+    // PLAYER_NAME_LENGTH (7), so the copy is bounded + EOS-terminated.
+    if (playerSideId != TRAINER_NONE)
+    {
+        const struct Trainer *t = GetTrainerStructFromId(playerSideId);
+        if (t != NULL)
+        {
+            StringCopyN(gSaveBlock2Ptr->playerName, t->trainerName, PLAYER_NAME_LENGTH);
+            gSaveBlock2Ptr->playerName[PLAYER_NAME_LENGTH] = EOS;
+        }
+    }
+}
+
+void Sim_RestorePlayerName(void)
+{
+    if (!sSimPlayerNameOverridden)
+        return;
+    for (u32 i = 0; i < PLAYER_NAME_LENGTH + 1; i++)
+        gSaveBlock2Ptr->playerName[i] = sSimSavedPlayerName[i];
+    sSimPlayerNameOverridden = FALSE;
+}
+
 // path (Sim_TriggerNextMatchRound). Always force doubles since singles AI-vs-AI is
 // engine-broken. Save state for the matchup must be reset by the caller as needed.
 static void Sim_SetupMatchRound(s32 trainer1Id, s32 trainer2Id, s32 partnerId, s32 playerSideId)
@@ -6276,6 +6633,12 @@ static void Sim_SetupMatchRound(s32 trainer1Id, s32 trainer2Id, s32 partnerId, s
     // battle_main.c can detect it (the cap's existing AI-vs-AI flag gate
     // is bypassed by pilot mode by design).
     gSimPilotMode = pilotMode;
+    // v1.1 — Swap gSaveBlock2Ptr->playerName for the player AI trainer's name
+    // so battle dialogue ("[Player] sent out X!") shows "LOGAN" / "CYNTHIA"
+    // instead of the user's overworld name (or garbage on fresh saves).
+    // Pilot mode keeps the user's name but patches obviously-empty defaults.
+    // Restored in CB2_EndDebugBattle.
+    Sim_OverridePlayerName((u16)playerSideId, pilotMode);
     // v0.53.3 — Grant all 8 Hoenn badges in pilot mode so loaner mons obey at
     // any level. The vanilla obedience table caps controllable level at 30 /
     // 50 / 70 / 90 / unlimited based on badge count — pilot mode hands the

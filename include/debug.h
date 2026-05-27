@@ -71,4 +71,11 @@ void Sim_SnapshotPicksForNextRound(void);
 // moves to the final. Called from CB2_EndDebugBattle.
 void Sim_AdvanceTournamentAfterMatch(bool32 playerWon);
 
+// v1.1 — Player name override for sim battles. Swap gSaveBlock2Ptr->playerName
+// with the player AI trainer's name (Logan / Cynthia / etc.) so battle
+// dialogue reads correctly. Pilot mode keeps the user's name but patches
+// obviously-empty defaults. Call Override at sim battle start, Restore at end.
+void Sim_OverridePlayerName(u16 playerSideId, bool32 pilotMode);
+void Sim_RestorePlayerName(void);
+
 #endif // GUARD_DEBUG_H

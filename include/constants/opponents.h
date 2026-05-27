@@ -1216,6 +1216,13 @@
 #define TRAINER_ZISU_LA                     1096
 #define TRAINER_BENI_LA                     1097
 #define TRAINER_REI_LA                      1098
+// v1.1 — 3 more custom user-built trainer slots (community ask).
+// Placed AFTER the LA section so legacy save data for slots 1-3 (1087-1089)
+// keeps working. Range checks in src/debug.c and include/data.h have to
+// special-case the discontiguous custom range.
+#define TRAINER_SIM_CUSTOM_4                1099
+#define TRAINER_SIM_CUSTOM_5                1100
+#define TRAINER_SIM_CUSTOM_6                1101
 
 // NOTE: Because each Trainer uses a flag to determine when they are defeated, there is only space for 9 additional trainers before trainer flag space overflows
 //       More space can be made by shifting flags around in constants/flags.h or changing how trainer flags are handled
@@ -1232,8 +1239,9 @@
 // size stays within SECTOR_DATA_SIZE * 4 (15,872 bytes); the build will
 // fail loudly if we ever overflow.
 
-#define TRAINERS_COUNT_EMERALD     1099
-#define MAX_TRAINERS_COUNT_EMERALD 1100
+// v1.1 — bumped 1099 → 1102 / 1100 → 1102 to make room for SIM_CUSTOM_4/5/6.
+#define TRAINERS_COUNT_EMERALD     1102
+#define MAX_TRAINERS_COUNT_EMERALD 1102
 
 #if IS_FRLG
 #define TRAINERS_COUNT                      TRAINERS_COUNT_FRLG
