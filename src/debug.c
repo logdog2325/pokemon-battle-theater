@@ -9,6 +9,8 @@
 #include "battle_main.h"
 #include "battle_setup.h"
 #include "battle_util.h"
+// v1.2 — Showdown team-code import (decoder + keyboard widget).
+#include "sim_team_code.h"
 #include "bg.h"
 #include "fpmath.h"
 #include "gpu_regs.h"
@@ -990,6 +992,9 @@ static void DebugAction_BuildTrainer_OpenMon6(u8 taskId);
 static void DebugAction_BuildTrainer_SaveSlot(u8 taskId);
 static void DebugAction_BuildTrainer_MonSaveBack(u8 taskId);
 static void DebugAction_BuildTrainer_MonCancel(u8 taskId);
+// v1.2 — Showdown team-code import. Opens an on-screen keyboard, decodes the
+// typed string into sBuildTrainerWorkMon on confirm.
+static void DebugAction_BuildTrainer_OpenImportCode(u8 taskId);
 static void DebugAction_BuildTrainer_EditLevel(u8 taskId);
 static void DebugAction_BuildTrainer_EditNature(u8 taskId);
 static void DebugAction_BuildTrainer_EditGender(u8 taskId);
@@ -1563,6 +1568,10 @@ static const struct DebugMenuOption sDebugMenu_Actions_BuildTrainerMon[] =
     // v0.52.4 — toggle shiny rendering for this mon (engine uses isShiny to
     // generate an OT ID that XORs to a shiny personality).
     { COMPOUND_STRING("Shiny: {STR_VAR_1}"),       DebugAction_BuildTrainer_EditShiny,    },
+    // v1.2 — Showdown team-code import. Opens a base64-only keyboard; on
+    // confirm, the typed PB-prefixed code is decoded and overwrites the
+    // current per-mon work buffer.
+    { COMPOUND_STRING("Import from code…"),        DebugAction_BuildTrainer_OpenImportCode },
     { COMPOUND_STRING("Save & Back"),              DebugAction_BuildTrainer_MonSaveBack,  },
     { COMPOUND_STRING("Cancel"),                   DebugAction_BuildTrainer_MonCancel,    },
     { NULL }
@@ -6260,6 +6269,240 @@ static const struct Trainer *Sim_GetTrainerStruct(s32 id)
     if (id < 0 || id >= TRAINERS_COUNT)
         return NULL;
     return GetTrainerStructFromId((u16)id);
+}
+
+// =============================================================================
+// v1.2 — Team-code keyboard widget
+// =============================================================================
+// On-screen base64 keyboard for the "Import from code…" row in the per-mon
+// editor. The user types a "PB..." code (typ. 24-34 chars) using D-pad +
+// A/B/L/R/START/SELECT. On START we decode via Sim_DecodeTeamCode and
+// overwrite sBuildTrainerWorkMon. On SELECT we cancel and return to the
+// per-mon editor untouched.
+//
+// Layout (28x18 tile window, ~224x144 px):
+//   Row 0:  "Code:" header
+//   Row 1:  typed buffer (first 26 chars)
+//   Row 2:  typed buffer (overflow, chars 26-51)
+//   Row 3:  status line (last error, or hint when fresh)
+//   Rows 4-11: 8 rows of 8 chars each = 64-char base64 grid. Cursor uses
+//              square brackets around the selected char.
+//   Rows 12-13: control hints
+//
+// Cursor moves: D-pad. A inserts char, B deletes last, L/R jump 2 rows
+// (vertical fast-nav), START confirms, SELECT cancels.
+
+// 64-char URL-safe base64 alphabet. Indexed by (cursorY * 8 + cursorX).
+static const u8 sCodeKeyboardChars[64] = {
+    'A','B','C','D','E','F','G','H',
+    'I','J','K','L','M','N','O','P',
+    'Q','R','S','T','U','V','W','X',
+    'Y','Z','a','b','c','d','e','f',
+    'g','h','i','j','k','l','m','n',
+    'o','p','q','r','s','t','u','v',
+    'w','x','y','z','0','1','2','3',
+    '4','5','6','7','8','9','-','_',
+};
+
+#define CODE_KB_MAX_LEN 52   // PB (2) + worst-case v2 base64 (~50)
+
+static EWRAM_DATA u8 sCodeKbBuffer[CODE_KB_MAX_LEN + 1] = {0};
+static EWRAM_DATA u8 sCodeKbLen = 0;
+static EWRAM_DATA u8 sCodeKbCursorX = 0;
+static EWRAM_DATA u8 sCodeKbCursorY = 0;
+static EWRAM_DATA u8 sCodeKbStatus = 0xFF;  // 0xFF = no status, else SimTeamCodeResult value
+
+// Window for the keyboard widget. Wider/taller than sDebugMenuWindowTemplateExtra
+// so the 8x8 grid + buffer display all fit on one screen.
+static const struct WindowTemplate sCodeKeyboardWindowTemplate =
+{
+    .bg = 0,
+    .tilemapLeft = 1,
+    .tilemapTop = 1,
+    .width = 28,
+    .height = 17,
+    .paletteNum = 15,
+    .baseBlock = 1,
+};
+
+// Render the keyboard + buffer + status into the window. Called on every
+// state change (cursor move, char add/del, status set).
+static void CodeKeyboard_Draw(u8 windowId)
+{
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
+
+    // --- Buffer display (rows 0-2) ---
+    u8 line[27];  // 26 chars + EOS per line
+    StringCopy(gStringVar1, COMPOUND_STRING("Code:"));
+    AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar1, 0, 0, 0, NULL);
+
+    u8 *p = sCodeKbBuffer;
+    u32 remaining = sCodeKbLen;
+    // Line 1: chars 0-25
+    u32 take = remaining > 26 ? 26 : remaining;
+    for (u32 i = 0; i < take; i++) line[i] = p[i];
+    line[take] = EOS;
+    AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, line, 32, 0, 0, NULL);
+    // Line 2: chars 26-51 (overflow)
+    if (remaining > 26)
+    {
+        take = remaining - 26;
+        if (take > 26) take = 26;
+        for (u32 i = 0; i < take; i++) line[i] = p[26 + i];
+        line[take] = EOS;
+        AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, line, 32, 14, 0, NULL);
+    }
+
+    // --- Status line (row 3) ---
+    if (sCodeKbStatus != 0xFF)
+    {
+        AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT,
+            Sim_TeamCodeResultLabel((enum SimTeamCodeResult)sCodeKbStatus),
+            0, 30, 0, NULL);
+    }
+    else
+    {
+        AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT,
+            COMPOUND_STRING("A:type B:del START:OK SEL:X"), 0, 30, 0, NULL);
+    }
+
+    // --- Keyboard grid (rows 4-11): 8x8, each cell shows " X " or "[X]" ---
+    for (u32 row = 0; row < 8; row++)
+    {
+        u8 *out = line;
+        for (u32 col = 0; col < 8; col++)
+        {
+            u8 ch = sCodeKeyboardChars[row * 8 + col];
+            if (row == sCodeKbCursorY && col == sCodeKbCursorX)
+            {
+                *out++ = CHAR_LEFT_SQ_BRACKET;
+                *out++ = ch;
+                *out++ = CHAR_RIGHT_SQ_BRACKET;
+            }
+            else
+            {
+                *out++ = CHAR_SPACE;
+                *out++ = ch;
+                *out++ = CHAR_SPACE;
+            }
+        }
+        *out = EOS;
+        AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, line, 8, 48 + row * 10, 0, NULL);
+    }
+
+    CopyWindowToVram(windowId, COPYWIN_GFX);
+}
+
+// Tear down the keyboard window + return to the per-mon editor's list menu.
+// `commitWorkBuffer` controls whether to also persist the work buffer to
+// the saveblock (TRUE only on a successful import).
+static void CodeKeyboard_ReturnToMonEditor(u8 taskId, bool32 commitWorkBuffer)
+{
+    if (commitWorkBuffer)
+        BuildTrainer_CommitWorkBufferToSaveblock();
+    ClearStdWindowAndFrame(gTasks[taskId].tSubWindowId, TRUE);
+    RemoveWindow(gTasks[taskId].tSubWindowId);
+    gTasks[taskId].tSubWindowId = 0;
+    sCodeKbStatus = 0xFF;
+    Debug_DestroyMenu(taskId);
+    sDebugMenuListData->listId = DEBUG_LISTID_BUILD_TRAINER_MON;
+    Debug_GenerateListBuildTrainerMonMenu();
+    Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_BuildTrainerMon);
+}
+
+// Per-frame input handler for the keyboard.
+static void Task_CodeKeyboard(u8 taskId)
+{
+    bool32 redraw = FALSE;
+    u8 windowId = gTasks[taskId].tSubWindowId;
+
+    if (JOY_NEW(DPAD_LEFT))  { sCodeKbCursorX = (sCodeKbCursorX + 7) % 8; redraw = TRUE; PlaySE(SE_SELECT); }
+    if (JOY_NEW(DPAD_RIGHT)) { sCodeKbCursorX = (sCodeKbCursorX + 1) % 8; redraw = TRUE; PlaySE(SE_SELECT); }
+    if (JOY_NEW(DPAD_UP))    { sCodeKbCursorY = (sCodeKbCursorY + 7) % 8; redraw = TRUE; PlaySE(SE_SELECT); }
+    if (JOY_NEW(DPAD_DOWN))  { sCodeKbCursorY = (sCodeKbCursorY + 1) % 8; redraw = TRUE; PlaySE(SE_SELECT); }
+    // L/R jumps 2 rows for fast nav (charset is laid out so 2 rows ≈ a
+    // visual "group" — uppercase / lowercase / digits+sym).
+    if (JOY_NEW(L_BUTTON))   { sCodeKbCursorY = (sCodeKbCursorY + 6) % 8; redraw = TRUE; PlaySE(SE_SELECT); }
+    if (JOY_NEW(R_BUTTON))   { sCodeKbCursorY = (sCodeKbCursorY + 2) % 8; redraw = TRUE; PlaySE(SE_SELECT); }
+
+    if (JOY_NEW(A_BUTTON))
+    {
+        if (sCodeKbLen < CODE_KB_MAX_LEN)
+        {
+            sCodeKbBuffer[sCodeKbLen++] = sCodeKeyboardChars[sCodeKbCursorY * 8 + sCodeKbCursorX];
+            sCodeKbBuffer[sCodeKbLen] = '\0';
+            sCodeKbStatus = 0xFF;
+            redraw = TRUE;
+            PlaySE(SE_SELECT);
+        }
+    }
+    if (JOY_NEW(B_BUTTON))
+    {
+        // Don't delete past the "PB" prefix; we re-insert it on every open.
+        if (sCodeKbLen > 2)
+        {
+            sCodeKbBuffer[--sCodeKbLen] = '\0';
+            sCodeKbStatus = 0xFF;
+            redraw = TRUE;
+            PlaySE(SE_SELECT);
+        }
+    }
+
+    if (JOY_NEW(START_BUTTON))
+    {
+        struct SimCustomTrainerMon mon;
+        enum SimTeamCodeResult res = Sim_DecodeTeamCode(sCodeKbBuffer, &mon);
+        if (res == SIM_CODE_OK)
+        {
+            PlaySE(SE_SUCCESS);
+            sBuildTrainerWorkMon = mon;
+            CodeKeyboard_ReturnToMonEditor(taskId, TRUE);
+            return;
+        }
+        else
+        {
+            PlaySE(SE_FAILURE);
+            sCodeKbStatus = (u8)res;
+            CodeKeyboard_Draw(windowId);
+            return;
+        }
+    }
+    if (JOY_NEW(SELECT_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        CodeKeyboard_ReturnToMonEditor(taskId, FALSE);
+        return;
+    }
+
+    if (redraw)
+        CodeKeyboard_Draw(windowId);
+}
+
+// Open the keyboard sub-window. Pre-fills the buffer with the magic "PB"
+// prefix so the user can't accidentally delete it. Cursor starts at A (0,0).
+static void DebugAction_BuildTrainer_OpenImportCode(u8 taskId)
+{
+    Debug_DestroyMenu(taskId);
+    Debug_RemoveCallbackMenu();
+    HideMapNamePopUpWindow();
+    LoadMessageBoxAndBorderGfx();
+    u8 windowId = AddWindow(&sCodeKeyboardWindowTemplate);
+    DrawStdWindowFrame(windowId, FALSE);
+
+    sCodeKbBuffer[0] = 'P';
+    sCodeKbBuffer[1] = 'B';
+    sCodeKbBuffer[2] = '\0';
+    sCodeKbLen = 2;
+    sCodeKbCursorX = 0;
+    sCodeKbCursorY = 0;
+    sCodeKbStatus = 0xFF;
+
+    u8 newTaskId = CreateTask(Task_CodeKeyboard, 3);
+    gTasks[newTaskId].tSubWindowId = windowId;
+    gTasks[newTaskId].tWindowId = windowId;
+
+    CodeKeyboard_Draw(windowId);
+    CopyWindowToVram(windowId, COPYWIN_FULL);
 }
 
 // =============================================================================
