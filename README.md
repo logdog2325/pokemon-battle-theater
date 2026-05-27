@@ -105,6 +105,8 @@ flow / debug menu reference.
 - pokeemerald-expansion engine + decompilation project
 - LiYun — Battle Theater background art
 - Bulbapedia / Smogon archives — canonical trainer rosters
+- u/Healthy_Bug7977 and u/LordePachi — suggested the Marvel Snap / Hearthstone–style
+  deck-code import that became v1.3's Showdown team-code feature
 
 Not affiliated with Nintendo, Game Freak, or The Pokémon Company.
 Pokémon and all related marks are trademarks of their respective owners.
