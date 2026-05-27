@@ -3029,7 +3029,25 @@ static void DebugTask_HandleMenuInput_General(u8 taskId)
         if (Debug_GetCurrentCallbackMenu() != NULL && Debug_RemoveCallbackMenu() != 0)
         {
             Debug_DestroyMenu(taskId);
-            if (sDebugMenuListData->listId != 0)
+            // v1.2 — restore the right listId based on what menu we're
+            // returning to. The old code always reset to 0, which made any
+            // menu with dynamic-value rows render with raw {STR_VAR_1}
+            // placeholders (blank values) after a B-back. Every menu whose
+            // generator lives in the listId switch needs to be listed here.
+            const struct DebugMenuOption *newTop = Debug_GetCurrentCallbackMenu();
+            if (newTop == sDebugMenu_Actions_BuildTrainerMon)
+                sDebugMenuListData->listId = DEBUG_LISTID_BUILD_TRAINER_MON;
+            else if (newTop == sDebugMenu_Actions_BuildTrainerSlot)
+                sDebugMenuListData->listId = DEBUG_LISTID_BUILD_TRAINER_SLOT;
+            else if (newTop == sDebugMenu_Actions_BuildTrainerEVs)
+                sDebugMenuListData->listId = DEBUG_LISTID_BUILD_TRAINER_EVS;
+            else if (newTop == sDebugMenu_Actions_BuildTrainerIVs)
+                sDebugMenuListData->listId = DEBUG_LISTID_BUILD_TRAINER_IVS;
+            else if (newTop == sDebugMenu_Actions_Trainers)
+                sDebugMenuListData->listId = 2;  // sim trainer-config menu
+            else if (newTop == sDebugMenu_Actions_Flags)
+                sDebugMenuListData->listId = 1;  // flag-toggle menu
+            else if (sDebugMenuListData->listId != 0)
                 sDebugMenuListData->listId = 0;
             Debug_ShowMenu(DebugTask_HandleMenuInput_General, NULL);
         }
@@ -4197,6 +4215,27 @@ static void BuildTrainerPicker_ReturnToMonEditor(u8 taskId)
 // Picker select-input loop for Species. D-Up/Down ±1, L/R ±50 (fast scroll).
 // A commits (sBuildTrainerWorkMon.species already tracks current), B cancels
 // by restoring sBuildTrainerPickerOriginal.
+// Forward decl — defined further down with the move picker. Needed here so
+// the species-change confirm can wipe moves that the new species can't learn.
+static bool32 BuildTrainerPicker_IsLearnable(u16 species, u16 move);
+
+// v1.2 — Iterate moves[] and clear any the current species can't learn.
+// Run after a species change so the user doesn't end up with stale moves
+// from the previous species (which would also make the Move picker open at
+// an invalid value and scroll-find the next-higher-ID learnable, often a
+// TM-style move several hundred IDs away from where useful moves live).
+static void BuildTrainer_DropIllegalMoves(void)
+{
+    for (u8 i = 0; i < 4; i++)
+    {
+        if (sBuildTrainerWorkMon.moves[i] != MOVE_NONE
+            && !BuildTrainerPicker_IsLearnable(sBuildTrainerWorkMon.species, sBuildTrainerWorkMon.moves[i]))
+        {
+            sBuildTrainerWorkMon.moves[i] = MOVE_NONE;
+        }
+    }
+}
+
 static void DebugAction_BuildTrainer_SpeciesPicker_Select(u8 taskId)
 {
     bool32 redraw = FALSE;
@@ -4251,6 +4290,12 @@ static void DebugAction_BuildTrainer_SpeciesPicker_Select(u8 taskId)
     if (JOY_NEW(A_BUTTON))
     {
         PlaySE(SE_SELECT);
+        // v1.2 — wipe moves the new species can't learn. Catches the common
+        // case of "Magikarp default has Splash, user picks Tyranitar, opens
+        // Move 1 and sees Splash + TMs because Splash isn't in Tyranitar's
+        // learnset and the picker has nothing valid nearby to land on."
+        if (sBuildTrainerWorkMon.species != sBuildTrainerPickerOriginal)
+            BuildTrainer_DropIllegalMoves();
         BuildTrainerPicker_ReturnToMonEditor(taskId);
     }
     else if (JOY_NEW(B_BUTTON))
@@ -4583,6 +4628,16 @@ static void BuildTrainer_OpenMovePicker(u8 taskId, u8 slot)
     DrawStdWindowFrame(windowId, FALSE);
     CopyWindowToVram(windowId, COPYWIN_FULL);
 
+    // v1.2 — Defensive snap: if the slot currently holds a move the species
+    // can't learn (e.g. import path bypassed the species-picker sanitizer),
+    // clear it before opening the picker. Without this the picker starts at
+    // an illegal move and StepMove finds the next-higher learnable ID, which
+    // is usually a TM rather than the more useful low-ID level-up moves.
+    if (sBuildTrainerWorkMon.moves[slot] != MOVE_NONE
+        && !BuildTrainerPicker_IsLearnable(sBuildTrainerWorkMon.species, sBuildTrainerWorkMon.moves[slot]))
+    {
+        sBuildTrainerWorkMon.moves[slot] = MOVE_NONE;
+    }
     sBuildTrainerPickerOriginal = sBuildTrainerWorkMon.moves[slot];
 
     gTasks[taskId].func = DebugAction_BuildTrainer_MovePicker_Select;
@@ -6310,7 +6365,10 @@ static EWRAM_DATA u8 sCodeKbBuffer[CODE_KB_MAX_LEN + 1] = {0};
 static EWRAM_DATA u8 sCodeKbLen = 0;
 static EWRAM_DATA u8 sCodeKbCursorX = 0;
 static EWRAM_DATA u8 sCodeKbCursorY = 0;
-static EWRAM_DATA u8 sCodeKbStatus = 0xFF;  // 0xFF = no status, else SimTeamCodeResult value
+// 0xFF = no status to display, else SimTeamCodeResult value. EWRAM_DATA must
+// initialize to zero in .sbss; OpenImportCode sets it to 0xFF before the
+// first paint, so the initializer here is just a placeholder.
+static EWRAM_DATA u8 sCodeKbStatus = 0;
 
 // Window for the keyboard widget. Wider/taller than sDebugMenuWindowTemplateExtra
 // so the 8x8 grid + buffer display all fit on one screen.
@@ -6375,9 +6433,11 @@ static void CodeKeyboard_Draw(u8 windowId)
             u8 ch = sCodeKeyboardChars[row * 8 + col];
             if (row == sCodeKbCursorY && col == sCodeKbCursorX)
             {
-                *out++ = CHAR_LEFT_SQ_BRACKET;
+                // Pokemon's text charset has no square brackets, so use
+                // parens to mark the cursor cell: "(X)" vs " X ".
+                *out++ = CHAR_LEFT_PAREN;
                 *out++ = ch;
-                *out++ = CHAR_RIGHT_SQ_BRACKET;
+                *out++ = CHAR_RIGHT_PAREN;
             }
             else
             {

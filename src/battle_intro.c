@@ -556,6 +556,17 @@ static void BattleIntroSlideLink(u8 taskId)
 
 static void BattleIntroSlidePartner(u8 taskId)
 {
+    // v1.2 — Mirror the BattleIntroSlide1/2/3 short-circuit. When
+    // B_FAST_INTRO_NO_SLIDE is enabled (default in Battle Theater since v1.1),
+    // CB2_InitBattleInternal skips the scanline effect setup that this
+    // function's state-2 loop needs to terminate. Without this early return,
+    // the partner intro infinite-loops in state 2 — gBattle_WIN0V cycles
+    // through values forever waiting to hit the 0x2000 magic that the slide
+    // animation would normally produce. Symptom: the bottom WIN0V bar
+    // visibly "goes up continuously" in multi battles.
+    if (B_FAST_INTRO_NO_SLIDE || gTestRunnerHeadless)
+        return BattleIntroNoSlide(taskId);
+
     switch (gTasks[taskId].tState)
     {
     case 0:
