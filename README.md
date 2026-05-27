@@ -39,7 +39,8 @@ All releases live on the [Releases page](https://github.com/logdog2325/pokemon-b
 - 9-trainer Legends Arceus section (Volo, Adaman, Irida, Ingo, Akari,
   Kamado, Zisu, Beni, Rei)
 - 6 Custom Trainer slots with full PKHeX-style editor (sprite / name /
-  species / item / ability / EVs / IVs / moves / nature / gender / shiny)
+  species / item / ability / EVs / IVs / moves / nature / gender / shiny) —
+  **teams persist across sessions as of v1.4**
 - Tournament mode (8-trainer single-elim brackets across all regions)
 - Best-of-N matches with adaptive picks
 - VGC mode (forced doubles, Lv 50 cap, 4-pick-of-6)
@@ -48,6 +49,34 @@ All releases live on the [Releases page](https://github.com/logdog2325/pokemon-b
 - AI tweaks for Z-Move / Mega / Dynamax / Gmax bias
 - Custom singles AI controller (fixes vanilla post-KO crash)
 - Affection and Terastallization disabled
+
+## Building custom trainers
+
+You can build up to 6 of your own trainers from scratch and pit them
+against the preset rosters or each other.
+
+**Opening the editor:** boot the ROM, pick **Build Trainer** from the
+opening menu, then choose a slot (1–6).
+
+**What you can edit:**
+- Trainer name, sprite class (Lass, Ace Trainer, Cynthia, etc.)
+- Per Pokémon: species, held item, ability, 4 moves, EVs, IVs, nature,
+  gender, level, shiny toggle
+
+**Two shortcuts to skip the from-scratch build:**
+- **Copy preset** — start from an existing trainer's team (Cynthia,
+  Volo, Logan's team, etc.) and tweak from there
+- **Import from code** — paste a 24-character Showdown team code from
+  the [offline encoder](tools/team-codes/encoder.html) to instantly load
+  a team you built externally on Showdown
+
+**Persistence:** as of v1.4, every edit you confirm flushes to your
+save automatically — close the ROM, reopen it, your custom trainers
+are still there. (Earlier versions wrote to memory but never to flash,
+so trainers got wiped on power-off.)
+
+Once a slot is filled, your custom trainer shows up in the trainer
+picker alongside the preset roster.
 
 ## Known bugs (v1.0)
 
