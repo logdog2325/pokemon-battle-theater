@@ -9,8 +9,8 @@ An AI vs AI Pokemon battle simulator built on
 Pit any two trainers from the mainline games (Gens 1-9) against each other,
 or pilot one side via Pilot Mode.
 
-**Releases:** see the [Releases page](https://github.com/logdog2325/pokemon-battle-theater/releases)
-for the `.bps` patch and end-user docs.
+**Download the latest patch:** [v1.1.1 — bug fixes + smarter AI](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
+All releases live on the [Releases page](https://github.com/logdog2325/pokemon-battle-theater/releases).
 
 ---
 
