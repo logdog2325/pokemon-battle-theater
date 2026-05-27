@@ -41,10 +41,14 @@ All releases live on the [Releases page](https://github.com/logdog2325/pokemon-b
 - 6 Custom Trainer slots with full PKHeX-style editor (sprite / name /
   species / item / ability / EVs / IVs / moves / nature / gender / shiny) —
   **teams persist across sessions as of v1.4**
+- **Showdown team-code import** — paste a 24-character code to load any
+  team you built on Pokémon Showdown directly into a custom slot. No
+  internet, no link cable, no patching
 - Tournament mode (8-trainer single-elim brackets across all regions)
 - Best-of-N matches with adaptive picks
 - VGC mode (forced doubles, Lv 50 cap, 4-pick-of-6)
-- Pilot Mode (control the player AI's loaner mons yourself)
+- Pilot Mode — play *against* the AI yourself using a loaner team
+  (see [Pilot Mode](#pilot-mode) below)
 - Custom Battle Theater background by LiYun
 - AI tweaks for Z-Move / Mega / Dynamax / Gmax bias
 - Custom singles AI controller (fixes vanilla post-KO crash)
@@ -65,10 +69,11 @@ opening menu, then choose a slot (1–6).
 
 **Two shortcuts to skip the from-scratch build:**
 - **Copy preset** — start from an existing trainer's team (Cynthia,
-  Volo, Logan's team, etc.) and tweak from there
-- **Import from code** — paste a 24-character Showdown team code from
-  the [offline encoder](tools/team-codes/encoder.html) to instantly load
-  a team you built externally on Showdown
+  Volo, Logan's team, etc.) and tweak from there. Saves you ~10 minutes
+  per team if you mostly want to swap moves or items on a known set
+- **Import from code** — paste a 24-character Showdown team code to
+  instantly load a team you built externally — see
+  [Showdown team codes](#showdown-team-codes) below for the full flow
 
 **Persistence:** as of v1.4, every edit you confirm flushes to your
 save automatically — close the ROM, reopen it, your custom trainers
@@ -78,23 +83,81 @@ so trainers got wiped on power-off.)
 Once a slot is filled, your custom trainer shows up in the trainer
 picker alongside the preset roster.
 
-## Known bugs (v1.0)
+## Showdown team codes
 
-Cosmetic issues that don't affect battle behavior — being fixed for v1.1:
+Pokemon Battle Theater includes a team-code system (added v1.2, polished
+in v1.3) that lets you transport a complete competitive team into the
+ROM via a short text code — no internet, no link cable, no patching
+required. Inspired by Marvel Snap / Hearthstone deck imports.
 
-- **Player trainer name** sometimes renders with glitched / corrupted
-  characters in battle dialogue.
-- **Trainer picker menu** occasionally shows funky text on certain
-  entries when scrolling. Closing and reopening the picker normalizes it.
+### The flow
 
-## Roadmap
+1. **Build a team on [Pokémon Showdown](https://pokemonshowdown.com/teambuilder)**
+   (or anywhere that produces the standard Showdown text format)
+2. **Open the [offline encoder](tools/team-codes/encoder.html)** in your
+   browser. It's a single HTML file — no install, no network needed,
+   works on your phone or laptop
+3. **Paste your Showdown team** into the encoder. It spits out a
+   24-character code like `Y9XK.MEW2.HK4N.GQ5W.J2RZ.YAAQ`
+4. **In the ROM:** Build Trainer → pick a slot → **Import from code**
+5. **Type the 24 characters** using the in-game keyboard (alphanumeric
+   + period as a separator, no need to remember casing or symbols).
+   Press confirm
+6. **The full team materializes** in the slot — species, item, ability,
+   moves, EVs, IVs, nature, gender, shiny, and trainer name, all
+   decoded inside the ROM
 
-- **v1.1** — fix the trainer-name + picker-text glitches
-- **v1.2** — add Gen 9 (Paldea) trainers: Nemona, Geeta, Penny,
-  Larry, Iono, Grusha, Brassius, etc.
-- **v1.3** — re-enable Terastallization with proper AI bias tuning
-  (currently disabled because pre-gen-9 trainers don't have Tera types
-  declared, which made matchups chaotic)
+### Why it's cool
+
+- **No internet, no link cable** — works on stock hardware or any
+  emulator. The 24-char code is the entire team
+- **Compact** — 24 chars covers everything for up to 6 Pokemon. The v2
+  format is bit-packed (~25% shorter than the v1 prototype) by storing
+  each field at exactly the bits needed instead of byte-aligned
+- **Showdown-native** — paste any team from Showdown's teambuilder
+  directly; the encoder handles all field translation
+- **Persists with v1.4** — once you import a team, it's saved to your
+  cartridge save and survives power-off
+
+### Use cases
+
+- **Share teams** — paste a code in Discord, your friend imports it
+  in their ROM in 30 seconds
+- **Test competitive teams** in a casual emulator setting before
+  committing them to a Showdown ladder run
+- **Build on mobile, play on emulator** — open the encoder HTML on
+  your phone while you're out, copy the code, paste it into your
+  laptop's ROM when you get home
+- **Tournament organizers** — players submit team codes instead of
+  formatted text files; the host can verify legality by decoding
+
+### Credits
+
+Idea for the deck-code import flow came from
+[u/Healthy_Bug7977](https://www.reddit.com/user/Healthy_Bug7977/) and
+[u/LordePachi](https://www.reddit.com/user/LordePachi/) on r/PokemonROMhacks,
+who pointed at Marvel Snap / Hearthstone's deck imports and asked
+whether something similar would work for Pokemon teams. Turns out: yes.
+
+## Pilot Mode
+
+Most of this ROM is AI vs AI — you pick two trainers and watch them
+duke it out. Pilot Mode flips that on its head: you control one side
+yourself, using the chosen trainer's loaner team.
+
+**What it gives you:**
+- A way to *play* the rosters instead of just spectating
+- A drop-in challenge mode — boot the ROM, pick a trainer to face,
+  pick a trainer whose team you want to borrow, fight
+- No grinding required. You don't level mons, you don't catch them,
+  you don't earn badges — pilot mode auto-grants all 8 badges for
+  obedience and suppresses XP gain so the loaner team stays at the
+  intended level for the matchup
+- Works against any preset trainer or any of your 6 custom slots
+
+**How to enable:** in the wrapper menu, toggle **Pilot Mode** on, then
+pick which side you want to control. Run the battle as normal — the
+battle UI lets you select moves, swap mons, use items, the works.
 
 ## Building from source
 
