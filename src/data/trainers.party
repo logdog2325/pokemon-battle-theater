@@ -33498,9 +33498,9 @@ Nature: Adamant
 - Protect
 
 === TRAINER_OAK_GLITCH_VENUSAUR ===
-Name: OAK
-Class: Gentleman
-Pic: Gentleman
+Name: PROF. OAK
+Class: Pkmn Prof Frlg
+Pic: Professor Oak Frlg
 Gender: Male
 Music: Male
 Items: Full Restore / Full Restore / Full Restore / Full Restore
@@ -33563,9 +33563,9 @@ Nature: Adamant
 - Hyper Beam
 
 === TRAINER_OAK_GLITCH_CHARIZARD ===
-Name: OAK
-Class: Gentleman
-Pic: Gentleman
+Name: PROF. OAK
+Class: Pkmn Prof Frlg
+Pic: Professor Oak Frlg
 Gender: Male
 Music: Male
 Items: Full Restore / Full Restore / Full Restore / Full Restore
@@ -33628,9 +33628,9 @@ Nature: Adamant
 - Hyper Beam
 
 === TRAINER_OAK_GLITCH_BLASTOISE ===
-Name: OAK
-Class: Gentleman
-Pic: Gentleman
+Name: PROF. OAK
+Class: Pkmn Prof Frlg
+Pic: Professor Oak Frlg
 Gender: Male
 Music: Male
 Items: Full Restore / Full Restore / Full Restore / Full Restore

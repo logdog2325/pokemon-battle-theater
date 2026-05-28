@@ -9,7 +9,7 @@ An AI vs AI Pokemon battle simulator built on
 Pit any two trainers from the mainline games (Gens 1-9) against each other,
 or pilot one side via Pilot Mode.
 
-**Download the latest patch:** [v1.6 — fan-art title screen, Prof. Oak Glitch boss, Arceus plate fix, sim-exploit lockdown](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
+**Download the latest patch:** [v1.6.1 — canonical Professor Oak sprite for Glitch boss](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
 All releases live on the [Releases page](https://github.com/logdog2325/pokemon-battle-theater/releases).
 
 ---
