@@ -1,6 +1,8 @@
 #ifndef GUARD_DEBUG_H
 #define GUARD_DEBUG_H
 
+#include "constants/global.h"  // PLAYER_NAME_LENGTH
+
 void Debug_ShowMainMenu(void);
 void Debug_ShowTrainersSubMenu(void);
 // v0.52: opens the two-option wrapper (Build Trainer / Run Simulation).
@@ -51,6 +53,7 @@ void Debug_DecodeImportedTeamCodeAndReopen(void);
 // the START menu even though gPlayerParty[] is populated correctly), and
 // clears the flag.
 extern EWRAM_DATA bool8 gSimFrontierChallengePending;
+extern EWRAM_DATA u8 gSimFrontierBorrowedName[PLAYER_NAME_LENGTH + 1];
 extern EWRAM_DATA s16 gSimLevelCap;
 extern EWRAM_DATA u8 gSimBestOf;
 extern EWRAM_DATA u8 gSimT1Wins;

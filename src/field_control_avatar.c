@@ -287,6 +287,21 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     {
         gSimFrontierChallengePending = FALSE;
         LoadPlayerParty();
+        // v1.8 — re-apply the borrowed trainer name. The pre-warp write
+        // in Sim_StartFrontierChallenge doesn't survive the map-load
+        // sequence (something between SetWarpDestination and the first
+        // field tick clobbers gSaveBlock2Ptr->playerName, probably the
+        // MoveSaveBlocks_ResetHeap saveblock rebase racing with map
+        // script init). Re-applying here lands AFTER all that settles
+        // so the START menu / receptionist / battle dialogue see the
+        // borrowed name. Empty buffer means no borrow active; skip.
+        // 0xFF = EOS in game encoding, 0x00 = uninit. Either means no
+        // active borrow — skip the re-apply.
+        if (gSimFrontierBorrowedName[0] != 0xFF && gSimFrontierBorrowedName[0] != 0x00)
+        {
+            for (u32 i = 0; i < PLAYER_NAME_LENGTH + 1; i++)
+                gSaveBlock2Ptr->playerName[i] = gSimFrontierBorrowedName[i];
+        }
     }
 
     if (gSimAutoOpenPending && DEBUG_OVERWORLD_MENU && !DEBUG_OVERWORLD_IN_MENU)

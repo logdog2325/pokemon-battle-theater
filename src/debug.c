@@ -881,6 +881,14 @@ EWRAM_DATA u64 gDebugAIFlags = 0;
 EWRAM_DATA bool8 gSimAutoOpenPending = FALSE;
 // v1.7 — Frontier Challenge post-warp fixup (see include/debug.h).
 EWRAM_DATA bool8 gSimFrontierChallengePending = FALSE;
+// v1.8 — buffer for the borrowed trainer name. The Frontier Challenge
+// flow writes the trainer's name into gSaveBlock2Ptr->playerName, but
+// the map-load process (MoveSaveBlocks_ResetHeap + map-script
+// initialization) appears to either reset playerName from a snapshot
+// taken pre-write, or shadow it via a saveblock-rebase race. The field
+// tick after the warp lands re-applies the borrowed name from this
+// buffer to guarantee it sticks. Cleared at boot via EWRAM zero-init.
+EWRAM_DATA u8 gSimFrontierBorrowedName[PLAYER_NAME_LENGTH + 1] = {0};
 // v0.52.5 — pending re-open of the Build Trainer slot menu after returning
 // from DoNamingScreen. sBuildTrainerActiveSlot already persists in EWRAM so
 // the slot index round-trips automatically.
@@ -7477,6 +7485,14 @@ static void Sim_StartFrontierChallenge(s32 trainerId)
     // playerName from SaveBlock2 anyway.
     StringCopyN(gSaveBlock2Ptr->playerName, trainer->trainerName, PLAYER_NAME_LENGTH);
     gSaveBlock2Ptr->playerName[PLAYER_NAME_LENGTH] = EOS;
+    // Stash a copy in EWRAM for the field-tick re-apply (see
+    // field_control_avatar.c). The map-load callback chain has a
+    // window between SetWarpDestination/WarpIntoMap and the player's
+    // first field tick where playerName can get overwritten — this
+    // buffer survives the whole sequence and the tick fixup restores
+    // playerName from it just before the user regains control.
+    StringCopyN(gSimFrontierBorrowedName, trainer->trainerName, PLAYER_NAME_LENGTH);
+    gSimFrontierBorrowedName[PLAYER_NAME_LENGTH] = EOS;
     // v1.7 — grant all 8 Hoenn badges so the loaner mons obey at any level.
     // Without this, Lv 50+ legendaries on a borrowed Champion team would
     // disobey commands every other turn. Mirrors the same trick pilot
