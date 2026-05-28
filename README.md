@@ -187,14 +187,46 @@ pitched *"make it an official feature"* as a better fix than patching
 the exit hole. They were right — this is way more fun than just blocking
 the escape route.
 
-### Coming in v1.8
+### v1.8: modernized opponent pool
 
-The Frontier opponents themselves are still vanilla Gen-3 era pool
-(Sunkern, Azurill, Caterpie, etc.). v1.8 will modernize the opponent pool
-with 50-100 competitive mons + modern items (Mega Stones / Z-Crystals /
-Choice items / Heavy-Duty Boots), and wire Mega Evolution / Z-Moves /
-Dynamax activation into the Frontier AI controller. High-streak runs are
-about to feel a lot more current.
+The Frontier opponents got a serious glow-up. **60 new competitive sets**
+covering Gen 4-9 staples are now folded into the high-tier endgame trainer
+pools, so streak-50+ matches actually feel like 2024 Smogon instead of
+2003.
+
+What you'll run into:
+
+- **Gen 4 staples** — Garchomp (SD / Scarf / Mega), Hydreigon (Specs /
+  Nasty Plot), Heatran (Specs / Air Balloon SR), Latios (Specs), Latias
+  (CM Recover), Magnezone (Specs trapper / Body Press), Mamoswine, Weavile,
+  Gliscor (Poison Heal toxic stall), Excadrill (Sand Rush)
+- **Gen 5** — Volcarona (Quiver Dance), Ferrothorn (Spikes/Leech Seed),
+  Rotom-Wash (Bulky WoW / Specs), Rotom-Heat (Scarf), Tornadus-T (Specs
+  Hurricane), Landorus-T (Scarf / Defensive), Thundurus-T, Bisharp (SD),
+  Kyurem-Black (DD Roost), Conkeldurr (Bulk Up Guts)
+- **Mega Evolutions** — Mega Sceptile, Mega Charizard X, Mega Garchomp,
+  Mega Lucario, Mega Alakazam (they auto-trigger on opponent side)
+- **Gen 7 Tapus + co** — Tapu Koko (Specs / LO Mixed), Tapu Lele, Tapu Bulu
+  (CB), Tapu Fini (Defog CM), Toxapex (Regenerator), Mimikyu (SD)
+- **Gen 8** — Cinderace (Libero Pyro Ball), Corviknight (Bulk Up Body
+  Press Mirror Armor), Dragapult (Specs / DD), Dracovish (CB Fishious Rend
+  Strong Jaw)
+- **Gen 9 paradox/ruin mons** — Kingambit (SD Supreme Overlord), Great
+  Tusk, Iron Valiant, Roaring Moon (DD), Flutter Mane (CM), Gholdengo
+  (Specs Make It Rain), Chien-Pao (CB Icicle Crash), Ting-Lu (defensive
+  hazard setter)
+
+Each mon has its real competitive ability slot (Libero, Regenerator,
+Magic Guard, Huge Power, Protosynthesis, Quark Drive, the Ruin abilities,
+Supreme Overlord, etc.), Smogon-style EV spread, nature, and held item
+(Life Orb, Choice Specs/Band/Scarf, Heavy-Duty Boots, Booster Energy,
+Toxic Orb, Mega Stones).
+
+Modern mons are mixed into 10 endgame trainer pools (Expert M/F,
+Cooltrainer 2C/2D, Dragon Tamer 2, Pokémaniac 2A/B/C, Gentleman 3A/B,
+Hiker 3), so they cycle into rotation alongside the existing Gen 1-3
+roster. You'll still see Tyranitar and Latios — they'll just be standing
+next to Kingambit and Dragapult now.
 
 ## Pilot Mode
 
