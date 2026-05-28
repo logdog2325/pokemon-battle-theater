@@ -38,18 +38,31 @@ All releases live on the [Releases page](https://github.com/logdog2325/pokemon-b
   scrolling one at a time
 - 9-trainer Legends Arceus section (Volo, Adaman, Irida, Ingo, Akari,
   Kamado, Zisu, Beni, Rei)
+- **Full BW2 PWT roster** including the Striaton trio (Cilan, Chili, Cress),
+  Cheren, Roxie, and Bianca's World Leaders Tournament team *(v1.5)*
+- **2012 VGC World Finals teams** — Wolfe Glick (runner-up) and Ray Rizo
+  (champion). Their iconic Trick Room vs. Tailwind battle, recreated *(v1.5)*
+- **Prof. Oak Glitch boss** — the unused RGBY final boss with 3 starter
+  variants, using the canonical FRLG sprite *(v1.6.1)*
 - 6 Custom Trainer slots with full PKHeX-style editor (sprite / name /
   species / item / ability / EVs / IVs / moves / nature / gender / shiny) —
-  **teams persist across sessions as of v1.4**
+  **teams persist across sessions as of v1.4.1**
 - **Showdown team-code import** — paste a 24-character code to load any
   team you built on Pokémon Showdown directly into a custom slot. No
   internet, no link cable, no patching
-- Tournament mode (8-trainer single-elim brackets across all regions)
+- **Battle Frontier Challenge Mode** — borrow any preset trainer's team
+  and challenge the Frontier with it. See
+  [Frontier Challenge](#battle-frontier-challenge-mode) below *(v1.7)*
+- Tournament mode (8-trainer single-elim brackets across all regions),
+  including a **pooled-mode PWT Unova** that draws a different 7-trainer
+  bracket each run from the full Unova roster *(v1.5)*
 - Best-of-N matches with adaptive picks
 - VGC mode (forced doubles, Lv 50 cap, 4-pick-of-6)
 - Pilot Mode — play *against* the AI yourself using a loaner team
   (see [Pilot Mode](#pilot-mode) below)
 - Custom Battle Theater background by LiYun
+- Fan-made placeholder title screen by u/Itchy-Hedgehog-3371
+  (Mega Blastoise vs Mega Charizard X)
 - AI tweaks for Z-Move / Mega / Dynamax / Gmax bias
 - Custom singles AI controller (fixes vanilla post-KO crash)
 - Affection and Terastallization disabled
@@ -138,6 +151,50 @@ Idea for the deck-code import flow came from
 [u/LordePachi](https://www.reddit.com/user/LordePachi/) on r/PokemonROMhacks,
 who pointed at Marvel Snap / Hearthstone's deck imports and asked
 whether something similar would work for Pokemon teams. Turns out: yes.
+
+## Battle Frontier Challenge Mode
+
+Pick any trainer in the picker and thought *"I want to take that team into
+the Battle Frontier"*? As of v1.7 you can. Frontier Challenge is a new
+entry on the boot wrapper menu that:
+
+1. Opens the **curated trainer picker** directly (no sim setup screen — just
+   pick a trainer)
+2. Loads that trainer's full 6-mon team as your party
+3. Warps you straight into the Battle Tower lobby ready to challenge any
+   of the 7 facilities (Tower / Dome / Palace / Arena / Factory / Pike /
+   Pyramid)
+
+You can pick from any of the ~120 preset trainers (Cynthia's team, Wolfe
+Glick's 2012 VGC squad, Ray Rizo's championship Trick Room build, Volo's
+Hisuian sweepers, Prof. Oak Glitch — whoever) **or** one of your 6 custom
+trainer slots.
+
+### What you get on launch
+
+- 🏃 **Running shoes** — hold B to sprint the Frontier hub
+- 🚲 **Mach Bike** in the bag — for the longer corridor runs
+- 🏅 **All 8 Hoenn badges** — so high-level loaner mons (Lv 70+ legendaries
+  on Champion teams) actually obey commands
+- 🎫 **Frontier Pass** — receptionists let you in
+- 💎 **Mega Ring / Z-Power Ring / Dynamax Band / Tera Orb** — gimmicks
+  fire correctly in facilities that accept them
+
+### Idea credit
+
+The Reddit player who found the v1.4 forfeit-to-overworld exploit and
+pitched *"make it an official feature"* as a better fix than patching
+the exit hole. They were right — this is way more fun than just blocking
+the escape route.
+
+### Coming in v1.8
+
+The Frontier opponents themselves are still vanilla Gen-3 era pool
+(Sunkern, Azurill, Caterpie, etc.). v1.8 will modernize the opponent pool
+with 50-100 competitive mons + modern items (Mega Stones / Z-Crystals /
+Choice items / Heavy-Duty Boots), and wire Mega Evolution / Z-Moves /
+Dynamax activation into the Frontier AI controller. High-streak runs are
+about to feel a lot more current.
 
 ## Pilot Mode
 
