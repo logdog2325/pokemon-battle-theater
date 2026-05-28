@@ -7459,6 +7459,24 @@ static void Sim_StartFrontierChallenge(s32 trainerId)
     // this flag enables hold-B-to-run via field_player_avatar.c's existing
     // FlagGet(FLAG_SYS_B_DASH) check.
     FlagSet(FLAG_SYS_B_DASH);
+    // v1.8 — borrow the trainer's name as the player's display name for the
+    // entire Frontier run. Roleplay request: "if I'm using Iris's team, I
+    // want to BE Iris in the Frontier — show 'Iris sent out Hydreigon' in
+    // dialogue, receptionists call me Iris, trainer card says Iris, etc."
+    //
+    // Trainer name is up to TRAINER_NAME_LENGTH (10) chars; playerName is
+    // only PLAYER_NAME_LENGTH (7). StringCopyN bounds the copy and we EOS-
+    // terminate manually so anything that walks past the cap (battle
+    // dialogue formatters, trainer card render, etc.) hits a clean stop.
+    //
+    // Unlike Sim_OverridePlayerName (used for AI-vs-AI sim battles), this
+    // is intentionally a one-way write — no snapshot, no restore. Frontier
+    // Challenge is a "leave and come back" mode (player soft-resets or
+    // returns to wrapper menu via boot), so we don't need to round-trip
+    // back to the user's original name mid-session. Soft reset reloads
+    // playerName from SaveBlock2 anyway.
+    StringCopyN(gSaveBlock2Ptr->playerName, trainer->trainerName, PLAYER_NAME_LENGTH);
+    gSaveBlock2Ptr->playerName[PLAYER_NAME_LENGTH] = EOS;
     // v1.7 — grant all 8 Hoenn badges so the loaner mons obey at any level.
     // Without this, Lv 50+ legendaries on a borrowed Champion team would
     // disobey commands every other turn. Mirrors the same trick pilot
