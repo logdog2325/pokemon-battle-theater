@@ -1238,6 +1238,14 @@
 #define TRAINER_WOLFE_VGC2012               1108
 #define TRAINER_RAY_VGC2012                 1109
 
+// v1.6 — the legendary unused Prof. Oak boss battle from RGBY (originally
+// accessible only through the Mew / Trainer-Fly glitch). Three variants
+// keyed to the player's RGBY starter pick. Teams are Lv 66-70 with Gen-1
+// canonical movesets.
+#define TRAINER_OAK_GLITCH_VENUSAUR         1110  // if player chose Charmander
+#define TRAINER_OAK_GLITCH_CHARIZARD        1111  // if player chose Squirtle
+#define TRAINER_OAK_GLITCH_BLASTOISE        1112  // if player chose Bulbasaur
+
 // NOTE: Because each Trainer uses a flag to determine when they are defeated, there is only space for 9 additional trainers before trainer flag space overflows
 //       More space can be made by shifting flags around in constants/flags.h or changing how trainer flags are handled
 //       MAX_TRAINERS_COUNT can be increased but will take up additional saveblock space
@@ -1255,11 +1263,15 @@
 
 // v1.1 — bumped 1099 → 1102 / 1100 → 1102 to make room for SIM_CUSTOM_4/5/6.
 // v1.5 — bumped 1102 → 1110 to make room for Striaton trio + Cheren + Roxie +
-// Bianca + Wolfe + Ray. We're now at the soft ceiling described in the
-// "9 additional trainers" comment above — any future trainer additions will
-// need to shift the trainer-flag space in flags.h before bumping again.
-#define TRAINERS_COUNT_EMERALD     1110
-#define MAX_TRAINERS_COUNT_EMERALD 1110
+// Bianca + Wolfe + Ray.
+// v1.6 — bumped 1110 → 1310 to add headroom for Prof. Oak Glitch trio + future
+// Z-A / Champions / Paldea content drops. The trainer-flag region in flags.h
+// auto-shifts SYSTEM_FLAGS to TRAINER_FLAGS_END + 1, so this widens the
+// 0x500-0x… range by 200 slots. Saveblock impact: SaveBlock1.flags[] grows
+// by ROUND_BITS_TO_BYTES(200) = 25 bytes. The STATIC_ASSERT in global.h
+// catches overflow at build time if we approach the SaveBlock sector cap.
+#define TRAINERS_COUNT_EMERALD     1310
+#define MAX_TRAINERS_COUNT_EMERALD 1310
 
 #if IS_FRLG
 #define TRAINERS_COUNT                      TRAINERS_COUNT_FRLG

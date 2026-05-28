@@ -33496,3 +33496,198 @@ Nature: Adamant
 - Earthquake
 - Zen Headbutt
 - Protect
+
+=== TRAINER_OAK_GLITCH_VENUSAUR ===
+Name: OAK
+Class: Gentleman
+Pic: Gentleman
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Tauros @ Lum Berry
+Ability: Intimidate
+Level: 66
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Jolly
+- Take Down
+- Leer
+- Rage
+- Tail Whip
+
+Exeggutor @ Sitrus Berry
+Ability: Chlorophyll
+Level: 67
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 4 Def / 252 SpA
+Nature: Quiet
+- Stomp
+- Barrage
+- Hypnosis
+- Psychic
+
+Arcanine @ Charcoal
+Ability: Intimidate
+Level: 68
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Adamant
+- Take Down
+- Ember
+- Roar
+- Leer
+
+Venusaur @ Miracle Seed
+Ability: Overgrow
+Level: 69
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 4 Def / 252 SpA
+Nature: Modest
+- Razor Leaf
+- Growth
+- Sleep Powder
+- Solar Beam
+
+Gyarados @ Mystic Water
+Ability: Intimidate
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Adamant
+- Hydro Pump
+- Dragon Rage
+- Leer
+- Hyper Beam
+
+=== TRAINER_OAK_GLITCH_CHARIZARD ===
+Name: OAK
+Class: Gentleman
+Pic: Gentleman
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Tauros @ Lum Berry
+Ability: Intimidate
+Level: 66
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Jolly
+- Take Down
+- Leer
+- Rage
+- Tail Whip
+
+Exeggutor @ Sitrus Berry
+Ability: Chlorophyll
+Level: 67
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 4 Def / 252 SpA
+Nature: Quiet
+- Stomp
+- Barrage
+- Hypnosis
+- Psychic
+
+Arcanine @ Charcoal
+Ability: Intimidate
+Level: 68
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Adamant
+- Take Down
+- Ember
+- Roar
+- Leer
+
+Charizard @ Charcoal
+Ability: Blaze
+Level: 69
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Adamant
+- Rage
+- Slash
+- Flamethrower
+- Fire Spin
+
+Gyarados @ Mystic Water
+Ability: Intimidate
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Adamant
+- Hydro Pump
+- Dragon Rage
+- Leer
+- Hyper Beam
+
+=== TRAINER_OAK_GLITCH_BLASTOISE ===
+Name: OAK
+Class: Gentleman
+Pic: Gentleman
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Tauros @ Lum Berry
+Ability: Intimidate
+Level: 66
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Jolly
+- Take Down
+- Leer
+- Rage
+- Tail Whip
+
+Exeggutor @ Sitrus Berry
+Ability: Chlorophyll
+Level: 67
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 4 Def / 252 SpA
+Nature: Quiet
+- Stomp
+- Barrage
+- Hypnosis
+- Psychic
+
+Arcanine @ Charcoal
+Ability: Intimidate
+Level: 68
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Adamant
+- Take Down
+- Ember
+- Roar
+- Leer
+
+Blastoise @ Mystic Water
+Ability: Torrent
+Level: 69
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 4 Def / 252 SpA
+Nature: Modest
+- Bite
+- Withdraw
+- Skull Bash
+- Hydro Pump
+
+Gyarados @ Mystic Water
+Ability: Intimidate
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Adamant
+- Hydro Pump
+- Dragon Rage
+- Leer
+- Hyper Beam

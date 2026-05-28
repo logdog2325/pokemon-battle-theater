@@ -9,7 +9,7 @@ An AI vs AI Pokemon battle simulator built on
 Pit any two trainers from the mainline games (Gens 1-9) against each other,
 or pilot one side via Pilot Mode.
 
-**Download the latest patch:** [v1.4.1 — save persistence + Striaton trio / Cheren / Roxie / Bianca + 2012 VGC Finals + PWT Unova pooled](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
+**Download the latest patch:** [v1.6 — fan-art title screen, Prof. Oak Glitch boss, Arceus plate fix, sim-exploit lockdown](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
 All releases live on the [Releases page](https://github.com/logdog2325/pokemon-battle-theater/releases).
 
 ---
@@ -199,6 +199,8 @@ flow / debug menu reference.
 - Bulbapedia / Smogon archives — canonical trainer rosters
 - u/Healthy_Bug7977 and u/LordePachi — suggested the Marvel Snap / Hearthstone–style
   deck-code import that became v1.3's Showdown team-code feature
+- u/Itchy-Hedgehog-3371 — drew the v1.6 placeholder title screen (Mega Blastoise vs
+  Mega Charizard) while a real artist commission is in progress
 
 Not affiliated with Nintendo, Game Freak, or The Pokémon Company.
 Pokémon and all related marks are trademarks of their respective owners.

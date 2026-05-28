@@ -553,6 +553,8 @@ static const u16 sSimulatorRoster[] = {
     //      Ingo runs Hisuian forms; Akari is the PC rival.
     1090, 1091, 1092, 1093, 1094,                        // Volo / Adaman / Irida / Ingo / Akari
     1095, 1096, 1097, 1098,                              // v0.53.2: Kamado / Zisu / Beni / Rei
+    // ---- RGBY section (Gen 1 unused content — Prof. Oak Glitch boss) ----
+    1110, 1111, 1112,                                    // v1.6: Oak Venusaur/Charizard/Blastoise variants
 };
 #define SIMULATOR_ROSTER_COUNT (sizeof(sSimulatorRoster) / sizeof(sSimulatorRoster[0]))
 
@@ -3595,6 +3597,34 @@ static void BuildTrainer_CommitWorkBufferToSaveblock(void)
 {
     struct SimCustomTrainer *slot = &gSaveBlock3Ptr->simCustomTrainers[sBuildTrainerActiveSlot];
     if (sBuildTrainerActiveMon >= 6) return;
+
+    // v1.6 — recompute item-driven form changes before commit. The editor
+    // mutates species and heldItem independently and the engine's normal
+    // item-equip event doesn't fire, so the stored species used to stay at
+    // the base form even after the player attached a form-changing item
+    // (the Arceus + Plate bug a player reported on Reddit — workaround was
+    // to take the plate off and re-equip). Build a FormChangeContext from
+    // the work buffer, ask the engine for the correct species, and overwrite
+    // if it changed. Mirrors what users were doing manually by picking
+    // SPECIES_ARCEUS_FIRE etc. directly in the species picker. Covers all
+    // FORM_CHANGE_ITEM_HOLD mons: Arceus + Plates / Z-crystals, Silvally +
+    // Memories, Genesect + Drives, Giratina + Griseous Orb.
+    {
+        struct FormChangeContext ctx =
+        {
+            .method = FORM_CHANGE_ITEM_HOLD,
+            .currentSpecies = sBuildTrainerWorkMon.species,
+            .heldItem = sBuildTrainerWorkMon.heldItem,
+            .ability = GetAbilityBySpecies(sBuildTrainerWorkMon.species, sBuildTrainerWorkMon.abilityNum),
+            .partyItemUsed = ITEM_NONE,
+            .multichoiceSelection = 0,
+            .status = 0,
+        };
+        u32 newSpecies = GetFormChangeTargetSpecies_Internal(ctx);
+        if (newSpecies != 0 && newSpecies != sBuildTrainerWorkMon.species)
+            sBuildTrainerWorkMon.species = newSpecies;
+    }
+
     slot->mons[sBuildTrainerActiveMon] = sBuildTrainerWorkMon;
     if (sBuildTrainerActiveMon >= slot->monCount)
         slot->monCount = sBuildTrainerActiveMon + 1;
@@ -5449,6 +5479,7 @@ static const u16 sSimulatorRosterSectionStarts[] = {
     250 + CUSTOM_OFFSET,     // VGC — v1.5: Wolfe Glick + Ray Rizo (2012 World Finals) (2)
     252 + CUSTOM_OFFSET,     // Custom — v0.51 + v1.1 user-built slots (6: 3 original + 3 added)
     258 + CUSTOM_OFFSET,     // Legends Arceus — v0.53 Volo/Adaman/Irida/Ingo/Akari + v0.53.2 Kamado/Zisu/Beni/Rei (9)
+    267 + CUSTOM_OFFSET,     // RGBY — v1.6: Prof. Oak Glitch x3 (Venusaur/Charizard/Blastoise variants based on player's starter)
 };
 #define SIMULATOR_ROSTER_SECTION_COUNT (sizeof(sSimulatorRosterSectionStarts) / sizeof(sSimulatorRosterSectionStarts[0]))
 

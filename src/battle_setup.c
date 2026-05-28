@@ -1394,7 +1394,18 @@ static void CB2_EndDebugBattle(void)
     // The player would land back at the Pokemon Center via CB2_EndTrainerBattle
     // and no trainer menu would reopen. Run the sim cleanup independently so
     // partner-mode sim battles also rewarp + auto-open the picker.
-    if (B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE))
+    // v1.6 — also include pilot mode in the cleanup branch. The
+    // B_FLAG_AI_VS_AI_BATTLE flag is intentionally NOT set in pilot mode (see
+    // Sim_StartSimulation in src/debug.c — the flag's only set when
+    // !pilotMode), so without checking gSimPilotMode here, forfeiting a pilot
+    // battle skipped the warp-to-Battle-Tower cleanup and fell through to
+    // CB2_EndTrainerBattle, which CB2_WhiteOut'd the player to the nearest
+    // Pokemon Center (Petalburg on a fresh save). That dropped the player into
+    // the overworld with full debug-menu access, which is the Battle Frontier
+    // escape route that v1.4 partially patched. With this fix the cleanup
+    // runs for both pure AI-vs-AI and pilot-mode battles, so all sim battles
+    // exit back to the Battle Tower lobby + auto-reopen the picker.
+    if ((B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE)) || gSimPilotMode)
     {
         LoadPlayerParty();
         FlagClear(B_FLAG_AI_VS_AI_BATTLE);
