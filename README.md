@@ -179,6 +179,9 @@ trainer slots.
 - 🎫 **Frontier Pass** — receptionists let you in
 - 💎 **Mega Ring / Z-Power Ring / Dynamax Band / Tera Orb** — gimmicks
   fire correctly in facilities that accept them
+- 🪪 **Borrowed identity (v1.8)** — your player name becomes the trainer's
+  name for the run. Pick Iris's team, you're "Iris" in every dialogue
+  line, receptionist greeting, and trainer card. Soft reset to restore
 
 ### Idea credit
 
