@@ -526,7 +526,8 @@ static const u16 sSimulatorRoster[] = {
     939, 940, 941, 942, 943, 944, 945, 946,              // PWT Johto
     947, 948, 949, 950, 951, 952, 953, 954,              // PWT Sinnoh
     955, 956, 957, 958, 959, 960, 961, 962,              // PWT Unova
-    890, 886, 887, 888, 889, 963, 964, 965,              // PWT Champs (Red/Blue/Lance/Steven/Wallace/Cynthia/Iris/Alder)
+    1102, 1103, 1104, 1105, 1106,                        // v1.5: Cilan/Chili/Cress/Cheren/Roxie PWT
+    890, 886, 887, 888, 889, 963, 964, 965, 1107,        // PWT Champs (+ v1.5 Bianca World Leaders)
     // ---- BW section (v0.40 Black/White + B2W2) ----
     1055, 1056,                                          // N (Zekrom, Reshiram versions)
     1057,                                                // Alder BW (Unova champion)
@@ -540,6 +541,8 @@ static const u16 sSimulatorRoster[] = {
     1083, 1084, 1085,                                    // v0.49: Diantha / Serena / Calem
     // ---- Anime section ----
     1086,                                                // v0.50: Ash World Champion (Z + Mega + Gmax)
+    // ---- VGC section (2012 World Championships finals exhibition) ----
+    1108, 1109,                                          // v1.5: Wolfe Glick (runner-up), Ray Rizo (champion)
     // ---- Custom section (user-built trainers, v0.51 + v1.1) ----
     1087, 1088, 1089,                                    // Custom 1/2/3 (v0.51)
     1099, 1100, 1101,                                    // Custom 4/5/6 (v1.1)
@@ -617,17 +620,28 @@ static const u16 sCupPwtJohto[]   = { 946, 945, 944, 943, 942, 941, 940, 939 };
 // Sinnoh PWT (8 leaders): Roark, Gardenia, Maylene, Wake, Fantina, Byron, Candice, Volkner
 static const u16 sCupPwtSinnoh[]  = { 948, 949, 954, 951, 953, 950, 952, 947 };
 // Unova PWT (8 leaders): Lenora, Burgh, Elesa, Clay, Skyla, Brycen, Drayden, Marlon
-static const u16 sCupPwtUnova[]   = { 955, 956, 957, 958, 959, 960, 961, 962 };
-// PWT World Leaders: pool of ALL 40 PWT gym leaders + champions across every
+// v1.5 — PWT Unova converted to pool format (13 trainers, picks 7 random per
+// run). Adds Cilan/Chili/Cress/Cheren/Roxie to the previously-curated 8-slot
+// roster so the Striaton trio's first-gym presence finally shows up in PWT
+// brackets, and players see different mixes of the 11 canonical BW2 Unova
+// leaders each tournament.
+static const u16 sCupPwtUnova[]   = {
+    955, 956, 957, 958, 959, 960, 961, 962,         // Lenora/Burgh/Elesa/Clay/Skyla/Brycen/Drayden/Marlon
+    1102, 1103, 1104, 1105, 1106,                   // Cilan/Chili/Cress/Cheren/Roxie (v1.5)
+};
+// PWT World Leaders: pool of ALL PWT gym leaders + champions across every
 // region (Kanto + Hoenn + Johto + Sinnoh + Unova). Sim_BuildTournamentBracket
 // Fisher-Yates shuffles the pool and picks 7 random candidates per run, so
 // every World Leaders tournament has a different roster.
+// v1.5 — pool grew 43 → 49 with the Striaton trio + Cheren + Roxie + Bianca's
+// World Leaders Tournament entry. Bianca slots in with the Unova block.
 static const u16 sCupPwtWorld[]   = {
     869, 870, 871, 872, 873, 874, 875, 876,         // Kanto PWT (8)
     877, 878, 879, 880, 881, 882, 883, 884,         // Hoenn PWT (8)
     939, 940, 941, 942, 943, 944, 945, 946,         // Johto PWT (8)
     947, 948, 949, 950, 951, 952, 953, 954,         // Sinnoh PWT (8)
     955, 956, 957, 958, 959, 960, 961, 962,         // Unova PWT (8)
+    1102, 1103, 1104, 1105, 1106, 1107,             // v1.5: Cilan/Chili/Cress/Cheren/Roxie/Bianca (6)
     963, 964, 965,                                  // Champions (Cynthia/Iris/Alder)
 };
 
@@ -675,11 +689,15 @@ static const struct SimCup sSimCups[] =
     // ---- v0.10 PWT regional cups + expanded World pool ----
     { sCupName_PwtJohto,    sCupPwtJohto,      8 },
     { sCupName_PwtSinnoh,   sCupPwtSinnoh,     8 },
-    { sCupName_PwtUnova,    sCupPwtUnova,      8 },
+    // v1.5 — PWT Unova bumped 8 → 13 (added Striaton trio + Cheren + Roxie).
+    // Count >7 triggers Sim_BuildTournamentBracket's pool-shuffle path, so
+    // each tournament run picks 7 random opponents from the 13-trainer pool.
+    { sCupName_PwtUnova,    sCupPwtUnova,     13 },
     { sCupName_PwtChamps,   sCupPwtChamps,     8 },
-    // PWT World Leaders — 43-entry pool (all PWT leaders + Cynthia/Iris/Alder),
-    // builder picks 7 random per run.
-    { sCupName_PwtWorld,    sCupPwtWorld,     43 },
+    // PWT World Leaders — 49-entry pool (all PWT leaders + Cynthia/Iris/Alder
+    // + v1.5 Striaton trio / Cheren / Roxie / Bianca), builder picks 7 random
+    // per run.
+    { sCupName_PwtWorld,    sCupPwtWorld,     49 },
     // v0.11 Platinum + HGSS cups
     { sCupName_PlatGym,     sCupPlatGym,       8 },     // Sinnoh Battleground gym leaders
     { sCupName_PlatLeague,  sCupPlatLeague,    8 },     // Sinnoh E4 + Cynthia + Barry-C + Riley/Buck
@@ -5403,7 +5421,9 @@ static u32 SimulatorRoster_Step(u32 currentId, s32 direction)
 #else
 #define CUSTOM_OFFSET 2
 #endif
-static const u8 sSimulatorRosterSectionStarts[] = {
+// v1.5 — type bumped u8 → u16 since the LA section now starts past index 255.
+// Total roster is approaching 260 with the new PWT entries + VGC 2012 cup.
+static const u16 sSimulatorRosterSectionStarts[] = {
 #ifndef RELEASE_BUILD
     0,                       // Custom challengers — Logan, Taylor (2) — dev only
 #endif
@@ -5421,13 +5441,14 @@ static const u8 sSimulatorRosterSectionStarts[] = {
     181 + CUSTOM_OFFSET,     // PWT Hoenn (9)
     190 + CUSTOM_OFFSET,     // PWT Johto (8)
     198 + CUSTOM_OFFSET,     // PWT Sinnoh (8)
-    206 + CUSTOM_OFFSET,     // PWT Unova (8)
-    214 + CUSTOM_OFFSET,     // PWT Champs — Red/Blue/Lance/Steven/Wallace + Cynthia/Iris/Alder (8)
-    222 + CUSTOM_OFFSET,     // BW — N x2 + Alder + Cheren x3 + Bianca x3 + Hugh x3 + Unova E4 + Ghetsis + Colress (18)
-    240 + CUSTOM_OFFSET,     // XY — Diantha/Serena/Calem (3)
-    243 + CUSTOM_OFFSET,     // Anime — Ash World Champion (1)
-    244 + CUSTOM_OFFSET,     // Custom — v0.51 + v1.1 user-built slots (6: 3 original + 3 added)
-    250 + CUSTOM_OFFSET,     // Legends Arceus — v0.53 Volo/Adaman/Irida/Ingo/Akari + v0.53.2 Kamado/Zisu/Beni/Rei (9)
+    206 + CUSTOM_OFFSET,     // PWT Unova (8 base + 5 v1.5 = 13: Lenora..Marlon + Cilan/Chili/Cress/Cheren/Roxie)
+    219 + CUSTOM_OFFSET,     // PWT Champs — Red/Blue/Lance/Steven/Wallace + Cynthia/Iris/Alder + v1.5 Bianca World Leaders (9)
+    228 + CUSTOM_OFFSET,     // BW — N x2 + Alder + Cheren x3 + Bianca x3 + Hugh x3 + Unova E4 + Ghetsis + Colress (18)
+    246 + CUSTOM_OFFSET,     // XY — Diantha/Serena/Calem (3)
+    249 + CUSTOM_OFFSET,     // Anime — Ash World Champion (1)
+    250 + CUSTOM_OFFSET,     // VGC — v1.5: Wolfe Glick + Ray Rizo (2012 World Finals) (2)
+    252 + CUSTOM_OFFSET,     // Custom — v0.51 + v1.1 user-built slots (6: 3 original + 3 added)
+    258 + CUSTOM_OFFSET,     // Legends Arceus — v0.53 Volo/Adaman/Irida/Ingo/Akari + v0.53.2 Kamado/Zisu/Beni/Rei (9)
 };
 #define SIMULATOR_ROSTER_SECTION_COUNT (sizeof(sSimulatorRosterSectionStarts) / sizeof(sSimulatorRosterSectionStarts[0]))
 
@@ -5454,7 +5475,7 @@ static u32 SimulatorRoster_JumpSection(u32 currentId, s32 direction)
     s32 currentSection = 0;
     for (s32 i = 0; i < (s32)SIMULATOR_ROSTER_SECTION_COUNT; i++)
     {
-        if (sSimulatorRosterSectionStarts[i] <= (u8)currentIdx)
+        if (sSimulatorRosterSectionStarts[i] <= (u16)currentIdx)
             currentSection = i;
         else
             break;
@@ -5465,7 +5486,7 @@ static u32 SimulatorRoster_JumpSection(u32 currentId, s32 direction)
     {
         // R press: if we're not already at the section's first entry, snap to it
         // first (so the user lands on the section head). Otherwise advance.
-        if ((u8)currentIdx != sSimulatorRosterSectionStarts[currentSection])
+        if ((u16)currentIdx != sSimulatorRosterSectionStarts[currentSection])
             newSection = currentSection;
         else
             newSection = (currentSection + 1) % (s32)SIMULATOR_ROSTER_SECTION_COUNT;

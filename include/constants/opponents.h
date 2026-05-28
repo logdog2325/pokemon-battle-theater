@@ -1224,6 +1224,20 @@
 #define TRAINER_SIM_CUSTOM_5                1100
 #define TRAINER_SIM_CUSTOM_6                1101
 
+// v1.5 — fill out the missing BW2 PWT Unova roster (Striaton trio + Cheren +
+// Roxie + Bianca) and add the iconic 2012 VGC World Finals teams (Wolfe Glick
+// + Ray Rizo). Striaton trio, Cheren, Roxie, Bianca all carry the (PWT)
+// suffix and slot into PWT World + PWT Unova pools. Wolfe & Ray live in
+// their own "VGC 2012 Finals" cup.
+#define TRAINER_CILAN_PWT                   1102
+#define TRAINER_CHILI_PWT                   1103
+#define TRAINER_CRESS_PWT                   1104
+#define TRAINER_CHEREN_PWT                  1105
+#define TRAINER_ROXIE_PWT                   1106
+#define TRAINER_BIANCA_PWT                  1107
+#define TRAINER_WOLFE_VGC2012               1108
+#define TRAINER_RAY_VGC2012                 1109
+
 // NOTE: Because each Trainer uses a flag to determine when they are defeated, there is only space for 9 additional trainers before trainer flag space overflows
 //       More space can be made by shifting flags around in constants/flags.h or changing how trainer flags are handled
 //       MAX_TRAINERS_COUNT can be increased but will take up additional saveblock space
@@ -1240,8 +1254,12 @@
 // fail loudly if we ever overflow.
 
 // v1.1 — bumped 1099 → 1102 / 1100 → 1102 to make room for SIM_CUSTOM_4/5/6.
-#define TRAINERS_COUNT_EMERALD     1102
-#define MAX_TRAINERS_COUNT_EMERALD 1102
+// v1.5 — bumped 1102 → 1110 to make room for Striaton trio + Cheren + Roxie +
+// Bianca + Wolfe + Ray. We're now at the soft ceiling described in the
+// "9 additional trainers" comment above — any future trainer additions will
+// need to shift the trainer-flag space in flags.h before bumping again.
+#define TRAINERS_COUNT_EMERALD     1110
+#define MAX_TRAINERS_COUNT_EMERALD 1110
 
 #if IS_FRLG
 #define TRAINERS_COUNT                      TRAINERS_COUNT_FRLG

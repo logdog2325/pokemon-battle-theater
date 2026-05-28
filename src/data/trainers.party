@@ -32888,3 +32888,611 @@ Nature: Jolly
 - Iron Tail
 - Volt Tackle
 - Play Rough
+
+=== TRAINER_CILAN_PWT ===
+Name: CILAN PWT
+Class: Gentleman
+Pic: Gentleman
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Simisage @ Grass Gem
+Ability: Overgrow
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Jolly
+- Seed Bomb
+- Low Kick
+- Acrobatics
+- Crunch
+
+Ferrothorn @ Choice Band
+Ability: Iron Barbs
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 4 SpD
+Nature: Brave
+- Power Whip
+- Gyro Ball
+- Bulldoze
+- Explosion
+
+Serperior @ Leftovers
+Ability: Overgrow
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 4 SpA / 252 Spe
+Nature: Timid
+- Leech Seed
+- Protect
+- Aerial Ace
+- Leaf Blade
+
+Jumpluff @ Focus Sash
+Ability: Chlorophyll
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 4 Def / 252 Spe
+Nature: Jolly
+- Leech Seed
+- Cotton Guard
+- Giga Drain
+- Sleep Powder
+
+Whimsicott @ Mental Herb
+Ability: Prankster
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 4 Def / 252 Spe
+Nature: Timid
+- Giga Drain
+- Substitute
+- Hurricane
+- Leech Seed
+
+Lilligant @ Miracle Seed
+Ability: Chlorophyll
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 SpA / 252 Spe
+Nature: Modest
+- Petal Dance
+- Quiver Dance
+- Sleep Powder
+- Dream Eater
+
+=== TRAINER_CHILI_PWT ===
+Name: CHILI PWT
+Class: Kindler
+Pic: Kindler
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Simisear @ Fire Gem
+Ability: Blaze
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 SpA / 252 Spe
+Nature: Modest
+- Overheat
+- Low Kick
+- Acrobatics
+- Crunch
+
+Camerupt @ Shuca Berry
+Ability: Solid Rock
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 SpA / 4 SpD
+Nature: Quiet
+- Overheat
+- Stone Edge
+- Earthquake
+- Explosion
+
+Heatmor @ Focus Sash
+Ability: White Smoke
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 SpA / 252 Spe
+Nature: Modest
+- Fire Blast
+- Sucker Punch
+- Focus Blast
+- Sunny Day
+
+Darmanitan @ Life Orb
+Ability: Sheer Force
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Jolly
+- Flare Blitz
+- Hammer Arm
+- Stone Edge
+- U-turn
+
+Arcanine @ Power Herb
+Ability: Intimidate
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 SpA / 252 Spe
+Nature: Modest
+- Overheat
+- Dragon Pulse
+- Solar Beam
+- Extreme Speed
+
+Emboar @ Expert Belt
+Ability: Blaze
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Adamant
+- Flare Blitz
+- Head Smash
+- Hammer Arm
+- Wild Charge
+
+=== TRAINER_CRESS_PWT ===
+Name: CRESS PWT
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Simipour @ Water Gem
+Ability: Torrent
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 SpA / 252 Spe
+Nature: Modest
+- Hydro Pump
+- Low Kick
+- Acrobatics
+- Crunch
+
+Crawdaunt @ Choice Scarf
+Ability: Adaptability
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Adamant
+- Crunch
+- Waterfall
+- Brick Break
+- Guillotine
+
+Samurott @ Leftovers
+Ability: Torrent
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Adamant
+- Razor Shell
+- Megahorn
+- Aqua Jet
+- Revenge
+
+Azumarill @ Choice Band
+Ability: Huge Power
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 4 SpD
+Nature: Adamant
+- Aqua Jet
+- Aqua Tail
+- Superpower
+- Giga Impact
+
+Slowking @ Expert Belt
+Ability: Regenerator
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 SpA / 4 SpD
+Nature: Modest
+- Psychic
+- Blizzard
+- Fire Blast
+- Nasty Plot
+
+Seismitoad @ Rindo Berry
+Ability: Swift Swim
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 SpA / 252 Spe
+Nature: Modest
+- Hydro Pump
+- Poison Jab
+- Earth Power
+- Rain Dance
+
+=== TRAINER_CHEREN_PWT ===
+Name: CHEREN PWT
+Class: Gentleman
+Pic: Gentleman
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Stoutland @ Focus Sash
+Ability: Intimidate
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Jolly
+- Return
+- Crunch
+- Ice Fang
+- Reversal
+
+Porygon-Z @ Chople Berry
+Ability: Adaptability
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 SpA / 252 Spe
+Nature: Modest
+- Shadow Ball
+- Psychic
+- Signal Beam
+- Thunder
+
+Cinccino @ King's Rock
+Ability: Skill Link
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Jolly
+- Tail Slap
+- Rock Blast
+- Bullet Seed
+- Aqua Tail
+
+Lickilicky @ Expert Belt
+Ability: Own Tempo
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 4 SpD
+Nature: Adamant
+- Hammer Arm
+- Power Whip
+- Thunder
+- Ice Punch
+
+Castform @ Lum Berry
+Ability: Forecast
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 SpA / 252 Spe
+Nature: Modest
+- Weather Ball
+- Ice Beam
+- Rain Dance
+- Thunder
+
+Bouffalant @ Leftovers
+Ability: Reckless
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 4 SpD
+Nature: Adamant
+- Head Charge
+- Megahorn
+- Wild Charge
+- Revenge
+
+=== TRAINER_ROXIE_PWT ===
+Name: ROXIE PWT
+Class: Lass
+Pic: Lass
+Gender: Female
+Music: Female
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Scolipede @ Choice Scarf
+Ability: Speed Boost
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Jolly
+- Poison Jab
+- Megahorn
+- Earthquake
+- Rock Slide
+
+Toxicroak @ Focus Sash
+Ability: Dry Skin
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Adamant
+- Poison Jab
+- Swords Dance
+- Drain Punch
+- Protect
+
+Garbodor @ Expert Belt
+Ability: Stench
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 SpA / 252 Spe
+Nature: Modest
+- Psychic
+- Thunderbolt
+- Focus Blast
+- Protect
+
+Crobat @ Psychic Gem
+Ability: Inner Focus
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Jolly
+- Cross Poison
+- Zen Headbutt
+- Tailwind
+- Brave Bird
+
+Drapion @ Scope Lens
+Ability: Sniper
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Jolly
+- Cross Poison
+- Night Slash
+- Ice Fang
+- Protect
+
+Amoonguss @ Black Sludge
+Ability: Effect Spore
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 4 Def / 252 SpD
+Nature: Calm
+- Foul Play
+- Spore
+- Giga Drain
+- Protect
+
+=== TRAINER_BIANCA_PWT ===
+Name: BIANCA PWT
+Class: Aroma Lady
+Pic: Aroma Lady
+Gender: Female
+Music: Female
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Musharna @ Leftovers
+Ability: Synchronize
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 4 SpA / 252 SpD
+Nature: Calm
+- Calm Mind
+- Stored Power
+- Moonlight
+- Shadow Ball
+
+Samurott @ Zoom Lens
+Ability: Torrent
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 SpA / 252 Spe
+Nature: Modest
+- Blizzard
+- Aqua Jet
+- Hydro Pump
+- Megahorn
+
+Emboar @ Life Orb
+Ability: Blaze
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 SpA / 252 Spe
+Nature: Modest
+- Scald
+- Superpower
+- Overheat
+- Grass Knot
+
+Serperior @ Light Clay
+Ability: Overgrow
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 4 Def / 252 Spe
+Nature: Timid
+- Light Screen
+- Glare
+- Leaf Storm
+- Reflect
+
+Stoutland @ Chople Berry
+Ability: Intimidate
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Adamant
+- Return
+- Wild Charge
+- Crunch
+- Ice Fang
+
+Haxorus @ Focus Sash
+Ability: Mold Breaker
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Jolly
+- Outrage
+- Earthquake
+- Aqua Tail
+- Guillotine
+
+=== TRAINER_WOLFE_VGC2012 ===
+Name: WOLFE
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: Yes
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Hitmontop @ Chesto Berry
+Ability: Intimidate
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 4 Atk / 252 SpD
+Nature: Careful
+- Close Combat
+- Fake Out
+- Stone Edge
+- Rest
+
+Cresselia @ Leftovers
+Ability: Levitate
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 4 SpA / 252 SpD
+Nature: Calm
+- Ice Beam
+- Psyshock
+- Skill Swap
+- Sunny Day
+
+Thundurus @ Electric Gem
+Ability: Prankster
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 4 SpA / 252 Spe
+Nature: Calm
+- Thunderbolt
+- Taunt
+- Hidden Power
+- Thunder Wave
+
+Terrakion @ Choice Band
+Ability: Justified
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Adamant
+- Rock Slide
+- Close Combat
+- Quick Attack
+- X-Scissor
+
+Heatran @ Chople Berry
+Ability: Flash Fire
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 SpA / 252 Spe
+Nature: Modest
+- Heat Wave
+- Protect
+- Substitute
+- Earth Power
+
+Exeggutor @ Sitrus Berry
+Ability: Harvest
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 4 Def / 252 SpA
+Nature: Calm
+- Leaf Storm
+- Psyshock
+- Power Swap
+- Protect
+
+=== TRAINER_RAY_VGC2012 ===
+Name: RAY
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: Yes
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Tyranitar @ Chople Berry
+Ability: Sand Stream
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 4 Atk / 252 SpD
+Nature: Adamant
+- Rock Slide
+- Low Kick
+- Fire Punch
+- Protect
+
+Garchomp @ Yache Berry
+Ability: Sand Veil
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+Nature: Jolly
+- Dragon Claw
+- Earthquake
+- Substitute
+- Protect
+
+Cresselia @ Sitrus Berry
+Ability: Levitate
+Level: 50
+IVs: 31 HP / 31 Atk / 0 Def / 31 SpA / 31 SpD / 0 Spe
+EVs: 252 HP / 4 SpA / 252 SpD
+Nature: Sassy
+- Ice Beam
+- Psyshock
+- Swagger
+- Trick Room
+
+Hydreigon @ Dragon Gem
+Ability: Levitate
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 SpA / 252 Spe
+Nature: Timid
+- Draco Meteor
+- Dark Pulse
+- Flamethrower
+- Protect
+
+Rotom-Wash @ Choice Specs
+Ability: Levitate
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 SpA / 252 Spe
+Nature: Modest
+- Thunderbolt
+- Hydro Pump
+- Hidden Power
+- Thunder
+
+Metagross @ Lum Berry
+Ability: Clear Body
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 4 SpD
+Nature: Adamant
+- Meteor Mash
+- Earthquake
+- Zen Headbutt
+- Protect
