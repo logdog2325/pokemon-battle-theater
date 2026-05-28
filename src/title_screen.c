@@ -15,6 +15,7 @@
 #include "constants/map_groups.h"
 #include "palette.h"
 #include "reset_rtc_screen.h"
+#include "save.h"
 #include "string_util.h"
 #include "berry_fix_program.h"
 #include "sound.h"
@@ -207,20 +208,47 @@ static void CB2_SimNewGameSkipTruck(void)
     gFieldCallback = NULL;
 }
 
+// v1.4.1 — wraps CB2_ContinueSavedGame for the sim's "Continue" boot path.
+// Skips the standard map-popup field callback so we land at the Battle Tower
+// lobby instantly, then the gSimAutoOpenPending flag re-opens the trainer
+// picker the next frame.
+static void CB2_SimContinueSkipMapPopup(void)
+{
+    CB2_ContinueSavedGame();
+    gFieldCallback = NULL;
+}
+
 static void CB2_GoToMainMenu(void)
 {
     if (!UpdatePaletteFade())
     {
-        // Battle Simulator: skip main menu + Birch entirely, jump straight to a
-        // new game and request the trainer picker to auto-open once the
-        // overworld is interactive.
-        gSaveBlock2Ptr->playerGender = MALE;
-        StringCopy(gSaveBlock2Ptr->playerName, COMPOUND_STRING("PLAYER"));
-        // Battle style SET = auto-send next mon without "will you switch?" prompt.
-        gSaveBlock2Ptr->optionsBattleStyle = OPTIONS_BATTLE_STYLE_SET;
-        gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST;
+        // v1.4.1 — the trainer picker still auto-opens on either path.
         gSimAutoOpenPending = TRUE;
-        SetMainCallback2(CB2_SimNewGameSkipTruck);
+
+        // v1.4.1 — if a save exists, use the Continue path. The previous code
+        // unconditionally called CB2_NewGame on every boot, which runs
+        // NewGameInitData → ClearSav3 → wipes gSaveBlock3Ptr->simCustomTrainers
+        // every time the user launched the ROM. That's the real reason custom
+        // trainers didn't persist across sessions in v1.4: the save flushed
+        // fine, but the boot path zeroed the in-memory copy before anything
+        // could read it.
+        if (gSaveFileStatus == SAVE_STATUS_OK)
+        {
+            SetMainCallback2(CB2_SimContinueSkipMapPopup);
+        }
+        else
+        {
+            // First boot (no save): skip main menu + Birch and jump straight
+            // into a new game. Customize defaults on the FRESH save so existing
+            // user prefs (e.g. v1.1 player-name override) aren't clobbered on
+            // every subsequent boot.
+            gSaveBlock2Ptr->playerGender = MALE;
+            StringCopy(gSaveBlock2Ptr->playerName, COMPOUND_STRING("PLAYER"));
+            // Battle style SET = auto-send next mon without "will you switch?" prompt.
+            gSaveBlock2Ptr->optionsBattleStyle = OPTIONS_BATTLE_STYLE_SET;
+            gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST;
+            SetMainCallback2(CB2_SimNewGameSkipTruck);
+        }
     }
 }
 
