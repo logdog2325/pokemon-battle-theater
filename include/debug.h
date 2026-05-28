@@ -44,6 +44,13 @@ void Debug_ReopenBuildTrainerSlotMenu(void);
 extern EWRAM_DATA bool8 gSimImportCodePending;
 extern EWRAM_DATA u8 gSimTeamCodeBuffer[32];
 void Debug_DecodeImportedTeamCodeAndReopen(void);
+// v1.7 — set TRUE by Sim_StartFrontierChallenge before the warp to a Frontier
+// facility lobby. field_control_avatar's input poll picks this up on the
+// first frame after the warp lands, re-runs CalculatePlayerPartyCount (which
+// otherwise gets reset to 0 by the warp/load sequence, hiding POKéMON from
+// the START menu even though gPlayerParty[] is populated correctly), and
+// clears the flag.
+extern EWRAM_DATA bool8 gSimFrontierChallengePending;
 extern EWRAM_DATA s16 gSimLevelCap;
 extern EWRAM_DATA u8 gSimBestOf;
 extern EWRAM_DATA u8 gSimT1Wins;

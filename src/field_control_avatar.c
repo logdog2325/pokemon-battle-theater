@@ -13,6 +13,7 @@
 #include "field_control_avatar.h"
 #include "field_message_box.h"
 #include "field_move.h"
+#include "load_save.h"  // v1.7 LoadPlayerParty for Frontier Challenge restore
 #include "field_effect.h"
 #include "field_player_avatar.h"
 #include "field_poison.h"
@@ -270,6 +271,22 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
         FreezeObjectEvents();
         Debug_DecodeImportedTeamCodeAndReopen();
         return TRUE;
+    }
+
+    // v1.7 — Frontier Challenge post-warp party restore. Something in the
+    // CB2_LoadMap → DoMapLoadLoop sequence resets BOTH gPlayerParty[] AND
+    // gPlayerPartyCount after Sim_StartFrontierChallenge writes them, which
+    // is why the START menu hides POKéMON (count=0) AND the menu would show
+    // nothing if you forced it open. The receptionist worked because the
+    // facility's OnTransition calls LoadPlayerParty itself (from the saved
+    // shadow we wrote via SavePlayerParty before the warp). We just need to
+    // do the same restore on first input tick so the START menu sees the
+    // team too. LoadPlayerParty copies gSaveBlock1Ptr->playerParty back into
+    // gPlayerParty[] and sets gPlayerPartyCount in one shot.
+    if (gSimFrontierChallengePending)
+    {
+        gSimFrontierChallengePending = FALSE;
+        LoadPlayerParty();
     }
 
     if (gSimAutoOpenPending && DEBUG_OVERWORLD_MENU && !DEBUG_OVERWORLD_IN_MENU)

@@ -181,6 +181,11 @@ enum DebugTrainerSelection
     // selected trainer's full party into gSaveBlock3Ptr->simCustomTrainers
     // [sBuildTrainerActiveSlot]; cancel returns to the slot menu unchanged.
     TRAINERS_DEBUG_SELECTION_COPY_TO_CUSTOM,
+    // v1.7 — picker is being used as the Frontier Challenge team-picker.
+    // Confirm loads the selected trainer's full party into gPlayerParty and
+    // warps to MAP_BATTLE_FRONTIER_OUTSIDE_WEST so the user can walk into
+    // any facility. Cancel returns to the wrapper menu.
+    TRAINERS_DEBUG_SELECTION_FRONTIER,
 };
 
 // Battle Simulator: tier color prefix for picker display.
@@ -344,6 +349,8 @@ static const u8 sSimSourceSuffixBW[]   = _(" (BW)");      // v0.40 Black/White +
 static const u8 sSimSourceSuffixXY[]   = _(" (XY)");      // v0.49 X/Y (Kalos)
 static const u8 sSimSourceSuffixAnime[] = _(" (Anime)");  // v0.50 Anime team builds
 static const u8 sSimSourceSuffixCustom[] = _(" (Custom)"); // v0.51 user-built trainer slots
+static const u8 sSimSourceSuffixVGC[]    = _(" (VGC)");    // v1.5 VGC 2012 finals (Wolfe / Ray)
+static const u8 sSimSourceSuffixRGBY[]   = _(" (RGBY)");   // v1.6 Prof. Oak Glitch boss
 // v0.41.2: per-variant tags for N / Cheren / Bianca / Hugh so the picker can
 // disambiguate the three starter variants at a glance. N's pair distinguishes
 // by signature legendary; rivals' three each tag the rival's ace starter
@@ -449,6 +456,12 @@ static const u8 *GetSimSourceSuffix(u16 trainerId)
     if ((trainerId >= TRAINER_SIM_CUSTOM_1 && trainerId <= TRAINER_SIM_CUSTOM_3)
      || (trainerId >= TRAINER_SIM_CUSTOM_4 && trainerId <= TRAINER_SIM_CUSTOM_6))
         return sSimSourceSuffixCustom;
+    // v1.5 VGC 2012 World Championships finals (Wolfe Glick + Ray Rizo).
+    if (trainerId == TRAINER_WOLFE_VGC2012 || trainerId == TRAINER_RAY_VGC2012)
+        return sSimSourceSuffixVGC;
+    // v1.6 Prof. Oak Glitch boss — the 3 starter variants.
+    if (trainerId >= TRAINER_OAK_GLITCH_VENUSAUR && trainerId <= TRAINER_OAK_GLITCH_BLASTOISE)
+        return sSimSourceSuffixRGBY;
     return sSimSourceSuffixNone;
 }
 
@@ -866,6 +879,8 @@ static EWRAM_DATA struct DebugMenuListData *sDebugMenuListData = NULL;
 EWRAM_DATA bool8 gIsDebugBattle = FALSE;
 EWRAM_DATA u64 gDebugAIFlags = 0;
 EWRAM_DATA bool8 gSimAutoOpenPending = FALSE;
+// v1.7 — Frontier Challenge post-warp fixup (see include/debug.h).
+EWRAM_DATA bool8 gSimFrontierChallengePending = FALSE;
 // v0.52.5 — pending re-open of the Build Trainer slot menu after returning
 // from DoNamingScreen. sBuildTrainerActiveSlot already persists in EWRAM so
 // the slot index round-trips automatically.
@@ -1143,6 +1158,7 @@ static void DebugAction_Trainers_SetRematch(u8 taskId);
 static void DebugAction_Trainers_SetRematchReadiness(u8 taskId);
 static void DebugAction_Trainers_TryBattle(u8 taskId);
 static void DebugAction_Trainers_RechargeVsSeeker(u8 taskId);
+static void Sim_StartFrontierChallenge(s32 trainerId);  // v1.7
 
 static void DebugAction_FlagsVars_Flags(u8 taskId);
 static void DebugAction_FlagsVars_FlagsSelect(u8 taskId);
@@ -1691,6 +1707,11 @@ static const struct DebugMenuOption sDebugMenu_Actions_TrainersWrapper[] =
 {
     { COMPOUND_STRING("Build Trainer…"),  DebugAction_OpenSubMenuBuildTrainer, sDebugMenu_Actions_BuildTrainer, },
     { COMPOUND_STRING("Run Simulation…"), DebugAction_OpenSubMenuTrainers,     sDebugMenu_Actions_Trainers,     },
+    // v1.7 — Frontier Challenge: skip the sim setup screen entirely, open
+    // the trainer picker directly in FRONTIER selection mode. On confirm,
+    // the chosen trainer's full team loads into gPlayerParty and the user
+    // warps to the Battle Frontier hub so they can walk into any facility.
+    { COMPOUND_STRING("{COLOR LIGHT_BLUE}Frontier Challenge…"), DebugAction_Trainers_ChooseTrainer, (void *)TRAINERS_DEBUG_SELECTION_FRONTIER, },
     { NULL }
 };
 
@@ -5544,11 +5565,19 @@ static void DebugAction_ChooseTrainerID_Select(u8 taskId)
                      || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_PARTNER
                      // v1.1 — copy-to-custom uses the same roster scroll +
                      // L/R section jump UX as the sim slot pickers.
-                     || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_COPY_TO_CUSTOM);
+                     || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_COPY_TO_CUSTOM
+                     // v1.7 — Frontier Challenge picker also wants the
+                     // curated roster scroll + L/R region jump. Without this
+                     // the picker falls through to the generic 0..1310
+                     // numeric scroll and shows every vanilla Emerald
+                     // trainer ID, not just our ~120 curated entries.
+                     || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_FRONTIER);
     // v1.1 — copy mode is read-only against sDebugMenuListData->data[] (it
     // never writes back into a sim slot); cached separately so the scroll
     // handlers can skip the data[X] = tInput write for COPY entries.
-    bool32 isCopyMode = (gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_COPY_TO_CUSTOM);
+    // v1.7 — same goes for FRONTIER mode.
+    bool32 isCopyMode = (gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_COPY_TO_CUSTOM
+                      || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_FRONTIER);
     if (isSimSlot && (JOY_NEW(L_BUTTON) || JOY_NEW(R_BUTTON)))
     {
         PlaySE(SE_SELECT);
@@ -5624,6 +5653,11 @@ static void DebugAction_ChooseTrainerID_Select(u8 taskId)
         // v1.1 — copy-to-custom commits on A, cancels on B, and returns to the
         // slot menu instead of the sim menu.
         bool32 isCopyConfirm = (gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_COPY_TO_CUSTOM);
+        // v1.7 — Frontier Challenge picker. A launches the warp + team load,
+        // B cancels back to the wrapper menu (not the sim menu, since the
+        // user came in from the wrapper).
+        bool32 isFrontier = (gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_FRONTIER);
+        bool32 frontierLaunch = isFrontier && JOY_NEW(A_BUTTON);
         if (isCopyConfirm && JOY_NEW(A_BUTTON))
         {
             if (BuildTrainer_CopyFromTrainer((u16)gTasks[taskId].tInput))
@@ -5631,7 +5665,15 @@ static void DebugAction_ChooseTrainerID_Select(u8 taskId)
             else
                 PlaySE(SE_FAILURE);
         }
-        if (!isCopyConfirm && gTasks[taskId].tInput != gTasks[taskId].tInitial)
+        else if (frontierLaunch)
+        {
+            // Launches the warp into the Battle Frontier hub with the chosen
+            // trainer's team loaded into gPlayerParty. The function pushes a
+            // new MainCallback2 (CB2_LoadMap) so the menu-reopen branch below
+            // is a no-op for this path — the warp takes over the next frame.
+            Sim_StartFrontierChallenge((u16)gTasks[taskId].tInput);
+        }
+        if (!isCopyConfirm && !isFrontier && gTasks[taskId].tInput != gTasks[taskId].tInitial)
         {
             sDebugMenuListData->data[3] = FALSE;
             sDebugMenuListData->data[1] = -1;
@@ -5647,6 +5689,17 @@ static void DebugAction_ChooseTrainerID_Select(u8 taskId)
         {
             sDebugMenuListData->listId = DEBUG_LISTID_BUILD_TRAINER_SLOT;
             Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_BuildTrainerSlot);
+        }
+        else if (frontierLaunch)
+        {
+            // Sim_StartFrontierChallenge already pushed CB2_LoadMap — don't
+            // reopen any menu, the warp takes over.
+        }
+        else if (isFrontier)
+        {
+            // B-button cancel: return to the wrapper menu the user came from.
+            sDebugMenuListData->listId = 0;
+            Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_TrainersWrapper);
         }
         else
         {
@@ -5687,6 +5740,13 @@ static void DebugAction_Trainers_ChooseTrainer(u8 taskId, u32 selection)
         break;
     case TRAINERS_DEBUG_SELECTION_PLAYER:
         gTasks[taskId].tInput = sDebugMenuListData->data[6];
+        break;
+    case TRAINERS_DEBUG_SELECTION_FRONTIER:
+        // v1.7 — Frontier Challenge picker. No saved selection to restore;
+        // land on the first roster trainer (skipping all the vanilla Emerald
+        // trainer IDs that aren't part of our curated sSimulatorRoster).
+        // Mirrors COPY_TO_CUSTOM's initial-value logic.
+        gTasks[taskId].tInput = sSimulatorRoster[0];
         break;
     case TRAINERS_DEBUG_SELECTION_COPY_TO_CUSTOM:
         // v1.1 — copy picker has no "saved selection" to restore. Land on the
@@ -7279,6 +7339,157 @@ static void DebugAction_Trainers_RechargeVsSeeker(u8 taskId)
     MapResetTrainerRematches(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum);
     ScriptContext_SetupScript(EventScript_VsSeekerChargingDone);
     Debug_DestroyMenu_Full(taskId);
+}
+
+// v1.7 — Battle Frontier Challenge Mode (Option A: minimal).
+// Borrows the given trainer's full team and warps the user to the Battle
+// Frontier outdoor hub so they can challenge any of the 7 facilities
+// (Tower / Dome / Palace / Arena / Factory / Pike / Pyramid) with that team.
+// Idea credit: the Reddit player who found the v1.4 forfeit-to-overworld
+// exploit and pitched "make it an official feature" as a better fix than
+// patching the exit hole.
+//
+// Called from the picker's A-button confirm when the picker was opened in
+// TRAINERS_DEBUG_SELECTION_FRONTIER mode (the new wrapper menu entry sets
+// that mode directly without going through the sim battle setup screen).
+//
+// The chosen trainer's team gets loaded into gPlayerParty via the same
+// CreateNPCTrainerPartyFromTrainer call Sim_SetupMatchRound uses. From there,
+// the engine's existing SavePlayerParty / LoadPlayerParty specials (already
+// wired into every Frontier facility's lobby OnTransition script) handle the
+// backup/restore on entry/exit, so no Frontier-internal edits are needed.
+//
+// Exit caveat (Option A): walking back out of the Frontier reception gate
+// leaves the player in the standard overworld. Easiest path back to the
+// wrapper menu is a soft reset. Hooking the gate exit to auto-relaunch the
+// wrapper menu is queued for v1.7.1 polish.
+static void Sim_StartFrontierChallenge(s32 trainerId)
+{
+    if (trainerId == TRAINER_NONE)
+    {
+        PlaySE(SE_FAILURE);
+        return;
+    }
+    // v1.7 — manual party loader. Tried CreateNPCTrainerPartyFromTrainer
+    // (the engine's standard "load this trainer's party" helper) but it
+    // was silently failing to populate gPlayerParty[] for our path —
+    // both the START-menu party display AND the saveblock shadow we wrote
+    // afterwards came out empty. Probably hits an internal gate we
+    // couldn't pin down (the function has special-case branches for
+    // FRONTIER / TRAINER_HILL / sim-battle modes that don't fire the
+    // population loop). Falling back to manual: iterate TrainerMon[]
+    // entries and call CreateMon + SetMonData directly. No gates, no
+    // surprises.
+    const struct Trainer *trainer = GetTrainerStructFromId(trainerId);
+    if (trainer == NULL || trainer->party == NULL || trainer->partySize == 0)
+    {
+        PlaySE(SE_FAILURE);
+        return;
+    }
+    ZeroPlayerPartyMons();
+    u32 partySize = (trainer->partySize > PARTY_SIZE) ? PARTY_SIZE : trainer->partySize;
+    for (u32 i = 0; i < partySize; i++)
+    {
+        const struct TrainerMon *src = &trainer->party[i];
+        u32 personality = 0x88 | (i << 8);  // arbitrary distinct per slot
+        ModifyPersonalityForNature(&personality, src->nature);
+        u32 monLevel = (src->lvl == 0) ? 50 : src->lvl;
+        CreateMon(&gPlayerParty[i], src->species, monLevel, personality, OTID_STRUCT_RANDOM_NO_SHINY);
+        SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &src->heldItem);
+        for (u32 j = 0; j < MAX_MON_MOVES; j++)
+        {
+            u32 move = src->moves[j];
+            SetMonData(&gPlayerParty[i], MON_DATA_MOVE1 + j, &move);
+            u32 pp = gMovesInfo[move].pp;
+            SetMonData(&gPlayerParty[i], MON_DATA_PP1 + j, &pp);
+        }
+        if (src->iv != 0)
+            SetMonData(&gPlayerParty[i], MON_DATA_IVS, &src->iv);
+        if (src->ev != NULL)
+        {
+            SetMonData(&gPlayerParty[i], MON_DATA_HP_EV,    &src->ev[0]);
+            SetMonData(&gPlayerParty[i], MON_DATA_ATK_EV,   &src->ev[1]);
+            SetMonData(&gPlayerParty[i], MON_DATA_DEF_EV,   &src->ev[2]);
+            SetMonData(&gPlayerParty[i], MON_DATA_SPATK_EV, &src->ev[3]);
+            SetMonData(&gPlayerParty[i], MON_DATA_SPDEF_EV, &src->ev[4]);
+            SetMonData(&gPlayerParty[i], MON_DATA_SPEED_EV, &src->ev[5]);
+        }
+        // Recompute stats so the IV/EV/level changes take effect (HP becomes
+        // the proper value instead of the base CreateMon estimate).
+        CalculateMonStats(&gPlayerParty[i]);
+    }
+    gPlayerPartyCount = partySize;
+    // v1.7 — gPlayerPartyCount is set explicitly above in the manual load
+    // loop. Calling CalculatePlayerPartyCount() defensively in case any
+    // helper-path produces a non-SPECIES_NONE entry that the manual count
+    // missed.
+    CalculatePlayerPartyCount();
+    // v1.7 — also persist the loaded team to gSaveBlock1Ptr->playerParty
+    // (in-memory shadow). Every Frontier facility lobby's OnTransition
+    // script calls SavePlayerParty on entry; if the shadow is empty when
+    // those scripts later LoadPlayerParty, gPlayerParty gets wiped.
+    // Writing the shadow here keeps both views in sync.
+    //
+    // NOTE: Skipping TrySavingData (flash flush). Tested calling it but
+    // it's multi-frame async and the warp/save flows tripped over each
+    // other, leaving gPlayerPartyCount=0 in the START menu (receptionist
+    // still saw the team because it iterates gPlayerParty directly).
+    // In-memory shadow alone is enough — flash will sync next save point.
+    SavePlayerParty();
+    // v1.7 — flag a post-warp Calculate fixup. Something in the
+    // CB2_LoadMap → field-load sequence resets gPlayerPartyCount to 0
+    // after our load, which hides POKéMON from the START menu. The
+    // field_control_avatar dispatch checks gSimFrontierChallengePending
+    // each frame; on first frame after the warp lands it re-runs
+    // CalculatePlayerPartyCount and clears the flag.
+    gSimFrontierChallengePending = TRUE;
+    // Grant the Frontier Pass so the receptionists let us into facilities.
+    FlagSet(FLAG_SYS_FRONTIER_PASS);
+    // v1.7 — the smoking-gun fix for the "START menu doesn't show POKéMON
+    // even though party is populated" bug. start_menu.c:340 gates the
+    // POKéMON entry on FLAG_SYS_POKEMON_GET. That flag is set in vanilla
+    // when Birch hands you your starter — never in sim mode since the
+    // wrapper menu skips the entire intro. Receptionist NPCs iterate
+    // gPlayerParty[] directly so they don't need the flag, but the START
+    // menu does. Setting it here unblocks POKéMON in the menu and brings
+    // up the loaner team correctly.
+    FlagSet(FLAG_SYS_POKEMON_GET);
+    // v1.7 polish — give the player running shoes by default. The Frontier
+    // maps are sprawling and walking pace everywhere is annoying. Setting
+    // this flag enables hold-B-to-run via field_player_avatar.c's existing
+    // FlagGet(FLAG_SYS_B_DASH) check.
+    FlagSet(FLAG_SYS_B_DASH);
+    // v1.7 — grant all 8 Hoenn badges so the loaner mons obey at any level.
+    // Without this, Lv 50+ legendaries on a borrowed Champion team would
+    // disobey commands every other turn. Mirrors the same trick pilot
+    // mode uses (Sim_SetupMatchRound at line ~7150).
+    for (u32 i = 0; i < NUM_BADGES; i++)
+        FlagSet(FLAG_BADGE01_GET + i);
+    // v1.7 — drop a Mach Bike + gimmick keys in the bag. Bike is optional
+    // (running shoes already cover most movement) but the user can press
+    // SELECT to swap to bike for the longer hub runs. Mega/Z/Dynamax/Tera
+    // keys let any facility that accepts them fire the gimmick (the bag
+    // checks here mirror the same set Sim_SetupMatchRound adds for sim
+    // battles at lines ~7098-7101).
+    AddBagItem(ITEM_MACH_BIKE, 1);
+    AddBagItem(ITEM_MEGA_RING, 1);
+    AddBagItem(ITEM_Z_POWER_RING, 1);
+    AddBagItem(ITEM_DYNAMAX_BAND, 1);
+    AddBagItem(ITEM_TERA_ORB, 1);
+    // v1.7 — spawn directly inside the Battle Tower lobby instead of the
+    // outdoor Frontier hub. The outdoor map triggered Scott's first-visit
+    // cutscene + dropped the player into a non-walkable tile in some testing
+    // sessions (player got stuck walking into a wall). Battle Tower lobby is
+    // the same map sim battles already exit to — known-good spawn coords,
+    // no scripted intro to interfere. Player can talk to the Tower
+    // receptionist to start a Tower challenge immediately, or walk out (south
+    // door) to navigate the Frontier hub and pick a different facility.
+    SetWarpDestination(MAP_GROUP(MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY),
+                       MAP_NUM(MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY),
+                       WARP_ID_NONE, 5, 8);
+    WarpIntoMap();
+    PlaySE(SE_WARP_IN);
+    SetMainCallback2(CB2_LoadMap);
 }
 
 // *******************************
