@@ -2831,6 +2831,7 @@
     FRONTIER_MON_TYRANITAR_8,   \
     FRONTIER_MON_TYRANITAR_9,   \
     FRONTIER_MON_TYRANITAR_10,  \
+    FRONTIER_MONS_MODERN_META_BLOCK, \
     -1
 
 // Also used by PKMN Ranger M/F
@@ -3618,6 +3619,7 @@
     FRONTIER_MON_TYRANITAR_8,   \
     FRONTIER_MON_TYRANITAR_9,   \
     FRONTIER_MON_TYRANITAR_10,  \
+    FRONTIER_MONS_MODERN_META_BLOCK, \
     -1
 
 #define FRONTIER_MONS_BLACK_BELT_2A \
@@ -3962,6 +3964,7 @@
     FRONTIER_MON_##lastmon##_8, \
     FRONTIER_MON_##lastmon##_9, \
     FRONTIER_MON_##lastmon##_10,\
+    FRONTIER_MONS_MODERN_META_BLOCK, \
     -1
 
 // For this group, Expert M uses Latios, Expert F uses Latias
@@ -4066,6 +4069,7 @@
     FRONTIER_MON_TYRANITAR_8,   \
     FRONTIER_MON_TYRANITAR_9,   \
     FRONTIER_MON_TYRANITAR_10,  \
+    FRONTIER_MONS_MODERN_META_BLOCK, \
     -1
 
 // For this group, Expert M uses Tyranitar, Expert F uses Dragonite
@@ -4170,6 +4174,7 @@
     FRONTIER_MON_##lastmon##_8, \
     FRONTIER_MON_##lastmon##_9, \
     FRONTIER_MON_##lastmon##_10,\
+    FRONTIER_MONS_MODERN_META_BLOCK, \
     -1
 
 // The strong Psychic M/F trainers all use the below Pokémon
@@ -4510,6 +4515,7 @@
     FRONTIER_MON_TYRANITAR_8,   \
     FRONTIER_MON_TYRANITAR_9,   \
     FRONTIER_MON_TYRANITAR_10,  \
+    FRONTIER_MONS_MODERN_META_BLOCK, \
     -1
 
 #define FRONTIER_MONS_POKEMANIAC_2B \
@@ -4600,6 +4606,7 @@
     FRONTIER_MON_TYRANITAR_8,   \
     FRONTIER_MON_TYRANITAR_9,   \
     FRONTIER_MON_TYRANITAR_10,  \
+    FRONTIER_MONS_MODERN_META_BLOCK, \
     -1
 
 #define FRONTIER_MONS_POKEMANIAC_2C \
@@ -4692,6 +4699,7 @@
     FRONTIER_MON_TYRANITAR_8,   \
     FRONTIER_MON_TYRANITAR_9,   \
     FRONTIER_MON_TYRANITAR_10,  \
+    FRONTIER_MONS_MODERN_META_BLOCK, \
     -1
 
 // Identical to FRONTIER_MONS_COOLTRAINER_2C but with both Latias and Latios
@@ -4796,6 +4804,7 @@
     FRONTIER_MON_TYRANITAR_8,   \
     FRONTIER_MON_TYRANITAR_9,   \
     FRONTIER_MON_TYRANITAR_10,  \
+    FRONTIER_MONS_MODERN_META_BLOCK, \
     -1
 
 // Identical to FRONTIER_MONS_COOLTRAINER_2D but with both Latias and Latios
@@ -5564,6 +5573,7 @@
     FRONTIER_MON_TYRANITAR_8,   \
     FRONTIER_MON_TYRANITAR_9,   \
     FRONTIER_MON_TYRANITAR_10,  \
+    FRONTIER_MONS_MODERN_META_BLOCK, \
     -1
 
 #define FRONTIER_MONS_KINDLER_3 \
@@ -5832,3 +5842,69 @@
     FRONTIER_MON_STARMIE_7,     \
     FRONTIER_MON_STARMIE_8,     \
     -1
+
+// v1.8: Modern competitive sets injected into the strongest Battle Frontier
+// trainer pools (EXPERT_2A/2B/2C). Streak 50+ trainers now draw from a
+// Smogon-style pool covering Gen 4-9 staples with held items + nature/EVs
+// that match standard competitive sets.
+#define FRONTIER_MONS_MODERN_META_BLOCK \
+    FRONTIER_MON_SCEPTILE_M1,           \
+    FRONTIER_MON_CHARIZARD_M1,          \
+    FRONTIER_MON_GARCHOMP_1,            \
+    FRONTIER_MON_GARCHOMP_2,            \
+    FRONTIER_MON_GARCHOMP_3,            \
+    FRONTIER_MON_SALAMENCE_M1,          \
+    FRONTIER_MON_TYRANITAR_M1,          \
+    FRONTIER_MON_METAGROSS_M1,          \
+    FRONTIER_MON_SCIZOR_M1,             \
+    FRONTIER_MON_BRELOOM_M1,            \
+    FRONTIER_MON_LUCARIO_M1,            \
+    FRONTIER_MON_HYDREIGON_1,           \
+    FRONTIER_MON_HYDREIGON_2,           \
+    FRONTIER_MON_HEATRAN_1,             \
+    FRONTIER_MON_HEATRAN_2,             \
+    FRONTIER_MON_LATIOS_M1,             \
+    FRONTIER_MON_LATIAS_M1,             \
+    FRONTIER_MON_MAGNEZONE_1,           \
+    FRONTIER_MON_MAGNEZONE_2,           \
+    FRONTIER_MON_MAMOSWINE_1,           \
+    FRONTIER_MON_WEAVILE_1,             \
+    FRONTIER_MON_GLISCOR_1,             \
+    FRONTIER_MON_EXCADRILL_1,           \
+    FRONTIER_MON_AZUMARILL_M1,          \
+    FRONTIER_MON_CLEFABLE_M1,           \
+    FRONTIER_MON_VOLCARONA_1,           \
+    FRONTIER_MON_FERROTHORN_1,          \
+    FRONTIER_MON_ROTOM_WASH_1,          \
+    FRONTIER_MON_ROTOM_WASH_2,          \
+    FRONTIER_MON_ROTOM_HEAT_1,          \
+    FRONTIER_MON_TORNADUS_THERIAN_1,    \
+    FRONTIER_MON_LANDORUS_THERIAN_1,    \
+    FRONTIER_MON_LANDORUS_THERIAN_2,    \
+    FRONTIER_MON_THUNDURUS_THERIAN_1,   \
+    FRONTIER_MON_BISHARP_1,             \
+    FRONTIER_MON_KYUREM_BLACK_1,        \
+    FRONTIER_MON_CONKELDURR_1,          \
+    FRONTIER_MON_TAPU_KOKO_1,           \
+    FRONTIER_MON_TAPU_KOKO_2,           \
+    FRONTIER_MON_TAPU_LELE_1,           \
+    FRONTIER_MON_TAPU_BULU_1,           \
+    FRONTIER_MON_TAPU_FINI_1,           \
+    FRONTIER_MON_TOXAPEX_1,             \
+    FRONTIER_MON_MIMIKYU_1,             \
+    FRONTIER_MON_CINDERACE_1,           \
+    FRONTIER_MON_CORVIKNIGHT_1,         \
+    FRONTIER_MON_DRAGAPULT_1,           \
+    FRONTIER_MON_DRAGAPULT_2,           \
+    FRONTIER_MON_DRACOVISH_1,           \
+    FRONTIER_MON_KINGAMBIT_1,           \
+    FRONTIER_MON_KINGAMBIT_2,           \
+    FRONTIER_MON_GREAT_TUSK_1,          \
+    FRONTIER_MON_IRON_VALIANT_1,        \
+    FRONTIER_MON_ROARING_MOON_1,        \
+    FRONTIER_MON_FLUTTER_MANE_1,        \
+    FRONTIER_MON_GHOLDENGO_1,           \
+    FRONTIER_MON_CHIEN_PAO_1,           \
+    FRONTIER_MON_TING_LU_1,             \
+    FRONTIER_MON_BLISSEY_M1,            \
+    FRONTIER_MON_ALAKAZAM_M1
