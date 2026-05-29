@@ -33691,3 +33691,69 @@ Nature: Adamant
 - Dragon Rage
 - Leer
 - Hyper Beam
+
+=== TRAINER_HAWKE===
+Name:Hawke
+Class: Gentleman
+Pic:Gentleman
+Gender: Male
+Music: Elite Four
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Glimmora @ Focus Sash
+Ability: Toxic Debris
+EVs: 4 HP / 252 SpA / 252 Spe
+Timid Nature
+- Stealth Rock
+- Mortal Spin
+- Power Gem
+- Earth Power
+
+Yveltal @ Heavy-Duty Boots
+Ability: Dark Aura
+EVs: 252 HP / 4 SpA / 252 SpD
+Calm Nature
+- Oblivion Wing
+- Foul Play
+- Roost
+- U-turn
+
+Gliscor @ Poison Orb
+Ability: Poison Heal
+EVs: 244 HP / 244 SpD / 20 Spe
+Careful Nature
+- Spikes
+- Toxic
+- Protect
+- Earthquake
+
+Serperior @ Leftovers
+Ability: Contrary
+EVs: 56 HP / 200 SpA / 252 Spe
+Timid Nature
+IVs: 0 Atk
+- Leaf Storm
+- Giga Drain
+- Substitute
+- Glare
+
+Hydreigon @ Life Orb
+Ability: Levitate
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+IVs: 0 Atk
+- Draco Meteor
+- Dark Pulse
+- Flash Cannon
+- Roost
+
+Garganacl @ Leftovers
+Ability: Purifying Salt
+EVs: 252 HP / 4 Atk / 252 SpD
+Careful Nature
+- Salt Cure
+- Recover
+- Stealth Rock
+- Body Press
