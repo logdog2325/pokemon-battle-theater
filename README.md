@@ -263,9 +263,6 @@ cd pokemon-battle-theater
 make -j4   # produces pokeemerald.gba
 ```
 
-To produce a `RELEASE_BUILD` (Logan + Taylor stripped from the picker),
-uncomment `#define RELEASE_BUILD 1` at the top of `src/debug.c` and rebuild.
-
 ## Distributing a patch
 
 The release ROM cannot be shared directly (Nintendo copyright). Use
