@@ -859,7 +859,14 @@
 #define FRONTIER_MON_LATIOS_7       848
 #define FRONTIER_MON_LATIOS_8       849
 
-#define FRONTIER_MONS_HIGH_TIER     849 // Mons above this point can only appear > level 50
+// v1.10: bumped to NUM_FRONTIER_MONS-1 so modern mons (v1.8/v1.9 additions
+// at index 882-1065) are accessible at Level 50 too. Originally 849 to
+// gate vanilla legendaries (Articuno 870+) behind Open Level. With the
+// modern expansion, capping at 849 means none of the v1.8/v1.9 mons ever
+// show up at Level 50 across any facility (Tower/Dome/Palace/Arena/
+// Factory/Pyramid), which is the most common play mode. Lifting the cap
+// lets the whole modern pool participate.
+#define FRONTIER_MONS_HIGH_TIER     (NUM_FRONTIER_MONS - 1) // Mons above this point can only appear > level 50 (effectively no cap now)
 
 #define FRONTIER_MON_DRAGONITE_1    850
 #define FRONTIER_MON_DRAGONITE_2    851
