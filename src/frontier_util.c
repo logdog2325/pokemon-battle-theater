@@ -631,31 +631,38 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
                 .moves = {MOVE_ICE_BEAM, MOVE_THUNDERBOLT, MOVE_FOCUS_BLAST, MOVE_EARTH_POWER},
             },
         },
-        // Gold Symbol. v1.11: buffed — kanto trio with modern movesets + Heavy-Duty Boots.
+        // Gold Symbol. v1.13: full modern Regi roster. Eleki specs-nukes,
+        // Drago runs Dragon Energy under Dragon Fang + Dragon's Maw for
+        // absurd 150 BP STAB at full HP, Regigigas closes as the King's
+        // ultimate ace — Slow Start means it warms up over 5 turns, then
+        // becomes unstoppable.
         {
             {
-                .species = SPECIES_ARTICUNO,
-                .heldItem = ITEM_HEAVY_DUTY_BOOTS,
+                .species = SPECIES_REGIELEKI,
+                .heldItem = ITEM_CHOICE_SPECS,
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_TIMID,
-                .evs = {248, 0, 0, 252, 8, 0},
-                .moves = {MOVE_FREEZE_DRY, MOVE_HURRICANE, MOVE_ROOST, MOVE_DEFOG},
+                .evs = {0, 0, 0, 252, 4, 252},
+                // Electroweb swapped in for Thunder — gives Brandon a way
+                // to drop fast threats to Regigigas range while it warms
+                // up out of Slow Start.
+                .moves = {MOVE_THUNDERBOLT, MOVE_VOLT_SWITCH, MOVE_RISING_VOLTAGE, MOVE_ELECTROWEB},
             },
             {
-                .species = SPECIES_ZAPDOS,
-                .heldItem = ITEM_HEAVY_DUTY_BOOTS,
+                .species = SPECIES_REGIDRAGO,
+                .heldItem = ITEM_DRAGON_FANG,
                 .fixedIV = MAX_PER_STAT_IVS,
-                .nature = NATURE_TIMID,
-                .evs = {248, 0, 0, 252, 8, 0},
-                .moves = {MOVE_THUNDERBOLT, MOVE_HURRICANE, MOVE_HEAT_WAVE, MOVE_ROOST},
+                .nature = NATURE_MODEST,
+                .evs = {4, 0, 0, 252, 0, 252},
+                .moves = {MOVE_DRAGON_ENERGY, MOVE_DRACO_METEOR, MOVE_EARTH_POWER, MOVE_FOCUS_BLAST},
             },
             {
-                .species = SPECIES_MOLTRES,
-                .heldItem = ITEM_HEAVY_DUTY_BOOTS,
+                .species = SPECIES_REGIGIGAS,
+                .heldItem = ITEM_LUM_BERRY,
                 .fixedIV = MAX_PER_STAT_IVS,
-                .nature = NATURE_TIMID,
-                .evs = {248, 0, 0, 252, 8, 0},
-                .moves = {MOVE_FIRE_BLAST, MOVE_HURRICANE, MOVE_ROOST, MOVE_U_TURN},
+                .nature = NATURE_ADAMANT,
+                .evs = {252, 252, 4, 0, 0, 0},
+                .moves = {MOVE_BODY_SLAM, MOVE_EARTHQUAKE, MOVE_KNOCK_OFF, MOVE_DRAIN_PUNCH},
             },
         },
     },
