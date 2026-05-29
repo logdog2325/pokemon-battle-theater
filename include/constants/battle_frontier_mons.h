@@ -956,6 +956,38 @@
 #define FRONTIER_MON_BLISSEY_M1             940
 #define FRONTIER_MON_ALAKAZAM_M1            941
 
-#define NUM_FRONTIER_MONS           942
+// -- v1.9: Modern early-route fodder --
+#define FRONTIER_MON_BIDOOF                 942
+#define FRONTIER_MON_STARLY                 943
+#define FRONTIER_MON_SHINX                  944
+#define FRONTIER_MON_BUDEW                  945
+#define FRONTIER_MON_BUIZEL                 946
+#define FRONTIER_MON_PATRAT                 947
+#define FRONTIER_MON_LILLIPUP               948
+#define FRONTIER_MON_PIDOVE                 949
+#define FRONTIER_MON_ROGGENROLA             950
+#define FRONTIER_MON_WOOBAT                 951
+#define FRONTIER_MON_COTTONEE               952
+#define FRONTIER_MON_BUNNELBY               953
+#define FRONTIER_MON_FLETCHLING             954
+#define FRONTIER_MON_LITLEO                 955
+#define FRONTIER_MON_PANCHAM                956
+#define FRONTIER_MON_YUNGOOS                957
+#define FRONTIER_MON_PIKIPEK                958
+#define FRONTIER_MON_GRUBBIN                959
+#define FRONTIER_MON_BOUNSWEET              960
+#define FRONTIER_MON_ROCKRUFF               961
+#define FRONTIER_MON_SKWOVET                962
+#define FRONTIER_MON_ROOKIDEE               963
+#define FRONTIER_MON_BLIPBUG                964
+#define FRONTIER_MON_WOOLOO                 965
+#define FRONTIER_MON_YAMPER                 966
+#define FRONTIER_MON_LECHONK                967
+#define FRONTIER_MON_PAWMI                  968
+#define FRONTIER_MON_FIDOUGH                969
+#define FRONTIER_MON_SMOLIV                 970
+#define FRONTIER_MON_TANDEMAUS              971
+
+#define NUM_FRONTIER_MONS           972
 
 #endif //GUARD_CONSTANTS_BATTLE_FRONTIER_MONS_H

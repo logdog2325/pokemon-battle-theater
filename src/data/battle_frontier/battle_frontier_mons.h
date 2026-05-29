@@ -7589,5 +7589,246 @@ const struct TrainerMon gBattleFrontierMons[NUM_FRONTIER_MONS] =
         .ev = TRAINER_PARTY_EVS(0, 0, 0, 252, 252, 4),
         .nature = NATURE_TIMID,
         .ball = BALL_ULTRA
+    },
+    // -- v1.9: Modern early-route fodder for lower-tier Frontier trainers --
+    [FRONTIER_MON_BIDOOF] = {
+        .species = SPECIES_BIDOOF,
+        .moves = {MOVE_TACKLE, MOVE_DEFENSE_CURL, MOVE_ROLLOUT, MOVE_HEADBUTT},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(252, 252, 0, 0, 0, 0),
+        .nature = NATURE_HARDY,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_STARLY] = {
+        .species = SPECIES_STARLY,
+        .moves = {MOVE_TACKLE, MOVE_GROWL, MOVE_QUICK_ATTACK, MOVE_WING_ATTACK},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(0, 252, 0, 252, 0, 0),
+        .nature = NATURE_JOLLY,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_SHINX] = {
+        .species = SPECIES_SHINX,
+        .moves = {MOVE_TACKLE, MOVE_THUNDER_SHOCK, MOVE_LEER, MOVE_BITE},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(0, 252, 0, 252, 0, 0),
+        .nature = NATURE_ADAMANT,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_BUDEW] = {
+        .species = SPECIES_BUDEW,
+        .moves = {MOVE_ABSORB, MOVE_GROWTH, MOVE_WATER_SPORT, MOVE_STUN_SPORE},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(252, 0, 0, 0, 252, 0),
+        .nature = NATURE_MODEST,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_BUIZEL] = {
+        .species = SPECIES_BUIZEL,
+        .moves = {MOVE_WATER_GUN, MOVE_QUICK_ATTACK, MOVE_SWIFT, MOVE_PURSUIT},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(0, 0, 0, 252, 252, 0),
+        .nature = NATURE_HASTY,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_PATRAT] = {
+        .species = SPECIES_PATRAT,
+        .moves = {MOVE_TACKLE, MOVE_LEER, MOVE_BITE, MOVE_BIDE},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(0, 252, 0, 252, 0, 0),
+        .nature = NATURE_ADAMANT,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_LILLIPUP] = {
+        .species = SPECIES_LILLIPUP,
+        .moves = {MOVE_TACKLE, MOVE_LEER, MOVE_BITE, MOVE_BABY_DOLL_EYES},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(0, 252, 0, 252, 0, 0),
+        .nature = NATURE_JOLLY,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_PIDOVE] = {
+        .species = SPECIES_PIDOVE,
+        .moves = {MOVE_GUST, MOVE_GROWL, MOVE_LEER, MOVE_QUICK_ATTACK},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(0, 252, 0, 252, 0, 0),
+        .nature = NATURE_JOLLY,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_ROGGENROLA] = {
+        .species = SPECIES_ROGGENROLA,
+        .moves = {MOVE_TACKLE, MOVE_HARDEN, MOVE_ROCK_BLAST, MOVE_MUD_SLAP},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(252, 252, 0, 0, 0, 0),
+        .nature = NATURE_ADAMANT,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_WOOBAT] = {
+        .species = SPECIES_WOOBAT,
+        .moves = {MOVE_CONFUSION, MOVE_GUST, MOVE_ASSURANCE, MOVE_HEART_STAMP},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(0, 0, 0, 252, 252, 0),
+        .nature = NATURE_TIMID,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_COTTONEE] = {
+        .species = SPECIES_COTTONEE,
+        .moves = {MOVE_ABSORB, MOVE_GROWTH, MOVE_LEECH_SEED, MOVE_STUN_SPORE},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(252, 0, 0, 252, 0, 0),
+        .nature = NATURE_MODEST,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_BUNNELBY] = {
+        .species = SPECIES_BUNNELBY,
+        .moves = {MOVE_TACKLE, MOVE_LEER, MOVE_QUICK_ATTACK, MOVE_DOUBLE_KICK},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(0, 252, 0, 252, 0, 0),
+        .nature = NATURE_JOLLY,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_FLETCHLING] = {
+        .species = SPECIES_FLETCHLING,
+        .moves = {MOVE_TACKLE, MOVE_GROWL, MOVE_QUICK_ATTACK, MOVE_PECK},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(0, 252, 0, 252, 0, 0),
+        .nature = NATURE_JOLLY,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_LITLEO] = {
+        .species = SPECIES_LITLEO,
+        .moves = {MOVE_TACKLE, MOVE_LEER, MOVE_EMBER, MOVE_WORK_UP},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(0, 0, 0, 252, 252, 0),
+        .nature = NATURE_MODEST,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_PANCHAM] = {
+        .species = SPECIES_PANCHAM,
+        .moves = {MOVE_TACKLE, MOVE_LEER, MOVE_ARM_THRUST, MOVE_WORK_UP},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(0, 252, 0, 252, 0, 0),
+        .nature = NATURE_ADAMANT,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_YUNGOOS] = {
+        .species = SPECIES_YUNGOOS,
+        .moves = {MOVE_TACKLE, MOVE_LEER, MOVE_BITE, MOVE_PURSUIT},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(0, 252, 0, 252, 0, 0),
+        .nature = NATURE_ADAMANT,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_PIKIPEK] = {
+        .species = SPECIES_PIKIPEK,
+        .moves = {MOVE_PECK, MOVE_GROWL, MOVE_ECHOED_VOICE, MOVE_PLUCK},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(0, 252, 0, 252, 0, 0),
+        .nature = NATURE_JOLLY,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_GRUBBIN] = {
+        .species = SPECIES_GRUBBIN,
+        .moves = {MOVE_VICE_GRIP, MOVE_STRING_SHOT, MOVE_MUD_SLAP, MOVE_BITE},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(252, 252, 0, 0, 0, 0),
+        .nature = NATURE_ADAMANT,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_BOUNSWEET] = {
+        .species = SPECIES_BOUNSWEET,
+        .moves = {MOVE_SPLASH, MOVE_RAPID_SPIN, MOVE_PLAY_NICE, MOVE_RAZOR_LEAF},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(252, 0, 0, 252, 0, 0),
+        .nature = NATURE_TIMID,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_ROCKRUFF] = {
+        .species = SPECIES_ROCKRUFF,
+        .moves = {MOVE_TACKLE, MOVE_LEER, MOVE_BITE, MOVE_ROCK_THROW},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(0, 252, 0, 252, 0, 0),
+        .nature = NATURE_JOLLY,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_SKWOVET] = {
+        .species = SPECIES_SKWOVET,
+        .moves = {MOVE_TACKLE, MOVE_TAIL_WHIP, MOVE_BITE, MOVE_STUFF_CHEEKS},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(252, 252, 0, 0, 0, 0),
+        .nature = NATURE_HARDY,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_ROOKIDEE] = {
+        .species = SPECIES_ROOKIDEE,
+        .moves = {MOVE_PECK, MOVE_LEER, MOVE_POWER_TRIP, MOVE_FURY_ATTACK},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(0, 252, 0, 252, 0, 0),
+        .nature = NATURE_JOLLY,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_BLIPBUG] = {
+        .species = SPECIES_BLIPBUG,
+        .moves = {MOVE_STRUGGLE_BUG, MOVE_INFESTATION, MOVE_NONE, MOVE_NONE},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(252, 0, 0, 0, 252, 0),
+        .nature = NATURE_MODEST,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_WOOLOO] = {
+        .species = SPECIES_WOOLOO,
+        .moves = {MOVE_TACKLE, MOVE_GROWL, MOVE_DEFENSE_CURL, MOVE_COPYCAT},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(252, 252, 0, 0, 0, 0),
+        .nature = NATURE_HARDY,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_YAMPER] = {
+        .species = SPECIES_YAMPER,
+        .moves = {MOVE_TACKLE, MOVE_TAIL_WHIP, MOVE_NUZZLE, MOVE_BITE},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(0, 252, 0, 252, 0, 0),
+        .nature = NATURE_JOLLY,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_LECHONK] = {
+        .species = SPECIES_LECHONK,
+        .moves = {MOVE_TACKLE, MOVE_TAIL_WHIP, MOVE_DISARMING_VOICE, MOVE_HEADBUTT},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(252, 252, 0, 0, 0, 0),
+        .nature = NATURE_HARDY,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_PAWMI] = {
+        .species = SPECIES_PAWMI,
+        .moves = {MOVE_THUNDER_SHOCK, MOVE_TAIL_WHIP, MOVE_QUICK_ATTACK, MOVE_NUZZLE},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(0, 252, 0, 252, 0, 0),
+        .nature = NATURE_JOLLY,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_FIDOUGH] = {
+        .species = SPECIES_FIDOUGH,
+        .moves = {MOVE_TACKLE, MOVE_FAIRY_WIND, MOVE_BABY_DOLL_EYES, MOVE_PLAY_ROUGH},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(0, 252, 0, 252, 0, 0),
+        .nature = NATURE_JOLLY,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_SMOLIV] = {
+        .species = SPECIES_SMOLIV,
+        .moves = {MOVE_TACKLE, MOVE_LEAFAGE, MOVE_RAZOR_LEAF, MOVE_GROWTH},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(252, 0, 0, 0, 252, 0),
+        .nature = NATURE_MODEST,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_TANDEMAUS] = {
+        .species = SPECIES_TANDEMAUS,
+        .moves = {MOVE_SCRATCH, MOVE_TAIL_WHIP, MOVE_BITE, MOVE_HELPING_HAND},
+        .heldItem = ITEM_ORAN_BERRY,
+        .ev = TRAINER_PARTY_EVS(0, 252, 0, 252, 0, 0),
+        .nature = NATURE_JOLLY,
+        .ball = BALL_POKE
     }
 };

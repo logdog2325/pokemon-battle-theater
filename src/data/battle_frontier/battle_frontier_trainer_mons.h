@@ -426,6 +426,7 @@
     FRONTIER_MON_DRATINI,       \
     FRONTIER_MON_SNUBBULL,      \
     FRONTIER_MON_GULPIN,        \
+    FRONTIER_MONS_MODERN_FODDER_BLOCK, \
     -1
 
 #define FRONTIER_MONS_BUG_CATCHER_1 \
@@ -5908,3 +5909,39 @@
     FRONTIER_MON_TING_LU_1,             \
     FRONTIER_MON_BLISSEY_M1,            \
     FRONTIER_MON_ALAKAZAM_M1
+
+// v1.9: Modern early-route fodder for lower-tier trainer pools
+// (Youngster, Lass, Bug Catcher, Fisherman, etc.). Adds Gen 4-9
+// route-1 mons alongside the existing Gen 1-3 fodder so low-streak
+// matches feel current too.
+#define FRONTIER_MONS_MODERN_FODDER_BLOCK \
+    FRONTIER_MON_BIDOOF,                  \
+    FRONTIER_MON_STARLY,                  \
+    FRONTIER_MON_SHINX,                   \
+    FRONTIER_MON_BUDEW,                   \
+    FRONTIER_MON_BUIZEL,                  \
+    FRONTIER_MON_PATRAT,                  \
+    FRONTIER_MON_LILLIPUP,                \
+    FRONTIER_MON_PIDOVE,                  \
+    FRONTIER_MON_ROGGENROLA,              \
+    FRONTIER_MON_WOOBAT,                  \
+    FRONTIER_MON_COTTONEE,                \
+    FRONTIER_MON_BUNNELBY,                \
+    FRONTIER_MON_FLETCHLING,              \
+    FRONTIER_MON_LITLEO,                  \
+    FRONTIER_MON_PANCHAM,                 \
+    FRONTIER_MON_YUNGOOS,                 \
+    FRONTIER_MON_PIKIPEK,                 \
+    FRONTIER_MON_GRUBBIN,                 \
+    FRONTIER_MON_BOUNSWEET,               \
+    FRONTIER_MON_ROCKRUFF,                \
+    FRONTIER_MON_SKWOVET,                 \
+    FRONTIER_MON_ROOKIDEE,                \
+    FRONTIER_MON_BLIPBUG,                 \
+    FRONTIER_MON_WOOLOO,                  \
+    FRONTIER_MON_YAMPER,                  \
+    FRONTIER_MON_LECHONK,                 \
+    FRONTIER_MON_PAWMI,                   \
+    FRONTIER_MON_FIDOUGH,                 \
+    FRONTIER_MON_SMOLIV,                  \
+    FRONTIER_MON_TANDEMAUS
