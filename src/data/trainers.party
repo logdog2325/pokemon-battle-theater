@@ -33704,6 +33704,7 @@ AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
 
 Glimmora @ Focus Sash
 Ability: Toxic Debris
+Level: 70
 EVs: 4 HP / 252 SpA / 252 Spe
 Timid Nature
 - Stealth Rock
@@ -33713,6 +33714,7 @@ Timid Nature
 
 Yveltal @ Heavy-Duty Boots
 Ability: Dark Aura
+Level: 70
 EVs: 252 HP / 4 SpA / 252 SpD
 Calm Nature
 - Oblivion Wing
@@ -33722,6 +33724,7 @@ Calm Nature
 
 Gliscor @ Poison Orb
 Ability: Poison Heal
+Level: 70
 EVs: 244 HP / 244 SpD / 20 Spe
 Careful Nature
 - Spikes
@@ -33731,6 +33734,7 @@ Careful Nature
 
 Serperior @ Leftovers
 Ability: Contrary
+Level: 70
 EVs: 56 HP / 200 SpA / 252 Spe
 Timid Nature
 IVs: 0 Atk
@@ -33741,6 +33745,7 @@ IVs: 0 Atk
 
 Hydreigon @ Life Orb
 Ability: Levitate
+Level: 70
 EVs: 252 SpA / 4 SpD / 252 Spe
 Timid Nature
 IVs: 0 Atk
@@ -33751,6 +33756,7 @@ IVs: 0 Atk
 
 Garganacl @ Leftovers
 Ability: Purifying Salt
+Level: 70
 EVs: 252 HP / 4 Atk / 252 SpD
 Careful Nature
 - Salt Cure
