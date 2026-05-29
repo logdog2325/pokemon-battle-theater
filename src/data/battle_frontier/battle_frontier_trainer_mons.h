@@ -427,6 +427,7 @@
     FRONTIER_MON_SNUBBULL,      \
     FRONTIER_MON_GULPIN,        \
     FRONTIER_MONS_MODERN_FODDER_BLOCK, \
+    FRONTIER_MONS_V19_EXPANSION_BLOCK, \
     -1
 
 #define FRONTIER_MONS_BUG_CATCHER_1 \
@@ -5975,3 +5976,69 @@
     FRONTIER_MON_INCINEROAR_Z1,    \
     FRONTIER_MON_DECIDUEYE_Z1,     \
     FRONTIER_MON_TAPU_KOKO_Z1
+
+// v1.9: Big pre-evo variety block. Unova monkeys + pseudo-legendary
+// first/second stages + modern starter first/second stages. Goal:
+// "any non-legendary Pokemon could show up in the early tiers."
+// 58 entries spanning Gen 4-9 pre-evos. Mixed into the same low-tier
+// pool as MODERN_FODDER_BLOCK (YOUNGSTER_LASS_1) so streak 1-7
+// matches have huge variety.
+#define FRONTIER_MONS_V19_EXPANSION_BLOCK \
+    FRONTIER_MON_PANSAGE,                 \
+    FRONTIER_MON_SIMISAGE,                \
+    FRONTIER_MON_PANSEAR,                 \
+    FRONTIER_MON_SIMISEAR,                \
+    FRONTIER_MON_PANPOUR,                 \
+    FRONTIER_MON_SIMIPOUR,                \
+    FRONTIER_MON_GIBLE,                   \
+    FRONTIER_MON_GABITE,                  \
+    FRONTIER_MON_BAGON_2,                 \
+    FRONTIER_MON_SHELGON,                 \
+    FRONTIER_MON_LARVITAR_2,              \
+    FRONTIER_MON_PUPITAR,                 \
+    FRONTIER_MON_DEINO,                   \
+    FRONTIER_MON_ZWEILOUS,                \
+    FRONTIER_MON_GOOMY,                   \
+    FRONTIER_MON_SLIGGOO,                 \
+    FRONTIER_MON_JANGMO_O,                \
+    FRONTIER_MON_HAKAMO_O,                \
+    FRONTIER_MON_DREEPY,                  \
+    FRONTIER_MON_DRAKLOAK,                \
+    FRONTIER_MON_FRIGIBAX,                \
+    FRONTIER_MON_ARCTIBAX,                \
+    FRONTIER_MON_TURTWIG,                 \
+    FRONTIER_MON_CHIMCHAR,                \
+    FRONTIER_MON_PIPLUP,                  \
+    FRONTIER_MON_GROTLE,                  \
+    FRONTIER_MON_MONFERNO,                \
+    FRONTIER_MON_PRINPLUP,                \
+    FRONTIER_MON_SNIVY,                   \
+    FRONTIER_MON_TEPIG,                   \
+    FRONTIER_MON_OSHAWOTT,                \
+    FRONTIER_MON_SERVINE,                 \
+    FRONTIER_MON_PIGNITE,                 \
+    FRONTIER_MON_DEWOTT,                  \
+    FRONTIER_MON_CHESPIN,                 \
+    FRONTIER_MON_FENNEKIN,                \
+    FRONTIER_MON_FROAKIE,                 \
+    FRONTIER_MON_QUILLADIN,               \
+    FRONTIER_MON_BRAIXEN,                 \
+    FRONTIER_MON_FROGADIER,               \
+    FRONTIER_MON_ROWLET,                  \
+    FRONTIER_MON_LITTEN,                  \
+    FRONTIER_MON_POPPLIO,                 \
+    FRONTIER_MON_DARTRIX,                 \
+    FRONTIER_MON_TORRACAT,                \
+    FRONTIER_MON_BRIONNE,                 \
+    FRONTIER_MON_GROOKEY,                 \
+    FRONTIER_MON_SCORBUNNY,               \
+    FRONTIER_MON_SOBBLE,                  \
+    FRONTIER_MON_THWACKEY,                \
+    FRONTIER_MON_RABOOT,                  \
+    FRONTIER_MON_DRIZZILE,                \
+    FRONTIER_MON_SPRIGATITO,              \
+    FRONTIER_MON_FLORAGATO,               \
+    FRONTIER_MON_FUECOCO,                 \
+    FRONTIER_MON_CROCALOR,                \
+    FRONTIER_MON_QUAXLY,                  \
+    FRONTIER_MON_QUAXWELL

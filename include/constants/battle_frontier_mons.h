@@ -1002,6 +1002,66 @@
 #define FRONTIER_MON_DECIDUEYE_Z1           982
 #define FRONTIER_MON_TAPU_KOKO_Z1           983
 
-#define NUM_FRONTIER_MONS           984
+// -- v1.9: Unova monkeys + pseudo lines + modern starter pre-evos --
+#define FRONTIER_MON_PANSAGE                984
+#define FRONTIER_MON_SIMISAGE               985
+#define FRONTIER_MON_PANSEAR                986
+#define FRONTIER_MON_SIMISEAR               987
+#define FRONTIER_MON_PANPOUR                988
+#define FRONTIER_MON_SIMIPOUR               989
+#define FRONTIER_MON_GIBLE                  990
+#define FRONTIER_MON_GABITE                 991
+#define FRONTIER_MON_BAGON_2                992
+#define FRONTIER_MON_SHELGON                993
+#define FRONTIER_MON_LARVITAR_2             994
+#define FRONTIER_MON_PUPITAR                995
+#define FRONTIER_MON_DEINO                  996
+#define FRONTIER_MON_ZWEILOUS               997
+#define FRONTIER_MON_GOOMY                  998
+#define FRONTIER_MON_SLIGGOO                999
+#define FRONTIER_MON_JANGMO_O               1000
+#define FRONTIER_MON_HAKAMO_O               1001
+#define FRONTIER_MON_DREEPY                 1002
+#define FRONTIER_MON_DRAKLOAK               1003
+#define FRONTIER_MON_FRIGIBAX               1004
+#define FRONTIER_MON_ARCTIBAX               1005
+#define FRONTIER_MON_TURTWIG                1006
+#define FRONTIER_MON_CHIMCHAR               1007
+#define FRONTIER_MON_PIPLUP                 1008
+#define FRONTIER_MON_GROTLE                 1009
+#define FRONTIER_MON_MONFERNO               1010
+#define FRONTIER_MON_PRINPLUP               1011
+#define FRONTIER_MON_SNIVY                  1012
+#define FRONTIER_MON_TEPIG                  1013
+#define FRONTIER_MON_OSHAWOTT               1014
+#define FRONTIER_MON_SERVINE                1015
+#define FRONTIER_MON_PIGNITE                1016
+#define FRONTIER_MON_DEWOTT                 1017
+#define FRONTIER_MON_CHESPIN                1018
+#define FRONTIER_MON_FENNEKIN               1019
+#define FRONTIER_MON_FROAKIE                1020
+#define FRONTIER_MON_QUILLADIN              1021
+#define FRONTIER_MON_BRAIXEN                1022
+#define FRONTIER_MON_FROGADIER              1023
+#define FRONTIER_MON_ROWLET                 1024
+#define FRONTIER_MON_LITTEN                 1025
+#define FRONTIER_MON_POPPLIO                1026
+#define FRONTIER_MON_DARTRIX                1027
+#define FRONTIER_MON_TORRACAT               1028
+#define FRONTIER_MON_BRIONNE                1029
+#define FRONTIER_MON_GROOKEY                1030
+#define FRONTIER_MON_SCORBUNNY              1031
+#define FRONTIER_MON_SOBBLE                 1032
+#define FRONTIER_MON_THWACKEY               1033
+#define FRONTIER_MON_RABOOT                 1034
+#define FRONTIER_MON_DRIZZILE               1035
+#define FRONTIER_MON_SPRIGATITO             1036
+#define FRONTIER_MON_FLORAGATO              1037
+#define FRONTIER_MON_FUECOCO                1038
+#define FRONTIER_MON_CROCALOR               1039
+#define FRONTIER_MON_QUAXLY                 1040
+#define FRONTIER_MON_QUAXWELL               1041
+
+#define NUM_FRONTIER_MONS           1042
 
 #endif //GUARD_CONSTANTS_BATTLE_FRONTIER_MONS_H
