@@ -988,6 +988,20 @@
 #define FRONTIER_MON_SMOLIV                 970
 #define FRONTIER_MON_TANDEMAUS              971
 
-#define NUM_FRONTIER_MONS           972
+// -- v1.9: Z-move sets across all generations --
+#define FRONTIER_MON_PIKACHU_Z1             972
+#define FRONTIER_MON_CHARIZARD_Z1           973
+#define FRONTIER_MON_TYRANITAR_Z1           974
+#define FRONTIER_MON_KINGDRA_Z1             975
+#define FRONTIER_MON_SCEPTILE_Z1            976
+#define FRONTIER_MON_GARCHOMP_Z1            977
+#define FRONTIER_MON_HYDREIGON_Z1           978
+#define FRONTIER_MON_GRENINJA_Z1            979
+#define FRONTIER_MON_MIMIKYU_Z1             980
+#define FRONTIER_MON_INCINEROAR_Z1          981
+#define FRONTIER_MON_DECIDUEYE_Z1           982
+#define FRONTIER_MON_TAPU_KOKO_Z1           983
+
+#define NUM_FRONTIER_MONS           984
 
 #endif //GUARD_CONSTANTS_BATTLE_FRONTIER_MONS_H

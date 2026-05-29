@@ -7830,5 +7830,108 @@ const struct TrainerMon gBattleFrontierMons[NUM_FRONTIER_MONS] =
         .ev = TRAINER_PARTY_EVS(0, 252, 0, 252, 0, 0),
         .nature = NATURE_JOLLY,
         .ball = BALL_POKE
+    },
+    // -- v1.9: Z-move sets across all generations --
+    [FRONTIER_MON_PIKACHU_Z1] = {
+        .species = SPECIES_PIKACHU,
+        .moves = {MOVE_VOLT_TACKLE, MOVE_IRON_TAIL, MOVE_QUICK_ATTACK, MOVE_THUNDERBOLT},
+        .heldItem = ITEM_PIKANIUM_Z,
+        .ev = TRAINER_PARTY_EVS(0, 252, 0, 252, 0, 0),
+        .nature = NATURE_JOLLY,
+        .ball = BALL_POKE
+    },
+    [FRONTIER_MON_CHARIZARD_Z1] = {
+        .species = SPECIES_CHARIZARD,
+        .moves = {MOVE_FIRE_BLAST, MOVE_AIR_SLASH, MOVE_SOLAR_BEAM, MOVE_ROOST},
+        .heldItem = ITEM_FIRIUM_Z,
+        .ev = TRAINER_PARTY_EVS(0, 0, 0, 252, 252, 4),
+        .nature = NATURE_TIMID,
+        .ball = BALL_ULTRA
+    },
+    [FRONTIER_MON_TYRANITAR_Z1] = {
+        .species = SPECIES_TYRANITAR,
+        .moves = {MOVE_STONE_EDGE, MOVE_CRUNCH, MOVE_EARTHQUAKE, MOVE_FIRE_PUNCH},
+        .heldItem = ITEM_ROCKIUM_Z,
+        .ev = TRAINER_PARTY_EVS(0, 252, 0, 252, 0, 4),
+        .ability = ABILITY_SAND_STREAM,
+        .nature = NATURE_JOLLY,
+        .ball = BALL_ULTRA
+    },
+    [FRONTIER_MON_KINGDRA_Z1] = {
+        .species = SPECIES_KINGDRA,
+        .moves = {MOVE_HYDRO_PUMP, MOVE_DRACO_METEOR, MOVE_ICE_BEAM, MOVE_SURF},
+        .heldItem = ITEM_WATERIUM_Z,
+        .ev = TRAINER_PARTY_EVS(0, 0, 0, 252, 252, 4),
+        .nature = NATURE_MODEST,
+        .ball = BALL_ULTRA
+    },
+    [FRONTIER_MON_SCEPTILE_Z1] = {
+        .species = SPECIES_SCEPTILE,
+        .moves = {MOVE_LEAF_STORM, MOVE_DRAGON_PULSE, MOVE_FOCUS_BLAST, MOVE_EARTHQUAKE},
+        .heldItem = ITEM_GRASSIUM_Z,
+        .ev = TRAINER_PARTY_EVS(0, 0, 0, 252, 252, 4),
+        .nature = NATURE_TIMID,
+        .ball = BALL_ULTRA
+    },
+    [FRONTIER_MON_GARCHOMP_Z1] = {
+        .species = SPECIES_GARCHOMP,
+        .moves = {MOVE_EARTHQUAKE, MOVE_OUTRAGE, MOVE_STONE_EDGE, MOVE_SWORDS_DANCE},
+        .heldItem = ITEM_GROUNDIUM_Z,
+        .ev = TRAINER_PARTY_EVS(0, 252, 0, 252, 0, 4),
+        .ability = ABILITY_ROUGH_SKIN,
+        .nature = NATURE_JOLLY,
+        .ball = BALL_ULTRA
+    },
+    [FRONTIER_MON_HYDREIGON_Z1] = {
+        .species = SPECIES_HYDREIGON,
+        .moves = {MOVE_DARK_PULSE, MOVE_DRACO_METEOR, MOVE_FIRE_BLAST, MOVE_FLASH_CANNON},
+        .heldItem = ITEM_DARKINIUM_Z,
+        .ev = TRAINER_PARTY_EVS(0, 0, 0, 252, 252, 4),
+        .ability = ABILITY_LEVITATE,
+        .nature = NATURE_TIMID,
+        .ball = BALL_ULTRA
+    },
+    [FRONTIER_MON_GRENINJA_Z1] = {
+        .species = SPECIES_GRENINJA,
+        .moves = {MOVE_HYDRO_PUMP, MOVE_ICE_BEAM, MOVE_DARK_PULSE, MOVE_U_TURN},
+        .heldItem = ITEM_WATERIUM_Z,
+        .ev = TRAINER_PARTY_EVS(0, 0, 0, 252, 252, 4),
+        .ability = ABILITY_PROTEAN,
+        .nature = NATURE_TIMID,
+        .ball = BALL_ULTRA
+    },
+    [FRONTIER_MON_MIMIKYU_Z1] = {
+        .species = SPECIES_MIMIKYU,
+        .moves = {MOVE_PLAY_ROUGH, MOVE_SHADOW_SNEAK, MOVE_SHADOW_CLAW, MOVE_SWORDS_DANCE},
+        .heldItem = ITEM_MIMIKIUM_Z,
+        .ev = TRAINER_PARTY_EVS(0, 252, 0, 252, 0, 4),
+        .ability = ABILITY_DISGUISE,
+        .nature = NATURE_JOLLY,
+        .ball = BALL_ULTRA
+    },
+    [FRONTIER_MON_INCINEROAR_Z1] = {
+        .species = SPECIES_INCINEROAR,
+        .moves = {MOVE_DARKEST_LARIAT, MOVE_FLARE_BLITZ, MOVE_EARTHQUAKE, MOVE_U_TURN},
+        .heldItem = ITEM_INCINIUM_Z,
+        .ev = TRAINER_PARTY_EVS(248, 252, 0, 8, 0, 0),
+        .nature = NATURE_ADAMANT,
+        .ball = BALL_ULTRA
+    },
+    [FRONTIER_MON_DECIDUEYE_Z1] = {
+        .species = SPECIES_DECIDUEYE,
+        .moves = {MOVE_SPIRIT_SHACKLE, MOVE_BRAVE_BIRD, MOVE_LEAF_BLADE, MOVE_SUCKER_PUNCH},
+        .heldItem = ITEM_DECIDIUM_Z,
+        .ev = TRAINER_PARTY_EVS(0, 252, 0, 252, 0, 4),
+        .nature = NATURE_ADAMANT,
+        .ball = BALL_ULTRA
+    },
+    [FRONTIER_MON_TAPU_KOKO_Z1] = {
+        .species = SPECIES_TAPU_KOKO,
+        .moves = {MOVE_NATURES_MADNESS, MOVE_THUNDERBOLT, MOVE_DAZZLING_GLEAM, MOVE_VOLT_SWITCH},
+        .heldItem = ITEM_TAPUNIUM_Z,
+        .ev = TRAINER_PARTY_EVS(0, 0, 0, 252, 252, 4),
+        .ability = ABILITY_ELECTRIC_SURGE,
+        .nature = NATURE_TIMID,
+        .ball = BALL_PREMIER
     }
 };

@@ -2833,6 +2833,7 @@
     FRONTIER_MON_TYRANITAR_9,   \
     FRONTIER_MON_TYRANITAR_10,  \
     FRONTIER_MONS_MODERN_META_BLOCK, \
+    FRONTIER_MONS_Z_MOVE_BLOCK, \
     -1
 
 // Also used by PKMN Ranger M/F
@@ -3621,6 +3622,7 @@
     FRONTIER_MON_TYRANITAR_9,   \
     FRONTIER_MON_TYRANITAR_10,  \
     FRONTIER_MONS_MODERN_META_BLOCK, \
+    FRONTIER_MONS_Z_MOVE_BLOCK, \
     -1
 
 #define FRONTIER_MONS_BLACK_BELT_2A \
@@ -3966,6 +3968,7 @@
     FRONTIER_MON_##lastmon##_9, \
     FRONTIER_MON_##lastmon##_10,\
     FRONTIER_MONS_MODERN_META_BLOCK, \
+    FRONTIER_MONS_Z_MOVE_BLOCK, \
     -1
 
 // For this group, Expert M uses Latios, Expert F uses Latias
@@ -4071,6 +4074,7 @@
     FRONTIER_MON_TYRANITAR_9,   \
     FRONTIER_MON_TYRANITAR_10,  \
     FRONTIER_MONS_MODERN_META_BLOCK, \
+    FRONTIER_MONS_Z_MOVE_BLOCK, \
     -1
 
 // For this group, Expert M uses Tyranitar, Expert F uses Dragonite
@@ -4176,6 +4180,7 @@
     FRONTIER_MON_##lastmon##_9, \
     FRONTIER_MON_##lastmon##_10,\
     FRONTIER_MONS_MODERN_META_BLOCK, \
+    FRONTIER_MONS_Z_MOVE_BLOCK, \
     -1
 
 // The strong Psychic M/F trainers all use the below Pokémon
@@ -4517,6 +4522,7 @@
     FRONTIER_MON_TYRANITAR_9,   \
     FRONTIER_MON_TYRANITAR_10,  \
     FRONTIER_MONS_MODERN_META_BLOCK, \
+    FRONTIER_MONS_Z_MOVE_BLOCK, \
     -1
 
 #define FRONTIER_MONS_POKEMANIAC_2B \
@@ -4608,6 +4614,7 @@
     FRONTIER_MON_TYRANITAR_9,   \
     FRONTIER_MON_TYRANITAR_10,  \
     FRONTIER_MONS_MODERN_META_BLOCK, \
+    FRONTIER_MONS_Z_MOVE_BLOCK, \
     -1
 
 #define FRONTIER_MONS_POKEMANIAC_2C \
@@ -4701,6 +4708,7 @@
     FRONTIER_MON_TYRANITAR_9,   \
     FRONTIER_MON_TYRANITAR_10,  \
     FRONTIER_MONS_MODERN_META_BLOCK, \
+    FRONTIER_MONS_Z_MOVE_BLOCK, \
     -1
 
 // Identical to FRONTIER_MONS_COOLTRAINER_2C but with both Latias and Latios
@@ -4806,6 +4814,7 @@
     FRONTIER_MON_TYRANITAR_9,   \
     FRONTIER_MON_TYRANITAR_10,  \
     FRONTIER_MONS_MODERN_META_BLOCK, \
+    FRONTIER_MONS_Z_MOVE_BLOCK, \
     -1
 
 // Identical to FRONTIER_MONS_COOLTRAINER_2D but with both Latias and Latios
@@ -5575,6 +5584,7 @@
     FRONTIER_MON_TYRANITAR_9,   \
     FRONTIER_MON_TYRANITAR_10,  \
     FRONTIER_MONS_MODERN_META_BLOCK, \
+    FRONTIER_MONS_Z_MOVE_BLOCK, \
     -1
 
 #define FRONTIER_MONS_KINDLER_3 \
@@ -5945,3 +5955,23 @@
     FRONTIER_MON_FIDOUGH,                 \
     FRONTIER_MON_SMOLIV,                  \
     FRONTIER_MON_TANDEMAUS
+
+// v1.9: Z-move sets injected into the same high-tier endgame pools
+// that v1.8 modernized (EXPERT_2A/B/C, COOLTRAINER, POKEMANIAC, etc.).
+// Lands modern Z-move firepower alongside Mega Evolutions at streak
+// 50+. Z-Crystals auto-trigger on opponent battlers since the
+// player-side Z-Power Ring check is skipped for opponents (same
+// pattern as Mega Stones).
+#define FRONTIER_MONS_Z_MOVE_BLOCK \
+    FRONTIER_MON_PIKACHU_Z1,       \
+    FRONTIER_MON_CHARIZARD_Z1,     \
+    FRONTIER_MON_TYRANITAR_Z1,     \
+    FRONTIER_MON_KINGDRA_Z1,       \
+    FRONTIER_MON_SCEPTILE_Z1,      \
+    FRONTIER_MON_GARCHOMP_Z1,      \
+    FRONTIER_MON_HYDREIGON_Z1,     \
+    FRONTIER_MON_GRENINJA_Z1,      \
+    FRONTIER_MON_MIMIKYU_Z1,       \
+    FRONTIER_MON_INCINEROAR_Z1,    \
+    FRONTIER_MON_DECIDUEYE_Z1,     \
+    FRONTIER_MON_TAPU_KOKO_Z1
