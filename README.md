@@ -185,10 +185,11 @@ trainer slots.
 
 ### Idea credit
 
-The Reddit player who found the v1.4 forfeit-to-overworld exploit and
-pitched *"make it an official feature"* as a better fix than patching
+**u/Itchy-Hedgehog-3371** — found the v1.4 forfeit-to-overworld exploit
+and pitched *"make it an official feature"* as a better fix than patching
 the exit hole. They were right — this is way more fun than just blocking
-the escape route.
+the escape route. Same Reddit user also drew the current placeholder
+title screen (Mega Blastoise vs Mega Charizard) for v1.6.
 
 ### v1.8: modernized opponent pool
 
@@ -291,8 +292,10 @@ flow / debug menu reference.
 - Bulbapedia / Smogon archives — canonical trainer rosters
 - u/Healthy_Bug7977 and u/LordePachi — suggested the Marvel Snap / Hearthstone–style
   deck-code import that became v1.3's Showdown team-code feature
-- u/Itchy-Hedgehog-3371 — drew the v1.6 placeholder title screen (Mega Blastoise vs
-  Mega Charizard) while a real artist commission is in progress
+- u/Itchy-Hedgehog-3371 — pitched the v1.7 Battle Frontier Challenge Mode idea
+  ("make the forfeit exploit an official feature") AND drew the v1.6 placeholder
+  title screen (Mega Blastoise vs Mega Charizard) while a real artist commission
+  is in progress
 
 Not affiliated with Nintendo, Game Freak, or The Pokémon Company.
 Pokémon and all related marks are trademarks of their respective owners.
