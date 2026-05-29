@@ -260,31 +260,31 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
 {
     [FRONTIER_FACILITY_TOWER] =
     {
-        // Silver Symbol.
+        // Silver Symbol. v1.12: modernized — no megas yet (Gold gets those).
         {
             {
                 .species = SPECIES_ALAKAZAM,
-                .heldItem = ITEM_BRIGHT_POWDER,
-                .fixedIV = 24,
-                .nature = NATURE_MODEST,
-                .evs = {106, 0, 152, 152, 100, 0},
-                .moves = {MOVE_THUNDER_PUNCH, MOVE_FIRE_PUNCH, MOVE_ICE_PUNCH, MOVE_DISABLE},
+                .heldItem = ITEM_LIFE_ORB,
+                .fixedIV = MAX_PER_STAT_IVS,
+                .nature = NATURE_TIMID,
+                .evs = {0, 0, 0, 252, 4, 252},
+                .moves = {MOVE_PSYCHIC, MOVE_FOCUS_BLAST, MOVE_SHADOW_BALL, MOVE_ENERGY_BALL},
             },
             {
                 .species = SPECIES_ENTEI,
-                .heldItem = ITEM_LUM_BERRY,
-                .fixedIV = 24,
-                .nature = NATURE_LONELY,
-                .evs = {100, 152, 152, 0, 100, 6},
-                .moves = {MOVE_FIRE_BLAST, MOVE_CALM_MIND, MOVE_RETURN, MOVE_ROAR},
+                .heldItem = ITEM_LIFE_ORB,
+                .fixedIV = MAX_PER_STAT_IVS,
+                .nature = NATURE_ADAMANT,
+                .evs = {0, 252, 0, 0, 4, 252},
+                .moves = {MOVE_SACRED_FIRE, MOVE_STONE_EDGE, MOVE_EXTREME_SPEED, MOVE_STOMPING_TANTRUM},
             },
             {
                 .species = SPECIES_SNORLAX,
-                .heldItem = ITEM_QUICK_CLAW,
-                .fixedIV = 24,
+                .heldItem = ITEM_LEFTOVERS,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_ADAMANT,
-                .evs = {152, 152, 0, 0, 106, 100},
-                .moves = {MOVE_BODY_SLAM, MOVE_BELLY_DRUM, MOVE_YAWN, MOVE_SHADOW_BALL},
+                .evs = {252, 252, 4, 0, 0, 0},
+                .moves = {MOVE_CURSE, MOVE_BODY_SLAM, MOVE_EARTHQUAKE, MOVE_REST},
             },
         },
         // Gold Symbol. v1.11: buffed to modern competitive sets.
@@ -317,31 +317,31 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
     },
     [FRONTIER_FACILITY_DOME] =
     {
-        // Silver Symbol.
+        // Silver Symbol. v1.12: modernized — no megas yet.
         {
             {
                 .species = SPECIES_SWAMPERT,
-                .heldItem = ITEM_FOCUS_BAND,
-                .fixedIV = 20,
-                .nature = NATURE_BRAVE,
-                .evs = {152, 152, 106, 0, 100, 0},
-                .moves = {MOVE_SURF, MOVE_EARTHQUAKE, MOVE_ICE_BEAM, MOVE_COUNTER},
+                .heldItem = ITEM_CHOICE_BAND,
+                .fixedIV = MAX_PER_STAT_IVS,
+                .nature = NATURE_ADAMANT,
+                .evs = {0, 252, 4, 0, 0, 252},
+                .moves = {MOVE_WATERFALL, MOVE_EARTHQUAKE, MOVE_ICE_PUNCH, MOVE_STONE_EDGE},
             },
             {
                 .species = SPECIES_SALAMENCE,
-                .heldItem = ITEM_LUM_BERRY,
-                .fixedIV = 20,
-                .nature = NATURE_ADAMANT,
-                .evs = {152, 152, 106, 100, 0, 0},
-                .moves = {MOVE_EARTHQUAKE, MOVE_BRICK_BREAK, MOVE_DRAGON_CLAW, MOVE_AERIAL_ACE},
+                .heldItem = ITEM_LIFE_ORB,
+                .fixedIV = MAX_PER_STAT_IVS,
+                .nature = NATURE_JOLLY,
+                .evs = {0, 252, 0, 0, 4, 252},
+                .moves = {MOVE_DRAGON_DANCE, MOVE_OUTRAGE, MOVE_EARTHQUAKE, MOVE_DRAGON_CLAW},
             },
             {
                 .species = SPECIES_CHARIZARD,
-                .heldItem = ITEM_WHITE_HERB,
-                .fixedIV = 20,
-                .nature = NATURE_QUIET,
-                .evs = {100, 152, 106, 152, 0, 0},
-                .moves = {MOVE_OVERHEAT, MOVE_ROCK_SLIDE, MOVE_AERIAL_ACE, MOVE_EARTHQUAKE},
+                .heldItem = ITEM_CHOICE_SPECS,
+                .fixedIV = MAX_PER_STAT_IVS,
+                .nature = NATURE_TIMID,
+                .evs = {0, 0, 0, 252, 4, 252},
+                .moves = {MOVE_FIRE_BLAST, MOVE_AIR_SLASH, MOVE_SOLAR_BEAM, MOVE_FOCUS_BLAST},
             },
         },
         // Gold Symbol. v1.11: buffed — Mega Metagross headlines.
@@ -374,31 +374,31 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
     },
     [FRONTIER_FACILITY_PALACE] =
     {
-        // Silver Symbol.
+        // Silver Symbol. v1.12: modernized.
         {
             {
                 .species = SPECIES_CROBAT,
-                .heldItem = ITEM_BRIGHT_POWDER,
-                .fixedIV = 16,
-                .nature = NATURE_ADAMANT,
-                .evs = {152, 0, 0, 152, 100, 106},
-                .moves = {MOVE_CONFUSE_RAY, MOVE_DOUBLE_TEAM, MOVE_TOXIC, MOVE_FLY},
+                .heldItem = ITEM_BLACK_SLUDGE,
+                .fixedIV = MAX_PER_STAT_IVS,
+                .nature = NATURE_JOLLY,
+                .evs = {248, 0, 0, 0, 8, 252},
+                .moves = {MOVE_BRAVE_BIRD, MOVE_U_TURN, MOVE_ROOST, MOVE_DEFOG},
             },
             {
                 .species = SPECIES_SLAKING,
-                .heldItem = ITEM_SCOPE_LENS,
-                .fixedIV = 16,
-                .nature = NATURE_HARDY,
-                .evs = {152, 152, 0, 106, 100, 0},
-                .moves = {MOVE_EARTHQUAKE, MOVE_SWAGGER, MOVE_SHADOW_BALL, MOVE_BRICK_BREAK},
+                .heldItem = ITEM_CHOICE_BAND,
+                .fixedIV = MAX_PER_STAT_IVS,
+                .nature = NATURE_ADAMANT,
+                .evs = {0, 252, 4, 0, 0, 252},
+                .moves = {MOVE_RETURN, MOVE_EARTHQUAKE, MOVE_SHADOW_CLAW, MOVE_PURSUIT},
             },
             {
                 .species = SPECIES_LAPRAS,
-                .heldItem = ITEM_QUICK_CLAW,
-                .fixedIV = 16,
-                .nature = NATURE_QUIET,
-                .evs = {0, 0, 252, 0, 106, 152},
-                .moves = {MOVE_ICE_BEAM, MOVE_HORN_DRILL, MOVE_CONFUSE_RAY, MOVE_PROTECT},
+                .heldItem = ITEM_CHOICE_SPECS,
+                .fixedIV = MAX_PER_STAT_IVS,
+                .nature = NATURE_MODEST,
+                .evs = {0, 0, 0, 252, 4, 252},
+                .moves = {MOVE_HYDRO_PUMP, MOVE_ICE_BEAM, MOVE_THUNDERBOLT, MOVE_ANCIENT_POWER},
             },
         },
         // Gold Symbol. v1.11: buffed with modern movesets.
@@ -431,31 +431,31 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
     },
     [FRONTIER_FACILITY_ARENA] =
     {
-        // Silver Symbol.
+        // Silver Symbol. v1.12: modernized.
         {
             {
                 .species = SPECIES_HERACROSS,
-                .heldItem = ITEM_SALAC_BERRY,
-                .fixedIV = 20,
+                .heldItem = ITEM_CHOICE_BAND,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_JOLLY,
-                .evs = {106, 152, 0, 152, 0, 100},
-                .moves = {MOVE_MEGAHORN, MOVE_ROCK_TOMB, MOVE_ENDURE, MOVE_REVERSAL},
+                .evs = {0, 252, 0, 0, 4, 252},
+                .moves = {MOVE_MEGAHORN, MOVE_CLOSE_COMBAT, MOVE_STONE_EDGE, MOVE_KNOCK_OFF},
             },
             {
                 .species = SPECIES_UMBREON,
                 .heldItem = ITEM_LEFTOVERS,
-                .fixedIV = 20,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_CALM,
-                .evs = {152, 0, 100, 0, 152, 106},
-                .moves = {MOVE_BODY_SLAM, MOVE_CONFUSE_RAY, MOVE_PSYCHIC, MOVE_FEINT_ATTACK},
+                .evs = {252, 0, 4, 0, 252, 0},
+                .moves = {MOVE_FOUL_PLAY, MOVE_WISH, MOVE_HEAL_BELL, MOVE_TOXIC},
             },
             {
                 .species = SPECIES_SHEDINJA,
-                .heldItem = ITEM_BRIGHT_POWDER,
-                .fixedIV = 20,
+                .heldItem = ITEM_FOCUS_SASH,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_ADAMANT,
-                .evs = {0, 252, 6, 252, 0, 0},
-                .moves = {MOVE_SHADOW_BALL, MOVE_RETURN, MOVE_CONFUSE_RAY, MOVE_AERIAL_ACE},
+                .evs = {0, 252, 4, 0, 0, 252},
+                .moves = {MOVE_SHADOW_SNEAK, MOVE_X_SCISSOR, MOVE_WILL_O_WISP, MOVE_TOXIC},
             },
         },
         // Gold Symbol. v1.11: buffed — Mega Gengar headlines.
@@ -547,31 +547,31 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
     },
     [FRONTIER_FACILITY_PIKE] =
     {
-        // Silver Symbol.
+        // Silver Symbol. v1.12: modernized.
         {
             {
                 .species = SPECIES_SEVIPER,
-                .heldItem = ITEM_QUICK_CLAW,
-                .fixedIV = 16,
-                .nature = NATURE_BRAVE,
-                .evs = {252, 0, 252, 0, 6, 0},
-                .moves = {MOVE_SWAGGER, MOVE_CRUNCH, MOVE_POISON_FANG, MOVE_GIGA_DRAIN},
+                .heldItem = ITEM_BLACK_SLUDGE,
+                .fixedIV = MAX_PER_STAT_IVS,
+                .nature = NATURE_ADAMANT,
+                .evs = {0, 252, 4, 0, 0, 252},
+                .moves = {MOVE_SLUDGE_BOMB, MOVE_EARTHQUAKE, MOVE_SUCKER_PUNCH, MOVE_COIL},
             },
             {
                 .species = SPECIES_SHUCKLE,
-                .heldItem = ITEM_CHESTO_BERRY,
-                .fixedIV = 16,
+                .heldItem = ITEM_LEFTOVERS,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_BOLD,
-                .evs = {252, 0, 0, 0, 106, 252},
-                .moves = {MOVE_TOXIC, MOVE_SANDSTORM, MOVE_PROTECT, MOVE_REST},
+                .evs = {252, 0, 252, 0, 4, 0},
+                .moves = {MOVE_STICKY_WEB, MOVE_TOXIC, MOVE_KNOCK_OFF, MOVE_REST},
             },
             {
                 .species = SPECIES_MILOTIC,
                 .heldItem = ITEM_LEFTOVERS,
-                .fixedIV = 16,
-                .nature = NATURE_MODEST,
-                .evs = {152, 0, 100, 0, 152, 106},
-                .moves = {MOVE_ICE_BEAM, MOVE_MIRROR_COAT, MOVE_SURF, MOVE_RECOVER},
+                .fixedIV = MAX_PER_STAT_IVS,
+                .nature = NATURE_BOLD,
+                .evs = {252, 0, 252, 0, 4, 0},
+                .moves = {MOVE_SCALD, MOVE_ICE_BEAM, MOVE_RECOVER, MOVE_HAZE},
             },
         },
         // Gold Symbol. v1.11: buffed — Mega Gyarados + Mega Steelix double mega.
@@ -604,31 +604,31 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
     },
     [FRONTIER_FACILITY_PYRAMID] =
     {
-        // Silver Symbol.
+        // Silver Symbol. v1.12: modernized — Hoenn regi trio with current sets.
         {
             {
                 .species = SPECIES_REGIROCK,
-                .heldItem = ITEM_QUICK_CLAW,
-                .fixedIV = 16,
+                .heldItem = ITEM_CHOICE_BAND,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_ADAMANT,
-                .evs = {152, 152, 0, 0, 106, 100},
-                .moves = {MOVE_EXPLOSION, MOVE_SUPERPOWER, MOVE_EARTHQUAKE, MOVE_ANCIENT_POWER},
+                .evs = {0, 252, 4, 0, 0, 252},
+                .moves = {MOVE_STONE_EDGE, MOVE_EARTHQUAKE, MOVE_BODY_PRESS, MOVE_EXPLOSION},
             },
             {
                 .species = SPECIES_REGISTEEL,
                 .heldItem = ITEM_LEFTOVERS,
-                .fixedIV = 16,
-                .nature = NATURE_ADAMANT,
-                .evs = {152, 152, 0, 0, 6, 200},
-                .moves = {MOVE_EARTHQUAKE, MOVE_METAL_CLAW, MOVE_TOXIC, MOVE_IRON_DEFENSE},
+                .fixedIV = MAX_PER_STAT_IVS,
+                .nature = NATURE_CAREFUL,
+                .evs = {252, 0, 4, 0, 252, 0},
+                .moves = {MOVE_IRON_HEAD, MOVE_BODY_PRESS, MOVE_STEALTH_ROCK, MOVE_IRON_DEFENSE},
             },
             {
                 .species = SPECIES_REGICE,
-                .heldItem = ITEM_CHESTO_BERRY,
-                .fixedIV = 16,
+                .heldItem = ITEM_CHOICE_SPECS,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_MODEST,
-                .evs = {106, 0, 152, 0, 100, 152},
-                .moves = {MOVE_ICE_BEAM, MOVE_AMNESIA, MOVE_THUNDER, MOVE_REST},
+                .evs = {0, 0, 0, 252, 4, 252},
+                .moves = {MOVE_ICE_BEAM, MOVE_THUNDERBOLT, MOVE_FOCUS_BLAST, MOVE_EARTH_POWER},
             },
         },
         // Gold Symbol. v1.11: buffed — kanto trio with modern movesets + Heavy-Duty Boots.
