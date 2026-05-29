@@ -97,27 +97,36 @@ static const u8 sFixedIVTable[][2] =
     {31, 31},
 };
 
+// v1.11: bumped EVERY tier's upper bound to NUM_FRONTIER_MONS - 1 so
+// modern mons (v1.8/v1.9 additions at indices 882-1065) can appear in
+// Battle Factory rentals at every round of both Level 50 and Open level
+// modes. Lower bounds preserved so the tier's "starting pool" still
+// matters — early rounds skew toward weaker base mons, later rounds
+// expand to legendaries — but every round has SOME chance to roll
+// modern entries. Vanilla had narrow [start, end] ranges for early
+// rounds that completely excluded modern indices, making Factory the
+// only facility where v1.8/v1.9 mons stayed invisible after v1.10.
 static const u16 sInitialRentalMonRanges[][2] =
 {
     // Level 50
-    {FRONTIER_MON_GRIMER,     FRONTIER_MON_FURRET_1},   // 110 - 199
-    {FRONTIER_MON_DELCATTY_1, FRONTIER_MON_CLOYSTER_1}, // 162 - 266
-    {FRONTIER_MON_DELCATTY_2, FRONTIER_MON_CLOYSTER_2}, // 267 - 371
-    {FRONTIER_MON_DUGTRIO_1,  FRONTIER_MON_SLAKING_1},  // 372 - 467
-    {FRONTIER_MON_DUGTRIO_2,  FRONTIER_MON_SLAKING_2},  // 468 - 563
-    {FRONTIER_MON_DUGTRIO_3,  FRONTIER_MON_SLAKING_3},  // 564 - 659
-    {FRONTIER_MON_DUGTRIO_4,  FRONTIER_MON_SLAKING_4},  // 660 - 755
-    {FRONTIER_MON_DUGTRIO_1,  FRONTIER_MONS_HIGH_TIER}, // 372 - 849
+    {FRONTIER_MON_GRIMER,     NUM_FRONTIER_MONS - 1}, // 110 - 1065 (round 1)
+    {FRONTIER_MON_DELCATTY_1, NUM_FRONTIER_MONS - 1}, // 162 - 1065 (round 2)
+    {FRONTIER_MON_DELCATTY_2, NUM_FRONTIER_MONS - 1}, // 267 - 1065 (round 3)
+    {FRONTIER_MON_DUGTRIO_1,  NUM_FRONTIER_MONS - 1}, // 372 - 1065 (round 4)
+    {FRONTIER_MON_DUGTRIO_2,  NUM_FRONTIER_MONS - 1}, // 468 - 1065 (round 5)
+    {FRONTIER_MON_DUGTRIO_3,  NUM_FRONTIER_MONS - 1}, // 564 - 1065 (round 6)
+    {FRONTIER_MON_DUGTRIO_4,  NUM_FRONTIER_MONS - 1}, // 660 - 1065 (round 7)
+    {FRONTIER_MON_DUGTRIO_1,  FRONTIER_MONS_HIGH_TIER}, // 372 - 1065 (round 8+, full pool)
 
     // Open level
-    {FRONTIER_MON_DUGTRIO_1, FRONTIER_MON_SLAKING_1}, // 372 - 467
-    {FRONTIER_MON_DUGTRIO_2, FRONTIER_MON_SLAKING_2}, // 468 - 563
-    {FRONTIER_MON_DUGTRIO_3, FRONTIER_MON_SLAKING_3}, // 564 - 659
-    {FRONTIER_MON_DUGTRIO_4, FRONTIER_MON_SLAKING_4}, // 660 - 755
-    {FRONTIER_MON_DUGTRIO_1, NUM_FRONTIER_MONS - 1},  // 372 - 881
-    {FRONTIER_MON_DUGTRIO_1, NUM_FRONTIER_MONS - 1},  // 372 - 881
-    {FRONTIER_MON_DUGTRIO_1, NUM_FRONTIER_MONS - 1},  // 372 - 881
-    {FRONTIER_MON_DUGTRIO_1, NUM_FRONTIER_MONS - 1},  // 372 - 881
+    {FRONTIER_MON_DUGTRIO_1, NUM_FRONTIER_MONS - 1}, // 372 - 1065
+    {FRONTIER_MON_DUGTRIO_2, NUM_FRONTIER_MONS - 1}, // 468 - 1065
+    {FRONTIER_MON_DUGTRIO_3, NUM_FRONTIER_MONS - 1}, // 564 - 1065
+    {FRONTIER_MON_DUGTRIO_4, NUM_FRONTIER_MONS - 1}, // 660 - 1065
+    {FRONTIER_MON_DUGTRIO_1, NUM_FRONTIER_MONS - 1}, // 372 - 1065
+    {FRONTIER_MON_DUGTRIO_1, NUM_FRONTIER_MONS - 1}, // 372 - 1065
+    {FRONTIER_MON_DUGTRIO_1, NUM_FRONTIER_MONS - 1}, // 372 - 1065
+    {FRONTIER_MON_DUGTRIO_1, NUM_FRONTIER_MONS - 1}, // 372 - 1065
 };
 
 // code
