@@ -1062,6 +1062,32 @@
 #define FRONTIER_MON_QUAXLY                 1040
 #define FRONTIER_MON_QUAXWELL               1041
 
-#define NUM_FRONTIER_MONS           1042
+// -- v1.9: Non-restricted legendaries for high-tier pools --
+#define FRONTIER_MON_MESPRIT                1042
+#define FRONTIER_MON_AZELF                  1043
+#define FRONTIER_MON_UXIE                   1044
+#define FRONTIER_MON_REGIELEKI              1045
+#define FRONTIER_MON_REGIDRAGO              1046
+#define FRONTIER_MON_COBALION               1047
+#define FRONTIER_MON_TERRAKION              1048
+#define FRONTIER_MON_VIRIZION               1049
+#define FRONTIER_MON_KELDEO                 1050
+#define FRONTIER_MON_PHEROMOSA              1051
+#define FRONTIER_MON_KARTANA                1052
+#define FRONTIER_MON_XURKITREE              1053
+#define FRONTIER_MON_BUZZWOLE               1054
+#define FRONTIER_MON_GENESECT               1055
+#define FRONTIER_MON_MELOETTA               1056
+#define FRONTIER_MON_CRESSELIA              1057
+#define FRONTIER_MON_MAGEARNA               1058
+#define FRONTIER_MON_SILVALLY               1059
+#define FRONTIER_MON_WO_CHIEN               1060
+#define FRONTIER_MON_CHI_YU                 1061
+#define FRONTIER_MON_JIRACHI_M1             1062
+#define FRONTIER_MON_CELEBI_M1              1063
+#define FRONTIER_MON_VOLCANION              1064
+#define FRONTIER_MON_DIANCIE                1065
+
+#define NUM_FRONTIER_MONS           1066
 
 #endif //GUARD_CONSTANTS_BATTLE_FRONTIER_MONS_H

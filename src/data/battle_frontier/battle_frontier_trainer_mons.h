@@ -2835,6 +2835,7 @@
     FRONTIER_MON_TYRANITAR_10,  \
     FRONTIER_MONS_MODERN_META_BLOCK, \
     FRONTIER_MONS_Z_MOVE_BLOCK, \
+    FRONTIER_MONS_LEGENDARY_BLOCK, \
     -1
 
 // Also used by PKMN Ranger M/F
@@ -3624,6 +3625,7 @@
     FRONTIER_MON_TYRANITAR_10,  \
     FRONTIER_MONS_MODERN_META_BLOCK, \
     FRONTIER_MONS_Z_MOVE_BLOCK, \
+    FRONTIER_MONS_LEGENDARY_BLOCK, \
     -1
 
 #define FRONTIER_MONS_BLACK_BELT_2A \
@@ -3970,6 +3972,7 @@
     FRONTIER_MON_##lastmon##_10,\
     FRONTIER_MONS_MODERN_META_BLOCK, \
     FRONTIER_MONS_Z_MOVE_BLOCK, \
+    FRONTIER_MONS_LEGENDARY_BLOCK, \
     -1
 
 // For this group, Expert M uses Latios, Expert F uses Latias
@@ -4076,6 +4079,7 @@
     FRONTIER_MON_TYRANITAR_10,  \
     FRONTIER_MONS_MODERN_META_BLOCK, \
     FRONTIER_MONS_Z_MOVE_BLOCK, \
+    FRONTIER_MONS_LEGENDARY_BLOCK, \
     -1
 
 // For this group, Expert M uses Tyranitar, Expert F uses Dragonite
@@ -4182,6 +4186,7 @@
     FRONTIER_MON_##lastmon##_10,\
     FRONTIER_MONS_MODERN_META_BLOCK, \
     FRONTIER_MONS_Z_MOVE_BLOCK, \
+    FRONTIER_MONS_LEGENDARY_BLOCK, \
     -1
 
 // The strong Psychic M/F trainers all use the below Pokémon
@@ -4524,6 +4529,7 @@
     FRONTIER_MON_TYRANITAR_10,  \
     FRONTIER_MONS_MODERN_META_BLOCK, \
     FRONTIER_MONS_Z_MOVE_BLOCK, \
+    FRONTIER_MONS_LEGENDARY_BLOCK, \
     -1
 
 #define FRONTIER_MONS_POKEMANIAC_2B \
@@ -4616,6 +4622,7 @@
     FRONTIER_MON_TYRANITAR_10,  \
     FRONTIER_MONS_MODERN_META_BLOCK, \
     FRONTIER_MONS_Z_MOVE_BLOCK, \
+    FRONTIER_MONS_LEGENDARY_BLOCK, \
     -1
 
 #define FRONTIER_MONS_POKEMANIAC_2C \
@@ -4710,6 +4717,7 @@
     FRONTIER_MON_TYRANITAR_10,  \
     FRONTIER_MONS_MODERN_META_BLOCK, \
     FRONTIER_MONS_Z_MOVE_BLOCK, \
+    FRONTIER_MONS_LEGENDARY_BLOCK, \
     -1
 
 // Identical to FRONTIER_MONS_COOLTRAINER_2C but with both Latias and Latios
@@ -4816,6 +4824,7 @@
     FRONTIER_MON_TYRANITAR_10,  \
     FRONTIER_MONS_MODERN_META_BLOCK, \
     FRONTIER_MONS_Z_MOVE_BLOCK, \
+    FRONTIER_MONS_LEGENDARY_BLOCK, \
     -1
 
 // Identical to FRONTIER_MONS_COOLTRAINER_2D but with both Latias and Latios
@@ -5586,6 +5595,7 @@
     FRONTIER_MON_TYRANITAR_10,  \
     FRONTIER_MONS_MODERN_META_BLOCK, \
     FRONTIER_MONS_Z_MOVE_BLOCK, \
+    FRONTIER_MONS_LEGENDARY_BLOCK, \
     -1
 
 #define FRONTIER_MONS_KINDLER_3 \
@@ -6042,3 +6052,34 @@
     FRONTIER_MON_CROCALOR,                \
     FRONTIER_MON_QUAXLY,                  \
     FRONTIER_MON_QUAXWELL
+
+// v1.9: Non-restricted legendaries injected into the same high-tier
+// pools as v1.8's modern competitive sets. Lake trio, Swords of
+// Justice, modern Regis (Eleki + Drago), Ultra Beasts, mythicals
+// like Jirachi/Celebi/Diancie. Avoids true restricted box legends
+// (Mewtwo, Rayquaza, Arceus, etc.).
+#define FRONTIER_MONS_LEGENDARY_BLOCK \
+    FRONTIER_MON_MESPRIT,             \
+    FRONTIER_MON_AZELF,               \
+    FRONTIER_MON_UXIE,                \
+    FRONTIER_MON_REGIELEKI,           \
+    FRONTIER_MON_REGIDRAGO,           \
+    FRONTIER_MON_COBALION,            \
+    FRONTIER_MON_TERRAKION,           \
+    FRONTIER_MON_VIRIZION,            \
+    FRONTIER_MON_KELDEO,              \
+    FRONTIER_MON_PHEROMOSA,           \
+    FRONTIER_MON_KARTANA,             \
+    FRONTIER_MON_XURKITREE,           \
+    FRONTIER_MON_BUZZWOLE,            \
+    FRONTIER_MON_GENESECT,            \
+    FRONTIER_MON_MELOETTA,            \
+    FRONTIER_MON_CRESSELIA,           \
+    FRONTIER_MON_MAGEARNA,            \
+    FRONTIER_MON_SILVALLY,            \
+    FRONTIER_MON_WO_CHIEN,            \
+    FRONTIER_MON_CHI_YU,              \
+    FRONTIER_MON_JIRACHI_M1,          \
+    FRONTIER_MON_CELEBI_M1,           \
+    FRONTIER_MON_VOLCANION,           \
+    FRONTIER_MON_DIANCIE
