@@ -62,7 +62,7 @@ All releases live on the [Releases page](https://github.com/logdog2325/pokemon-b
   (see [Pilot Mode](#pilot-mode) below)
 - Custom Battle Theater background by LiYun
 - Fan-made placeholder title screen by u/Itchy-Hedgehog-3371
-  (Mega Blastoise vs Mega Charizard X)
+  (Mega Blastoise vs Gigantamax Charizard)
 - AI tweaks for Z-Move / Mega / Dynamax / Gmax bias
 - Custom singles AI controller (fixes vanilla post-KO crash)
 - Affection and Terastallization disabled
@@ -189,7 +189,7 @@ trainer slots.
 and pitched *"make it an official feature"* as a better fix than patching
 the exit hole. They were right — this is way more fun than just blocking
 the escape route. Same Reddit user also drew the current placeholder
-title screen (Mega Blastoise vs Mega Charizard) for v1.6.
+title screen (Mega Blastoise vs Gigantamax Charizard) for v1.6.
 
 ### v1.8: modernized opponent pool
 
@@ -291,7 +291,7 @@ flow / debug menu reference.
   deck-code import that became v1.3's Showdown team-code feature
 - u/Itchy-Hedgehog-3371 — pitched the v1.7 Battle Frontier Challenge Mode idea
   ("make the forfeit exploit an official feature") AND drew the v1.6 placeholder
-  title screen (Mega Blastoise vs Mega Charizard) while a real artist commission
+  title screen (Mega Blastoise vs Gigantamax Charizard) while a real artist commission
   is in progress
 
 Not affiliated with Nintendo, Game Freak, or The Pokémon Company.
