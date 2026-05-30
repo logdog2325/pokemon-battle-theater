@@ -9,7 +9,7 @@ An AI vs AI Pokemon battle simulator built on
 Pit any two trainers from the mainline games (Gens 1-9) against each other,
 or pilot one side via Pilot Mode.
 
-**Download the latest patch:** [v1.14 — Pilot Mode item spam fix](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
+**Download the latest patch:** [v1.19 — Sim wrapper re-entry from inside Frontier Challenge](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
 All releases live on the [Releases page](https://github.com/logdog2325/pokemon-battle-theater/releases).
 
 ---
@@ -182,6 +182,27 @@ trainer slots.
 - 🪪 **Borrowed identity (v1.8)** — your player name becomes the trainer's
   name for the run. Pick Iris's team, you're "Iris" in every dialogue
   line, receptionist greeting, and trainer card. Soft reset to restore
+
+### v1.19: hop back into the Sim menu mid-challenge
+
+<p align="center">
+  <img src="docs/frontier_sim_npc.png" alt="The scientist NPC in the Battle Tower lobby — talk to him to re-open the Sim menu without leaving the challenge" width="480">
+</p>
+
+Once you're inside a Frontier Challenge run, you can re-open the **Build
+Trainer / Run Simulation / Frontier Challenge** wrapper menu *without*
+having to abort the run. Two ways:
+
+- **Battle Tower lobby NPC** — a scientist (pictured above, southeast
+  corner of the Tower lobby) offers a yes/no prompt. Pick "Yes" and the
+  wrapper menu opens right there.
+- **START menu → SIM MENU** — open the START menu anywhere in the
+  Frontier and you'll see a new **SIM MENU** entry. Pick it for the same
+  result, no walking required.
+
+Both routes are non-destructive. Your active challenge keeps going, your
+borrowed trainer name stays intact, and you can swap in / out of sim
+battles or tweak a custom trainer slot without losing your streak.
 
 ### Idea credit
 
