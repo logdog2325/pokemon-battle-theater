@@ -233,8 +233,28 @@ static enum SimTier Sim_GetTier(u16 trainerId)
 // leader theme — fine, but not "Battle Revolution showdown" energy. We pick
 // by tier of the highest-tier trainer in the matchup so every fight feels
 // appropriately epic.
+// v1.17 — Hoenn rivals (Wally / May / Brendan ORAS) should play the RSE
+// Rival theme instead of the FRLG Champion theme they currently get
+// because they're flagged as Champion-tier in the picker color logic.
+// Fan request (Itchy). 891=Wally, 892=Steven Delta, 893=May, 894=Brendan
+// per the Sim_GetTierColorPrefix comment block above. Steven Delta stays
+// on Champion music (he's a Champion), only the actual rivals re-route.
+static bool32 IsHoennRivalForMusic(u16 trainerId)
+{
+    return trainerId == 891 || trainerId == 893 || trainerId == 894;
+}
+
 u16 Sim_GetBattleMusic(void)
 {
+    // Rival music override takes priority over tier-based selection. If any
+    // opponent or the player AI slot is a Hoenn rival, play the RSE Rival
+    // theme — feels right for May/Brendan/Wally even though they're tagged
+    // Champion-tier in the picker.
+    if (IsHoennRivalForMusic(TRAINER_BATTLE_PARAM.opponentA)
+     || ((gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS) && IsHoennRivalForMusic(TRAINER_BATTLE_PARAM.opponentB))
+     || (gPartnerTrainerId != 0 && gPartnerTrainerId < TRAINERS_COUNT && IsHoennRivalForMusic(gPartnerTrainerId)))
+        return MUS_VS_RIVAL;
+
     enum SimTier best = SIM_TIER_NONE;
     // Check both opponent slots and the player AI's roster — pick the highest tier.
     enum SimTier t;
