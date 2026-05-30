@@ -47,7 +47,14 @@ static const struct PyramidWildMon sLevel50WildMons_Round1[] =
         .lvl = 40,
         .abilityNum = ABILITY_RANDOM,
         .moves = {MOVE_THUNDER_WAVE, MOVE_THUNDER, MOVE_PIN_MISSILE, MOVE_QUICK_ATTACK}
-    }
+    },
+    // v1.18 — modern fodder added to lowest-tier Pyramid round. Itchy
+    // request: more fodder/variety on early floors.
+    { .species = SPECIES_BIDOOF,     .lvl = 36, .abilityNum = ABILITY_RANDOM, .moves = {MOVE_TACKLE, MOVE_HEADBUTT, MOVE_DEFENSE_CURL, MOVE_ROLLOUT} },
+    { .species = SPECIES_STARLY,     .lvl = 36, .abilityNum = ABILITY_RANDOM, .moves = {MOVE_QUICK_ATTACK, MOVE_WING_ATTACK, MOVE_GROWL, MOVE_TACKLE} },
+    { .species = SPECIES_LECHONK,    .lvl = 37, .abilityNum = ABILITY_RANDOM, .moves = {MOVE_TACKLE, MOVE_HEADBUTT, MOVE_DISARMING_VOICE, MOVE_TAIL_WHIP} },
+    { .species = SPECIES_PAWMI,      .lvl = 37, .abilityNum = ABILITY_RANDOM, .moves = {MOVE_THUNDER_SHOCK, MOVE_QUICK_ATTACK, MOVE_NUZZLE, MOVE_TAIL_WHIP} },
+    { .species = SPECIES_FIDOUGH,    .lvl = 38, .abilityNum = ABILITY_RANDOM, .moves = {MOVE_PLAY_ROUGH, MOVE_FAIRY_WIND, MOVE_BABY_DOLL_EYES, MOVE_TACKLE} }
 };
 
 static const struct PyramidWildMon sLevel50WildMons_Round2[] =
@@ -99,7 +106,13 @@ static const struct PyramidWildMon sLevel50WildMons_Round2[] =
         .lvl = 41,
         .abilityNum = ABILITY_RANDOM,
         .moves = {MOVE_TOXIC, MOVE_SHADOW_PUNCH, MOVE_NIGHT_SHADE, MOVE_NONE}
-    }
+    },
+    // v1.18 — modern Gen 4-7 fodder
+    { .species = SPECIES_PATRAT,     .lvl = 38, .abilityNum = ABILITY_RANDOM, .moves = {MOVE_TACKLE, MOVE_BITE, MOVE_LEER, MOVE_HYPNOSIS} },
+    { .species = SPECIES_LILLIPUP,   .lvl = 38, .abilityNum = ABILITY_RANDOM, .moves = {MOVE_TACKLE, MOVE_BITE, MOVE_BABY_DOLL_EYES, MOVE_LEER} },
+    { .species = SPECIES_YUNGOOS,    .lvl = 38, .abilityNum = ABILITY_RANDOM, .moves = {MOVE_TACKLE, MOVE_BITE, MOVE_PURSUIT, MOVE_LEER} },
+    { .species = SPECIES_BUNNELBY,   .lvl = 39, .abilityNum = ABILITY_RANDOM, .moves = {MOVE_TACKLE, MOVE_DOUBLE_KICK, MOVE_QUICK_ATTACK, MOVE_LEER} },
+    { .species = SPECIES_PIKIPEK,    .lvl = 39, .abilityNum = ABILITY_RANDOM, .moves = {MOVE_PECK, MOVE_ECHOED_VOICE, MOVE_PLUCK, MOVE_GROWL} }
 };
 
 static const struct PyramidWildMon sLevel50WildMons_Round3[] =
@@ -151,7 +164,13 @@ static const struct PyramidWildMon sLevel50WildMons_Round3[] =
         .lvl = 42,
         .abilityNum = ABILITY_RANDOM,
         .moves = {MOVE_FLAMETHROWER, MOVE_BITE, MOVE_SOLAR_BEAM, MOVE_OVERHEAT}
-    }
+    },
+    // v1.18 — Gen 4-5 pre-evos
+    { .species = SPECIES_SHINX,      .lvl = 40, .abilityNum = ABILITY_RANDOM, .moves = {MOVE_THUNDER_SHOCK, MOVE_BITE, MOVE_LEER, MOVE_TACKLE} },
+    { .species = SPECIES_BUDEW,      .lvl = 40, .abilityNum = ABILITY_RANDOM, .moves = {MOVE_ABSORB, MOVE_GROWTH, MOVE_STUN_SPORE, MOVE_WATER_SPORT} },
+    { .species = SPECIES_BUIZEL,     .lvl = 40, .abilityNum = ABILITY_RANDOM, .moves = {MOVE_WATER_GUN, MOVE_QUICK_ATTACK, MOVE_SWIFT, MOVE_PURSUIT} },
+    { .species = SPECIES_PIDOVE,     .lvl = 40, .abilityNum = ABILITY_RANDOM, .moves = {MOVE_GUST, MOVE_QUICK_ATTACK, MOVE_LEER, MOVE_GROWL} },
+    { .species = SPECIES_WOOLOO,     .lvl = 41, .abilityNum = ABILITY_RANDOM, .moves = {MOVE_TACKLE, MOVE_DEFENSE_CURL, MOVE_GROWL, MOVE_COPYCAT} }
 };
 
 static const struct PyramidWildMon sLevel50WildMons_Round4[] =

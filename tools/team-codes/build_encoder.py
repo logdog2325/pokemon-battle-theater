@@ -43,6 +43,37 @@ def _build_lookup(table: dict[str, int], prefix: str) -> dict[str, int]:
     return out
 
 
+def _build_species_abilities() -> dict:
+    """v1.18 — extract every species' [primary, secondary, hidden] ability
+    names from src/data/pokemon/species_info/*.h. Used by the JS encoder
+    to resolve Showdown's ability names to slot indices (0/1/2). Fixes
+    the Hidden Ability import bug — Zapdos + Static and Hitmonlee +
+    Unburden previously came through as slot 0 (Pressure / Limber)
+    because the encoder didn't know which slot the named ability was in."""
+    repo_root = THIS_DIR.parent.parent
+    species_dir = repo_root / "src" / "data" / "pokemon" / "species_info"
+    species_re = re.compile(r"\[SPECIES_([A-Z0-9_]+)\]\s*=\s*\{")
+    ability_re = re.compile(
+        r"\.abilities\s*=\s*\{\s*ABILITY_([A-Z0-9_]+)\s*,\s*"
+        r"ABILITY_([A-Z0-9_]+)\s*,\s*ABILITY_([A-Z0-9_]+)\s*\}"
+    )
+    out = {}
+    for path in sorted(species_dir.glob("gen_*_families.h")):
+        text = path.read_text()
+        for m in species_re.finditer(text):
+            species = m.group(1)
+            # Search next ~3 KB for the abilities line (struct is sequential).
+            rest = text[m.end() : m.end() + 3000]
+            am = ability_re.search(rest)
+            if am:
+                out[_normalize(species)] = [
+                    _normalize(am.group(1)),
+                    _normalize(am.group(2)),
+                    _normalize(am.group(3)),
+                ]
+    return out
+
+
 def main() -> int:
     species, items, moves, abilities = _tables()
     tables = {
@@ -50,6 +81,10 @@ def main() -> int:
         "items":     _build_lookup(items,     "ITEM_"),
         "moves":     _build_lookup(moves,     "MOVE_"),
         "abilities": _build_lookup(abilities, "ABILITY_"),
+        # v1.18 — species → [slot0, slot1, slot2] ability NAMES (normalized).
+        # JS encoder uses this to resolve "Ability: Static" → slot 2 for
+        # Zapdos, etc. Fixes the HA import bug.
+        "species_abilities": _build_species_abilities(),
     }
     natures_lookup = {n.lower(): i for i, n in enumerate(NATURES)}
 
@@ -69,6 +104,7 @@ def main() -> int:
     print(f"  items:   {len(tables['items'])} entries")
     print(f"  moves:   {len(tables['moves'])} entries")
     print(f"  abilities: {len(tables['abilities'])} entries")
+    print(f"  species_abilities: {len(tables['species_abilities'])} entries")
     return 0
 
 
@@ -240,6 +276,7 @@ function parseShowdown(text) {
     if (!current) {
       current = {
         species: 0, heldItem: 0, abilitySlot: 0, abilityName: "",
+        speciesName: "", // v1.18 — normalized species name for ability-slot lookup
         nickname: "", level: 50, nature: 0, gender: 0, shiny: false,
         moves: [0, 0, 0, 0],
         evs: [0, 0, 0, 0, 0, 0],
@@ -264,8 +301,10 @@ function parseShowdown(text) {
       if (nickMatch) {
         current.nickname = nickMatch[1].trim();
         current.species = lookup(TABLES.species, nickMatch[2].trim(), "species");
+        current.speciesName = normalize(nickMatch[2].trim());
       } else {
         current.species = lookup(TABLES.species, monLine, "species");
+        current.speciesName = normalize(monLine);
       }
       continue;
     }
@@ -288,9 +327,15 @@ function parseShowdown(text) {
       switch (key) {
         case "ability":
           current.abilityName = value;
-          // We don't resolve ability slot here — Showdown lists by name, but
-          // the ROM stores 0/1/2. Default to 0 and let user adjust if needed.
-          // A v1.3 enhancement could lookup species ability table.
+          // v1.18 — resolve ability NAME to slot 0/1/2 via species_abilities
+          // lookup table. Fixes the HA import bug (Zapdos + Static, Hitmonlee
+          // + Unburden, etc. were importing as slot 0 = species default).
+          if (current.speciesName && TABLES.species_abilities[current.speciesName]) {
+            const slots = TABLES.species_abilities[current.speciesName];
+            const normAbil = normalize(value);
+            const slotIdx = slots.indexOf(normAbil);
+            if (slotIdx >= 0) current.abilitySlot = slotIdx;
+          }
           break;
         case "level": current.level = parseInt(value, 10); break;
         case "nature":
