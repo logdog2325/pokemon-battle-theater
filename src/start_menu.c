@@ -69,6 +69,7 @@ enum
     MENU_ACTION_PYRAMID_BAG,
     MENU_ACTION_DEBUG,
     MENU_ACTION_DEXNAV,
+    MENU_ACTION_SIM,  // v1.19 — Frontier Challenge re-opens wrapper menu
 };
 
 // Save status
@@ -111,6 +112,7 @@ static bool8 StartMenuBattlePyramidRetireCallback(void);
 static bool8 StartMenuBattlePyramidBagCallback(void);
 static bool8 StartMenuDebugCallback(void);
 static bool8 StartMenuDexNavCallback(void);
+static bool8 StartMenuSimCallback(void);  // v1.19 — re-opens Sim Theater wrapper menu from inside Frontier Challenge
 
 // Menu callbacks
 static bool8 SaveStartCallback(void);
@@ -188,6 +190,10 @@ static const struct WindowTemplate sWindowTemplate_PyramidPeak = {
 };
 
 static const u8 sText_MenuDebug[] = _("DEBUG");
+// v1.19 — START menu entry that re-opens the Sim wrapper menu while
+// the player is inside Frontier Challenge. Lets them switch teams /
+// modes / pick a new preset without soft resetting.
+static const u8 sText_MenuSim[] = _("SIM MENU");
 
 static const struct MenuAction sStartMenuItems[] =
 {
@@ -206,6 +212,7 @@ static const struct MenuAction sStartMenuItems[] =
     [MENU_ACTION_PYRAMID_BAG]     = {gText_MenuBag,     {.u8_void = StartMenuBattlePyramidBagCallback}},
     [MENU_ACTION_DEBUG]           = {sText_MenuDebug,   {.u8_void = StartMenuDebugCallback}},
     [MENU_ACTION_DEXNAV]          = {gText_MenuDexNav,  {.u8_void = StartMenuDexNavCallback}},
+    [MENU_ACTION_SIM]             = {sText_MenuSim,     {.u8_void = StartMenuSimCallback}},  // v1.19
 };
 
 static const struct BgTemplate sBgTemplates_LinkBattleSave[] =
@@ -348,6 +355,12 @@ static void BuildNormalStartMenu(void)
     AddStartMenuAction(MENU_ACTION_PLAYER);
     AddStartMenuAction(MENU_ACTION_SAVE);
     AddStartMenuAction(MENU_ACTION_OPTION);
+    // v1.19 — show SIM MENU entry only when the player is in an active
+    // Frontier Challenge session. Lets them pop back to the wrapper
+    // (Build Trainer / Run Simulation / Frontier Challenge picker)
+    // without soft-resetting. Sticky flag set in Sim_StartFrontierChallenge.
+    if (gSimFrontierChallengeActive)
+        AddStartMenuAction(MENU_ACTION_SIM);
     AddStartMenuAction(MENU_ACTION_EXIT);
 }
 
@@ -663,7 +676,8 @@ static bool8 HandleStartMenuInput(void)
             && gMenuCallback != StartMenuExitCallback
             && gMenuCallback != StartMenuDebugCallback
             && gMenuCallback != StartMenuSafariZoneRetireCallback
-            && gMenuCallback != StartMenuBattlePyramidRetireCallback)
+            && gMenuCallback != StartMenuBattlePyramidRetireCallback
+            && gMenuCallback != StartMenuSimCallback)  // v1.19 — keep field visible while wrapper opens deferred
         {
            FadeScreen(FADE_TO_BLACK, 0);
         }
@@ -809,6 +823,21 @@ static bool8 StartMenuDebugCallback(void)
     }
 
 return TRUE;
+}
+
+// v1.19 — re-open Sim Theater wrapper menu (Build Trainer / Run Sim /
+// Frontier Challenge) from inside Frontier Challenge mode. Calling
+// Debug_ShowTrainersWrapper() directly from the START menu callback opened the
+// wrapper on top of the START menu's mid-teardown window state, which left a
+// black screen with a live cursor. Defer the open to the next overworld input
+// poll via gSimAutoOpenPending — same channel the boot path and lobby NPC
+// already use. By that point all START menu windows are fully torn down.
+static bool8 StartMenuSimCallback(void)
+{
+    RemoveExtraStartMenuWindows();
+    HideStartMenu();
+    SimRequestWrapperReopen();
+    return TRUE;
 }
 
 static bool8 StartMenuSafariZoneRetireCallback(void)

@@ -39,6 +39,9 @@ extern EWRAM_DATA bool8 gSimPilotMode;
 // across the round-trip).
 extern EWRAM_DATA bool8 gSimBuildTrainerReopenSlot;
 void Debug_ReopenBuildTrainerSlotMenu(void);
+// v1.19 — callnative entry point used by the Battle Tower lobby NPC. Sets
+// gSimAutoOpenPending so the next overworld input poll re-opens the wrapper.
+void SimRequestWrapperReopen(void);
 // v1.3 — team-code import flag + handler. Set TRUE before launching
 // NAMING_SCREEN_TEAMCODE; field_control_avatar's input poll consumes the
 // flag, calls the handler, and the handler decodes the buffer + re-opens
@@ -53,6 +56,7 @@ void Debug_DecodeImportedTeamCodeAndReopen(void);
 // the START menu even though gPlayerParty[] is populated correctly), and
 // clears the flag.
 extern EWRAM_DATA bool8 gSimFrontierChallengePending;
+extern EWRAM_DATA bool8 gSimFrontierChallengeActive;  // v1.19
 extern EWRAM_DATA u8 gSimFrontierBorrowedName[PLAYER_NAME_LENGTH + 1];
 extern EWRAM_DATA s16 gSimLevelCap;
 extern EWRAM_DATA u8 gSimBestOf;

@@ -901,6 +901,14 @@ EWRAM_DATA u64 gDebugAIFlags = 0;
 EWRAM_DATA bool8 gSimAutoOpenPending = FALSE;
 // v1.7 — Frontier Challenge post-warp fixup (see include/debug.h).
 EWRAM_DATA bool8 gSimFrontierChallengePending = FALSE;
+// v1.19 — STICKY flag: stays TRUE for the entire Frontier Challenge
+// session (unlike gSimFrontierChallengePending which is one-shot and
+// clears after the first field tick). Used by start_menu.c to show
+// a "Sim Menu" entry in START menu while the player's in Frontier
+// Challenge, letting them re-open the wrapper without soft resetting.
+// Cleared at boot via EWRAM zero-init or when the user explicitly
+// exits back to the wrapper menu.
+EWRAM_DATA bool8 gSimFrontierChallengeActive = FALSE;
 // v1.8 — buffer for the borrowed trainer name. The Frontier Challenge
 // flow writes the trainer's name into gSaveBlock2Ptr->playerName, but
 // the map-load process (MoveSaveBlocks_ResetHeap + map-script
@@ -2363,6 +2371,14 @@ void Debug_ShowTrainersSubMenu(void)
     sDebugMenuListData->listId = 2;
     Debug_Trainers_ResetTrainersData();
     Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_Trainers);
+}
+
+// v1.19: callnative entry point for the Battle Tower lobby NPC. Just queues
+// the wrapper to auto-open on the next overworld input poll — same channel as
+// the boot path uses. Keeps the script engine out of the menu's lifecycle.
+void SimRequestWrapperReopen(void)
+{
+    gSimAutoOpenPending = TRUE;
 }
 
 // v0.52: top-level wrapper auto-opened on boot. The two-option split between
@@ -7497,6 +7513,10 @@ static void Sim_StartFrontierChallenge(s32 trainerId)
     // each frame; on first frame after the warp lands it re-runs
     // CalculatePlayerPartyCount and clears the flag.
     gSimFrontierChallengePending = TRUE;
+    // v1.19 — sticky flag so the START menu "Sim Menu" entry stays
+    // available the whole Frontier Challenge session, not just the
+    // first frame after warp.
+    gSimFrontierChallengeActive = TRUE;
     // Grant the Frontier Pass so the receptionists let us into facilities.
     FlagSet(FLAG_SYS_FRONTIER_PASS);
     // v1.7 — the smoking-gun fix for the "START menu doesn't show POKéMON

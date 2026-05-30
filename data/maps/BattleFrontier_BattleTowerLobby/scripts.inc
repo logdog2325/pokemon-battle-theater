@@ -497,6 +497,25 @@ BattleFrontier_BattleTowerLobby_EventScript_Boy::
 	msgbox BattleFrontier_BattleTowerLobby_Text_CanLeaveUntilLossOrSevenWins, MSGBOX_NPC
 	end
 
+@ v1.19 — Sim wrapper re-entry NPC. Active during Frontier Challenge so the
+@ player can hop back into the Battle Theater wrapper menu (run a sim, build
+@ a trainer, etc.) without having to abort the challenge first.
+BattleFrontier_BattleTowerLobby_EventScript_SimWrapperNPC::
+	lock
+	faceplayer
+	msgbox BattleFrontier_BattleTowerLobby_Text_SimWrapperOffer, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, BattleFrontier_BattleTowerLobby_EventScript_SimWrapperDecline
+	msgbox BattleFrontier_BattleTowerLobby_Text_SimWrapperOpening, MSGBOX_DEFAULT
+	closemessage
+	callnative SimRequestWrapperReopen
+	release
+	end
+
+BattleFrontier_BattleTowerLobby_EventScript_SimWrapperDecline::
+	msgbox BattleFrontier_BattleTowerLobby_Text_SimWrapperDecline, MSGBOX_DEFAULT
+	release
+	end
+
 BattleFrontier_BattleTowerLobby_EventScript_ShowSinglesResults::
 	lockall
 	frontier_results FRONTIER_FACILITY_TOWER, FRONTIER_MODE_SINGLES
@@ -1397,3 +1416,16 @@ BattleFrontier_BattleTowerLobby_Text_ExplainMultiLinkRules:
 	.string "from those of your friend.\p"
 	.string "You may not interrupt this challenge\n"
 	.string "in the middle, unlike other modes.$"
+
+@ v1.19 — Sim wrapper NPC dialog (Battle Tower lobby)
+BattleFrontier_BattleTowerLobby_Text_SimWrapperOffer:
+	.string "Welcome to the BATTLE THEATER!\p"
+	.string "Would you like to open the SIM MENU\n"
+	.string "to build a trainer or run a sim?$"
+
+BattleFrontier_BattleTowerLobby_Text_SimWrapperOpening:
+	.string "Opening the SIM MENU…$"
+
+BattleFrontier_BattleTowerLobby_Text_SimWrapperDecline:
+	.string "Stop by any time you'd like to\n"
+	.string "step out of the challenge!$"
