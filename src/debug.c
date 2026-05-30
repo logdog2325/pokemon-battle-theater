@@ -1028,6 +1028,7 @@ static void DebugAction_BuildTrainer_OpenSlot4(u8 taskId);
 static void DebugAction_BuildTrainer_OpenSlot5(u8 taskId);
 static void DebugAction_BuildTrainer_OpenSlot6(u8 taskId);
 static void DebugAction_BuildTrainer_ResetSlot(u8 taskId);
+static void DebugAction_BuildTrainer_SetAllLvl50(u8 taskId);  // v1.15
 static void DebugAction_BuildTrainer_BackToWrapper(u8 taskId);
 // v0.52.5 — slot-level identity (trainer name + sprite class). Name uses
 // DoNamingScreen and returns via a field auto-reopen flag; sprite uses the
@@ -1691,6 +1692,9 @@ static const struct DebugMenuOption sDebugMenu_Actions_BuildTrainerSlot[] =
     // trainer picker via DebugAction_Trainers_ChooseTrainer with the
     // COPY_TO_CUSTOM token; A confirms the copy, B cancels.
     { COMPOUND_STRING("Copy preset team…"),      DebugAction_Trainers_ChooseTrainer, (void *)TRAINERS_DEBUG_SELECTION_COPY_TO_CUSTOM },
+    // v1.15 — bulk set every mon's level to 50. Fan request: tedious to
+    // open each per-mon editor and bump level individually after import.
+    { COMPOUND_STRING("Set all to Lv50"),         DebugAction_BuildTrainer_SetAllLvl50,     },
     { COMPOUND_STRING("Save Slot"),              DebugAction_BuildTrainer_SaveSlot,        },
     { COMPOUND_STRING("Reset Slot"),             DebugAction_BuildTrainer_ResetSlot,       },
     { COMPOUND_STRING("Back"),                   DebugAction_BuildTrainer_BackToWrapper,   },
@@ -3222,6 +3226,27 @@ static void DebugAction_BuildTrainer_ResetSlot(u8 taskId)
            sizeof(gSaveBlock3Ptr->simCustomTrainers[sBuildTrainerActiveSlot]));
     // Stay on the slot menu so the user can confirm Reset took effect by
     // backing out and seeing the placeholder team in a battle.
+}
+
+// v1.15 — bulk set every populated mon in the current slot to level 50.
+// Skips empty slots (species == SPECIES_NONE). Plays a success cue so the
+// user gets immediate feedback without having to back out and re-open
+// each mon to verify the change took.
+static void DebugAction_BuildTrainer_SetAllLvl50(u8 taskId)
+{
+    if (sBuildTrainerActiveSlot >= SIM_NUM_CUSTOM_TRAINERS)
+        return;
+    struct SimCustomTrainer *slot = &gSaveBlock3Ptr->simCustomTrainers[sBuildTrainerActiveSlot];
+    u32 touched = 0;
+    for (u32 i = 0; i < 6; i++)
+    {
+        if (slot->mons[i].species != SPECIES_NONE)
+        {
+            slot->mons[i].level = 50;
+            touched++;
+        }
+    }
+    PlaySE(touched > 0 ? SE_SUCCESS : SE_FAILURE);
 }
 
 // v0.52 Phase 2 — Pop back to the Build Trainer slot picker from the

@@ -1009,9 +1009,25 @@ static u32 ChooseMoveOrAction_Doubles(enum BattlerId battler)
             bestMovePointsForTarget[battlerIndex] = mostViableMovesScores[0];
 
             // Don't use a move against ally if it has less than 100 points.
-            if (battlerIndex == BATTLE_PARTNER(battler) && bestMovePointsForTarget[battlerIndex] < AI_SCORE_DEFAULT)
+            // v1.15 — also reject if the chosen move would deal damage to
+            // the ally (DAMAGE_CATEGORY_PHYSICAL / SPECIAL). Fan bug report:
+            // AI in doubles occasionally picked a single-target damaging
+            // move against its own teammate when the score happened to land
+            // at exactly AI_SCORE_DEFAULT (100) for that target. The
+            // existing `< AI_SCORE_DEFAULT` check let a 100-tie through.
+            // AI_FLAG_ATTACKS_PARTNER (wild natural enemies in B_WILD mode)
+            // is the only legitimate case for crossing the friendly fire
+            // line, so it stays exempt.
+            if (battlerIndex == BATTLE_PARTNER(battler))
             {
-                bestMovePointsForTarget[battlerIndex] = -1;
+                u32 chosenMove = gBattleMons[battler].moves[mostViableMovesIndices[0]];
+                bool32 attacksPartnerFlag = (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_ATTACKS_PARTNER) != 0;
+                bool32 isDamaging = !IsBattleMoveStatus(chosenMove);
+                if (bestMovePointsForTarget[battlerIndex] < AI_SCORE_DEFAULT
+                 || (isDamaging && !attacksPartnerFlag))
+                {
+                    bestMovePointsForTarget[battlerIndex] = -1;
+                }
             }
 
             for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
