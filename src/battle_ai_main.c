@@ -1029,6 +1029,18 @@ static u32 ChooseMoveOrAction_Doubles(enum BattlerId battler)
                     bestMovePointsForTarget[battlerIndex] = -1;
                 }
             }
+            // v1.15.1 — same fix for self-targeting. Itchy followup report:
+            // Azumarill used Iron Tail on itself. The target loop iterates all
+            // 4 battlers including the attacker, and damaging moves at exactly
+            // AI_SCORE_DEFAULT (100) for self-target slipped through. Status
+            // moves with self-target intent (Swords Dance, Recover, etc.)
+            // remain valid — only block damaging moves from picking self.
+            if (battlerIndex == battler)
+            {
+                u32 chosenMove = gBattleMons[battler].moves[mostViableMovesIndices[0]];
+                if (!IsBattleMoveStatus(chosenMove))
+                    bestMovePointsForTarget[battlerIndex] = -1;
+            }
 
             for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
             {
