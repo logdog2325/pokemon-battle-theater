@@ -33763,3 +33763,75 @@ Careful Nature
 - Recover
 - Stealth Rock
 - Body Press
+
+=== TRAINER_PENNY===
+Name:Penny
+Class: Lass
+Pic:Lass
+Gender: Female
+Music: Female
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Umbreon  
+Ability: Synchronize  
+Level: 62  
+EVs: 252 HP / 4 Def / 252 SpD  
+Calm Nature  
+- Dark Pulse  
+- Psychic  
+- Baby-Doll Eyes  
+- Quick Attack  
+
+Vaporeon  
+Ability: Water Absorb  
+Level: 62  
+EVs: 252 HP / 252 Def / 4 SpA  
+Bold Nature  
+- Hydro Pump  
+- Aurora Beam  
+- Baby-Doll Eyes  
+- Quick Attack  
+
+Jolteon  
+Ability: Quick Feet  
+Level: 62  
+EVs: 252 SpA / 4 SpD / 252 Spe  
+Timid Nature  
+- Thunder  
+- Pin Missile  
+- Baby-Doll Eyes  
+- Quick Attack  
+
+Flareon  
+Ability: Flash Fire  
+Level: 62  
+EVs: 252 Atk / 4 SpD / 252 Spe  
+Adamant Nature  
+- Flare Blitz  
+- Fire Spin  
+- Baby-Doll Eyes  
+- Quick Attack  
+
+Leafeon  
+Ability: Leaf Guard  
+Level: 62  
+EVs: 252 Atk / 4 SpD / 252 Spe  
+Jolly Nature  
+- Leaf Blade  
+- X-Scissor  
+- Baby-Doll Eyes  
+- Quick Attack  
+
+Sylveon  
+Ability: Cute Charm  
+Level: 63  
+Tera Type: Fairy  
+EVs: 252 HP / 252 SpA / 4 SpD  
+Modest Nature  
+- Moonblast  
+- Shadow Ball  
+- Baby-Doll Eyes  
+- Quick Attack  
+
