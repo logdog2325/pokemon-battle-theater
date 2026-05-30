@@ -602,52 +602,100 @@ struct SimCup
     u8 size;
 };
 
-static const u16 sCupHoenn[]      = { 773, 777, 781, 785, 789, 793, 797, 801 };           // Hoenn gym leader _5 rematches
-static const u16 sCupKantoHGSS[]  = { 862, 863, 864, 865, 866, 867, 868 };                // 7 Kanto HGSS gym leaders
+// v1.20 — consolidated per-game cups. Replaced the old per-region splits
+// (Hoenn/KantoHGSS/Indigo + AlolaTrial/AlolaLeague + PlatGym/PlatLeague +
+// BdspGym/BdspLeague + SwshGym/SwshChamps + HgssPool) with one cup per game.
+// PWT cups, RR, LGPE, ORAS, and Champions kept as standalone (Champions
+// revamped below to use the 11 canonical in-game champions).
+// All cups except the small ORAS / FRLG ones are pool-mode: the bracket
+// builder shuffles and picks 7 random opponents per run.
+
+// Emerald — 8 gym leader Match-Call rematches (_5) + 4 E4 + Wallace + Steven
+static const u16 sCupEmerald[]    = {
+    773, 777, 781, 785, 789, 793, 797, 801,         // Roxanne/Brawly/Wattson/Flannery/Norman/Winona/T&L/Juan _5
+    261, 262, 263, 264,                              // Sidney, Phoebe, Glacia, Drake
+    335, 804,                                        // Wallace champion, Steven
+};
+
+// FRLG — Indigo E4 + 3 Blue starter variants + Red + Leaf
+static const u16 sCupFRLG[]       = {
+    851, 852,                                        // Red, Leaf
+    855, 856, 857, 858,                              // Lorelei, Bruno, Agatha, Lance Kanto
+    859, 860, 861,                                   // Blue (Squirtle/Bulbasaur/Charmander variants)
+};
+
+// HGSS — Red + Blue HGSS + 3 Silvers + Johto gyms + Kanto HGSS gyms + Johto E4 + Lance HGSS
+static const u16 sCupHGSS[]       = {
+    851, 966, 967, 968, 984,                         // Red, Blue HGSS, Silver Cynd/Toto/Chik
+    969, 970, 971, 972, 973, 974, 975, 976,          // Johto gym leaders HGSS
+    862, 863, 864, 865, 866, 867, 868,               // Kanto gym HGSS rematches
+    977, 978, 979, 980,                              // Johto E4 HGSS
+    981,                                             // Lance HGSS
+};
+
+// Platinum — Sinnoh gyms + Sinnoh E4 + Cynthia Pt + Barry + Riley + Buck
+static const u16 sCupPlatinum[]   = {
+    988, 989, 990, 991, 992, 993, 994, 995,          // Roark/Gardenia/Maylene/Wake/Fantina/Byron/Candice/Volkner
+    1001, 1002, 1003, 1004, 1005,                    // Aaron, Bertha, Flint, Lucian, Cynthia Pt
+    986, 998, 1000,                                  // Barry, Riley, Buck
+};
+
+// BDSP — same Sinnoh roster, BDSP-era teams (Cynthia BDSP w/ Garchomp Lv 88, etc.)
+static const u16 sCupBDSP[]       = {
+    1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016,  // Sinnoh gym leaders BDSP
+    1017, 1018, 1019, 1020, 1021,                    // E4 + Cynthia BDSP
+    1007, 1023, 1026,                                // Barry, Lucas, Dawn BDSP
+};
+
+// ORAS — Wally, Steven ORAS, May/Brendan rivals, Hoenn E4 ORAS
+static const u16 sCupOras[]       = { 891, 892, 893, 894, 895, 896, 897, 898 };
+
+// SwSh — Galar gym leaders (incl. Melony) + Leon × 3 + Hop × 3 + Mustard × 2 + Marnie/Bede + Klara/Avery/Peony
+static const u16 sCupSwSh[]       = {
+    1042, 1043, 1044, 1045, 1046, 1047, 1049, 1050,  // Milo/Nessa/Kabu/Bea/Allister/Gordie/Piers/Raihan
+    1048,                                            // Melony
+    1040, 1041,                                      // Marnie, Bede
+    1029, 1030, 1031,                                // Leon variants
+    1032, 1034, 1036,                                // Hop (one per starter path)
+    1038, 1039,                                      // Mustard Single / Rapid Strike
+    1051, 1052, 1053,                                // Klara, Avery, Peony
+};
+
+// Alola — SM trial captains + kahunas + E4 + champion + Kukui/Hau/Gladion variants + USUM additions
+static const u16 sCupAlola[]      = {
+    917, 918, 919, 920, 921, 922, 923,               // Ilima/Lana/Kiawe/Mallow/Sophocles/Acerola/Mina
+    924, 925, 926, 927, 928, 929, 930, 931,          // Hala/Olivia/Nanu/Hapu/Molayne/Kahili/Kukui/Hau
+    932, 933,                                        // Kukui Primarina/Incineroar variants
+    934, 935,                                        // Hau Decidueye/Incineroar variants
+    936, 937, 938,                                   // Gladion 3 starter variants
+    1073, 1074, 1075, 1076, 1077, 1078, 1079,        // Faba, Dexio, Plumeria, Ryuki, Guzma, Lusamine, Tristan
+    1080, 1081, 1082,                                // Blue USUM, Red USUM, Anabel USUM
+};
+
+// Champions — the 11 canonical in-game champion teams (Cynthia in BOTH BDSP and Platinum = 12 entries).
+// Bracket picks 8 random per run so each tournament has a different mix.
+static const u16 sCupChampions[]  = {
+    860,                                             // Blue FRLG (Bulbasaur variant — canonical)
+    981,                                             // Lance HGSS
+    892,                                             // Steven ORAS
+    335,                                             // Wallace Emerald
+    1083,                                            // Diantha XY
+    1057,                                            // Alder BW
+    1030,                                            // Leon SwSh (Scorbunny variant — canonical)
+    964,                                             // Iris (BW2 PWT — only Iris in game)
+    1021,                                            // Cynthia BDSP
+    1005,                                            // Cynthia Platinum
+    982,                                             // Trace LGPE (Pikachu variant)
+    930,                                             // Kukui Alola
+};
+
+// PWT cups + RR kept as-is below.
 static const u16 sCupPwtKanto[]   = { 869, 870, 871, 872, 873, 874, 875, 876 };           // PWT Kanto leaders
-static const u16 sCupPwtHoenn[]   = { 877, 878, 879, 880, 881, 882, 883, 884 };           // PWT Hoenn leaders (8 of 9)
-static const u16 sCupOras[]       = { 891, 892, 893, 894, 895, 896, 897, 898 };           // Wally, Steven, May, Brendan, Sidney, Phoebe, Glacia, Drake
-static const u16 sCupLgpe[]       = { 899, 900, 901, 902, 903, 904, 906 };                // Lorelei, Agatha, Lance, Red, Blue, Bruno, Green
-static const u16 sCupChampions[]  = { 335, 804, 851, 886, 888, 889, 890, 902 };           // Steven, Wallace, Red, Blue PWT, Steven PWT, Wallace PWT, Red PWT, Red LGPE
-static const u16 sCupIndigoE4[]   = { 855, 856, 857, 858, 859, 860, 861, 851 };           // Indigo E4 + Blue variants + Red
-// v0.9 NEW CUPS
+static const u16 sCupPwtHoenn[]   = { 877, 878, 879, 880, 881, 882, 883, 884 };           // PWT Hoenn leaders
+static const u16 sCupLgpe[]       = { 899, 900, 901, 902, 903, 904, 906 };                // LGPE E4 + Red + Blue + Bruno + Green
 static const u16 sCupRRocket[]    = { 907, 908, 909, 910, 911, 913, 915, 916 };           // RR bosses: Archie, Maxie, Cyrus US/UM, Lysandre US, Ghetsis US, Giovanni US/UM
-static const u16 sCupAlolaTrial[] = { 917, 918, 919, 920, 921, 922, 923 };                // Alola Trial Captains (Ilima, Lana, Kiawe, Mallow, Sophocles, Acerola, Mina)
-static const u16 sCupAlolaLeague[] = { 924, 925, 926, 927, 928, 929, 930, 931 };          // Alola Kahunas+E4+Champion (Hala, Olivia A., Nanu, Hapu, Molayne, Kahili, Kukui, Hau)
-// v0.10 PWT CHAMPIONS — the eight PWT-format champion teams in one bracket.
-// Red (890), Blue (886), Lance (887), Steven (888), Wallace (889) from the
-// original PWT specials, plus v0.10 additions Cynthia (963), Iris (964),
-// Alder (965). Builder shuffles for random pairings each run.
+// PWT CHAMPIONS — Red/Blue/Lance/Steven/Wallace PWT + Cynthia/Iris/Alder PWT
 static const u16 sCupPwtChamps[]  = { 890, 886, 887, 888, 889, 963, 964, 965 };
-
-// v0.11 PLATINUM cups — Sinnoh Battleground gym leaders (8) and a Platinum
-// "League" cup mixing the high-level Sinnoh E4 + Cynthia rematch + Barry.
-static const u16 sCupPlatGym[]    = { 988, 989, 990, 991, 992, 993, 994, 995 };  // Roark..Volkner
-static const u16 sCupPlatLeague[] = { 1001, 1002, 1003, 1004, 1005,              // Aaron, Bertha, Flint, Lucian, Cynthia
-                                      986, 998, 1000 };                          // Barry-C, Riley, Buck
-
-// v0.12 BDSP cups — BDSP Battleground gym leaders (8) + BDSP League (4 E4 +
-// Cynthia + Barry-BC + Lucas-BC + Dawn-BC).
-static const u16 sCupBdspGym[]    = { 1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016 };
-static const u16 sCupBdspLeague[] = { 1017, 1018, 1019, 1020, 1021,             // Aaron, Bertha, Flint, Lucian, Cynthia BDSP
-                                      1007, 1023, 1026 };                       // Barry-BC, Lucas-BC, Dawn-BC
-
-// v0.14 SwSh cups — Galar gym leaders (8 of 9, Milo + Nessa + Kabu + Bea +
-// Allister + Gordie + Piers + Raihan; Melony swapped in for Allister/Gordie
-// in alt cup) and SwSh Champions (3 Leon variants + Mustard ×2 + Hop ×3).
-static const u16 sCupSwshGym[]    = { 1042, 1043, 1044, 1045, 1046, 1047, 1049, 1050 };  // Milo, Nessa, Kabu, Bea, Allister, Gordie, Piers, Raihan
-static const u16 sCupSwshChamps[] = { 1029, 1030, 1031,                                  // Leon-C / Leon-I / Leon-R
-                                      1038, 1039,                                        // Mustard-S / Mustard-R
-                                      1032, 1034, 1036 };                                // Hop-SWR / Hop-SWC / Hop-SWI
-
-// v0.11 HGSS pool cup — 25-trainer pool covering Red, Blue HGSS, all three
-// Silvers, Johto gym rematches, Kanto gym HGSS, Johto E4, and Lance HGSS.
-// Builder picks 7 random per run so each tournament has a different roster.
-static const u16 sCupHgssPool[]   = { 851, 966, 967, 968, 984,                   // Red, Blue HGSS, Silvers
-                                      969, 970, 971, 972, 973, 974, 975, 976,    // Johto gym (Falkner..Clair)
-                                      862, 863, 864, 865, 866, 867, 868,         // Kanto HGSS gym
-                                      977, 978, 979, 980,                        // Johto E4
-                                      981 };                                     // Lance HGSS
 
 // v0.10 PWT REGIONAL CUPS (each region has its own 8-leader tournament).
 // Johto PWT (8 leaders): Falkner, Bugsy, Whitney, Morty, Chuck, Jasmine, Pryce, Clair
@@ -681,72 +729,50 @@ static const u16 sCupPwtWorld[]   = {
 };
 
 static const u8 sCupName_Off[]      = _("Off");
-static const u8 sCupName_Hoenn[]    = _("Hoenn");
-static const u8 sCupName_KantoHGSS[] = _("Kanto HGSS");
-static const u8 sCupName_PwtKanto[] = _("PWT Kanto");
-static const u8 sCupName_PwtHoenn[] = _("PWT Hoenn");
-static const u8 sCupName_Oras[]     = _("ORAS");
-static const u8 sCupName_Lgpe[]     = _("LGPE");
-static const u8 sCupName_Champions[] = _("Champions");
-static const u8 sCupName_Indigo[]   = _("Indigo E4");
-// v0.9 NEW CUP NAMES (≤10 chars each for picker display)
+// v1.20 — consolidated per-game cup names
+static const u8 sCupName_Emerald[]      = _("Emerald");
+static const u8 sCupName_FRLG[]         = _("FRLG");
+static const u8 sCupName_HGSS[]         = _("HGSS");
+static const u8 sCupName_Platinum[]     = _("Platinum");
+static const u8 sCupName_BDSP[]         = _("BDSP");
+static const u8 sCupName_Oras[]         = _("ORAS");
+static const u8 sCupName_SwSh[]         = _("SwSh");
+static const u8 sCupName_Alola[]        = _("Alola");
 static const u8 sCupName_RRocket[]      = _("R Rocket");
-static const u8 sCupName_AlolaTrial[]   = _("Alola Trial");
-static const u8 sCupName_AlolaLeague[]  = _("Alola E4");
-static const u8 sCupName_PwtWorld[]     = _("PWT World");
+static const u8 sCupName_Lgpe[]         = _("LGPE");
+static const u8 sCupName_Champions[]    = _("Champions");
+// PWT cups (unchanged)
+static const u8 sCupName_PwtKanto[]     = _("PWT Kanto");
+static const u8 sCupName_PwtHoenn[]     = _("PWT Hoenn");
 static const u8 sCupName_PwtJohto[]     = _("PWT Johto");
 static const u8 sCupName_PwtSinnoh[]    = _("PWT Sinnoh");
 static const u8 sCupName_PwtUnova[]     = _("PWT Unova");
 static const u8 sCupName_PwtChamps[]    = _("PWT Champs");
-static const u8 sCupName_PlatGym[]      = _("Pt Gym");
-static const u8 sCupName_PlatLeague[]   = _("Pt League");
-static const u8 sCupName_HgssPool[]     = _("HGSS Pool");
-static const u8 sCupName_BdspGym[]      = _("BDSP Gym");
-static const u8 sCupName_BdspLeague[]   = _("BDSP Leage");
-static const u8 sCupName_SwshGym[]      = _("SwSh Gym");
-static const u8 sCupName_SwshChamps[]   = _("SwSh Champs");
+static const u8 sCupName_PwtWorld[]     = _("PWT World");
 
 static const struct SimCup sSimCups[] =
 {
-    { sCupName_Off,       NULL,            0 },   // 0: Off
-    { sCupName_Hoenn,     sCupHoenn,       8 },
-    { sCupName_KantoHGSS, sCupKantoHGSS,   7 },
-    { sCupName_PwtKanto,  sCupPwtKanto,    8 },
-    { sCupName_PwtHoenn,  sCupPwtHoenn,    8 },
-    { sCupName_Oras,      sCupOras,        8 },
-    { sCupName_Lgpe,      sCupLgpe,        7 },
-    { sCupName_Champions, sCupChampions,   8 },
-    { sCupName_Indigo,      sCupIndigoE4,      8 },
-    // ---- v0.9 NEW CUPS ----
-    { sCupName_RRocket,     sCupRRocket,       8 },
-    { sCupName_AlolaTrial,  sCupAlolaTrial,    7 },
-    { sCupName_AlolaLeague, sCupAlolaLeague,   8 },
-    // ---- v0.10 PWT regional cups + expanded World pool ----
-    { sCupName_PwtJohto,    sCupPwtJohto,      8 },
-    { sCupName_PwtSinnoh,   sCupPwtSinnoh,     8 },
-    // v1.5 — PWT Unova bumped 8 → 13 (added Striaton trio + Cheren + Roxie).
-    // Count >7 triggers Sim_BuildTournamentBracket's pool-shuffle path, so
-    // each tournament run picks 7 random opponents from the 13-trainer pool.
-    { sCupName_PwtUnova,    sCupPwtUnova,     13 },
-    { sCupName_PwtChamps,   sCupPwtChamps,     8 },
-    // PWT World Leaders — 49-entry pool (all PWT leaders + Cynthia/Iris/Alder
-    // + v1.5 Striaton trio / Cheren / Roxie / Bianca), builder picks 7 random
-    // per run.
-    { sCupName_PwtWorld,    sCupPwtWorld,     49 },
-    // v0.11 Platinum + HGSS cups
-    { sCupName_PlatGym,     sCupPlatGym,       8 },     // Sinnoh Battleground gym leaders
-    { sCupName_PlatLeague,  sCupPlatLeague,    8 },     // Sinnoh E4 + Cynthia + Barry-C + Riley/Buck
-    { sCupName_HgssPool,    sCupHgssPool,     25 },     // 25-trainer HGSS pool, picks 7 random
-    // v0.12 BDSP cups
-    { sCupName_BdspGym,     sCupBdspGym,       8 },     // BDSP Battleground gym leaders
-    { sCupName_BdspLeague,  sCupBdspLeague,    8 },     // BDSP E4 + Cynthia + Barry/Lucas/Dawn rivals
-    // v0.14 SwSh cups
-    { sCupName_SwshGym,     sCupSwshGym,       8 },     // 8 Galar gym leaders
-    { sCupName_SwshChamps,  sCupSwshChamps,    8 },     // 3 Leon + 2 Mustard + 3 Hop
-    // ---- v0.10+ DEFERRED CUPS ----
-    // PWT Type Experts cup — user dumped ~324 Pokemon (54 unlabeled teams).
-    // Needs disambiguation before adding. Targeting v0.10.
-    //     { sCupName_PwtTypes,    sCupPwtTypes,     8 },
+    { sCupName_Off,         NULL,             0 },   // 0: Off
+    // v1.20 — consolidated per-game cups (one pool per game, bracket picks 7 random per run)
+    { sCupName_Emerald,     sCupEmerald,     14 },   // 8 gym _5 rematches + 4 E4 + Wallace + Steven
+    { sCupName_FRLG,        sCupFRLG,         9 },   // Red, Leaf, Indigo E4, 3 Blue starter variants
+    { sCupName_HGSS,        sCupHGSS,        25 },   // Red, Blue HGSS, 3 Silvers, Johto gyms, Kanto HGSS gyms, Johto E4, Lance HGSS
+    { sCupName_Platinum,    sCupPlatinum,    16 },   // Sinnoh gyms + E4 + Cynthia Pt + Barry + Riley + Buck
+    { sCupName_BDSP,        sCupBDSP,        16 },   // Same Sinnoh roster, BDSP-era teams
+    { sCupName_Oras,        sCupOras,         8 },   // Wally, Steven ORAS, May, Brendan, Hoenn E4 ORAS
+    { sCupName_SwSh,        sCupSwSh,        21 },   // Galar gyms + Melony + Leon × 3 + Hop × 3 + Mustard × 2 + Marnie/Bede + Klara/Avery/Peony
+    { sCupName_Alola,       sCupAlola,       32 },   // Every non-RR Alola trainer: trial captains + kahunas + E4 + Kukui/Hau/Gladion variants + Faba/Dexio/Plumeria/Ryuki/Guzma/Lusamine/Tristan + Blue/Red/Anabel USUM
+    { sCupName_RRocket,     sCupRRocket,      8 },   // RR bosses (USUM Rainbow Rocket)
+    { sCupName_Lgpe,        sCupLgpe,         7 },   // Lorelei, Agatha, Lance, Red, Blue, Bruno, Green
+    { sCupName_Champions,   sCupChampions,   12 },   // 11 in-game champions (+ Cynthia in both BDSP and Platinum)
+    // PWT cups (unchanged from earlier versions)
+    { sCupName_PwtKanto,    sCupPwtKanto,     8 },
+    { sCupName_PwtHoenn,    sCupPwtHoenn,     8 },
+    { sCupName_PwtJohto,    sCupPwtJohto,     8 },
+    { sCupName_PwtSinnoh,   sCupPwtSinnoh,    8 },
+    { sCupName_PwtUnova,    sCupPwtUnova,    13 },   // 8 Unova leaders + Striaton trio + Cheren + Roxie
+    { sCupName_PwtChamps,   sCupPwtChamps,    8 },   // Red/Blue/Lance/Steven/Wallace PWT + Cynthia/Iris/Alder PWT
+    { sCupName_PwtWorld,    sCupPwtWorld,    49 },   // All PWT leaders + champions across every region
 };
 #define SIM_CUP_COUNT (sizeof(sSimCups) / sizeof(sSimCups[0]))
 
@@ -7207,6 +7233,19 @@ static void Sim_SetupMatchRound(s32 trainer1Id, s32 trainer2Id, s32 partnerId, s
         forceDouble = (sDebugMenuListData != NULL && sDebugMenuListData->data[5] != 0);
         pilotMode   = (sDebugMenuListData != NULL && sDebugMenuListData->data[7] != 0);
     }
+    // v1.20 — tournament rounds 2+ go through Sim_TriggerNextMatchRound,
+    // which bypasses DebugAction_Trainers_TryBattle and lands here with
+    // sDebugMenuListData already freed (Debug_DestroyMenu_Full ran at
+    // round 1 setup-end). For these rounds we override forceDouble from the
+    // snapshot so a doubles tournament stays doubles past round 1 — same
+    // freed-pointer trap the best-of-N path got patched for in v0.52.13.
+    // Note: pilotMode is intentionally NOT overridden here. Tournament
+    // pilot-mode behavior across rounds is its own can of worms (preserving
+    // it across rounds changes whether the AI auto-plays rounds 2+, and
+    // that intersected badly with the bracket / advancement flow when last
+    // tested). Only the forceDouble axis is in scope for this fix.
+    if (Sim_IsTournamentActive() && gSimTournamentRound >= 2)
+        forceDouble = sSimMatchForceDouble;
     if (gSimVGCMode)
         forceDouble = TRUE;
     // v0.52.15 — publish pilot mode globally so the level-cap path in
