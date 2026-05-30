@@ -2,6 +2,7 @@
 #include "battle.h"
 #include "constants/battle_ai.h"
 #include "battle_ai_items.h"
+#include "debug.h" // v1.14 — gSimPilotMode
 #include "battle_ai_main.h"
 #include "battle_ai_util.h"
 #include "battle_util.h"
@@ -33,6 +34,15 @@ bool32 ShouldUseItem(enum BattlerId battler)
     u32 healAmount = 0;
 
     if (IsAiVsAiBattle())
+        return FALSE;
+
+    // v1.14 — block trainer item use in Pilot Mode. Opponents spamming Full
+    // Restores / X-Items felt obnoxious to play against (it's an unwinnable
+    // race when the AI has unlimited heals against your loaner team). Same
+    // spirit as the existing AI-vs-AI guard above: scripted item use is fine
+    // for canonical NPC battles but not for the "borrow a team and pilot it"
+    // experience this mode is built around.
+    if (gSimPilotMode)
         return FALSE;
 
     // If teaming up with player and Pokemon is on the right, or Pokemon is currently held by Sky Drop
