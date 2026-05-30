@@ -5,7 +5,7 @@
 </p>
 
 An AI vs AI Pokemon battle simulator built on
-[pokeemerald-expansion 1.15.2](https://github.com/rh-hideout/pokeemerald-expansion).
+[pokeemerald-expansion 1.15.3](https://github.com/rh-hideout/pokeemerald-expansion).
 Pit any two trainers from the mainline games (Gens 1-9) against each other,
 or pilot one side via Pilot Mode.
 
