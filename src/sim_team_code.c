@@ -25,7 +25,9 @@
 #include "constants/species.h"
 
 // Format version the decoder understands. Bumped in lockstep with the encoder.
-#define SIM_TEAM_CODE_VERSION   2
+// v3 (v1.21): adds 5-bit teraType field after IVs and before checksum.
+// v2 codes are still accepted; they decode with teraType = TYPE_NONE (no Tera).
+#define SIM_TEAM_CODE_VERSION   3
 
 // Magic prefix that gates a code as belonging to this format. Two bytes so
 // even a typo on the first char is caught immediately.
@@ -252,6 +254,20 @@ enum SimTeamCodeResult Sim_DecodeTeamCode(const u8 *code, struct SimCustomTraine
     {
         for (u32 i = 0; i < 6; i++)
             m.ivs[i] = 31;
+    }
+
+    // v1.21 / format v3 — Tera Type. 5-bit value, TYPE_NONE = no Tera.
+    // v2 codes skip this field entirely (defaults to 0 = TYPE_NONE).
+    if (version >= 3)
+    {
+        u32 tera = BitReader_Read(&br, 5);
+        if (tera >= NUMBER_OF_MON_TYPES || tera == TYPE_MYSTERY)
+            tera = TYPE_NONE;  // sanitize unknown / placeholder types
+        m.teraType = tera;
+    }
+    else
+    {
+        m.teraType = TYPE_NONE;
     }
 
     if (br.overflow)

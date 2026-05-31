@@ -277,7 +277,11 @@ struct SimCustomTrainerMon
     // ivs[] as "default 31s" (perfect IVs) to avoid making old saves look weak.
     u8  ivs[6];         // HP/Atk/Def/SpA/SpD/Spe, 0-31 each
     u8  shiny;          // 0 = not shiny, 1 = shiny
-    u8  padding;        // align to 2 bytes for u16 mons[] in next struct slot
+    // v1.21 — repurposed from the old `padding` byte. TYPE_NONE (= 0) means
+    // "no Tera" so legacy saves with this byte zeroed stay save-compatible.
+    // Any other type makes the mon Terastallize to that type, provided the
+    // owning trainer is allowed to Tera (see Sim_TrainerCanTera in debug.c).
+    u8  teraType;       // TYPE_NONE = no Tera, else TYPE_* (1-20)
 };                      // 30 bytes per mon
 
 struct SimCustomTrainer

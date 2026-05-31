@@ -81,6 +81,14 @@ bool32 Sim_ConsumeNextPickRow(u8 *outIndices, u8 maxIndices);
 // GetBattleBGM in src/pokemon.c when an AI-vs-AI sim battle is active.
 u16 Sim_GetBattleMusic(void);
 
+// v1.21 — Terastallization gating. Returns TRUE if this trainer is allowed to
+// Terastallize in sim battles. Consumed by ShouldTrainerBattlerUseGimmick in
+// src/battle_gimmick.c. Past-gen trainers never Tera; Gen 9 trainers (when
+// added) always Tera; custom slots always allowed at trainer-level (whether
+// each mon actually Teras is controlled by its per-mon Tera Type field in
+// the Build Trainer editor).
+bool32 Sim_TrainerCanTera(u16 trainerId);
+
 // Battle Simulator: snapshot the just-played round's team-preview picks so the
 // next round can adaptively counter them. Called from CB2_EndDebugBattle in
 // src/battle_setup.c when a Best-Of or Tournament match still has more rounds.

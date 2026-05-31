@@ -22,9 +22,22 @@ import sys
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]
 
+# v1.21 — Tera Type lookup. Maps Showdown type names (lowercase) to the
+# pokeemerald TYPE_* enum values. TYPE_NONE = 0 = "no Tera" (default).
+# Aligned with include/constants/pokemon.h. Stellar is the Gen 9 Terapagos-
+# only "all types" variant.
+TYPE_INDEX = {
+    "": 0, "none": 0,
+    "normal": 1, "fighting": 2, "flying": 3, "poison": 4,
+    "ground": 5, "rock": 6, "bug": 7, "ghost": 8, "steel": 9,
+    "fire": 11, "water": 12, "grass": 13, "electric": 14,
+    "psychic": 15, "ice": 16, "dragon": 17, "dark": 18,
+    "fairy": 19, "stellar": 20,
+}
+
 # Format version emitted. Decoder bumps version when it sees this byte.
 # v2 = bit-packed payload (saves ~25% vs v1's byte-aligned format).
-FORMAT_VERSION = 2
+FORMAT_VERSION = 3  # v1.21 — added 5-bit teraType field at end of bit stream
 
 
 # ---------------------------------------------------------------------------
@@ -297,6 +310,7 @@ class Mon:
     moves: list[int] = dataclasses.field(default_factory=lambda: [0, 0, 0, 0])
     evs: list[int] = dataclasses.field(default_factory=lambda: [0, 0, 0, 0, 0, 0])
     ivs: list[int] = dataclasses.field(default_factory=lambda: [31, 31, 31, 31, 31, 31])
+    tera_type: int = 0  # v1.21 — 0 = no Tera (TYPE_NONE), else TYPE_* enum
 
 
 def parse_showdown(text: str) -> list[Mon]:
@@ -355,6 +369,11 @@ def parse_showdown(text: str) -> list[Mon]:
                 _parse_stat_line(value, current.evs)
             elif key == "ivs":
                 _parse_stat_line(value, current.ivs)
+            elif key in ("tera type", "teratype"):
+                # v1.21 — Showdown emits "Tera Type: Fire" etc. Unknown /
+                # blank → TYPE_NONE (= 0 = "no Tera"), so legacy exports
+                # without this line just default to no Tera.
+                current.tera_type = TYPE_INDEX.get(value.lower().strip(), 0)
         elif line.endswith("Nature"):
             # "Adamant Nature" line format
             nature_name = line.replace("Nature", "").strip().lower()
@@ -382,8 +401,9 @@ def _parse_stat_line(value: str, dest: list[int]):
 # ---------------------------------------------------------------------------
 
 def encode_mon(mon: Mon) -> bytes:
-    """Pack a Mon into the v2 bit-stream layout (see SPEC.md).
+    """Pack a Mon into the v3 bit-stream layout (see SPEC.md).
 
+    v3 (v1.21) adds a 5-bit Tera Type field after IVs, before checksum.
     Returns the byte string: [bit_stream_bytes...] + [checksum_byte].
     """
     if mon.species >= (1 << 11):
@@ -436,6 +456,11 @@ def encode_mon(mon: Mon) -> bytes:
         for i in range(6):
             if iv_mask & (1 << i):
                 w.write(min(31, mon.ivs[i]), 5)
+
+    # v1.21 (format v3) — Tera Type. 5-bit value; 0 (TYPE_NONE) = no Tera.
+    # Clamp to valid range (0-20). Old v2 codes that round-trip through this
+    # encoder will end up with tera_type=0, which decodes back to "no Tera".
+    w.write(mon.tera_type & 0x1F, 5)
 
     body = w.finish()
     # Checksum: XOR of every body byte (including the trailing zero-pad).

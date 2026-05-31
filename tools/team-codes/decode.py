@@ -81,6 +81,11 @@ def decode_mon(code: str) -> Mon:
     else:
         for i in range(6):
             mon.ivs[i] = 31
+    # v1.21 (format v3) — Tera Type. v2 codes skip this field; default to 0.
+    if version >= 3:
+        mon.tera_type = r.read(5)
+    else:
+        mon.tera_type = 0
     return mon
 
 
@@ -100,6 +105,12 @@ def pretty_print(mon: Mon) -> None:
     print(f"  Nature:    {NATURES[mon.nature]}")
     print(f"  Gender:    {['Any', 'Male', 'Female'][mon.gender]}")
     print(f"  Shiny:     {'Yes' if mon.shiny else 'No'}")
+    type_names = ["None", "Normal", "Fighting", "Flying", "Poison", "Ground",
+                  "Rock", "Bug", "Ghost", "Steel", "Mystery", "Fire", "Water",
+                  "Grass", "Electric", "Psychic", "Ice", "Dragon", "Dark",
+                  "Fairy", "Stellar"]
+    if 0 < getattr(mon, "tera_type", 0) < len(type_names):
+        print(f"  Tera Type: {type_names[mon.tera_type]}")
     for i, m in enumerate(mon.moves, 1):
         if m:
             print(f"  Move {i}:    {_reverse_lookup(moves, 'MOVE_', m)}")

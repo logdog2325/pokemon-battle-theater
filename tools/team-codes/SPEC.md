@@ -1,4 +1,7 @@
-# Pokemon Battle Theater — Team Code Format v2
+# Pokemon Battle Theater — Team Code Format v3
+
+**v3 added (v1.21):** 5-bit Tera Type field at the end of the bit stream.
+v2 codes still decode (read as teraType = TYPE_NONE = no Tera).
 
 Encodes a single Pokemon as a short URL-safe base64 string for in-ROM import.
 A full team is 6 separate codes (one per Pokemon) — easier to type, easier to
@@ -38,6 +41,7 @@ byte 0, then bit 7 of byte 1, etc.). The final byte is zero-padded.
 | 1 | `ivHasDeviations` | 0 = every IV is 31 (skip the next two sections). 1 = at least one IV is not 31. |
 | 6 (if above is 1) | `ivMask` | Bit `i` (0-5) set ⇒ stat `i` IV is NOT 31. |
 | 5×popcount(ivMask) | `ivValues[]` | One 5-bit value per bit set in `ivMask`, 0-31 each. |
+| 5 (v3+) | `teraType` | `TYPE_*` enum (0-20). 0 = `TYPE_NONE` = no Tera. v2 codes omit this field. |
 | 8 | `checksum` | XOR of every payload byte (the byte-aligned representation of the bit stream, **including the trailing zero-pad** in the last byte) BEFORE the checksum byte itself. |
 
 The checksum byte is appended to the payload AFTER the bit-stream has been

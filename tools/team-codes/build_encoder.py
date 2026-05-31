@@ -246,6 +246,17 @@ const STAT_ALIASES = {
   spe: 5, speed: 5
 };
 const GENDER_MAP = { any: 0, "": 0, male: 1, m: 1, female: 2, f: 2 };
+// v1.21 — Tera Type lookup. Maps Showdown type names (lowercase) to the
+// pokeemerald TYPE_* enum values. 0 = TYPE_NONE = "no Tera" default for
+// older exports / blank values. Aligned with include/constants/pokemon.h.
+const TYPES = {
+  "": 0, "none": 0,
+  "normal": 1, "fighting": 2, "flying": 3, "poison": 4,
+  "ground": 5, "rock": 6, "bug": 7, "ghost": 8, "steel": 9,
+  "fire": 11, "water": 12, "grass": 13, "electric": 14,
+  "psychic": 15, "ice": 16, "dragon": 17, "dark": 18,
+  "fairy": 19, "stellar": 20,
+};
 
 function normalize(s) {
   return s.toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -281,6 +292,7 @@ function parseShowdown(text) {
         moves: [0, 0, 0, 0],
         evs: [0, 0, 0, 0, 0, 0],
         ivs: [31, 31, 31, 31, 31, 31],
+        teraType: 0,  // v1.21 — 0 = no Tera (TYPE_NONE), else TYPE_* enum
       };
       // "Name (Species) @ Item" or "Species @ Item"
       let monLine = line;
@@ -348,6 +360,13 @@ function parseShowdown(text) {
         case "gender": current.gender = GENDER_MAP[value.toLowerCase()] ?? 0; break;
         case "evs": parseStatLine(value, current.evs); break;
         case "ivs": parseStatLine(value, current.ivs); break;
+        case "tera type":
+        case "teratype":
+          // v1.21 — Showdown emits "Tera Type: Fire" etc. Unknown / blank
+          // → 0 (TYPE_NONE = no Tera), so older exports without this line
+          // round-trip cleanly as "no Tera".
+          current.teraType = TYPES[value.toLowerCase().trim()] ?? 0;
+          break;
       }
     } else if (/\bNature\b/i.test(line)) {
       // "Adamant Nature" alternative format
@@ -448,6 +467,9 @@ function encodeMon(mon) {
       if (ivMask & (1 << i)) w.write(Math.min(31, mon.ivs[i]), 5);
     }
   }
+
+  // v1.21 (format v3) — Tera Type. 5-bit value; 0 (TYPE_NONE) = no Tera.
+  w.write((mon.teraType || 0) & 0x1F, 5);
 
   const body = w.finish();
   let chk = 0;

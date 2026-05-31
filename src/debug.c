@@ -244,6 +244,42 @@ static bool32 IsHoennRivalForMusic(u16 trainerId)
     return trainerId == 891 || trainerId == 893 || trainerId == 894;
 }
 
+// v1.21 — Terastallization gating. Consumed by ShouldTrainerBattlerUseGimmick
+// in src/battle_gimmick.c. Past-gen trainers (Gens 1-8 + LGPE + PLA) NEVER
+// Tera — Tera is exclusive to Gen 9. Custom slots can Tera per-mon via the
+// Tera Type field in the Build Trainer editor (TYPE_NONE = no Tera).
+//
+// When Gen 9 trainers are added in a future release, extend this function
+// with their ID range (currently nothing past trainer ID 1112). The simplest
+// path: have the check be `trainerId >= SIM_GEN9_TRAINER_ID_START`.
+bool32 Sim_TrainerCanTera(u16 trainerId)
+{
+    // v1.21 — outside sim battles (Battle Frontier, normal NPC battles),
+    // trust the per-mon teraType data. The Frontier mon table has Tera Type
+    // set on the entries the user explicitly wants to Tera; past-gen NPC
+    // trainer parties have no teraType set, so opponentMonCanTera stays
+    // unset and they still can't Tera regardless of this return.
+    if (!gIsDebugBattle)
+        return TRUE;
+    // Custom slots: always allowed at the trainer level. Whether a specific
+    // mon actually Teras depends on its own Tera Type setting in the Build
+    // Trainer editor (TYPE_NONE leaves opponentMonCanTera unset for that mon).
+    if (trainerId == TRAINER_SIM_CUSTOM_1 || trainerId == TRAINER_SIM_CUSTOM_2
+     || trainerId == TRAINER_SIM_CUSTOM_3 || trainerId == TRAINER_SIM_CUSTOM_4
+     || trainerId == TRAINER_SIM_CUSTOM_5 || trainerId == TRAINER_SIM_CUSTOM_6)
+        return TRUE;
+
+    // Gen 9 SV trainers (1113-1142) — base game Nemona ×3 / Geeta / Paldea E4
+    // (Rika / Poppy / Larry / Hassel) / Penny / AI Sada / AI Turo +
+    // 7 Paldea gym leaders + 6 Academy professors + Carmine + BB Elite Four
+    // (Crispin/Amarys/Lacey/Drayton) + Kieran. Their party data has Tera
+    // Type set on the canonical aces only; non-ace mons with teraType=0
+    // just skip Tera engine-side via opponentMonCanTera bit logic.
+    if (trainerId >= TRAINER_NEMONA_QUAQUAVAL && trainerId <= TRAINER_KIERAN)
+        return TRUE;
+    return FALSE;
+}
+
 u16 Sim_GetBattleMusic(void)
 {
     // Rival music override takes priority over tier-based selection. If any
@@ -308,10 +344,19 @@ static const u8 *GetSimTierColorPrefix(u16 trainerId)
     // v0.11: Cynthia Pt rematch (1005) — Pokemon League Champion.
     // v0.12: Cynthia BDSP (1021) — BDSP Champion.
     // v0.14: Leon variants (1029-1031) — SwSh Champion. Hop+Mustard rivals.
+    // v1.21: Nemona 3 variants (1113-1115), Geeta (1116), Penny (1121), AI
+    // Sada (1122), AI Turo (1123) — Paldea SV champion-tier.
+    // v1.21 DLC: Kieran (1142) — BB League Champion.
+    // v1.21 Z-A: Urbain (1143), Taunie (1144), Korrina (1166) — Z-A champions.
     if ((trainerId >= 907 && trainerId <= 916) || (trainerId >= 930 && trainerId <= 938)
      || (trainerId >= 963 && trainerId <= 966) || (trainerId >= 981 && trainerId <= 983)
      || trainerId == 1005 || trainerId == 1021
-     || (trainerId >= 1029 && trainerId <= 1031))
+     || (trainerId >= 1029 && trainerId <= 1031)
+     || (trainerId >= TRAINER_NEMONA_QUAQUAVAL && trainerId <= TRAINER_GEETA)
+     || (trainerId >= TRAINER_PENNY && trainerId <= TRAINER_TURO)
+     || trainerId == TRAINER_KIERAN
+     || trainerId == TRAINER_URBAIN || trainerId == TRAINER_TAUNIE
+     || trainerId == TRAINER_KORRINA_ZA)
         return sSimTierColorChampion;
     // Hoenn E4 + Indigo E4 + PWT Lance + Hoenn ORAS E4 + Indigo LGPE E4 (incl. Bruno at 904)
     if ((trainerId >= 261 && trainerId <= 264)
@@ -333,6 +378,21 @@ static const u8 *GetSimTierColorPrefix(u16 trainerId)
     // v0.12: Sinnoh Elite Four BDSP (Aaron/Bertha/Flint/Lucian, 1017-1020).
     if (trainerId >= 1017 && trainerId <= 1020)
         return sSimTierColorE4;
+    // v1.21: Paldea Elite Four (Rika/Poppy/Larry_E4/Hassel, 1117-1120).
+    if (trainerId >= TRAINER_RIKA && trainerId <= TRAINER_HASSEL)
+        return sSimTierColorE4;
+    // v1.21 DLC: Indigo Disk BB Elite Four (Crispin/Amarys/Lacey/Drayton).
+    if (trainerId >= TRAINER_CRISPIN && trainerId <= TRAINER_DRAYTON)
+        return sSimTierColorE4;
+    // v1.21 Z-A: Royale Rank A-tier rivals (Vinnie / Canari / Ivor / Corbeau /
+    // L / Naveen / Tarragon / Grisham / Jacinthe / Griselle / Gwynn / Lidia /
+    // Lebanne / Emma / Philippe). The mid-tier trainers (Rintaro / Xavi /
+    // Yvon / Mani / Josee / Andy) fall through to gym/default colors.
+    if (trainerId >= TRAINER_VINNIE && trainerId <= TRAINER_JACINTHE)
+        return sSimTierColorE4;
+    if ((trainerId >= TRAINER_GRISELLE && trainerId <= TRAINER_LEBANNE)
+     || trainerId == TRAINER_EMMA || trainerId == TRAINER_PHILIPPE)
+        return sSimTierColorE4;
     // Gym leaders (Hoenn _5 rematches, Kanto HGSS, all PWT leaders incl. v0.10 regions)
     if (trainerId == 773 || trainerId == 777 || trainerId == 781 || trainerId == 785
      || trainerId == 789 || trainerId == 793 || trainerId == 797 || trainerId == 801
@@ -346,6 +406,10 @@ static const u8 *GetSimTierColorPrefix(u16 trainerId)
         return sSimTierColorGym;
     // v0.9: Alola trial captains (Ilima, Lana, Kiawe, Mallow, Sophocles, Acerola, Mina)
     if (trainerId >= 917 && trainerId <= 923)
+        return sSimTierColorGym;
+    // v1.21: Paldea gym leaders (Katy/Brassius/Iono/Kofu/Ryme/Tulip/Grusha),
+    // Academy professors, and Carmine (Teal Mask rival).
+    if (trainerId >= TRAINER_KATY && trainerId <= TRAINER_CARMINE)
         return sSimTierColorGym;
     return sSimTierColorNone;
 }
@@ -371,6 +435,14 @@ static const u8 sSimSourceSuffixAnime[] = _(" (Anime)");  // v0.50 Anime team bu
 static const u8 sSimSourceSuffixCustom[] = _(" (Custom)"); // v0.51 user-built trainer slots
 static const u8 sSimSourceSuffixVGC[]    = _(" (VGC)");    // v1.5 VGC 2012 finals (Wolfe / Ray)
 static const u8 sSimSourceSuffixRGBY[]   = _(" (RGBY)");   // v1.6 Prof. Oak Glitch boss
+static const u8 sSimSourceSuffixSV[]     = _(" (SV)");     // v1.21 Scarlet/Violet (Paldea)
+static const u8 sSimSourceSuffixZA[]     = _(" (Z-A)");    // v1.21 Legends: Z-A (Kalos)
+// v2.0 — Nemona has 3 starter-variant teams; tag her ace so the picker
+// disambiguates them. Q = Quaquaval ace (player chose Fuecoco), M =
+// Meowscarada ace (Quaxly), S = Skeledirge ace (Sprigatito).
+static const u8 sSimSourceSuffixSV_NemQ[] = _(" (SV Q)");
+static const u8 sSimSourceSuffixSV_NemM[] = _(" (SV M)");
+static const u8 sSimSourceSuffixSV_NemS[] = _(" (SV S)");
 // v0.41.2: per-variant tags for N / Cheren / Bianca / Hugh so the picker can
 // disambiguate the three starter variants at a glance. N's pair distinguishes
 // by signature legendary; rivals' three each tag the rival's ace starter
@@ -482,6 +554,20 @@ static const u8 *GetSimSourceSuffix(u16 trainerId)
     // v1.6 Prof. Oak Glitch boss — the 3 starter variants.
     if (trainerId >= TRAINER_OAK_GLITCH_VENUSAUR && trainerId <= TRAINER_OAK_GLITCH_BLASTOISE)
         return sSimSourceSuffixRGBY;
+    // v1.21 Scarlet/Violet base game + DLC champion-tier (Nemona ×3 variants,
+    // Geeta, E4, Penny, AI Sada/Turo, Paldea gyms, Academy professors,
+    // Carmine, BB Elite Four, Kieran). All flagged Gen 9 in Sim_TrainerCanTera
+    // so their aces Terastallize.
+    // v2.0 — per-Nemona-variant tag (Q/M/S = her ace's first letter).
+    if (trainerId == TRAINER_NEMONA_QUAQUAVAL)  return sSimSourceSuffixSV_NemQ;
+    if (trainerId == TRAINER_NEMONA_MEOWSCARADA) return sSimSourceSuffixSV_NemM;
+    if (trainerId == TRAINER_NEMONA_SKELEDIRGE) return sSimSourceSuffixSV_NemS;
+    if (trainerId >= TRAINER_NEMONA_QUAQUAVAL && trainerId <= TRAINER_KIERAN)
+        return sSimSourceSuffixSV;
+    // v1.21 Legends: Z-A trainers (1143-1166) — Royale ranks, Urbain/Taunie
+    // finale. All Mega-using; no Tera. Suffix tags them in the picker.
+    if (trainerId >= TRAINER_URBAIN && trainerId <= TRAINER_KORRINA_ZA)
+        return sSimSourceSuffixZA;
     return sSimSourceSuffixNone;
 }
 
@@ -588,6 +674,21 @@ static const u16 sSimulatorRoster[] = {
     1095, 1096, 1097, 1098,                              // v0.53.2: Kamado / Zisu / Beni / Rei
     // ---- RGBY section (Gen 1 unused content — Prof. Oak Glitch boss) ----
     1110, 1111, 1112,                                    // v1.6: Oak Venusaur/Charizard/Blastoise variants
+    // ---- v1.21 Scarlet/Violet section (Paldea base + Indigo Disk DLC) ----
+    1113, 1114, 1115,                                    // Nemona ×3 starter variants
+    1116, 1117, 1118, 1119, 1120,                        // Geeta + Paldea E4 (Rika/Poppy/Larry/Hassel)
+    1121, 1122, 1123,                                    // Penny, AI Sada, AI Turo
+    1124, 1125, 1126, 1127, 1128, 1129, 1130,            // 7 Paldea gym leaders
+    1131, 1132, 1133, 1134, 1135, 1136,                  // 6 Academy professors
+    1137,                                                // Carmine (Teal Mask rival)
+    1138, 1139, 1140, 1141, 1142,                        // BB Elite Four + Kieran champion
+    // ---- v1.21 Legends: Z-A section (Kalos, Lumiose City Royale) ----
+    1143, 1144,                                          // Urbain / Taunie final rivals
+    1145, 1146, 1147, 1148,                              // Vinnie / Canari / Ivor / Corbeau
+    1149, 1150, 1151, 1152, 1153,                        // L / Naveen / Tarragon / Grisham / Jacinthe
+    1154, 1155, 1156,                                    // Rintaro / Xavi / Yvon
+    1157, 1158, 1159, 1160, 1161, 1162, 1163,            // Griselle / Gwynn / Lidia / Lebanne / Mani / Emma / Philippe
+    1164, 1165, 1166,                                    // Josee / Andy / Korrina Z-A
 };
 #define SIMULATOR_ROSTER_COUNT (sizeof(sSimulatorRoster) / sizeof(sSimulatorRoster[0]))
 
@@ -599,7 +700,7 @@ struct SimCup
 {
     const u8 *name;
     const u16 *trainers;
-    u8 size;
+    u16 size;  // v1.21 — widened from u8 to fit the 327-entry "All Stars" pool
 };
 
 // v1.20 — consolidated per-game cups. Replaced the old per-region splits
@@ -689,6 +790,30 @@ static const u16 sCupChampions[]  = {
     930,                                             // Kukui Alola
 };
 
+// v1.21 — Scarlet/Violet tournament pool. All 30 SV trainers (1113-1142).
+// Bracket builder picks 7 random per run.
+static const u16 sCupSV[] = {
+    1113, 1114, 1115,            // Nemona ×3 starter variants
+    1116, 1117, 1118, 1119, 1120, 1121, 1122, 1123,  // Geeta, Paldea E4, Penny, AI Sada/Turo
+    1124, 1125, 1126, 1127, 1128, 1129, 1130,        // 7 Paldea gym leaders
+    1131, 1132, 1133, 1134, 1135, 1136,              // 6 Academy professors
+    1137,                                            // Carmine
+    1138, 1139, 1140, 1141, 1142,                    // BB Elite Four + Kieran
+};
+
+// v1.21 — Legends: Z-A tournament pool. All 24 Z-A trainers (1143-1166).
+static const u16 sCupZA[] = {
+    1143, 1144, 1145, 1146, 1147, 1148,              // Urbain, Taunie, Vinnie, Canari, Ivor, Corbeau
+    1149, 1150, 1151, 1152, 1153, 1154, 1155, 1156,  // L, Naveen, Tarragon, Grisham, Jacinthe, Rintaro, Xavi, Yvon
+    1157, 1158, 1159, 1160, 1161, 1162, 1163,        // Griselle, Gwynn, Lidia, Lebanne, Mani, Emma, Philippe
+    1164, 1165, 1166,                                // Josee, Andy, Korrina
+};
+
+// v1.21 — All Stars pool. Literally every curated trainer in the game.
+// Aliases sSimulatorRoster so the cup roster auto-grows with future trainer
+// additions. Sim_BuildTournamentBracket's candidates buffer was bumped to
+// 256 entries to accommodate this pool.
+
 // PWT cups + RR kept as-is below.
 static const u16 sCupPwtKanto[]   = { 869, 870, 871, 872, 873, 874, 875, 876 };           // PWT Kanto leaders
 static const u16 sCupPwtHoenn[]   = { 877, 878, 879, 880, 881, 882, 883, 884 };           // PWT Hoenn leaders
@@ -749,6 +874,10 @@ static const u8 sCupName_PwtSinnoh[]    = _("PWT Sinnoh");
 static const u8 sCupName_PwtUnova[]     = _("PWT Unova");
 static const u8 sCupName_PwtChamps[]    = _("PWT Champs");
 static const u8 sCupName_PwtWorld[]     = _("PWT World");
+// v1.21 — three big cross-game pools
+static const u8 sCupName_SV[]           = _("SV");
+static const u8 sCupName_ZA[]           = _("Z-A");
+static const u8 sCupName_AllStars[]     = _("All Stars");
 
 static const struct SimCup sSimCups[] =
 {
@@ -773,6 +902,10 @@ static const struct SimCup sSimCups[] =
     { sCupName_PwtUnova,    sCupPwtUnova,    13 },   // 8 Unova leaders + Striaton trio + Cheren + Roxie
     { sCupName_PwtChamps,   sCupPwtChamps,    8 },   // Red/Blue/Lance/Steven/Wallace PWT + Cynthia/Iris/Alder PWT
     { sCupName_PwtWorld,    sCupPwtWorld,    49 },   // All PWT leaders + champions across every region
+    // v1.21 — Scarlet/Violet + Legends Z-A + All-Stars pools
+    { sCupName_SV,          sCupSV,          30 },   // Every SV trainer (base + DLC)
+    { sCupName_ZA,          sCupZA,          24 },   // Every Z-A Royale trainer
+    { sCupName_AllStars,    sSimulatorRoster, SIMULATOR_ROSTER_COUNT },  // EVERY curated trainer in the game
 };
 #define SIM_CUP_COUNT (sizeof(sSimCups) / sizeof(sSimCups[0]))
 
@@ -1111,6 +1244,7 @@ static void DebugAction_BuildTrainer_EditAbility(u8 taskId);
 static void DebugAction_BuildTrainer_OpenEVsMenu(u8 taskId);
 static void DebugAction_BuildTrainer_OpenIVsMenu(u8 taskId);
 static void DebugAction_BuildTrainer_EditShiny(u8 taskId);
+static void DebugAction_BuildTrainer_EditTeraType(u8 taskId);  // v1.21
 // v0.52.3 Phase 2c — Scrollable pickers (PxHex-style hierarchical menus)
 static void DebugAction_BuildTrainer_EditSpecies(u8 taskId);
 static void DebugAction_BuildTrainer_EditHeldItem(u8 taskId);
@@ -1678,6 +1812,10 @@ static const struct DebugMenuOption sDebugMenu_Actions_BuildTrainerMon[] =
     // v0.52.4 — toggle shiny rendering for this mon (engine uses isShiny to
     // generate an OT ID that XORs to a shiny personality).
     { COMPOUND_STRING("Shiny: {STR_VAR_1}"),       DebugAction_BuildTrainer_EditShiny,    },
+    // v1.21 — Tera Type picker. TYPE_NONE = no Tera; any other type makes
+    // the mon Terastallize to that type. Only honored for Custom + Gen 9
+    // trainers; past-gen trainers are gated out engine-side.
+    { COMPOUND_STRING("Tera Type: {STR_VAR_1}"),   DebugAction_BuildTrainer_EditTeraType, },
     // v1.3 — Showdown team-code import. Reuses the existing pokeemerald
     // naming screen (NAMING_SCREEN_TEAMCODE) instead of a from-scratch
     // keyboard, so the GBA's CHAR_* charset handles font rendering natively.
@@ -3246,6 +3384,11 @@ static void BuildTrainer_SanitizeSlot(struct SimCustomTrainer *slot)
         if (m->gender > 2)                  m->gender = 0;
         if (m->abilityNum >= NUM_ABILITY_SLOTS) m->abilityNum = 0;
         if (m->shiny > 1)                   m->shiny = 0;
+        // v1.21 — clamp teraType. Out-of-range / TYPE_MYSTERY both treated
+        // as "no Tera". Legacy saves with the old `padding` byte = 0 read
+        // through as TYPE_NONE which is already "no Tera".
+        if (m->teraType >= NUMBER_OF_MON_TYPES || m->teraType == TYPE_MYSTERY)
+            m->teraType = TYPE_NONE;
         for (u8 j = 0; j < 6; j++)
         {
             if (m->evs[j] > 252) m->evs[j] = 0;
@@ -3951,6 +4094,23 @@ static void DebugAction_BuildTrainer_EditShiny(u8 taskId)
     RedrawListMenu(gTasks[taskId].tMenuTaskId);
 }
 
+// v1.21 — Cycle Tera Type: None → Normal → Fighting → ... → Fairy → Stellar → None.
+// Skips TYPE_MYSTERY (10) which is an internal placeholder. The on-mon
+// teraType drives whether opponentMonCanTera gets set in CreateNPCTrainerParty,
+// gated additionally by Sim_TrainerCanTera at the trainer level.
+static void DebugAction_BuildTrainer_EditTeraType(u8 taskId)
+{
+    u8 next = sBuildTrainerWorkMon.teraType + 1;
+    if (next == TYPE_MYSTERY)
+        next++;  // skip internal placeholder
+    if (next >= NUMBER_OF_MON_TYPES)
+        next = TYPE_NONE;  // wrap back to "no Tera"
+    sBuildTrainerWorkMon.teraType = next;
+    PlaySE(SE_SELECT);
+    Debug_GenerateListBuildTrainerMonMenu();
+    RedrawListMenu(gTasks[taskId].tMenuTaskId);
+}
+
 // =============================================================================
 // v0.52.4 — EV / IV sub-menus
 // =============================================================================
@@ -4252,8 +4412,16 @@ static u8 Debug_GenerateListBuildTrainerMonMenu(void)
             else
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR RED}NO"));
             break;
+        case 13:  // v1.21 — Tera Type. TYPE_NONE shows "None" (no Tera).
+            if (sBuildTrainerWorkMon.teraType == TYPE_NONE
+             || sBuildTrainerWorkMon.teraType >= NUMBER_OF_MON_TYPES
+             || sBuildTrainerWorkMon.teraType == TYPE_MYSTERY)
+                StringCopy(gStringVar1, COMPOUND_STRING("{COLOR RED}None"));
+            else
+                StringCopy(gStringVar1, gTypesInfo[sBuildTrainerWorkMon.teraType].name);
+            break;
         default:
-            // Save & Back / Cancel — no value
+            // Import / Save & Back / Cancel — no value
             break;
         }
         StringExpandPlaceholders(gStringVar4, sDebugMenu_Actions_BuildTrainerMon[i].text);
@@ -6009,9 +6177,13 @@ static bool32 Sim_BuildTournamentBracket(u8 cupIndex, s32 playerSideId)
     // Cap raised from 16 -> 64 in v0.10 so the PWT World Leaders cup (which
     // pools all 40+ PWT gym leaders + champions) can include its full roster
     // and the Fisher-Yates shuffle below picks a different 7 each tournament.
-    u16 candidates[64];
-    u8 candidateCount = 0;
-    for (u8 i = 0; i < cup->size && candidateCount < ARRAY_COUNT(candidates); i++)
+    // v1.21: bumped 64 -> 384 so the new "All Stars" cup (327 trainers, the
+    // full sSimulatorRoster aliased) can include its entire roster. cup->size
+    // widened to u16 in struct SimCup at the same time. candidateCount also
+    // widened to u16.
+    u16 candidates[384];
+    u16 candidateCount = 0;
+    for (u32 i = 0; i < cup->size && candidateCount < ARRAY_COUNT(candidates); i++)
     {
         if ((s32)cup->trainers[i] == playerSideId)
             continue;
@@ -6981,6 +7153,10 @@ const struct Trainer *Sim_GetCustomTrainerStruct(u16 trainerId)
             // battle_main.c CreateNPCTrainerPartyFromTrainer to set an OT_ID_PRESET
             // so personality XOR otId hits the shiny rolls.
             dst->isShiny = (src->shiny != 0);
+            // v1.21 — propagate the Tera Type. TYPE_NONE (0) means no Tera;
+            // anything else makes the mon Terastallize to that type when the
+            // owning trainer is allowed to Tera (Sim_TrainerCanTera).
+            dst->teraType = (enum Type)src->teraType;
             // ability resolved from species's abilities table; ABILITY_NONE
             // means "use the default ability for this species/slot".
             dst->ability = ABILITY_NONE;

@@ -1246,6 +1246,84 @@
 #define TRAINER_OAK_GLITCH_CHARIZARD        1111  // if player chose Squirtle
 #define TRAINER_OAK_GLITCH_BLASTOISE        1112  // if player chose Bulbasaur
 
+// v1.21 — Scarlet/Violet base game champion-tier trainers (Paldea).
+// Three Nemona variants keyed to player's starter (her ace is the starter
+// weak to yours, per SV canon). Geeta is Top Champion of the Pokemon League.
+// Penny is the Star Boss with the full Eeveelution gauntlet. AI Sada/Turo
+// are the version-exclusive final boss paradox squads. Tera Type fields
+// set on the canonical aces (Quaquaval Fighting, Meowscarada Dark, Skeledirge
+// Ghost, Kingambit Flying, Clodsire Ground, Tinkaton Steel, Staraptor
+// Normal, Baxcalibur Dragon, Sylveon Fairy). Gated through Sim_TrainerCanTera
+// so the engine actually triggers their Terastallization.
+#define TRAINER_NEMONA_QUAQUAVAL            1113  // if player chose Fuecoco
+#define TRAINER_NEMONA_MEOWSCARADA          1114  // if player chose Quaxly
+#define TRAINER_NEMONA_SKELEDIRGE           1115  // if player chose Sprigatito
+#define TRAINER_GEETA                       1116  // Top Champion
+#define TRAINER_RIKA                        1117  // E4 Ground
+#define TRAINER_POPPY                       1118  // E4 Steel
+#define TRAINER_LARRY_E4                    1119  // E4 Flying (separate from Normal Gym Leader Larry — same character, different team)
+#define TRAINER_HASSEL                      1120  // E4 Dragon
+#define TRAINER_PENNY                       1121  // Team Star final boss (full Eeveelution squad)
+#define TRAINER_SADA                        1122  // Scarlet final boss (AI paradox squad)
+#define TRAINER_TURO                        1123  // Violet final boss (AI paradox squad)
+
+// v1.21 — SV Gym Leaders (7 of 8; Larry's gym version omitted, his E4 entry
+// at 1119 covers the same character). Tera Type set on canonical aces.
+#define TRAINER_KATY                        1124  // Gym Bug (Ursaring ace)
+#define TRAINER_BRASSIUS                    1125  // Gym Grass (Sudowoodo ace)
+#define TRAINER_IONO                        1126  // Gym Electric (Mismagius ace)
+#define TRAINER_KOFU                        1127  // Gym Water (Crabominable ace)
+#define TRAINER_RYME                        1128  // Gym Ghost (Toxtricity ace)
+#define TRAINER_TULIP                       1129  // Gym Psychic (Florges ace)
+#define TRAINER_GRUSHA                      1130  // Gym Ice (Altaria ace)
+
+// v1.21 — SV Academy professors (Mesagoza Naranja/Uva). Ace Tournament rosters.
+#define TRAINER_JACQ                        1131  // Biology professor (Farigiraf ace)
+#define TRAINER_RAIFORT                     1132  // History professor (Gengar ace)
+#define TRAINER_TYME                        1133  // Math professor (Garganacl ace)
+#define TRAINER_SALVATORE                   1134  // Language Arts professor (Raichu ace)
+#define TRAINER_DENDRA                      1135  // PE professor (Hariyama ace)
+#define TRAINER_SAGUARO                     1136  // Home Ec professor (Hatterene ace)
+
+// v1.21 — SV Teal Mask + Indigo Disk DLC trainers.
+#define TRAINER_CARMINE                     1137  // Teal Mask rival (Sinistcha ace)
+#define TRAINER_CRISPIN                     1138  // BB Elite Four Fire (Blaziken ace, Tera Fire)
+#define TRAINER_AMARYS                      1139  // BB Elite Four Steel (Metagross ace, Tera Steel)
+#define TRAINER_LACEY                       1140  // BB Elite Four Fairy (Excadrill ace, Tera Fairy)
+#define TRAINER_DRAYTON                     1141  // BB Elite Four Dragon (Archaludon ace, Tera Dragon)
+#define TRAINER_KIERAN                      1142  // BB League Champion (Hydrapple ace, Tera Fighting)
+
+// v1.21 — Pokemon Legends: Z-A trainers (Lumiose City, Kalos). The Z-A
+// Royale ranking system. All Lv 100 mons on Urbain/Taunie final battle —
+// only canon trainer to ever field a full Lv 100 team. All Z-A Megas use
+// new Mega Stones (Meowsticite, Feraligite, etc. — already in items.h).
+// Z-A trainers are NOT in Sim_TrainerCanTera's range — they use Mega
+// Evolution, not Terastallization.
+#define TRAINER_URBAIN                      1143  // Final rival male (Z-A Royale Rank A)
+#define TRAINER_TAUNIE                      1144  // Final rival female (Z-A Royale Rank A)
+#define TRAINER_VINNIE                      1145  // Rank A Royale (Mega Drampa)
+#define TRAINER_CANARI                      1146  // Rank A Royale Electric (Mega Eelektross)
+#define TRAINER_IVOR                        1147  // Rank A Royale Fighting (Mega Falinks)
+#define TRAINER_CORBEAU                     1148  // Rank A Royale Poison (Mega Scolipede)
+#define TRAINER_L_ZA                        1149  // L/Lysandre Z-A version (Mega Gyarados)
+#define TRAINER_NAVEEN                      1150  // Royale (Mega Scrafty)
+#define TRAINER_TARRAGON                    1151  // Royale (Mega Excadrill)
+#define TRAINER_GRISHAM                     1152  // Royale (Mega Charizard X)
+#define TRAINER_JACINTHE                    1153  // Royale Fairy (Mega Clefable)
+#define TRAINER_RINTARO                     1154  // Royale (Eeveelution team)
+#define TRAINER_XAVI                        1155  // Royale (mixed team)
+#define TRAINER_YVON                        1156  // Royale (Fairy/Psychic mix)
+#define TRAINER_GRISELLE                    1157  // Royale Fire (Mega Pyroar)
+#define TRAINER_GWYNN                       1158  // Royale Ghost (Mega Chandelure)
+#define TRAINER_LIDIA                       1159  // Royale Water (Mega Starmie)
+#define TRAINER_LEBANNE                     1160  // Royale Dragon (Mega Dragalge)
+#define TRAINER_MANI                        1161  // Royale (Electric mix)
+#define TRAINER_EMMA                        1162  // Royale (dual Mega: Lucario + Malamar)
+#define TRAINER_PHILIPPE                    1163  // Royale Steel (Mega Skarmory)
+#define TRAINER_JOSEE                       1164  // Royale Fighting (no Mega)
+#define TRAINER_ANDY                        1165  // Royale Fairy/Normal (no Mega)
+#define TRAINER_KORRINA_ZA                  1166  // Royale Fighting (6 Megas including Lucarionite Z)
+
 // NOTE: Because each Trainer uses a flag to determine when they are defeated, there is only space for 9 additional trainers before trainer flag space overflows
 //       More space can be made by shifting flags around in constants/flags.h or changing how trainer flags are handled
 //       MAX_TRAINERS_COUNT can be increased but will take up additional saveblock space

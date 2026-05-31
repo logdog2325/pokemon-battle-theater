@@ -7,6 +7,7 @@
 #include "battle_z_move.h"
 #include "battle_setup.h"
 #include "battle_util.h"
+#include "debug.h"  // v1.21 — Sim_TrainerCanTera
 #include "event_data.h"
 #include "item.h"
 #include "palette.h"
@@ -81,7 +82,11 @@ bool32 ShouldTrainerBattlerUseGimmick(enum BattlerId battler, enum Gimmick gimmi
             struct Pokemon *mon = GetBattlerMon(battler);
             return GetMonData(mon, MON_DATA_DYNAMAX_LEVEL) > 0;
         }
-        if (gimmick == GIMMICK_TERA && gBattleStruct->opponentMonCanTera & 1 << gBattlerPartyIndexes[battler])
+        // v1.21 — Tera is gated on Sim_TrainerCanTera (Gen 9 trainers only +
+        // custom slots if the picker toggle is on). Past-gen trainers never
+        // Tera even if their party data has teraType set.
+        if (gimmick == GIMMICK_TERA && gBattleStruct->opponentMonCanTera & 1 << gBattlerPartyIndexes[battler]
+            && Sim_TrainerCanTera(GetBattlerTrainer(battler)))
             return TRUE;
         return FALSE;
     }
@@ -93,8 +98,21 @@ bool32 ShouldTrainerBattlerUseGimmick(enum BattlerId battler, enum Gimmick gimmi
     // Check the trainer party data to see if a gimmick is intended.
     else
     {
-        if (gimmick == GIMMICK_TERA && gBattleStruct->opponentMonCanTera & 1 << gBattlerPartyIndexes[battler])
-            return TRUE;
+        // v1.21 — same Tera gate as AI-vs-AI path; applies to the
+        // opponent-controlled trainer slot in pilot-mode battles too.
+        if (gimmick == GIMMICK_TERA && Sim_TrainerCanTera(GetBattlerTrainer(battler)))
+        {
+            if (gBattleStruct->opponentMonCanTera & 1 << gBattlerPartyIndexes[battler])
+                return TRUE;
+            // v1.21 — Battle Frontier path: CreateFacilityMon doesn't touch
+            // opponentMonCanTera (only CreateNPCTrainerPartyFromTrainer does),
+            // so Frontier mons with teraType set never light that bit. Check
+            // MON_DATA_TERA_TYPE directly as a fallback. The Sim_TrainerCanTera
+            // gate above is already a no-op outside sim mode (returns TRUE),
+            // so this only fires for legitimate Frontier Tera mons.
+            if (GetMonData(GetBattlerMon(battler), MON_DATA_TERA_TYPE) > 0)
+                return TRUE;
+        }
         if (gimmick == GIMMICK_DYNAMAX && gBattleStruct->opponentMonCanDynamax & 1 << gBattlerPartyIndexes[battler])
             return TRUE;
     }
