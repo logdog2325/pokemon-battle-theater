@@ -7636,14 +7636,18 @@ static void DebugAction_Trainers_TryBattle(u8 taskId)
         if (Sim_IsTournamentActive())
         {
             trainer1Id = gSimTournamentBracket[Sim_GetPlayerOpponentSlot()];
-            // v2.0.1 — if the user brought a tag partner AND has Doubles on,
-            // keep them in tournament matches and roll a partner for the
-            // opponent from cup trainers not already in the bracket (or 2v1
-            // fallback). Otherwise default to clean 1v1 cup matches.
-            bool32 wantPartnerMatch = sDebugMenuListData != NULL
-                                   && sDebugMenuListData->data[5] != 0  // Double Battle toggle
-                                   && partnerId != PARTNER_NONE;
-            if (wantPartnerMatch)
+            // v2.0.1 — if the user brought a tag partner, keep them in
+            // tournament matches and roll a partner for the opponent from
+            // cup trainers not already in the bracket. The picker already
+            // auto-displays "Doubles: TRUE" when a partner is set (see the
+            // "case 9: Double Battle" render), and Sim_SetupMatchRound
+            // auto-flips BATTLE_TYPE_DOUBLE when partnerId != NONE — so we
+            // don't need to require the explicit data[5] toggle here. If
+            // no partner, default to clean 1v1 cup matches.
+            // v2.0.2 fix: was also requiring data[5] which is FALSE unless
+            // the user manually toggled Doubles, causing tournaments to
+            // silently drop the partner.
+            if (partnerId != PARTNER_NONE)
             {
                 trainer2Id = Sim_RollTournamentOpponentPartner(playerSideId, trainer1Id);
                 // partnerId stays; trainer2Id is whatever the roll returned
