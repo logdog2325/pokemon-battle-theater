@@ -6332,6 +6332,45 @@ static void Sim_StartTournament(s32 playerSideId)
     gSimTournamentEliminated = FALSE;
 }
 
+// v2.0.1 — pick a random opponent partner for a tournament doubles match.
+// Drawn from the cup's pool, skipping the player, the current opponent, and
+// every other trainer already placed in the bracket (so each match has 4
+// distinct trainers). Returns TRAINER_NONE if the cup is too small to spare
+// one — in that case the engine falls back to a 2v1 (single opponent fields
+// 2 mons against the player + their partner).
+static u16 Sim_RollTournamentOpponentPartner(s32 playerSideId, s32 currentOpponentId)
+{
+    if (gSimTournamentCup == 0 || gSimTournamentCup >= SIM_CUP_COUNT)
+        return TRAINER_NONE;
+    const struct SimCup *cup = &sSimCups[gSimTournamentCup];
+    if (cup->trainers == NULL || cup->size == 0)
+        return TRAINER_NONE;
+
+    u16 candidates[64];
+    u32 count = 0;
+    for (u32 i = 0; i < cup->size && count < ARRAY_COUNT(candidates); i++)
+    {
+        u16 t = cup->trainers[i];
+        if ((s32)t == playerSideId || (s32)t == currentOpponentId)
+            continue;
+        bool32 inBracket = FALSE;
+        for (u8 j = 0; j < SIM_TOURNAMENT_BRACKET_SIZE; j++)
+        {
+            if (gSimTournamentBracket[j] == t)
+            {
+                inBracket = TRUE;
+                break;
+            }
+        }
+        if (inBracket)
+            continue;
+        candidates[count++] = t;
+    }
+    if (count == 0)
+        return TRAINER_NONE;
+    return candidates[Random() % count];
+}
+
 static void DebugAction_Trainers_SetRematch(u8 taskId)
 {
     s32 rematchId = sDebugMenuListData->data[1];
@@ -7559,6 +7598,15 @@ static bool32 Sim_IsMatchDecided(void)
 // pending — bypasses the picker entirely so the user just sees fades into Round 2/3.
 void Sim_TriggerNextMatchRound(void)
 {
+    // v2.0.1 — tournament rounds 2+: re-roll the opponent's partner from the
+    // cup so each round has a fresh tag teammate (drawn from cup trainers
+    // not currently placed in the bracket). Only applies when the player is
+    // bringing their own partner; otherwise stays clean 1v1.
+    if (Sim_IsTournamentActive() && sSimMatchPartner != PARTNER_NONE)
+    {
+        u16 rolled = Sim_RollTournamentOpponentPartner(sSimMatchPlayerAI, sSimMatchOpponent1);
+        sSimMatchOpponent2 = rolled;  // TRAINER_NONE → engine handles 2v1
+    }
     Sim_SetupMatchRound(sSimMatchOpponent1, sSimMatchOpponent2, sSimMatchPartner, sSimMatchPlayerAI);
     BattleSetup_StartTrainerBattle_Debug();
 }
@@ -7588,10 +7636,24 @@ static void DebugAction_Trainers_TryBattle(u8 taskId)
         if (Sim_IsTournamentActive())
         {
             trainer1Id = gSimTournamentBracket[Sim_GetPlayerOpponentSlot()];
-            // Force singles-style 1v1 for cup matches — clear partner & opp2
-            // so each fight is a clean Player AI vs cup challenger duel.
-            trainer2Id = TRAINER_NONE;
-            partnerId = PARTNER_NONE;
+            // v2.0.1 — if the user brought a tag partner AND has Doubles on,
+            // keep them in tournament matches and roll a partner for the
+            // opponent from cup trainers not already in the bracket (or 2v1
+            // fallback). Otherwise default to clean 1v1 cup matches.
+            bool32 wantPartnerMatch = sDebugMenuListData != NULL
+                                   && sDebugMenuListData->data[5] != 0  // Double Battle toggle
+                                   && partnerId != PARTNER_NONE;
+            if (wantPartnerMatch)
+            {
+                trainer2Id = Sim_RollTournamentOpponentPartner(playerSideId, trainer1Id);
+                // partnerId stays; trainer2Id is whatever the roll returned
+                // (TRAINER_NONE = 2v1 fallback when cup is too small).
+            }
+            else
+            {
+                trainer2Id = TRAINER_NONE;
+                partnerId = PARTNER_NONE;
+            }
         }
     }
     // Battle Simulator: starting a new battle from the picker — reset any in-flight
