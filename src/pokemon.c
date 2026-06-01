@@ -7397,6 +7397,23 @@ enum Type GetTeraTypeFromPersonality(struct Pokemon *mon)
     return (GetMonData(mon, MON_DATA_PERSONALITY) & 0x1) == 0 ? types[0] : types[1];
 }
 
+// v2.0.4 — Battle Simulator gate: returns TRUE only when the mon's
+// substruct0.teraType field is explicitly set (or its species has
+// forceTeraType, e.g. Terapagos). The standard MON_DATA_TERA_TYPE accessor
+// defaults to the personality-derived primary/secondary type when teraType
+// is TYPE_NONE, which makes "is Tera set?" impossible to detect through the
+// public API — every mon looks Tera-capable. Sim mode uses this helper to
+// gate the player's Tera trigger so copied vanilla teams (which lose
+// teraType through BuildTrainer_CopyFromTrainer's zero-init) and non-ace
+// SV mons (whose party data has no teraType) don't show the Tera button.
+bool32 MonHasExplicitTeraType(struct Pokemon *mon)
+{
+    struct PokemonSubstruct0 *substruct0 = GetSubstruct0(&mon->box);
+    if (gSpeciesInfo[substruct0->species].forceTeraType)
+        return TRUE;
+    return substruct0->teraType != TYPE_NONE;
+}
+
 struct Pokemon *GetSavedPlayerPartyMon(u32 index)
 {
     return &gSaveBlock1Ptr->playerParty[index];

@@ -85,6 +85,24 @@ bool32 CanTerastallize(enum BattlerId battler)
     if (Sim_IsActive() && !Sim_TrainerCanTera(Sim_GetBattlerTrainerId(battler)))
         return FALSE;
 
+    // v2.0.4 — Per-mon Tera Type gate (sim mode only). Without this, the
+    // player-side Tera trigger shows up for every mon in pilot mode, even
+    // ones whose party data explicitly sets Tera Type to None — which
+    // breaks two cases:
+    //   1. Copy-preset-team into custom slot loses teraType (the copy zero-
+    //      inits and never propagates psrc->teraType), so e.g. Red's team
+    //      copied into a custom slot still showed the Tera button on every
+    //      mon. With this gate, copied teams default to no Tera until the
+    //      user opts in per-mon via the Build Trainer editor.
+    //   2. SV trainer non-ace mons (Nemona's Lycanroc, Geeta's Glimmora,
+    //      etc.) had teraType=0 in trainers.party but pilot mode let the
+    //      player Tera them anyway. Canonical SV behavior is "only the ace
+    //      Teras"; this gate enforces that.
+    // Reads the substruct directly (MonHasExplicitTeraType bypasses the
+    // personality-default behavior of MON_DATA_TERA_TYPE).
+    if (Sim_IsActive() && !MonHasExplicitTeraType(GetBattlerMon(battler)))
+        return FALSE;
+
     if (gBattleMons[battler].volatiles.transformed && GET_BASE_SPECIES_ID(gBattleMons[battler].species) == SPECIES_TERAPAGOS)
         return FALSE;
 

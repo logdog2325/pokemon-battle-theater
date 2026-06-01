@@ -258,7 +258,14 @@ static u64 GetAiFlags(u16 trainerId, enum BattlerId battler)
 void BattleAI_SetupFlags(void)
 {
     if (IsAiVsAiBattle())
-        gAiThinkingStruct->aiFlags[B_BATTLER_0] = GetAiFlags(gPartnerTrainerId, B_BATTLER_0);
+        // v2.0.4 — Use gSimPlayerSideId (the actual player-AI's trainer ID)
+        // rather than gPartnerTrainerId. In multi battles, gPartnerTrainerId
+        // points to the partner — using it for B_BATTLER_0's flags would give
+        // the player AI the partner's behavior. gSimPlayerSideId is the new
+        // sim-mode-only global that always tracks the piloted/player-AI
+        // trainer. In singles AI-vs-AI both variables mirror each other so
+        // this is also correct for the legacy 1v1 case.
+        gAiThinkingStruct->aiFlags[B_BATTLER_0] = GetAiFlags(gSimPlayerSideId, B_BATTLER_0);
     else
         gAiThinkingStruct->aiFlags[B_BATTLER_0] = 0; // player has no AI
 

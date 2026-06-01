@@ -267,7 +267,18 @@ static bool32 IsHoennRivalForMusic(u16 trainerId)
 u16 Sim_GetBattlerTrainerId(enum BattlerId battler)
 {
     if (IsOnPlayerSide(battler))
-        return gPartnerTrainerId;
+    {
+        // v2.0.4 — In multi battle, B_BATTLER_2 is the partner slot and its
+        // trainer ID lives in gPartnerTrainerId (vanilla convention).
+        // B_BATTLER_0 is the piloted / AI player slot and its trainer ID is
+        // gSimPlayerSideId. In singles or non-multi doubles, all player-side
+        // battlers map to gSimPlayerSideId (1v2 doubles uses B_BATTLER_0 +
+        // B_BATTLER_2 for the same player, not for player + partner).
+        if ((gBattleTypeFlags & BATTLE_TYPE_MULTI)
+            && GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT)
+            return gPartnerTrainerId;
+        return gSimPlayerSideId;
+    }
     if (battler == B_BATTLER_3 && (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
         return TRAINER_BATTLE_PARAM.opponentB;
     return TRAINER_BATTLE_PARAM.opponentA;
@@ -329,6 +340,11 @@ u16 Sim_GetBattleMusic(void)
     // Champion-tier in the picker.
     if (IsHoennRivalForMusic(TRAINER_BATTLE_PARAM.opponentA)
      || ((gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS) && IsHoennRivalForMusic(TRAINER_BATTLE_PARAM.opponentB))
+     // v2.0.4 — Player AI ID lives in gSimPlayerSideId now (gPartnerTrainerId
+     // is reserved for the real partner's ID in multi battles). Check both:
+     // the player AI being a Hoenn rival routes us to rival music, and so
+     // does an actual rival partner (Steven/Wally/etc.).
+     || (gSimPlayerSideId != 0 && gSimPlayerSideId < TRAINERS_COUNT && IsHoennRivalForMusic(gSimPlayerSideId))
      || (gPartnerTrainerId != 0 && gPartnerTrainerId < TRAINERS_COUNT && IsHoennRivalForMusic(gPartnerTrainerId)))
         return MUS_VS_RIVAL;
 
@@ -342,7 +358,15 @@ u16 Sim_GetBattleMusic(void)
         t = Sim_GetTier(TRAINER_BATTLE_PARAM.opponentB);
         if (t > best) best = t;
     }
-    // Player AI side (sim-only — gPartnerTrainerId holds it during AI-vs-AI builds).
+    // Player AI side (sim-only).
+    // v2.0.4 — Tier comes from gSimPlayerSideId (was gPartnerTrainerId pre-fix).
+    // In a multi battle, also fold the partner's tier in if it's a real
+    // trainer ID (a custom-trainer partner from the picker will be).
+    if (gSimPlayerSideId != 0 && gSimPlayerSideId < TRAINERS_COUNT)
+    {
+        t = Sim_GetTier(gSimPlayerSideId);
+        if (t > best) best = t;
+    }
     if (gPartnerTrainerId != 0 && gPartnerTrainerId < TRAINERS_COUNT)
     {
         t = Sim_GetTier(gPartnerTrainerId);
@@ -1133,6 +1157,24 @@ EWRAM_DATA u8 gSimTeamCodeBuffer[32] = {0};
 // reads this to apply the level cap, since the AI-vs-AI flag (the cap's
 // existing gate) is intentionally skipped in pilot mode.
 EWRAM_DATA bool8 gSimPilotMode = FALSE;
+// v2.0.4 — Separate variable for the piloted/AI-player trainer ID. Pre-fix,
+// Sim_SetupMatchRound's player AI block overwrote gPartnerTrainerId with the
+// playerSideId, even when a partner was present. This corrupted every
+// partner-controller lookup that reads gPartnerTrainerId (PlayerPartnerHandle*
+// in src/battle_controller_player_partner.c, AI flag lookup at
+// src/battle_ai_main.c, partner sprite in src/battle_transition.c, etc.) —
+// they'd retrieve the player's trainer data instead of the partner's. The
+// most visible symptom was a hard crash at 0x60601E06 when the partner's mon
+// fainted in pilot-mode 2v1 multi: the engine re-entered the partner's send-
+// out path, looked up palette/sprite data through the wrong trainer struct,
+// and eventually dereferenced a garbage function pointer.
+//
+// Fix convention: gPartnerTrainerId stays as the *real* partner's trainer ID
+// in multi battles (vanilla semantics), and gSimPlayerSideId stores the
+// player-AI's ID. Sim_GetBattlerTrainerId reads gSimPlayerSideId for B_BATTLER_0
+// and gPartnerTrainerId for B_BATTLER_2. battle_ai_main.c's player-AI flag
+// lookup and Sim_GetBattleMusic's tier check also key on gSimPlayerSideId.
+EWRAM_DATA u16 gSimPlayerSideId = 0;
 EWRAM_DATA s16 gSimLevelCap = 0; // First-run init to 50 happens in Debug_ShowTrainersSubMenu. .sbss only allows zero initializers.
 
 // Battle Simulator: best-of-N match state. gSimBestOf is the configured length
@@ -3980,6 +4022,13 @@ static bool32 BuildTrainer_CopyFromTrainer(u16 trainerId)
         pdst->gender   = psrc->gender;   // 0=Any/Genderless, 1=Male, 2=Female
         pdst->shiny    = psrc->isShiny;
         pdst->level    = (psrc->lvl == 0) ? 50 : psrc->lvl;
+        // v2.0.4 — Preserve teraType from the source. Without this, copying
+        // an SV preset (Nemona/Geeta/Kieran/etc.) into a custom slot stripped
+        // Tera Type off the ace, defeating the whole point of "start from
+        // this team and tweak." Past-gen presets (Red, Cynthia, etc.) have
+        // teraType=0 on every mon by design, so they still default to "no
+        // Tera until the user opts in per-mon" — same behavior as before.
+        pdst->teraType = psrc->teraType;
         // abilityNum default: 0 (primary ability). The TrainerMon stores the
         // resolved Ability enum, not the slot index, so a full reverse-lookup
         // would need per-species iteration. Defaulting to 0 keeps the copy
@@ -7586,7 +7635,17 @@ static void Sim_SetupMatchRound(s32 trainer1Id, s32 trainer2Id, s32 partnerId, s
         if (B_FLAG_AI_VS_AI_BATTLE && !pilotMode)
             FlagSet(B_FLAG_AI_VS_AI_BATTLE);
         CreateNPCTrainerPartyFromTrainer(gPlayerParty, GetTrainerStructFromId(playerSideId), TRUE, gBattleTypeFlags);
-        gPartnerTrainerId = playerSideId;
+        // v2.0.4 — Two-variable convention: gSimPlayerSideId always stores
+        // the player-AI/piloted trainer's ID, gPartnerTrainerId stays as the
+        // partner's ID when a partner is present (so the engine's partner-
+        // controller paths read the right struct). In singles/no-partner sim
+        // battles, gPartnerTrainerId continues to mirror playerSideId — that
+        // path has no real partner to collide with, and several pre-existing
+        // call sites (music tier, recorded-battle save, etc.) still read
+        // gPartnerTrainerId for that purpose.
+        gSimPlayerSideId = playerSideId;
+        if (partnerId == PARTNER_NONE)
+            gPartnerTrainerId = playerSideId;
         for (u32 i = 0; i < MAX_FRONTIER_PARTY_SIZE; i++)
         {
             gSelectedOrderFromParty[i] = i + 1;

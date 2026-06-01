@@ -933,6 +933,11 @@ uq4_12_t GetDynamaxLevelHPMultiplier(u32 dynamaxLevel, bool32 inverseMultiplier)
 u32 GetRegionalFormByRegion(u32 species, u32 region);
 bool32 IsSpeciesForeignRegionalForm(u32 species, u32 currentRegion);
 enum Type GetTeraTypeFromPersonality(struct Pokemon *mon);
+// v2.0.4 — Battle Simulator: TRUE iff substruct0.teraType is explicitly
+// set (or species has forceTeraType). Standard MON_DATA_TERA_TYPE returns
+// a personality default when unset, so this is the only way to detect
+// "Tera Type: None" through the public API. See src/pokemon.c.
+bool32 MonHasExplicitTeraType(struct Pokemon *mon);
 bool8 ShouldSkipFriendshipChange(void);
 struct Pokemon *GetSavedPlayerPartyMon(u32 index);
 u8 *GetSavedPlayerPartyCount(void);

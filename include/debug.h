@@ -32,6 +32,11 @@ extern EWRAM_DATA bool8 gSimAutoOpenPending;
 // cap silently fails in pilot battles. Set by Sim_SetupMatchRound, cleared
 // by CB2_EndDebugBattle.
 extern EWRAM_DATA bool8 gSimPilotMode;
+// v2.0.4 — Player-AI trainer ID in sim mode. Set alongside gPartnerTrainerId
+// but ONLY this variable is overwritten in the multi-battle path so the
+// partner controller's gPartnerTrainerId reads stay correct. See comment on
+// gSimPlayerSideId in src/debug.c.
+extern EWRAM_DATA u16 gSimPlayerSideId;
 // v0.52.5 — set by DebugAction_BuildTrainer_EditName before invoking
 // DoNamingScreen. The naming screen's returnCallback drops the player back
 // on the field; field_control_avatar's input poll sees this flag and

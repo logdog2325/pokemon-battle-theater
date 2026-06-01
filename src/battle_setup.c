@@ -1410,27 +1410,48 @@ static void CB2_EndDebugBattle(void)
         LoadPlayerParty();
         FlagClear(B_FLAG_AI_VS_AI_BATTLE);
         gPartnerTrainerId = 0;
+        gSimPlayerSideId = 0;  // v2.0.4 — clear sim player-AI trainer ID alongside gPartnerTrainerId
+        // v2.0.4 — Treat run/forfeit as a series-ending loss when piloting a
+        // best-of or tournament match. Previously these outcomes were no-ops
+        // (the original comment below called them "draws / forfeits"), which
+        // meant the rematch dispatcher would fire again with neither side
+        // having a win, and Sim_SetupMatchRound's isRematch check (requires
+        // at least one win) would fall back to the sDebugMenuListData read —
+        // but that pointer was freed at round-1 setup, so pilotMode silently
+        // became FALSE. Net effect: running away in pilot tournament/best-of
+        // dropped you back into AI-vs-AI mode for the next round instead of
+        // ending the series. Now run/forfeit ends the match decisively.
+        bool32 playerForfeited = (gBattleOutcome == B_OUTCOME_RAN
+                                  || gBattleOutcome == B_OUTCOME_FORFEITED);
         // Battle Simulator: best-of-N scoring. From the AI-vs-AI sim's point of
         // view, the Player AI side is "trainer 1" and the opponent side is
         // "trainer 2". gBattleOutcome is reported from the player POV, so
         // B_OUTCOME_WON means our Player AI side won, B_OUTCOME_LOST means the
-        // opponent side won. Draws / forfeits don't count toward either tally.
+        // opponent side won.
         if (gSimBestOf > 1)
         {
             if (gBattleOutcome == B_OUTCOME_WON)
                 gSimT1Wins++;
             else if (gBattleOutcome == B_OUTCOME_LOST)
                 gSimT2Wins++;
+            else if (playerForfeited)
+            {
+                // Forfeit the entire series — clinch enough wins for the
+                // opponent to decide it. Sim_IsMatchDecided checks majority
+                // (e.g. 2 of 3, 3 of 5), so setting T2 to ceil(N/2) ends the
+                // best-of and skips the rematch dispatch.
+                gSimT2Wins = (gSimBestOf + 1) / 2;
+            }
         }
         // Battle Simulator: tournament progression — single-elim bracket.
         // Win → record the player slot as match winner, bump round. Lose →
-        // record the opponent slot, mark eliminated. Draws / forfeits are a
-        // no-op (the same round re-runs on retry).
+        // record the opponent slot, mark eliminated. Forfeit → treated as
+        // elimination (same as a loss).
         if (gSimTournamentCup > 0 && gSimTournamentRound > 0 && !gSimTournamentDone)
         {
             if (gBattleOutcome == B_OUTCOME_WON)
                 Sim_AdvanceTournamentAfterMatch(TRUE);
-            else if (gBattleOutcome == B_OUTCOME_LOST)
+            else if (gBattleOutcome == B_OUTCOME_LOST || playerForfeited)
                 Sim_AdvanceTournamentAfterMatch(FALSE);
         }
         // Battle Simulator: snapshot the team-preview picks so the NEXT round
