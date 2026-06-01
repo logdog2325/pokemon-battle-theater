@@ -96,7 +96,12 @@
 <div class="grid">
   <div class="panel">
     <h2>Showdown export</h2>
-    <textarea id="input" placeholder="Lucario @ Life Orb&#10;Ability: Inner Focus&#10;Level: 50&#10;EVs: 252 Atk / 4 SpD / 252 Spe&#10;Adamant Nature&#10;- Close Combat&#10;- Extreme Speed&#10;- Bullet Punch&#10;- Crunch&#10;&#10;Garchomp @ Yache Berry&#10;..."></textarea>
+    <textarea id="input"
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+              placeholder="Lucario @ Life Orb&#10;Ability: Inner Focus&#10;Level: 50&#10;EVs: 252 Atk / 4 SpD / 252 Spe&#10;Adamant Nature&#10;- Close Combat&#10;- Extreme Speed&#10;- Bullet Punch&#10;- Crunch&#10;&#10;Garchomp @ Yache Berry&#10;..."></textarea>
   </div>
 
   <div class="panel">
@@ -170,7 +175,23 @@ function lookup(table, name, kind) {
 }
 
 // Parse a Showdown text export into an array of Mon objects.
+// v2.0.4.5 — Normalize "smart" Unicode punctuation back to plain ASCII before
+// parsing. iOS Safari (and macOS' system-wide "Smart Punctuation" feature)
+// auto-converts straight quotes / hyphens / spaces into typographic variants
+// in some text contexts. Showdown exports rely on plain ASCII (specifically
+// the leading `-` on move lines must match `line.startsWith("-")`), so a
+// silently-converted `– Close Combat` produced an empty moveset and the
+// encoder failed to emit a code. Normalize everything to ASCII first.
+function normalizeAscii(text) {
+  return text
+    .replace(/[‐-―−]/g, "-")  // hyphen variants + minus sign → "-"
+    .replace(/[‘’‚‛]/g, "'")  // single quotes
+    .replace(/[“”„‟]/g, '"')  // double quotes
+    .replace(/[  -​]/g, " ");      // non-breaking + thin spaces → " "
+}
+
 function parseShowdown(text) {
+  text = normalizeAscii(text);
   const mons = [];
   let current = null;
   const lines = text.split(/\r?\n/);
@@ -539,7 +560,17 @@ function escapeHtml(s) {
 }
 function escapeAttr(s) { return escapeHtml(s); }
 
+// v2.0.4.5 — Multiple event listeners for iOS reliability. iOS Safari's
+// `input` event fires inconsistently on paste in some configurations (the
+// "Paste" context-menu action sometimes doesn't fire `input` synchronously),
+// so listen to `paste`, `change`, and `keyup` as backups. `paste` fires
+// BEFORE the clipboard content is in the field, so wrap render() in a
+// setTimeout to give the textarea one tick to update its .value.
 inputEl.addEventListener("input", render);
+inputEl.addEventListener("change", render);
+inputEl.addEventListener("keyup", render);
+inputEl.addEventListener("paste", () => setTimeout(render, 0));
+inputEl.addEventListener("blur", render);
 render();
 </script>
 
