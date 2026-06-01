@@ -1486,8 +1486,25 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u32 personal
     SetBoxMonData(boxMon, MON_DATA_OT_GENDER, &gSaveBlock2Ptr->playerGender);
 
     value = boxMon->personality & 0x1;
-    u32 teraType = value == 0 ? GetSpeciesType(species, 0) : GetSpeciesType(species, 1);
-    SetBoxMonData(boxMon, MON_DATA_TERA_TYPE, &teraType);
+    // v2.0.4.1 — pokeemerald-expansion's CreateBoxMon eagerly wrote the
+    // species's primary/secondary type (per personality bit) into the
+    // substruct's teraType field as a default. Two problems with that for
+    // Battle Theater:
+    //   - MON_DATA_TERA_TYPE's accessor already does the same personality
+    //     fallback when substruct->teraType == TYPE_NONE, so the eager
+    //     write is redundant for reads.
+    //   - MonHasExplicitTeraType (sim-mode per-mon Tera gate, v2.0.4) reads
+    //     substruct->teraType directly to detect "user/trainer set this
+    //     explicitly." The eager write made every mon look explicitly set,
+    //     so a custom-trainer mon with Tera Type=None in the Build Trainer
+    //     editor could still Tera in battle.
+    // Leaving teraType=TYPE_NONE here means "no explicit Tera Type." Damage
+    // calc and visuals still read MON_DATA_TERA_TYPE which falls back to
+    // the personality-derived type, so vanilla behavior is unchanged.
+    // CreateNPCTrainerPartyFromTrainer (battle_main.c:2172) still overrides
+    // teraType when the trainer's party data sets one; CreateFacilityMon
+    // (battle_frontier.c:386) does the same. So explicitly-set teraType
+    // values flow through unchanged.
     //using gen 3-4 ability formula, it was changed in later gens
     if (GetSpeciesAbility(species, 1))
         SetBoxMonData(boxMon, MON_DATA_ABILITY_NUM, &value);
