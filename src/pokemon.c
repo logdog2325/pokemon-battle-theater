@@ -7423,12 +7423,26 @@ enum Type GetTeraTypeFromPersonality(struct Pokemon *mon)
 // gate the player's Tera trigger so copied vanilla teams (which lose
 // teraType through BuildTrainer_CopyFromTrainer's zero-init) and non-ace
 // SV mons (whose party data has no teraType) don't show the Tera button.
+//
+// v2.0.4.2 — DECRYPT BEFORE READING. Pokemon substruct data is stored
+// XOR-encrypted with (otId ^ personality) in boxMon->secure. GetSubstruct0
+// returns a pointer into that encrypted buffer; reading substruct0->teraType
+// directly returns garbage (encrypted XOR'd bits, which are almost always
+// non-zero). The standard GetBoxMonData/GetMonData accessors always call
+// DecryptBoxMon → read → EncryptBoxMon, and my first-pass MonHasExplicitTeraType
+// skipped that step, which is why every mon looked like it had an explicit
+// teraType set even after v2.0.4.1's CreateBoxMon eager-assignment removal:
+// the substruct buffer was zero, but reading "zero ^ key" gave back the key
+// value, not zero. Match the engine's encryption discipline here.
 bool32 MonHasExplicitTeraType(struct Pokemon *mon)
 {
-    struct PokemonSubstruct0 *substruct0 = GetSubstruct0(&mon->box);
-    if (gSpeciesInfo[substruct0->species].forceTeraType)
-        return TRUE;
-    return substruct0->teraType != TYPE_NONE;
+    struct BoxPokemon *boxMon = &mon->box;
+    DecryptBoxMon(boxMon);
+    struct PokemonSubstruct0 *substruct0 = GetSubstruct0(boxMon);
+    bool32 forced = (gSpeciesInfo[substruct0->species].forceTeraType != 0);
+    bool32 hasExplicit = (substruct0->teraType != TYPE_NONE);
+    EncryptBoxMon(boxMon);
+    return forced || hasExplicit;
 }
 
 struct Pokemon *GetSavedPlayerPartyMon(u32 index)
