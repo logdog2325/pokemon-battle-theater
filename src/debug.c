@@ -7889,6 +7889,24 @@ static void Sim_StartFrontierChallenge(s32 trainerId)
             SetMonData(&gPlayerParty[i], MON_DATA_SPDEF_EV, &src->ev[4]);
             SetMonData(&gPlayerParty[i], MON_DATA_SPEED_EV, &src->ev[5]);
         }
+        // v2.0.4.4 — Propagate the trainer's Tera Type onto the borrowed mon.
+        // Sim_StartFrontierChallenge's manual party-build was added in v1.7
+        // and copied species/level/item/moves/IVs/EVs but never teraType, so
+        // a borrowed team's mons always ended up with substruct teraType =
+        // TYPE_NONE. That used to be invisible because Battle Frontier let
+        // every mon Tera into its species-default type via the (broken)
+        // MON_DATA_TERA_TYPE accessor fallback — but v2.0.4.3 closed that
+        // loophole with a per-mon MonHasExplicitTeraType gate, which made
+        // the omission visible: Penny's Sylveon and other canonical-Tera
+        // borrowed mons couldn't Tera anymore. Copy teraType through so
+        // their substruct gets the explicit value and the gate lets them
+        // Tera again. Mons whose party data has no teraType (Red, Oak,
+        // Blue, etc.) stay non-Tera-capable, matching the curated intent.
+        if (src->teraType != 0)
+        {
+            enum Type teraType = src->teraType;
+            SetMonData(&gPlayerParty[i], MON_DATA_TERA_TYPE, &teraType);
+        }
         // Recompute stats so the IV/EV/level changes take effect (HP becomes
         // the proper value instead of the base CreateMon estimate).
         CalculateMonStats(&gPlayerParty[i]);
