@@ -85,10 +85,9 @@ bool32 CanTerastallize(enum BattlerId battler)
     if (Sim_IsActive() && !Sim_TrainerCanTera(Sim_GetBattlerTrainerId(battler)))
         return FALSE;
 
-    // v2.0.4 — Per-mon Tera Type gate (sim mode only). Without this, the
-    // player-side Tera trigger shows up for every mon in pilot mode, even
-    // ones whose party data explicitly sets Tera Type to None — which
-    // breaks two cases:
+    // v2.0.4 / v2.0.5 — Per-mon Tera Type gate. Without this, the player-side
+    // Tera trigger shows up for every mon, even ones whose party data
+    // explicitly sets Tera Type to None — which breaks these cases:
     //   1. Copy-preset-team into custom slot loses teraType (the copy zero-
     //      inits and never propagates psrc->teraType), so e.g. Red's team
     //      copied into a custom slot still showed the Tera button on every
@@ -98,9 +97,18 @@ bool32 CanTerastallize(enum BattlerId battler)
     //      etc.) had teraType=0 in trainers.party but pilot mode let the
     //      player Tera them anyway. Canonical SV behavior is "only the ace
     //      Teras"; this gate enforces that.
-    // Reads the substruct directly (MonHasExplicitTeraType bypasses the
-    // personality-default behavior of MON_DATA_TERA_TYPE).
-    if (Sim_IsActive() && !MonHasExplicitTeraType(GetBattlerMon(battler)))
+    //   3. Battle Frontier opponents (Red/Oak/Blue rentals, Bidoof, etc.)
+    //      were Tera-ing into their species type because the engine's
+    //      MON_DATA_TERA_TYPE accessor defaults to a personality-derived
+    //      type when teraType is TYPE_NONE — and the old opponent-branch
+    //      Frontier fallback in ShouldTrainerBattlerUseGimmick used exactly
+    //      that accessor, so every Frontier mon looked Tera-capable.
+    // Reads the substruct directly via MonHasExplicitTeraType (decrypts +
+    // checks raw substruct teraType, bypassing the personality fallback).
+    // Initial v2.0.4 was sim-only; v2.0.5 broadens to Frontier too since
+    // the issue is identical there. TESTING-mode tests set teraType
+    // explicitly when they need Tera so this gate doesn't interfere.
+    if (!TESTING && !MonHasExplicitTeraType(GetBattlerMon(battler)))
         return FALSE;
 
     if (gBattleMons[battler].volatiles.transformed && GET_BASE_SPECIES_ID(gBattleMons[battler].species) == SPECIES_TERAPAGOS)

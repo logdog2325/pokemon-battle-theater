@@ -47,7 +47,7 @@ All releases live on the [Releases page](https://github.com/logdog2325/pokemon-b
 - 6 Custom Trainer slots with full PKHeX-style editor (sprite / name /
   species / item / ability / EVs / IVs / moves / nature / gender / shiny) —
   **teams persist across sessions as of v1.4.1**
-- **Showdown team-code import** — paste a 24-character code to load any
+- **Showdown team-code import** — paste a short text code (≤24 characters for typical competitive sets) to load any
   team you built on Pokémon Showdown directly into a custom slot. No
   internet, no link cable, no patching
 - **Battle Frontier Challenge Mode** — borrow any preset trainer's team
@@ -84,7 +84,7 @@ opening menu, then choose a slot (1–6).
 - **Copy preset** — start from an existing trainer's team (Cynthia,
   Volo, Logan's team, etc.) and tweak from there. Saves you ~10 minutes
   per team if you mostly want to swap moves or items on a known set
-- **Import from code** — paste a 24-character Showdown team code to
+- **Import from code** — paste a ≤24-character Showdown team code to
   instantly load a team you built externally — see
   [Showdown team codes](#showdown-team-codes) below for the full flow
 
@@ -99,9 +99,10 @@ picker alongside the preset roster.
 ## Showdown team codes
 
 Pokemon Battle Theater includes a team-code system (added v1.2, polished
-in v1.3) that lets you transport a complete competitive team into the
-ROM via a short text code — no internet, no link cable, no patching
-required. Inspired by Marvel Snap / Hearthstone deck imports.
+in v1.3, format compressed in v2.0.4.3) that lets you transport a
+complete competitive team into the ROM via a short text code — no
+internet, no link cable, no patching required. Inspired by Marvel Snap /
+Hearthstone deck imports.
 
 ### The flow
 
@@ -109,26 +110,56 @@ required. Inspired by Marvel Snap / Hearthstone deck imports.
    (or anywhere that produces the standard Showdown text format)
 2. **Open the [offline encoder](tools/team-codes/encoder.html)** in your
    browser. It's a single HTML file — no install, no network needed,
-   works on your phone or laptop
-3. **Paste your Showdown team** into the encoder. It spits out a
-   24-character code like `Y9XK.MEW2.HK4N.GQ5W.J2RZ.YAAQ`
+   works on your phone or laptop. (Also attached to every GitHub
+   release if you want to download it standalone.)
+3. **Paste your Showdown team** into the encoder. It spits out one
+   short text code per Pokémon — typically 18-24 characters each — like
+   `PBMfzmBjIhtSolcMzVAn4AOQ`. Every code starts with `PB` so you can
+   spot-check that you pasted the right thing
 4. **In the ROM:** Build Trainer → pick a slot → **Import from code**
-5. **Type the 24 characters** using the in-game keyboard (alphanumeric
-   + period as a separator, no need to remember casing or symbols).
-   Press confirm
-6. **The full team materializes** in the slot — species, item, ability,
-   moves, EVs, IVs, nature, gender, shiny, and trainer name, all
-   decoded inside the ROM
+5. **Type up to 24 characters** using the in-game keyboard (alphanumeric
+   + `-` and `_` from the symbols page; the encoder uses URL-safe
+   base64). Press confirm
+6. **The full team materializes** in the slot — species, item, ability
+   (including Hidden Ability), moves, EVs, IVs, nature, gender, shiny,
+   Tera Type, and trainer name, all decoded inside the ROM
+
+### Encoding format details
+
+The team code is base64-encoded over a bit-packed payload. Format **v5**
+(shipped with v2.0.4.3) flag-encodes the fields that are most often at
+their default values so common competitive sets fit in 24 characters:
+
+| Field      | Encoding                                          |
+|------------|---------------------------------------------------|
+| held item  | 1-bit "has item" flag + 10 bits (if held)         |
+| level      | 1-bit "is 100" flag + 7 bits (if not L100)        |
+| gender     | 1-bit "is any" flag + 2 bits (if explicit M/F)    |
+| Tera type  | 1-bit "has tera" flag + 5 bits (if set)           |
+| EV values  | 6 bits per stat (×4 = max 252), 4-EV granularity  |
+| IV values  | 1-bit "has deviations" flag + 5 bits per non-31   |
+| moves      | 3-bit count + 11 bits per move                    |
+
+EVs are quantized to multiples of 4 — competitive spreads use this
+granularity anyway (1 EV = 1/4 stat point), so it's no fidelity loss
+in practice. A typical competitive Pokémon (Level 100, held item, three
+EV stats, no IV deviations, four moves, no Tera) encodes to ~22 chars.
+Adding Tera Type / extra EV stats / level adjustments pushes it up to
+24-25; the encoder shows a warning when a code exceeds the ROM's input
+limit so you know to round-trim a field. Older v3 / v4 codes still
+import — the decoder accepts all three versions.
 
 ### Why it's cool
 
 - **No internet, no link cable** — works on stock hardware or any
   emulator. The 24-char code is the entire team
 - **Compact** — 24 chars covers everything for up to 6 Pokemon. The v2
-  format is bit-packed (~25% shorter than the v1 prototype) by storing
-  each field at exactly the bits needed instead of byte-aligned
+  format was bit-packed (~25% shorter than the v1 prototype); v5 layers
+  flag-encoding on top so common competitive sets are ~30% shorter
+  again than v3 was
 - **Showdown-native** — paste any team from Showdown's teambuilder
-  directly; the encoder handles all field translation
+  directly; the encoder handles all field translation including Hidden
+  Abilities (added v1.17, fixed end-to-end in v2.0.4.3)
 - **Persists with v1.4** — once you import a team, it's saved to your
   cartridge save and survives power-off
 

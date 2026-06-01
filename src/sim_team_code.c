@@ -27,7 +27,18 @@
 // Format version the decoder understands. Bumped in lockstep with the encoder.
 // v3 (v1.21): adds 5-bit teraType field after IVs and before checksum.
 // v2 codes are still accepted; they decode with teraType = TYPE_NONE (no Tera).
-#define SIM_TEAM_CODE_VERSION   3
+// v4 (v2.0.5): teraType is now flag-encoded — 1 bit "has tera type" + 5 bits
+// if set. Saves 4 bits in the common Tera Type: None case.
+// v5 (v2.0.5 follow-up): more aggressive flag-encoding to keep common-case
+// competitive teams under the 24-char ROM input ceiling:
+//   - item:    1-bit "has item" flag, 10 bits if held       (saves 9 bits if no item, costs 1 if held)
+//   - level:   1-bit "is 100" flag,   7 bits if not L100    (saves 6 bits at L100, costs 1 otherwise)
+//   - gender:  1-bit "is any" flag,   2 bits if explicit    (saves 1 bit for "Any", costs 1 if M/F)
+//   - EVs:     6 bits per value (quantized /4, max 252)     (saves 2 bits per set stat — EVs are
+//                                                            competitive-standard multiples of 4
+//                                                            anyway, no fidelity loss in practice)
+// v3 and v4 codes still decode through their respective branches.
+#define SIM_TEAM_CODE_VERSION   5
 
 // Magic prefix that gates a code as belonging to this format. Two bytes so
 // even a typo on the first char is caught immediately.
@@ -200,12 +211,24 @@ enum SimTeamCodeResult Sim_DecodeTeamCode(const u8 *code, struct SimCustomTraine
     memset(&m, 0, sizeof(m));
 
     m.species   = BitReader_Read(&br, 11);
-    m.heldItem  = BitReader_Read(&br, 10);
+    // v5: heldItem is flag-encoded. v3/v4: always 10 bits.
+    if (version >= 5)
+        m.heldItem = BitReader_Read(&br, 1) ? BitReader_Read(&br, 10) : 0;
+    else
+        m.heldItem = BitReader_Read(&br, 10);
     m.nature    = BitReader_Read(&br, 5);
     m.abilityNum= BitReader_Read(&br, 2);
     m.shiny     = BitReader_Read(&br, 1);
-    m.level     = BitReader_Read(&br, 7);
-    m.gender    = BitReader_Read(&br, 2);
+    // v5: level is flag-encoded with default 100. v3/v4: always 7 bits.
+    if (version >= 5)
+        m.level = BitReader_Read(&br, 1) ? BitReader_Read(&br, 7) : 100;
+    else
+        m.level = BitReader_Read(&br, 7);
+    // v5: gender is flag-encoded with default 0 (Any). v3/v4: always 2 bits.
+    if (version >= 5)
+        m.gender = BitReader_Read(&br, 1) ? BitReader_Read(&br, 2) : 0;
+    else
+        m.gender = BitReader_Read(&br, 2);
 
     // Move count + moves
     u32 moveCount = BitReader_Read(&br, 3);
@@ -214,15 +237,27 @@ enum SimTeamCodeResult Sim_DecodeTeamCode(const u8 *code, struct SimCustomTraine
     for (u32 i = 0; i < 4; i++)
         m.moves[i] = (i < moveCount) ? BitReader_Read(&br, 11) : MOVE_NONE;
 
-    // EVs: 6-bit mask + 8-bit values for each set bit
+    // EVs: 6-bit mask + values for each set bit.
+    //   v3/v4: 8-bit value (0-255, clamped to 252).
+    //   v5: 6-bit value, decoded as v * 4 (0-252 in 4-EV steps). Competitive
+    //   EV spreads are multiples of 4 anyway (1 EV = 1/4 stat point), so this
+    //   is no fidelity loss in practice and saves 2 bits per set stat.
     u32 evMask = BitReader_Read(&br, 6);
     for (u32 i = 0; i < 6; i++)
     {
         if (evMask & (1 << i))
         {
-            u32 v = BitReader_Read(&br, 8);
-            if (v > 252)
-                v = 252;
+            u32 v;
+            if (version >= 5)
+            {
+                v = BitReader_Read(&br, 6) * 4;
+                if (v > 252) v = 252;
+            }
+            else
+            {
+                v = BitReader_Read(&br, 8);
+                if (v > 252) v = 252;
+            }
             m.evs[i] = v;
         }
         else
@@ -256,9 +291,28 @@ enum SimTeamCodeResult Sim_DecodeTeamCode(const u8 *code, struct SimCustomTraine
             m.ivs[i] = 31;
     }
 
-    // v1.21 / format v3 — Tera Type. 5-bit value, TYPE_NONE = no Tera.
-    // v2 codes skip this field entirely (defaults to 0 = TYPE_NONE).
-    if (version >= 3)
+    // Tera Type. Encoding varies by version:
+    //   v2: field absent. Defaults to TYPE_NONE.
+    //   v3 (v1.21): always 5 bits. TYPE_NONE = no Tera.
+    //   v4 (v2.0.5): 1-bit "has tera" flag, then 5 bits only if flag is set.
+    //                Saves 4 bits in the (very common) None case so a Sceptile
+    //                @ White Herb / Unburden + 252/4/252 EVs fits in the
+    //                ROM input's 24-char limit instead of overflowing to 25.
+    if (version >= 4)
+    {
+        if (BitReader_Read(&br, 1))
+        {
+            u32 tera = BitReader_Read(&br, 5);
+            if (tera >= NUMBER_OF_MON_TYPES || tera == TYPE_MYSTERY)
+                tera = TYPE_NONE;
+            m.teraType = tera;
+        }
+        else
+        {
+            m.teraType = TYPE_NONE;
+        }
+    }
+    else if (version == 3)
     {
         u32 tera = BitReader_Read(&br, 5);
         if (tera >= NUMBER_OF_MON_TYPES || tera == TYPE_MYSTERY)

@@ -7286,9 +7286,27 @@ const struct Trainer *Sim_GetCustomTrainerStruct(u16 trainerId)
             // anything else makes the mon Terastallize to that type when the
             // owning trainer is allowed to Tera (Sim_TrainerCanTera).
             dst->teraType = (enum Type)src->teraType;
-            // ability resolved from species's abilities table; ABILITY_NONE
-            // means "use the default ability for this species/slot".
-            dst->ability = ABILITY_NONE;
+            // v2.0.5 — propagate the user's ability-slot pick (0/1/2 = primary
+            // /secondary/hidden) by looking up the species's abilities table.
+            // Previously this was hard-coded to ABILITY_NONE, which made
+            // CreateNPCTrainerPartyFromTrainer fall back to either personality
+            // -hashed selection (B_TRAINER_MON_RANDOM_ABILITY) or slot 0 — so
+            // a user-picked Hidden Ability in the Build Trainer editor (or a
+            // team-code-imported mon with abilityNum=2) silently became the
+            // primary ability in battle. Now: read the abilities[] entry at
+            // src->abilityNum, fall back to slot 0 if that entry is
+            // ABILITY_NONE (some species only have a primary ability), and
+            // pass the resolved ability through to CreateNPCTrainerPartyFromTrainer
+            // which will then write the correct MON_DATA_ABILITY_NUM.
+            {
+                u8 slot = src->abilityNum;
+                if (slot >= NUM_ABILITY_SLOTS)
+                    slot = 0;
+                enum Ability resolved = gSpeciesInfo[src->species].abilities[slot];
+                if (resolved == ABILITY_NONE && slot != 0)
+                    resolved = gSpeciesInfo[src->species].abilities[0];
+                dst->ability = resolved;
+            }
         }
         else
         {
@@ -7544,13 +7562,19 @@ static void Sim_SetupMatchRound(s32 trainer1Id, s32 trainer2Id, s32 partnerId, s
     // round 1 setup-end). For these rounds we override forceDouble from the
     // snapshot so a doubles tournament stays doubles past round 1 — same
     // freed-pointer trap the best-of-N path got patched for in v0.52.13.
-    // Note: pilotMode is intentionally NOT overridden here. Tournament
-    // pilot-mode behavior across rounds is its own can of worms (preserving
-    // it across rounds changes whether the AI auto-plays rounds 2+, and
-    // that intersected badly with the bracket / advancement flow when last
-    // tested). Only the forceDouble axis is in scope for this fix.
+    //
+    // v2.0.5 — also override pilotMode for tournament rounds 2+. The v1.20
+    // note here said pilot-mode-across-rounds intersected badly with the
+    // bracket flow when last tested, but the bracket flow has since
+    // stabilized (v1.20 + v2.0.4 cleanups) and the freed-sDebugMenuListData
+    // trap now makes pilotMode silently FALSE after round 1, which surfaced
+    // as "I won the first round of a doubles pilot tournament and round 2
+    // dumped me into AI-vs-AI." Re-test if the bracket flow regresses.
     if (Sim_IsTournamentActive() && gSimTournamentRound >= 2)
+    {
         forceDouble = sSimMatchForceDouble;
+        pilotMode   = sSimMatchPilotMode;
+    }
     if (gSimVGCMode)
         forceDouble = TRUE;
     // v0.52.15 — publish pilot mode globally so the level-cap path in
