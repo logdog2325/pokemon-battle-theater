@@ -15,6 +15,7 @@
 #include "util.h"
 #include "constants/abilities.h"
 #include "constants/rgb.h"
+#include "debug.h"  // v2.0.3 — Sim_GetBattlerTrainerId / Sim_TrainerCanTera / Sim_IsActive
 
 // Sets flags and variables upon a battler's Terastallization.
 void ActivateTera(enum BattlerId battler)
@@ -67,6 +68,23 @@ bool32 CanTerastallize(enum BattlerId battler)
     // Scarlet/Violet + Legends Z-A trainers have landed. Gating happens in
     // ShouldTrainerBattlerUseGimmick via Sim_TrainerCanTera (past-gen
     // trainers still can't Tera; Gen 9 + custom slots can).
+    //
+    // v2.0.3 — Defensive engine-level gate. ShouldTrainerBattlerUseGimmick's
+    // gate has multiple branches (AI-vs-AI, player, opponent) and the player
+    // branch historically returned TRUE unconditionally, so a past-gen mon
+    // could slip through if any single path missed the check. Block at the
+    // top of CanTerastallize too — belt-and-suspenders. Frontier battles
+    // (Sim_IsActive() == FALSE) skip this gate; Sim_TrainerCanTera handles
+    // them permissively anyway.
+    // Initial v2.0.3 used gIsDebugBattle here, but that flag is only flipped
+    // by the legacy DebugAction_Party_BattleSingle path — Sim_SetupMatchRound
+    // never sets it, so the check silently passed in every modern sim battle
+    // (which is why Z-A trainers were still Tera-ing). Sim_IsActive() reads
+    // gSimPilotMode and the B_FLAG_AI_VS_AI_BATTLE flag, both of which
+    // Sim_SetupMatchRound actually maintains.
+    if (Sim_IsActive() && !Sim_TrainerCanTera(Sim_GetBattlerTrainerId(battler)))
+        return FALSE;
+
     if (gBattleMons[battler].volatiles.transformed && GET_BASE_SPECIES_ID(gBattleMons[battler].species) == SPECIES_TERAPAGOS)
         return FALSE;
 
@@ -74,7 +92,25 @@ bool32 CanTerastallize(enum BattlerId battler)
     if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE && !IsOnPlayerSide(battler))
         return FALSE;
 
-    if (TESTING || !IsOnPlayerSide(battler))
+    // v2.0.3 — Skip the bag/charge gate in sim mode too. The player side in a
+    // sim battle is piloting someone else's loaner team, not the user's actual
+    // collection — the "you carry a Tera Orb, you charge it by visiting a
+    // Pokemon Center" mechanic doesn't apply. And with the vanilla config
+    // defaults (B_FLAG_TERA_ORB_CHARGED = 0, B_FLAG_TERA_ORB_NO_COST = 0),
+    // FlagGet(0) returns FALSE, so the !FlagGet(B_FLAG_TERA_ORB_CHARGED)
+    // branch below was hard-blocking player-side Tera in every pilot-mode
+    // battle — that's why piloting an SV trainer didn't show the Tera option.
+    //
+    // v2.0.3 second pass — also guard each flag check on `flag != 0`. The
+    // first pass relied on Sim_IsActive() being TRUE in pilot mode, but the
+    // user re-tested and the Tera button is still hidden, suggesting either
+    // Sim_IsActive() is FALSE in their setup or the FlagGet(0) misbehavior is
+    // firing through another path. Treat `B_FLAG_TERA_ORB_CHARGED == 0` as
+    // "charge mechanic disabled" (orb is always considered usable) rather
+    // than "permanently uncharged" — the original engine treats it as the
+    // latter, which makes the mechanic completely unusable when unconfigured.
+    // The Sim_TrainerCanTera gate above still blocks past-gen pilot teams.
+    if (TESTING || !IsOnPlayerSide(battler) || Sim_IsActive())
     {
         // Skip all other checks in this block, go to HasTrainerUsedGimmick
     }
@@ -82,11 +118,11 @@ bool32 CanTerastallize(enum BattlerId battler)
     {
         return FALSE;
     }
-    else if (FlagGet(B_FLAG_TERA_ORB_NO_COST))
+    else if (B_FLAG_TERA_ORB_NO_COST != 0 && FlagGet(B_FLAG_TERA_ORB_NO_COST))
     {
         // Tera Orb is not depleted, go to HasTrainerUsedGimmick
     }
-    else if (!FlagGet(B_FLAG_TERA_ORB_CHARGED))
+    else if (B_FLAG_TERA_ORB_CHARGED != 0 && !FlagGet(B_FLAG_TERA_ORB_CHARGED))
     {
         return FALSE;
     }

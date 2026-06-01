@@ -252,6 +252,42 @@ static bool32 IsHoennRivalForMusic(u16 trainerId)
 // When Gen 9 trainers are added in a future release, extend this function
 // with their ID range (currently nothing past trainer ID 1112). The simplest
 // path: have the check be `trainerId >= SIM_GEN9_TRAINER_ID_START`.
+// v2.0.3 — Looks up the actual u16 trainer ID for a battler slot. The vanilla
+// GetBattlerTrainer returns a 0-3 BattleTrainer slot enum, NOT the engine's
+// trainer ID — passing that to Sim_TrainerCanTera would always fall through
+// to FALSE for SV trainers (since 0-3 is never in 1113+). Use this helper
+// for any sim-mode Tera/Mega/gimmick gate.
+//
+// Player side in sim mode → gPartnerTrainerId (Sim_SetupMatchRound stores the
+//   player-AI's trainer ID there).
+// Opponent left  (B_BATTLER_1) → TRAINER_BATTLE_PARAM.opponentA.
+// Opponent right (B_BATTLER_3) → TRAINER_BATTLE_PARAM.opponentB when the
+//   battle is a two-opponents type (MULTI + TWO_OPPONENTS); otherwise still
+//   opponentA (single trainer fielding two mons, e.g. Tate & Liza).
+u16 Sim_GetBattlerTrainerId(enum BattlerId battler)
+{
+    if (IsOnPlayerSide(battler))
+        return gPartnerTrainerId;
+    if (battler == B_BATTLER_3 && (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+        return TRAINER_BATTLE_PARAM.opponentB;
+    return TRAINER_BATTLE_PARAM.opponentA;
+}
+
+// v2.0.3 — "Is this a Battle Theater sim battle?" gate. The canonical sim
+// battle detector. Two flavors of sim battle exist:
+//   - AI-vs-AI (B_FLAG_AI_VS_AI_BATTLE flag set by Sim_SetupMatchRound)
+//   - Pilot mode (gSimPilotMode set; flag intentionally NOT set so the player
+//     side uses human controllers).
+// Either being TRUE means we're inside a sim match. `gIsDebugBattle` would be
+// the natural variable name but it's only flipped TRUE in the legacy
+// DebugAction_Party_BattleSingle path — Sim_SetupMatchRound never sets it, so
+// gates that read gIsDebugBattle silently never fire in modern sim battles.
+// Use this helper for sim-mode detection going forward.
+bool32 Sim_IsActive(void)
+{
+    return gSimPilotMode || (B_FLAG_AI_VS_AI_BATTLE != 0 && FlagGet(B_FLAG_AI_VS_AI_BATTLE));
+}
+
 bool32 Sim_TrainerCanTera(u16 trainerId)
 {
     // v1.21 — outside sim battles (Battle Frontier, normal NPC battles),
@@ -259,7 +295,12 @@ bool32 Sim_TrainerCanTera(u16 trainerId)
     // set on the entries the user explicitly wants to Tera; past-gen NPC
     // trainer parties have no teraType set, so opponentMonCanTera stays
     // unset and they still can't Tera regardless of this return.
-    if (!gIsDebugBattle)
+    // v2.0.3 — switched from gIsDebugBattle to Sim_IsActive(). The old check
+    // never fired in modern sim battles (gIsDebugBattle isn't set by
+    // Sim_SetupMatchRound), making this function a no-op that returned TRUE
+    // for everyone — which is why Z-A trainers were still Tera-ing despite
+    // being outside the SV range.
+    if (!Sim_IsActive())
         return TRUE;
     // Custom slots: always allowed at the trainer level. Whether a specific
     // mon actually Teras depends on its own Tera Type setting in the Build

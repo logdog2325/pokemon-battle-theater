@@ -86,13 +86,23 @@ bool32 ShouldTrainerBattlerUseGimmick(enum BattlerId battler, enum Gimmick gimmi
         // custom slots if the picker toggle is on). Past-gen trainers never
         // Tera even if their party data has teraType set.
         if (gimmick == GIMMICK_TERA && gBattleStruct->opponentMonCanTera & 1 << gBattlerPartyIndexes[battler]
-            && Sim_TrainerCanTera(GetBattlerTrainer(battler)))
+            && Sim_TrainerCanTera(Sim_GetBattlerTrainerId(battler)))
             return TRUE;
         return FALSE;
     }
     // The player can bypass these checks because they can choose through the controller.
     if (IsOnPlayerSide(battler) && !((gBattleTypeFlags & BATTLE_TYPE_MULTI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT))
     {
+        // v2.0.3 — In sim mode (pilot mode included), the player side is filled
+        // with a chosen trainer's loaner team. The blanket "player can do
+        // anything" return below would let a Cynthia/Lance/etc. piloted team
+        // Terastallize even though past-gen trainers are supposed to be locked
+        // out. Apply the sim-trainer gate here too. Sim_IsActive() (not
+        // gIsDebugBattle) is the correct sim-mode signal — see comment on
+        // Sim_TrainerCanTera in src/debug.c.
+        if (gimmick == GIMMICK_TERA && Sim_IsActive()
+            && !Sim_TrainerCanTera(Sim_GetBattlerTrainerId(battler)))
+            return FALSE;
         return TRUE;
     }
     // Check the trainer party data to see if a gimmick is intended.
@@ -100,17 +110,26 @@ bool32 ShouldTrainerBattlerUseGimmick(enum BattlerId battler, enum Gimmick gimmi
     {
         // v1.21 — same Tera gate as AI-vs-AI path; applies to the
         // opponent-controlled trainer slot in pilot-mode battles too.
-        if (gimmick == GIMMICK_TERA && Sim_TrainerCanTera(GetBattlerTrainer(battler)))
+        if (gimmick == GIMMICK_TERA && Sim_TrainerCanTera(Sim_GetBattlerTrainerId(battler)))
         {
             if (gBattleStruct->opponentMonCanTera & 1 << gBattlerPartyIndexes[battler])
                 return TRUE;
-            // v1.21 — Battle Frontier path: CreateFacilityMon doesn't touch
-            // opponentMonCanTera (only CreateNPCTrainerPartyFromTrainer does),
-            // so Frontier mons with teraType set never light that bit. Check
-            // MON_DATA_TERA_TYPE directly as a fallback. The Sim_TrainerCanTera
-            // gate above is already a no-op outside sim mode (returns TRUE),
-            // so this only fires for legitimate Frontier Tera mons.
-            if (GetMonData(GetBattlerMon(battler), MON_DATA_TERA_TYPE) > 0)
+            // v1.21 / v2.0.3 — Battle Frontier path: CreateFacilityMon doesn't
+            // touch opponentMonCanTera (only CreateNPCTrainerPartyFromTrainer
+            // does), so Frontier mons with teraType set never light that bit.
+            // Fall back to MON_DATA_TERA_TYPE > 0 for them — but ONLY outside
+            // sim mode. Inside sim mode this check would always succeed,
+            // because the MON_DATA_TERA_TYPE accessor defaults to the
+            // personality-derived primary/secondary type when the substruct's
+            // explicit teraType is TYPE_NONE (see src/pokemon.c). That's why
+            // Z-A trainer mons (which carry Mega Stones and no Tera Type in
+            // their party data) were still Tera-ing in sim battles — the
+            // fallback was the only path that wasn't gated. Gate it to
+            // !Sim_IsActive() and sim opponents are forced through the
+            // opponentMonCanTera bit, which trainerproc only sets when the
+            // party file explicitly declares a Tera Type.
+            if (!Sim_IsActive()
+             && GetMonData(GetBattlerMon(battler), MON_DATA_TERA_TYPE) > 0)
                 return TRUE;
         }
         if (gimmick == GIMMICK_DYNAMAX && gBattleStruct->opponentMonCanDynamax & 1 << gBattlerPartyIndexes[battler])

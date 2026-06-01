@@ -88,6 +88,17 @@ u16 Sim_GetBattleMusic(void);
 // each mon actually Teras is controlled by its per-mon Tera Type field in
 // the Build Trainer editor).
 bool32 Sim_TrainerCanTera(u16 trainerId);
+// v2.0.3 — Battler → real trainer ID lookup. Vanilla GetBattlerTrainer
+// returns a BattleTrainer slot enum (0-3), not the engine's u16 trainer ID.
+// Sim Tera gating needs the actual ID to compare against the SV/Custom
+// range, so use this helper instead. Defined in src/debug.c.
+u16 Sim_GetBattlerTrainerId(enum BattlerId battler);
+// v2.0.3 — Canonical "in a Battle Theater sim battle?" check. Returns TRUE
+// for both AI-vs-AI and pilot-mode sim battles, FALSE for vanilla / Frontier.
+// Use this instead of gIsDebugBattle for sim-mode gates — gIsDebugBattle is
+// only set on the legacy DebugAction_Party_BattleSingle path, so any check
+// against it silently passes through in modern sim battles.
+bool32 Sim_IsActive(void);
 
 // Battle Simulator: snapshot the just-played round's team-preview picks so the
 // next round can adaptively counter them. Called from CB2_EndDebugBattle in
