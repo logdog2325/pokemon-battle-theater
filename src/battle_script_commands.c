@@ -4510,11 +4510,20 @@ bool32 NoAliveMonsForPlayer(void)
     }
 
     if (B_MULTI_BATTLE_WHITEOUT > GEN_3 && gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER)
-     && !(gBattleTypeFlags & BATTLE_TYPE_ARENA) && !(IsMultibattleTest()) && !IsAiVsAiBattle()) // Multibattle tests appear to not save the player party data for the check below.
+     && !(gBattleTypeFlags & BATTLE_TYPE_ARENA) && !(IsMultibattleTest()) && !Sim_IsActive()) // Multibattle tests appear to not save the player party data for the check below.
     {
-        // Battle Simulator: skip this saved-party reserve check in AI-vs-AI sim mode.
-        // We swap the real save out for the AI's trainer team, so the saved data is empty
-        // and would force an instant whiteout the moment any battler faints.
+        // Battle Simulator: skip this saved-party reserve check in BOTH AI-vs-AI
+        // and pilot-mode sim battles. Sim_SetupMatchRound calls SavePlayerParty()
+        // before swapping the real save out for the AI's trainer team, so the
+        // saved data is either empty (fresh save) or stale from a prior match.
+        // GetSavedPlayerPartyMon returns 0-species/0-HP for those slots, which
+        // counts as "ineligible" — once enough live mons faint, ineligibleMons
+        // hits 6 and the engine prints "You have no Pokémon left to battle"
+        // mid-match, even though battlers are still alive on the field.
+        // Originally gated this on !IsAiVsAiBattle() but pilot mode intentionally
+        // doesn't set B_FLAG_AI_VS_AI_BATTLE (so the player slot gets a human
+        // controller), so pilot battles still tripped the false whiteout —
+        // hence v2.0.4.7 widening to Sim_IsActive() which covers both flavors.
         for (i = 0; i < PARTY_SIZE; i++)
         {
             if (!GetMonData(GetSavedPlayerPartyMon(i), MON_DATA_SPECIES)
