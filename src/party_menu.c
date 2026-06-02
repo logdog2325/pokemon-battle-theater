@@ -7225,8 +7225,14 @@ static bool8 GetBattleEntryEligibility(struct Pokemon *mon)
         return TRUE;
     default: // Battle Frontier
         species = GetMonData(mon, MON_DATA_SPECIES);
-        if (gSpeciesInfo[species].isFrontierBanned)
-            return FALSE;
+        // v2.0.4.6 — bypass Frontier legality filter so legendaries / mythicals /
+        // anything flagged isFrontierBanned can still be brought into Frontier
+        // Challenge mode. This is a sim ROM hack; the canonical "Battle Tower
+        // bans legendaries" rule isn't useful for a competitive-simulator
+        // mod, and the player can already pilot whatever team they want via
+        // Build Trainer slots. Keep the species lookup for any future ban
+        // logic but stop returning FALSE on it.
+        (void)species;
         return TRUE;
     }
 }

@@ -2058,8 +2058,7 @@ static void AppendIfValid(u16 species, u16 heldItem, u16 hp, enum FrontierLevelM
 
     if (species == SPECIES_EGG || species == SPECIES_NONE)
         return;
-    if (gSpeciesInfo[species].isFrontierBanned)
-        return;
+    // v2.0.4.6 — legality filter disabled. See party_menu.c IsMonAllowedInBattleTower.
     if (lvlMode == FRONTIER_LVL_50 && monLevel > FRONTIER_MAX_LEVEL_50)
         return;
 
@@ -2150,12 +2149,18 @@ static void CheckPartyIneligibility(void)
         u32 totalPartyBanned = 0;
         u32 partyBanned[PARTY_SIZE] = {0};
 
+        // v2.0.4.6 — both loops below are vestigial after the legality filter
+        // was disabled (party_menu.c IsMonAllowedInBattleTower). They build a
+        // user-facing "you can't bring these mons" message that we'll never
+        // show because we no longer treat any species as Frontier-banned.
+        // Forcing the counters to 0 short-circuits the message-build path.
+        // Kept the loop bodies so a future re-enable just flips the gate.
         for (i = 0; i < NUM_SPECIES; i++)
         {
             if (!IsSpeciesEnabled(i))
                 continue;
             baseSpecies = GET_BASE_SPECIES_ID(i);
-            if (baseSpecies == i && gSpeciesInfo[baseSpecies].isFrontierBanned)
+            if (FALSE && baseSpecies == i && gSpeciesInfo[baseSpecies].isFrontierBanned)
             {
                 if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(baseSpecies), FLAG_GET_CAUGHT))
                     totalCaughtBanned++;
@@ -2167,7 +2172,7 @@ static void CheckPartyIneligibility(void)
             u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
             if (species == SPECIES_EGG || species == SPECIES_NONE)
                 continue;
-            if (gSpeciesInfo[GET_BASE_SPECIES_ID(species)].isFrontierBanned)
+            if (FALSE && gSpeciesInfo[GET_BASE_SPECIES_ID(species)].isFrontierBanned)
             {
                 bool32 addToList = TRUE;
                 for (j = 0; j < totalPartyBanned; j++)
@@ -3359,13 +3364,15 @@ static u16 *MakeCaughtBannesSpeciesList(u32 totalBannedSpecies)
 {
     u32 count = 0;
     u16 *list = AllocZeroed(sizeof(u16) * totalBannedSpecies);
+    // v2.0.4.6 — see party_menu.c IsMonAllowedInBattleTower for the disable.
+    // List is always empty in this build because nothing is treated as banned.
     for (u32 i = 0; i < NUM_SPECIES; i++)
     {
         if (!IsSpeciesEnabled(i))
             continue;
 
         u32 baseSpecies = GET_BASE_SPECIES_ID(i);
-        if (baseSpecies == i && gSpeciesInfo[baseSpecies].isFrontierBanned)
+        if (FALSE && baseSpecies == i && gSpeciesInfo[baseSpecies].isFrontierBanned)
         {
             if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(baseSpecies), FLAG_GET_CAUGHT))
             {

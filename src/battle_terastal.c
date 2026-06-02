@@ -136,7 +136,18 @@ bool32 CanTerastallize(enum BattlerId battler)
     // than "permanently uncharged" — the original engine treats it as the
     // latter, which makes the mechanic completely unusable when unconfigured.
     // The Sim_TrainerCanTera gate above still blocks past-gen pilot teams.
-    if (TESTING || !IsOnPlayerSide(battler) || Sim_IsActive())
+    //
+    // v2.0.4.6 — also skip in any Battle Frontier mode. Battle Pyramid uses
+    // a separate Pyramid Bag (3-7 selected items, no Tera Orb), and other
+    // Frontier facilities similarly restrict the player's regular bag, so
+    // CheckBagHasItem(ITEM_TERA_ORB, 1) returns FALSE and hard-blocks Tera
+    // for any player borrowing a Frontier team. v2.0.4.4 propagated teraType
+    // onto borrowed mons but this orb gate kept eating the Tera button
+    // anyway. BATTLE_TYPE_FRONTIER covers all six Frontier-facility flags.
+    if (TESTING
+        || !IsOnPlayerSide(battler)
+        || Sim_IsActive()
+        || (gBattleTypeFlags & BATTLE_TYPE_FRONTIER))
     {
         // Skip all other checks in this block, go to HasTrainerUsedGimmick
     }
