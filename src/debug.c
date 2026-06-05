@@ -783,9 +783,13 @@ static const u16 sCupEmerald[]    = {
     335, 804,                                        // Wallace champion, Steven
 };
 
-// FRLG — Indigo E4 + 3 Blue starter variants + Red + Leaf
+// FRLG — Indigo E4 + 3 Blue starter variants + Red
+// v2.0.4.8 — Leaf (852) removed from the cup. Her vanilla data is a L5
+// Bulbasaur placeholder (no canonical FRLG-era roster ever ships with her),
+// so she was a free win in the tournament. Re-add only if/when she gets a
+// canon-accurate team.
 static const u16 sCupFRLG[]       = {
-    851, 852,                                        // Red, Leaf
+    851,                                             // Red
     855, 856, 857, 858,                              // Lorelei, Bruno, Agatha, Lance Kanto
     859, 860, 861,                                   // Blue (Squirtle/Bulbasaur/Charmander variants)
 };
@@ -949,7 +953,7 @@ static const struct SimCup sSimCups[] =
     { sCupName_Off,         NULL,             0 },   // 0: Off
     // v1.20 — consolidated per-game cups (one pool per game, bracket picks 7 random per run)
     { sCupName_Emerald,     sCupEmerald,     14 },   // 8 gym _5 rematches + 4 E4 + Wallace + Steven
-    { sCupName_FRLG,        sCupFRLG,         9 },   // Red, Leaf, Indigo E4, 3 Blue starter variants
+    { sCupName_FRLG,        sCupFRLG,         8 },   // Red, Indigo E4, 3 Blue starter variants
     { sCupName_HGSS,        sCupHGSS,        25 },   // Red, Blue HGSS, 3 Silvers, Johto gyms, Kanto HGSS gyms, Johto E4, Lance HGSS
     { sCupName_Platinum,    sCupPlatinum,    16 },   // Sinnoh gyms + E4 + Cynthia Pt + Barry + Riley + Buck
     { sCupName_BDSP,        sCupBDSP,        16 },   // Same Sinnoh roster, BDSP-era teams

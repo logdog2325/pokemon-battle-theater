@@ -8,6 +8,7 @@
 #include "battle_special.h"
 #include "battle_z_move.h"
 #include "data.h"
+#include "debug.h"
 #include "event_data.h"
 #include "frontier_util.h"
 #include "graphics.h"
@@ -2985,9 +2986,24 @@ static const u8 *BattleStringGetOpponentNameByTrainerId(u16 trainerId, u8 *text,
     }
     else
     {
-        enum TrainerClassID trainerClass = GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA);
+        // v2.0.4.8 — two compounding bugs here:
+        //   (1) was GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA),
+        //       which broke 2v2 multi by always using opponentA's class for
+        //       both name resolutions. Fixed to use the passed trainerId.
+        //   (2) Even with (1) fixed, the FRLG-rival placeholder substitution
+        //       fires for ANY trainer with a FRLG rival/champion class — so
+        //       in the FRLG cup tournament (Blue variants + Lance Kanto
+        //       Champion), both opponents still substituted to "MAY"
+        //       (PLACEHOLDER_ID_RIVAL = the player's chosen rival name).
+        //       In Battle Theater sim battles we want the actual trainer
+        //       data names, not the player-save rival placeholder. Skip the
+        //       placeholder substitution path when Sim_IsActive().
+        enum TrainerClassID trainerClass = GetTrainerClassFromId(trainerId);
 
-        if (trainerClass == TRAINER_CLASS_RIVAL_EARLY_FRLG || trainerClass == TRAINER_CLASS_RIVAL_LATE_FRLG || trainerClass == TRAINER_CLASS_CHAMPION_FRLG)
+        if (!Sim_IsActive()
+         && (trainerClass == TRAINER_CLASS_RIVAL_EARLY_FRLG
+          || trainerClass == TRAINER_CLASS_RIVAL_LATE_FRLG
+          || trainerClass == TRAINER_CLASS_CHAMPION_FRLG))
             toCpy = GetExpandedPlaceholder(PLACEHOLDER_ID_RIVAL);
         else
             toCpy = GetTrainerNameFromId(trainerId);
@@ -3047,8 +3063,22 @@ static const u8 *BattleStringGetPlayerName(u8 *text, enum BattlerId battler)
         }
         else if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
         {
-            GetFrontierTrainerName(text, gPartnerTrainerId);
-            toCpy = text;
+            // v2.0.4.8 — vanilla path uses GetFrontierTrainerName which only
+            // resolves Battle Frontier trainer IDs (Battle Tower etc.). In
+            // sim multi battles the partner is a regular gTrainers entry, so
+            // the Frontier lookup returns empty/garbage and the partner shows
+            // as the player's save name in all dialogue ("MAY sent out …!").
+            // In sim mode, look the partner up in gTrainers like the opponent
+            // name path does.
+            if (Sim_IsActive())
+            {
+                toCpy = GetTrainerNameFromId(gPartnerTrainerId);
+            }
+            else
+            {
+                GetFrontierTrainerName(text, gPartnerTrainerId);
+                toCpy = text;
+            }
         }
         else
         {
@@ -3524,14 +3554,23 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                 }
                 break;
             case B_TXT_PARTNER_CLASS:
-                toCpy = gTrainerClasses[GetFrontierOpponentClass(gPartnerTrainerId)].name;
+                // v2.0.4.8 — sim partner is a regular gTrainers entry, not a
+                // Frontier trainer, so GetFrontierOpponentClass returns 0/garbage.
+                if (Sim_IsActive())
+                    toCpy = gTrainerClasses[GetTrainerClassFromId(gPartnerTrainerId)].name;
+                else
+                    toCpy = gTrainerClasses[GetFrontierOpponentClass(gPartnerTrainerId)].name;
                 break;
             case B_TXT_PARTNER_NAME:
                 toCpy = BattleStringGetPlayerName(text, GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT));
                 break;
             case B_TXT_PARTNER_NAME_WITH_CLASS:
                 toCpy = textStart;
-                classString = gTrainerClasses[GetFrontierOpponentClass(gPartnerTrainerId)].name;
+                // v2.0.4.8 — same Sim_IsActive() gate as B_TXT_PARTNER_CLASS.
+                if (Sim_IsActive())
+                    classString = gTrainerClasses[GetTrainerClassFromId(gPartnerTrainerId)].name;
+                else
+                    classString = gTrainerClasses[GetFrontierOpponentClass(gPartnerTrainerId)].name;
                 while (classString[classLength] != EOS)
                 {
                     textStart[classLength] = classString[classLength];

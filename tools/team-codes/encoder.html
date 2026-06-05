@@ -167,10 +167,78 @@ function normalize(s) {
   return s.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
+// v2.0.4.8 — Showdown writes the base species name (no form suffix) for the
+// *default* form of multi-form species. The species table is keyed by the
+// fully-qualified form name (e.g. "mimikyudisguised", "urshifusinglestrike"),
+// so a plain "Mimikyu" or "Urshifu" line failed lookup. Map base-name → the
+// default-form key for every species that hits this. Only base-name lookups
+// fall through to this map; "Mimikyu-Busted" still resolves directly.
+//
+// Expanded from the initial 12-species fix to cover *every* multi-form
+// species missing a base entry in the table. Sourced by auditing the table
+// programmatically against the canonical Showdown default form for each.
+const SPECIES_BASE_FORM_ALIASES = {
+  "castform":     "castformnormal",
+  "deoxys":       "deoxysnormal",
+  "cherrim":      "cherrimovercast",
+  "giratina":     "giratinaaltered",
+  "shaymin":      "shayminland",
+  "arceus":       "arceusnormal",
+  "basculin":     "basculinredstriped",
+  "darmanitan":   "darmanitanstandard",
+  "deerling":     "deerlingspring",
+  "sawsbuck":     "sawsbuckspring",
+  "tornadus":     "tornadusincarnate",
+  "thundurus":    "thundurusincarnate",
+  "landorus":     "landorusincarnate",
+  "keldeo":       "keldeoordinary",
+  "meloetta":     "meloettaaria",
+  "vivillon":     "vivillonmeadow",
+  "flabebe":      "flabebered",
+  "floette":      "floettered",
+  "florges":      "florgesred",
+  "furfrou":      "furfrounatural",
+  "aegislash":    "aegislashshield",
+  "pumpkaboo":    "pumpkabooaverage",
+  "gourgeist":    "gourgeistaverage",
+  "xerneas":      "xerneasneutral",
+  "zygarde":      "zygarde50",
+  "hoopa":        "hoopaconfined",
+  "oricorio":     "oricoriobaile",
+  "lycanroc":     "lycanrocmidday",
+  "wishiwashi":   "wishiwashisolo",
+  "silvally":     "silvallynormal",
+  "minior":       "miniormeteorred",
+  "mimikyu":      "mimikyudisguised",
+  "toxtricity":   "toxtricityamped",
+  "sinistea":     "sinisteaphony",
+  "polteageist":  "polteageistphony",
+  "alcremie":     "alcremiestrawberryvanillacream",
+  "eiscue":       "eiscueice",
+  "indeedee":     "indeedeem",
+  "morpeko":      "morpekofullbelly",
+  "zacian":       "zacianhero",
+  "zamazenta":    "zamazentahero",
+  "urshifu":      "urshifusinglestrike",
+  "enamorus":     "enamorusincarnate",
+  "maushold":     "mausholdthree",
+  "squawkabilly": "squawkabillygreen",
+  "palafin":      "palafinzero",
+  "tatsugiri":    "tatsugiricurly",
+  "dudunsparce":  "dudunsparcetwosegment",
+  "gimmighoul":   "gimmighoulchest",
+  "ogerpon":      "ogerponteal",
+  "terapagos":    "terapagosnormal",
+};
+
 function lookup(table, name, kind) {
   if (!name) return 0;
   const key = normalize(name);
   if (key in table) return table[key];
+  if (kind === "species" && key in SPECIES_BASE_FORM_ALIASES) {
+    const aliased = SPECIES_BASE_FORM_ALIASES[key];
+    if (aliased in table) return table[aliased];
+  }
   throw new Error(`Unknown ${kind}: "${name}"`);
 }
 
