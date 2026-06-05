@@ -33691,3 +33691,147 @@ Nature: Adamant
 - Dragon Rage
 - Leer
 - Hyper Beam
+
+=== TRAINER_HAWKE===
+Name:Hawke
+Class: Gentleman
+Pic:Gentleman
+Gender: Male
+Music: Magma
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Glimmora @ Focus Sash
+Ability: Toxic Debris
+Level: 70
+EVs: 4 HP / 252 SpA / 252 Spe
+Timid Nature
+- Stealth Rock
+- Mortal Spin
+- Power Gem
+- Earth Power
+
+Yveltal @ Heavy-Duty Boots
+Ability: Dark Aura
+Level: 70
+EVs: 252 HP / 4 SpA / 252 SpD
+Calm Nature
+- Oblivion Wing
+- Foul Play
+- Roost
+- U-turn
+
+Gliscor @ Poison Orb
+Ability: Poison Heal
+Level: 70
+EVs: 244 HP / 244 SpD / 20 Spe
+Careful Nature
+- Spikes
+- Toxic
+- Protect
+- Earthquake
+
+Serperior @ Leftovers
+Ability: Contrary
+Level: 70
+EVs: 56 HP / 200 SpA / 252 Spe
+Timid Nature
+IVs: 0 Atk
+- Leaf Storm
+- Giga Drain
+- Substitute
+- Glare
+
+Hydreigon @ Life Orb
+Ability: Levitate
+Level: 70
+EVs: 252 SpA / 4 SpD / 252 Spe
+Timid Nature
+IVs: 0 Atk
+- Draco Meteor
+- Dark Pulse
+- Flash Cannon
+- Roost
+
+Garganacl @ Leftovers
+Ability: Purifying Salt
+Level: 70
+EVs: 252 HP / 4 Atk / 252 SpD
+Careful Nature
+- Salt Cure
+- Recover
+- Stealth Rock
+- Body Press
+
+=== TRAINER_PENNY===
+Name:Penny
+Class: Lass
+Pic:Lass
+Gender: Female
+Music: Female
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Umbreon  
+Ability: Synchronize  
+Level: 62  
+EVs: 252 HP / 4 Def / 252 SpD  
+Calm Nature  
+- Dark Pulse  
+- Psychic  
+- Baby-Doll Eyes  
+- Quick Attack  
+
+Vaporeon  
+Ability: Water Absorb  
+Level: 62  
+EVs: 252 HP / 252 Def / 4 SpA  
+Bold Nature  
+- Hydro Pump  
+- Aurora Beam  
+- Baby-Doll Eyes  
+- Quick Attack  
+
+Jolteon  
+Ability: Quick Feet  
+Level: 62  
+EVs: 252 SpA / 4 SpD / 252 Spe  
+Timid Nature  
+- Thunder  
+- Pin Missile  
+- Baby-Doll Eyes  
+- Quick Attack  
+
+Flareon  
+Ability: Flash Fire  
+Level: 62  
+EVs: 252 Atk / 4 SpD / 252 Spe  
+Adamant Nature  
+- Flare Blitz  
+- Fire Spin  
+- Baby-Doll Eyes  
+- Quick Attack  
+
+Leafeon  
+Ability: Leaf Guard  
+Level: 62  
+EVs: 252 Atk / 4 SpD / 252 Spe  
+Jolly Nature  
+- Leaf Blade  
+- X-Scissor  
+- Baby-Doll Eyes  
+- Quick Attack  
+
+Sylveon  
+Ability: Cute Charm  
+Level: 63  
+Tera Type: Fairy  
+EVs: 252 HP / 252 SpA / 4 SpD  
+Modest Nature  
+- Moonblast  
+- Shadow Ball  
+- Baby-Doll Eyes  
+- Quick Attack  
+
