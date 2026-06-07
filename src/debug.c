@@ -4171,9 +4171,17 @@ static bool32 BuildTrainer_CopyFromTrainer(u16 trainerId)
     slot->trainerPic = src->trainerPic;
     u8 partySize = (src->partySize > 6) ? 6 : src->partySize;
     slot->monCount = partySize;
+    // v2.0.8 — Pool-aware sampling. For pool trainers (Wally BT, Cynthia BT,
+    // Frontier Brains), copy a random clause-respecting sample of `partySize`
+    // mons from the pool instead of the first `partySize` entries — matches
+    // what you'd face in a battle against that trainer. Non-pool trainers
+    // return identity 0..partySize-1 from DoTrainerPartyPool so this still
+    // copies the canonical fixed team.
+    u32 monIndices[partySize];
+    DoTrainerPartyPool(src, monIndices, partySize, BATTLE_TYPE_TRAINER);
     for (u8 i = 0; i < partySize; i++)
     {
-        const struct TrainerMon *psrc = &src->party[i];
+        const struct TrainerMon *psrc = &src->party[monIndices[i]];
         struct SimCustomTrainerMon *pdst = &slot->mons[i];
         memset(pdst, 0, sizeof(*pdst));
         pdst->species  = psrc->species;
@@ -6054,11 +6062,23 @@ static void Debug_Display_TrainerID(u32 trainerID, u32 selection, u32 digit, u8 
         ConvertIntToDecimalStringN(lvBuf, maxLvl, STR_CONV_MODE_LEFT_ALIGN, 3);
         end = StringAppend(gStringVar1, lvBuf);
     }
-    // v2.0.6 — in COPY_MON_TO_CUSTOM mode, append "[N: SpeciesName]" so the
-    // user knows which mon they're about to import. DPAD-LEFT/RIGHT cycles N.
+    WrapFontIdToFit(gStringVar1, end, DEBUG_MENU_FONT, WindowWidthPx(windowId));
+    StringCopyPadded(gStringVar1, gStringVar1, CHAR_SPACE, 15);
+    ConvertIntToDecimalStringN(gStringVar3, trainerID, STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_TRAINERS);
+
+    // v2.0.8 — In Import-Single-Mon mode (COPY_MON_TO_CUSTOM), put the
+    // currently-highlighted mon's species on its own line under the trainer
+    // name instead of cramped at the end of it. DPAD-LEFT/RIGHT in the
+    // trainer picker still cycles which mon is highlighted (handled
+    // elsewhere). In every other picker mode (Trainer1/Trainer2/Player/
+    // Partner/etc.) gStringVar2 keeps its original use as the digit-edit
+    // cursor. v2.0.8 briefly tried showing a full party preview for ALL
+    // picker modes — that landed as a clipped, jumbled mess in the cramped
+    // 80px-wide info window. Reverted to the COPY_MON-only minimal display.
     if (selection == TRAINERS_DEBUG_SELECTION_COPY_MON_TO_CUSTOM)
     {
         const struct Trainer *srcTr = GetTrainerStructFromId(trainerID);
+        u8 *p2 = gStringVar2;
         if (srcTr != NULL && srcTr->party != NULL && srcTr->partySize > 0)
         {
             u8 maxIdx = (srcTr->partySize > 6 ? 6 : srcTr->partySize) - 1;
@@ -6066,17 +6086,18 @@ static void Debug_Display_TrainerID(u32 trainerID, u32 selection, u32 digit, u8 
                 sBuildTrainerSourceMonIdx = 0;
             u16 species = srcTr->party[sBuildTrainerSourceMonIdx].species;
             u8 numBuf[4];
-            end = StringAppend(gStringVar1, COMPOUND_STRING(" ("));
             ConvertIntToDecimalStringN(numBuf, sBuildTrainerSourceMonIdx + 1, STR_CONV_MODE_LEFT_ALIGN, 2);
-            end = StringAppend(gStringVar1, numBuf);
-            end = StringAppend(gStringVar1, COMPOUND_STRING(":"));
-            end = StringAppend(gStringVar1, GetSpeciesName(species));
-            end = StringAppend(gStringVar1, COMPOUND_STRING(")"));
+            p2 = StringCopy(p2, numBuf);
+            p2 = StringCopy(p2, COMPOUND_STRING(": "));
+            p2 = StringCopy(p2, GetSpeciesName(species));
         }
+        *p2 = EOS;
     }
-    WrapFontIdToFit(gStringVar1, end, DEBUG_MENU_FONT, WindowWidthPx(windowId));
-    StringCopyPadded(gStringVar1, gStringVar1, CHAR_SPACE, 15);
-    ConvertIntToDecimalStringN(gStringVar3, trainerID, STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_TRAINERS);
+    else
+    {
+        StringCopy(gStringVar2, gText_DigitIndicator[digit]);
+    }
+
     StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("ID: {STR_VAR_3}\n{STR_VAR_1}{CLEAR_TO 90}\n\n{STR_VAR_2}{CLEAR_TO 90}"));
     AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
 }
@@ -8142,10 +8163,28 @@ static void Sim_PrepareTeamPicks(s32 trainer1Id, s32 trainer2Id, s32 partnerId, 
     }
     if (player != NULL)
     {
-        Sim_QueuePicksFor(playerTrainerId, player,
-                          opp1TrainerId, opp1,
-                          opp2TrainerId, opp2,
-                          pickCount, row);
+        // v2.0.8 — Pilot mode: skip the matchup-aware pick for the side the
+        // user is piloting. The pick queue otherwise produces a deterministic
+        // "best counter team" for the player AI based on opponent scoring,
+        // which is the right behavior for AI-vs-AI sims but wrong for pilot
+        // mode — the user is playing AS that trainer and wants the pool's
+        // random sample (different team each run) instead of the same
+        // optimized roster every time. We still emit a row (so the queue
+        // alignment with subsequent opp rows stays correct) but with count=0
+        // so battle_main.c's override sees an empty pick row, returns FALSE,
+        // and falls through to DoTrainerPartyPool's randomized sample.
+        if (gSimPilotMode)
+        {
+            gSimPickCounts[row] = 0;
+            sSimCurrentPickTrainerIds[row] = playerTrainerId;
+        }
+        else
+        {
+            Sim_QueuePicksFor(playerTrainerId, player,
+                              opp1TrainerId, opp1,
+                              opp2TrainerId, opp2,
+                              pickCount, row);
+        }
         row++;
     }
     if (opp1 != NULL)
@@ -8613,9 +8652,19 @@ static void Sim_StartFrontierChallenge(s32 trainerId)
     }
     ZeroPlayerPartyMons();
     u32 partySize = (trainer->partySize > PARTY_SIZE) ? PARTY_SIZE : trainer->partySize;
+    // v2.0.8 — Pool-aware sampling. For pool trainers (Battle Tree, Frontier
+    // Brains), the canonical engine path samples partySize mons from the pool
+    // with clause enforcement (species/item/mega/Z). Without this the
+    // Frontier-Challenge borrower would always get pool entries 0..partySize-1
+    // which for Red BT means the same fixed lead/back-half every run instead
+    // of a varied Pool of 10. DoTrainerPartyPool returns the pool indices we
+    // should read from. For non-pool trainers it just returns 0..partySize-1
+    // so this is safe to call unconditionally.
+    u32 monIndices[partySize];
+    DoTrainerPartyPool(trainer, monIndices, partySize, BATTLE_TYPE_TRAINER);
     for (u32 i = 0; i < partySize; i++)
     {
-        const struct TrainerMon *src = &trainer->party[i];
+        const struct TrainerMon *src = &trainer->party[monIndices[i]];
         u32 personality = 0x88 | (i << 8);  // arbitrary distinct per slot
         ModifyPersonalityForNature(&personality, src->nature);
         u32 monLevel = (src->lvl == 0) ? 50 : src->lvl;
