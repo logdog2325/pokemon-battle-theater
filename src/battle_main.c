@@ -2025,8 +2025,18 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
         // matchup-aware row in the pick queue (team preview / VGC). Fallback:
         // ace-priority sort (N highest-level mons) so the trainer's ace still
         // shows up first when team preview isn't applicable.
+        //
+        // v2.0.5.6: SKIP this override for pool trainers (poolSize > 0). For
+        // pools, DoTrainerPartyPool above already produced clause-respecting
+        // picks (no duplicate species/items, single mega/Z, ace-tag biased).
+        // The team-preview/ace-priority override scans trainer->party[0..
+        // partySize-1] which for pool trainers is the FIRST partySize entries
+        // of the pool — those can include duplicate species (e.g. Dexio BT's
+        // pool starts with Turtonator x2). Letting the override run replaces
+        // the pool sample with raw-pool picks and reintroduces duplicates.
         if (B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE)
-            && monsCount < trainer->partySize)
+            && monsCount < trainer->partySize
+            && trainer->poolSize == 0)
         {
             u8 pickRow[6];
             if (Sim_ConsumeNextPickRow(pickRow, monsCount))

@@ -212,7 +212,20 @@ static u32 PickMonFromPool(const struct Trainer *trainer, u8 *poolIndexArray, u3
                 poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
             if (!rules->excludeForms && chosenNatDex == currentNatDex)
                 poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
-            if (rules->itemClause && currentItem != ITEM_NONE)
+            // v2.0.5.6 fix: the itemClauseExclusions branch was missing the
+            // `chosenItem == currentItem` equality check, so picking any
+            // non-exempt-item mon (e.g. Turtonator @ Normalium Z) blanket-
+            // disabled EVERY remaining pool slot regardless of their item.
+            // That exhausted the pool after pick #1, making subsequent
+            // PickMonFromPool calls return POOL_SLOT_DISABLED (0xFF). Battle
+            // engine then did OOB reads on trainer->party[0xFF] which
+            // randomly happened to hit Turtonator's slot again in Dexio BT's
+            // pool layout — hence the user seeing 2 Turtonators in VGC
+            // doubles. With the equality check, item clause now correctly
+            // disables only slots whose item matches the picked item, except
+            // when the picked item is in the exclusion list (Sitrus/Oran can
+            // repeat across the party).
+            if (rules->itemClause && currentItem != ITEM_NONE && chosenItem == currentItem)
             {
                 if (rules->itemClauseExclusions)
                 {
@@ -228,7 +241,7 @@ static u32 PickMonFromPool(const struct Trainer *trainer, u8 *poolIndexArray, u3
                     if (!isExcluded)
                         poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
                 }
-                else if (chosenItem == currentItem)
+                else
                 {
                     poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
                 }
