@@ -710,6 +710,18 @@ static const u16 sSimulatorRoster[] = {
     932, 933, 934, 935, 936, 937, 938,                   // Hau/Kukui/Gladion variants
     1073, 1074, 1075, 1076, 1077, 1078, 1079,            // v0.48: Faba/Dexio/Plumeria/Ryuki/Guzma/Lusamine/Tristan
     1080, 1081, 1082,                                    // v0.48: Blue USUM / Red USUM / Anabel USUM
+    // ---- Battle Tree (USUM) section (v2.0.5.2 — moved here from BW-adjacent
+    //      so all USUM-era trainers cluster together) — canon Battle Tree
+    //      pool rosters distinct from each trainer's story team. Suffix "_BT"
+    //      used to disambiguate from existing _USUM and story IDs.
+    1187, 1188, 1189,                                    // Red BT / Blue BT / Anabel BT
+    1173,                                                // Wally BT
+    1174,                                                // Cynthia BT
+    1175,                                                // Colress BT
+    1176, 1183,                                          // Dexio BT / Sina BT
+    1177,                                                // Grimsley BT
+    1178, 1182,                                          // Guzma BT / Plumeria BT (Team Skull duo)
+    1179, 1180, 1181,                                    // Kiawe BT / Kukui BT / Mallow BT
     // ---- Rainbow Rocket section (USUM Episode RR) ----
     907, 908, 909, 910, 911, 912, 913, 914, 915, 916,    // RR bosses
     // ---- PWT chunk (BW2 World Tournament rosters, all together) ----
@@ -731,18 +743,6 @@ static const u16 sSimulatorRoster[] = {
     1072,                                                // Colress (B2W2 Plasma scientist, Steel/Electric)
     1170,                                                // v2.0.4.9: Benga (B2W2 Black Tower / White Treehollow boss)
     1171, 1172,                                          // v2.0.4.9: Ingo / Emmet (Battle Subway bosses)
-    // ---- Battle Tree (USUM) section (v2.0.4.10) — canon Battle Tree pool
-    //      rosters distinct from each trainer's story team. Suffix "_BT" used
-    //      in trainer IDs to disambiguate from existing in-game versions
-    //      (e.g. TRAINER_RED_BT vs TRAINER_RED_USUM).
-    1187, 1188, 1189,                                    // Red BT / Blue BT / Anabel BT
-    1173,                                                // Wally BT
-    1174,                                                // Cynthia BT
-    1175,                                                // Colress BT
-    1176, 1183,                                          // Dexio BT / Sina BT
-    1177,                                                // Grimsley BT
-    1178, 1182,                                          // Guzma BT / Plumeria BT (Team Skull duo)
-    1179, 1180, 1181,                                    // Kiawe BT / Kukui BT / Mallow BT
     // ---- XY section (Kalos) ----
     1083, 1084, 1085,                                    // v0.49: Diantha / Serena / Calem
     // ---- Anime section ----
@@ -5867,15 +5867,15 @@ static const u16 sSimulatorRosterSectionStarts[] = {
     96 + CUSTOM_OFFSET,      // BDSP — 3 Barrys + 8 gym + 4 E4 + Cynthia + 3 Lucas + 3 Dawn (22)
     118 + CUSTOM_OFFSET,     // SwSh — Leon x3 + Hop x6 + Mustard x2 + Marnie/Bede + 9 gym + Klara/Avery/Peony (25)
     143 + CUSTOM_OFFSET,     // Alola — Trial Captains + Kahunas + E4 + Champion + Variants + v0.48 USUM (32)
-    175 + CUSTOM_OFFSET,     // Rainbow Rocket — Episode RR bosses (10)
-    185 + CUSTOM_OFFSET,     // PWT Kanto (8)
-    193 + CUSTOM_OFFSET,     // PWT Hoenn (9)
-    202 + CUSTOM_OFFSET,     // PWT Johto (8)
-    210 + CUSTOM_OFFSET,     // PWT Sinnoh (8)
-    218 + CUSTOM_OFFSET,     // PWT Unova (8 base + 5 v1.5 = 13)
-    231 + CUSTOM_OFFSET,     // PWT Champs — Red/Blue/Lance/Steven/Wallace + Cynthia/Iris/Alder + v1.5 Bianca (9)
-    240 + CUSTOM_OFFSET,     // BW — N x2 + Alder + Cheren x3 + Bianca x3 + Hugh x3 + Unova E4 + Ghetsis + Colress + v2.0.4.9 Benga/Ingo/Emmet (21)
-    261 + CUSTOM_OFFSET,     // Battle Tree (USUM) — v2.0.4.10 Red/Blue/Anabel + Wally/Cynthia/Colress/Dexio/Sina/Grimsley/Guzma/Plumeria/Kiawe/Kukui/Mallow BT (14)
+    175 + CUSTOM_OFFSET,     // Battle Tree (USUM) — v2.0.5.2 moved here from BW-adjacent: Red/Blue/Anabel + Wally/Cynthia/Colress/Dexio/Sina/Grimsley/Guzma/Plumeria/Kiawe/Kukui/Mallow BT (14)
+    189 + CUSTOM_OFFSET,     // Rainbow Rocket — Episode RR bosses (10)
+    199 + CUSTOM_OFFSET,     // PWT Kanto (8)
+    207 + CUSTOM_OFFSET,     // PWT Hoenn (9)
+    216 + CUSTOM_OFFSET,     // PWT Johto (8)
+    224 + CUSTOM_OFFSET,     // PWT Sinnoh (8)
+    232 + CUSTOM_OFFSET,     // PWT Unova (8 base + 5 v1.5 = 13)
+    245 + CUSTOM_OFFSET,     // PWT Champs — Red/Blue/Lance/Steven/Wallace + Cynthia/Iris/Alder + v1.5 Bianca (9)
+    254 + CUSTOM_OFFSET,     // BW — N x2 + Alder + Cheren x3 + Bianca x3 + Hugh x3 + Unova E4 + Ghetsis + Colress + v2.0.4.9 Benga/Ingo/Emmet (21)
     275 + CUSTOM_OFFSET,     // XY — Diantha/Serena/Calem (3)
     278 + CUSTOM_OFFSET,     // Anime — Ash World Champion (1)
     279 + CUSTOM_OFFSET,     // VGC — v1.5: Wolfe Glick + Ray Rizo (2012 World Finals) (2)

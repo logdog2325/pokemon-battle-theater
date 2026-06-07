@@ -20052,6 +20052,7 @@ AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
 
 Gallade @ Galladite
 Ability: Steadfast
+Tags: Ace
 Level: 81
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Psycho Cut
@@ -20161,6 +20162,7 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 
 Metagross @ Metagrossite
 Ability: Clear Body
+Tags: Ace
 Level: 79
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Bullet Punch
@@ -20271,6 +20273,7 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 
 Sceptile (M) @ Sceptilite
 Ability: Overgrow
+Tags: Ace
 Level: 50
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Leaf Blade
@@ -20335,6 +20338,7 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 
 Absol (M) @ Absolite
 Ability: Super Luck
+Tags: Ace
 Level: 72
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Aerial Ace
@@ -20701,6 +20705,7 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 
 Charizard (M) @ Charizardite X
 Ability: Blaze
+Tags: Ace
 Level: 64
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Flare Blitz
@@ -20783,6 +20788,7 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 
 Venusaur (M) @ Venusaurite
 Ability: Overgrow
+Tags: Ace
 Level: 85
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Sludge Bomb
@@ -20847,6 +20853,7 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 
 Charizard (M) @ Charizardite Y
 Ability: Blaze
+Tags: Ace
 Level: 68
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Fire Blast
@@ -20930,6 +20937,7 @@ AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
 
 Sceptile @ Sceptilite
 Ability: Overgrow
+Tags: Ace
 Level: 50
 IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 EVs: 252 SpA / 4 SpD / 252 Spe
@@ -21364,6 +21372,7 @@ Nature: Modest
 
 Gyarados @ Gyaradosite
 Ability: Intimidate
+Tags: Ace
 Level: 65
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 EVs: 252 Atk / 252 Spe
@@ -21429,6 +21438,7 @@ Nature: Modest
 
 Gyarados @ Gyaradosite
 Ability: Intimidate
+Tags: Ace
 Level: 65
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 EVs: 252 Atk / 252 Spe
@@ -26216,6 +26226,7 @@ AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
 
 Pidgeot (M) @ Pidgeotite
 Ability: Keen Eye
+Tags: Ace
 Level: 56
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Quick Attack
@@ -26274,6 +26285,7 @@ AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
 
 Pidgeot (M) @ Pidgeotite
 Ability: Keen Eye
+Tags: Ace
 Level: 56
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Quick Attack
@@ -33001,6 +33013,7 @@ Hasty Nature
 
 Absol (M) @ Absolite
 Ability: Super Luck
+Tags: Ace
 Level: 68
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 EVs: 4 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
@@ -33074,6 +33087,7 @@ Jolly Nature
 
 Absol (M) @ Absolite
 Ability: Super Luck
+Tags: Ace
 Level: 68
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 EVs: 4 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
@@ -33127,6 +33141,7 @@ Dynamax Level: 0
 
 Lucario (M) @ Lucarionite
 Ability: Inner Focus
+Tags: Ace
 Level: 80
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
@@ -38446,6 +38461,7 @@ AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
 
 Milotic @ Shell Bell
 Ability: Marvel Scale
+Tags: Ace
 Level: 50
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 6 SpD / 0 Spe
@@ -38905,6 +38921,7 @@ AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
 
 Altaria @ Altarianite
 Ability: Natural Cure
+Tags: Ace
 Level: 50
 EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
 Jolly Nature
@@ -38965,6 +38982,7 @@ Calm Nature
 
 Gallade @ Galladite
 Ability: Justified
+Tags: Ace
 Level: 50
 EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
 Jolly Nature
@@ -38995,6 +39013,7 @@ Modest Nature
 
 Garchomp @ Garchompite
 Ability: Rough Skin
+Tags: Ace
 Level: 50
 EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 Adamant Nature
@@ -39027,6 +39046,7 @@ Timid Nature
 
 Charizard @ Charizardite Y
 Ability: Blaze
+Tags: Ace
 Level: 50
 EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
 Timid Nature
@@ -39067,6 +39087,7 @@ Adamant Nature
 
 Venusaur @ Venusaurite
 Ability: Overgrow
+Tags: Ace
 Level: 50
 EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
 Bold Nature
@@ -39077,6 +39098,7 @@ Bold Nature
 
 Charizard @ Charizardite X
 Ability: Blaze
+Tags: Ace
 Level: 50
 EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
 Jolly Nature
@@ -39124,11 +39146,12 @@ Music: Cool
 Items: Full Restore / Full Restore / Full Restore / Full Restore
 Battle Type: Doubles
 Party Size: 6
-Pool Rules: Basic
+Pool Rules: Doubles
 AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
 
 Pidgeot @ Pidgeotite
 Ability: Keen Eye
+Tags: Ace
 Level: 50
 EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
 Timid Nature
@@ -39139,6 +39162,7 @@ Timid Nature
 
 Alakazam @ Alakazite
 Ability: Synchronize
+Tags: Ace
 Level: 50
 EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
 Timid Nature
@@ -39159,6 +39183,7 @@ Jolly Nature
 
 Aerodactyl @ Aerodactylite
 Ability: Pressure
+Tags: Ace
 Level: 50
 EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 Adamant Nature
@@ -39219,6 +39244,7 @@ Jolly Nature
 
 Pidgeot @ Pidgeotite
 Ability: Keen Eye
+Tags: Ace
 Level: 50
 EVs: 0 HP / 0 Atk / 252 Def / 252 SpA / 0 SpD / 0 Spe
 Modest Nature
@@ -39269,6 +39295,7 @@ Brave Nature
 
 Gyarados @ Gyaradosite
 Ability: Intimidate
+Tags: Ace
 Level: 50
 EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
 Jolly Nature
@@ -39289,6 +39316,7 @@ Jolly Nature
 
 Tyranitar @ Tyranitarite
 Ability: Sand Stream
+Tags: Ace
 Level: 50
 EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 Brave Nature
@@ -39311,6 +39339,7 @@ AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
 
 Alakazam @ Alakazite
 Ability: Synchronize
+Tags: Ace
 Level: 50
 EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
 Timid Nature
@@ -39321,6 +39350,7 @@ Timid Nature
 
 Lucario @ Lucarionite
 Ability: Steadfast
+Tags: Ace
 Level: 50
 EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
 Jolly Nature
@@ -39481,6 +39511,7 @@ Adamant Nature
 
 Latios @ Latiosite
 Ability: Levitate
+Tags: Ace
 Level: 50
 EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
 Adamant Nature
@@ -39513,6 +39544,7 @@ Careful Nature
 
 Lucario @ Lucarionite
 Ability: Steadfast
+Tags: Ace
 Level: 50
 EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
 Jolly Nature
@@ -39543,6 +39575,7 @@ Timid Nature
 
 Garchomp @ Garchompite
 Ability: Rough Skin
+Tags: Ace
 Level: 50
 EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 Adamant Nature
@@ -39786,6 +39819,7 @@ Timid Nature
 
 Metagross @ Metagrossite
 Ability: Clear Body
+Tags: Ace
 Level: 50
 EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
 Jolly Nature
@@ -39888,6 +39922,7 @@ Modest Nature
 
 Slowbro @ Slowbronite
 Ability: Oblivious
+Tags: Ace
 Level: 50
 EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
 Quiet Nature
@@ -39970,6 +40005,7 @@ Jolly Nature
 
 Sharpedo @ Sharpedonite
 Ability: Speed Boost
+Tags: Ace
 Level: 50
 EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
 Adamant Nature
@@ -40050,6 +40086,7 @@ Jolly Nature
 
 Absol @ Absolite
 Ability: Pressure
+Tags: Ace
 Level: 50
 EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
 Jolly Nature
@@ -40090,6 +40127,7 @@ Adamant Nature
 
 Houndoom @ Houndoominite
 Ability: Flash Fire
+Tags: Ace
 Level: 50
 EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
 Timid Nature
@@ -40120,6 +40158,7 @@ Timid Nature
 
 Tyranitar @ Tyranitarite
 Ability: Sand Stream
+Tags: Ace
 Level: 50
 EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 Brave Nature
@@ -40202,6 +40241,7 @@ Jolly Nature
 
 Pinsir @ Pinsirite
 Ability: Mold Breaker
+Tags: Ace
 Level: 50
 EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
 Jolly Nature
@@ -40324,6 +40364,7 @@ Jolly Nature
 
 Kangaskhan @ Kangaskhanite
 Ability: Early Bird
+Tags: Ace
 Level: 50
 EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
 Jolly Nature
@@ -40364,6 +40405,7 @@ Jolly Nature
 
 Kangaskhan @ Kangaskhanite
 Ability: Early Bird
+Tags: Ace
 Level: 50
 EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
 Jolly Nature
@@ -40709,6 +40751,7 @@ Adamant Nature
 
 Sceptile @ Sceptilite
 Ability: Overgrow
+Tags: Ace
 Level: 50
 EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
 Jolly Nature
@@ -40831,6 +40874,7 @@ Modest Nature
 
 Gengar @ Gengarite
 Ability: Cursed Body
+Tags: Ace
 Level: 50
 EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
 Timid Nature
@@ -40953,6 +40997,7 @@ Bold Nature
 
 Abomasnow @ Abomasite
 Ability: Snow Warning
+Tags: Ace
 Level: 50
 EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
 Quiet Nature
@@ -41256,6 +41301,7 @@ Brave Nature
 
 Articuno @ Apicot Berry
 Ability: Pressure
+Tags: Ace
 Level: 50
 EVs: 0 HP / 0 Atk / 252 Def / 252 SpA / 0 SpD / 0 Spe
 Modest Nature
@@ -41266,6 +41312,7 @@ Modest Nature
 
 Zapdos @ Ganlon Berry
 Ability: Pressure
+Tags: Ace
 Level: 50
 EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 252 SpD / 0 Spe
 Modest Nature
@@ -41276,6 +41323,7 @@ Modest Nature
 
 Moltres @ Razor Claw
 Ability: Pressure
+Tags: Ace
 Level: 50
 EVs: 0 HP / 0 Atk / 252 Def / 252 SpA / 0 SpD / 0 Spe
 Modest Nature
@@ -41286,6 +41334,7 @@ Modest Nature
 
 Dragonite @ Lum Berry
 Ability: Inner Focus
+Tags: Ace
 Level: 50
 EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
 Adamant Nature
@@ -41476,6 +41525,7 @@ Sassy Nature
 
 Raikou @ Scope Lens
 Ability: Pressure
+Tags: Ace
 Level: 50
 EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
 Naive Nature
@@ -41486,6 +41536,7 @@ Naive Nature
 
 Entei @ Quick Claw
 Ability: Pressure
+Tags: Ace
 Level: 50
 EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
 Rash Nature
@@ -41496,6 +41547,7 @@ Rash Nature
 
 Suicune @ Sitrus Berry
 Ability: Pressure
+Tags: Ace
 Level: 50
 EVs: 0 HP / 0 Atk / 252 Def / 0 SpA / 252 SpD / 0 Spe
 Bold Nature
@@ -41506,6 +41558,7 @@ Bold Nature
 
 Tyranitar @ Quick Claw
 Ability: Sand Stream
+Tags: Ace
 Level: 50
 EVs: 0 HP / 252 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
 Brave Nature
@@ -41529,6 +41582,7 @@ AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
 
 Venusaur @ White Herb
 Ability: Overgrow
+Tags: Ace
 Level: 50
 EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 252 SpD / 0 Spe
 Modest Nature
@@ -41539,6 +41593,7 @@ Modest Nature
 
 Charizard @ Petaya Berry
 Ability: Blaze
+Tags: Ace
 Level: 50
 EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
 Modest Nature
@@ -41549,6 +41604,7 @@ Modest Nature
 
 Blastoise @ Mystic Water
 Ability: Torrent
+Tags: Ace
 Level: 50
 EVs: 0 HP / 0 Atk / 170 Def / 170 SpA / 170 SpD / 0 Spe
 Modest Nature
@@ -41589,6 +41645,7 @@ Adamant Nature
 
 Sceptile @ Liechi Berry
 Ability: Overgrow
+Tags: Ace
 Level: 50
 EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
 Jolly Nature
@@ -41599,6 +41656,7 @@ Jolly Nature
 
 Blaziken @ Salac Berry
 Ability: Blaze
+Tags: Ace
 Level: 50
 EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
 Adamant Nature
@@ -41609,6 +41667,7 @@ Adamant Nature
 
 Swampert @ Shell Bell
 Ability: Torrent
+Tags: Ace
 Level: 50
 EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 Adamant Nature
