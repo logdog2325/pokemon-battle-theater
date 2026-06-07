@@ -16221,12 +16221,511 @@ Class: Factory Head
 Pic: Factory Head Noland
 Gender: Male
 Music: Male
-Double Battle: No
-AI: Basic Trainer
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Battle Type: Singles
+Party Size: 6
+Pool Rules: Basic
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
 
-Beldum
-Level: 5
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Dugtrio @ Soft Sand
+Ability: Sand Veil
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Earthquake
+- Tri Attack
+- Slash
+- Sand Tomb
+
+Medicham @ Focus Band
+Ability: Pure Power
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Docile Nature
+- Psychic
+- High Jump Kick
+- Calm Mind
+- Baton Pass
+
+Misdreavus @ Focus Band
+Ability: Levitate
+Level: 50
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Impish Nature
+- Pain Split
+- Shadow Ball
+- Confuse Ray
+- Thunder Wave
+
+Fearow @ Sharp Beak
+Ability: Keen Eye
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Drill Peck
+- Tri Attack
+- Facade
+- Mud-Slap
+
+Granbull @ Cheri Berry
+Ability: Intimidate
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Mega Kick
+- Smelling Salts
+- Thunder Wave
+- Roar
+
+Jynx @ Shell Bell
+Ability: Oblivious
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Ice Beam
+- Fake Out
+- Lovely Kiss
+- Attract
+
+Dusclops @ Leftovers
+Ability: Pressure
+Level: 50
+EVs: 170 HP / 0 Atk / 170 Def / 0 SpA / 170 SpD / 0 Spe
+Impish Nature
+- Will-O-Wisp
+- Seismic Toss
+- Pain Split
+- Confuse Ray
+
+Dodrio @ Chesto Berry
+Ability: Run Away
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Drill Peck
+- Tri Attack
+- Sleep Talk
+- Rest
+
+Mr. Mime @ Leftovers
+Ability: Soundproof
+Level: 50
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Relaxed Nature
+- Psychic
+- Magical Leaf
+- Fake Out
+- Reflect
+
+Lanturn @ Cheri Berry
+Ability: Volt Absorb
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Surf
+- Confuse Ray
+- Attract
+- Thunder Wave
+
+Breloom @ King's Rock
+Ability: Effect Spore
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Sky Uppercut
+- Mach Punch
+- Headbutt
+- Counter
+
+Forretress @ Focus Band
+Ability: Sturdy
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Adamant Nature
+- Double-Edge
+- Rock Slide
+- Light Screen
+- Spikes
+
+Whiscash @ Chesto Berry
+Ability: Oblivious
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Earthquake
+- Rock Slide
+- Amnesia
+- Rest
+
+Xatu @ Sharp Beak
+Ability: Synchronize
+Level: 50
+EVs: 170 HP / 170 Atk / 0 Def / 170 SpA / 0 SpD / 0 Spe
+Hardy Nature
+- Drill Peck
+- Night Shade
+- Wish
+- Future Sight
+
+Skarmory @ Scope Lens
+Ability: Keen Eye
+Level: 50
+EVs: 170 HP / 170 Atk / 0 Def / 0 SpA / 170 SpD / 0 Spe
+Adamant Nature
+- Steel Wing
+- Air Cutter
+- Counter
+- Agility
+
+Marowak @ Thick Club
+Ability: Rock Head
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Bonemerang
+- Rock Slide
+- Icy Wind
+- Headbutt
+
+Quagsire @ Focus Band
+Ability: Damp
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Adamant Nature
+- Earthquake
+- Brick Break
+- Counter
+- Mud-Slap
+
+Clefable @ Leftovers
+Ability: Cute Charm
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 0 SpA / 252 SpD / 0 Spe
+Brave Nature
+- Metronome
+- Double Team
+- Reflect
+- Follow Me
+
+Hariyama @ Focus Band
+Ability: Thick Fat
+Level: 50
+EVs: 170 HP / 0 Atk / 170 Def / 0 SpA / 170 SpD / 0 Spe
+Adamant Nature
+- Cross Chop
+- Rock Slide
+- Counter
+- Fake Out
+
+Raichu @ Bright Powder
+Ability: Static
+Level: 50
+EVs: 0 HP / 0 Atk / 170 Def / 170 SpA / 0 SpD / 170 Spe
+Modest Nature
+- Thunderbolt
+- Quick Attack
+- Light Screen
+- Double Team
+
+Dewgong @ Never-Melt Ice
+Ability: Thick Fat
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Ice Beam
+- Icy Wind
+- Headbutt
+- Fake Out
+
+Manectric @ Magnet
+Ability: Static
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Modest Nature
+- Thunderbolt
+- Flash
+- Quick Attack
+- Roar
+
+Vileplume @ Persim Berry
+Ability: Chlorophyll
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Impish Nature
+- Sludge Bomb
+- Petal Dance
+- Moonlight
+- Aromatherapy
+
+Victreebel @ Sitrus Berry
+Ability: Chlorophyll
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 0 SpA / 252 SpD / 0 Spe
+Quiet Nature
+- Giga Drain
+- Sleep Powder
+- Sweet Scent
+- Synthesis
+
+Electrode @ Focus Band
+Ability: Soundproof
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Thunderbolt
+- Swift
+- Light Screen
+- Protect
+
+Exploud @ Chesto Berry
+Ability: Soundproof
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Impish Nature
+- Hyper Voice
+- Shadow Ball
+- Sleep Talk
+- Rest
+
+Shiftry @ Miracle Seed
+Ability: Chlorophyll
+Level: 50
+EVs: 0 HP / 0 Atk / 170 Def / 170 SpA / 170 SpD / 0 Spe
+Quiet Nature
+- Giga Drain
+- Feint Attack
+- Quick Attack
+- Fake Out
+
+Glalie @ Petaya Berry
+Ability: Inner Focus
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Ice Beam
+- Crunch
+- Hail
+- Protect
+
+Ludicolo @ Shell Bell
+Ability: Swift Swim
+Level: 50
+EVs: 170 HP / 0 Atk / 170 Def / 170 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Surf
+- Rain Dance
+- Thunder Punch
+- Fire Punch
+
+Hypno @ Twisted Spoon
+Ability: Insomnia
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Thunder Punch
+- Fire Punch
+- Ice Punch
+- Hypnosis
+
+Golem @ Quick Claw
+Ability: Rock Head
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Adamant Nature
+- Earthquake
+- Body Slam
+- Counter
+- Rock Tomb
+
+Rhydon @ Quick Claw
+Ability: Lightning Rod
+Level: 50
+EVs: 170 HP / 170 Atk / 0 Def / 0 SpA / 170 SpD / 0 Spe
+Adamant Nature
+- Earthquake
+- Rock Tomb
+- Scary Face
+- Brick Break
+
+Alakazam @ Focus Band
+Ability: Synchronize
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Thunder Punch
+- Fire Punch
+- Ice Punch
+- Thunder Wave
+
+Weezing @ Bright Powder
+Ability: Levitate
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Sludge Bomb
+- Will-O-Wisp
+- Shadow Ball
+- Smokescreen
+
+Kangaskhan @ Focus Band
+Ability: Early Bird
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Dizzy Punch
+- Brick Break
+- Counter
+- Fake Out
+
+Electabuzz @ Cheri Berry
+Ability: Static
+Level: 50
+EVs: 170 HP / 0 Atk / 170 Def / 170 SpA / 0 SpD / 0 Spe
+Relaxed Nature
+- Thunderbolt
+- Thunder Wave
+- Brick Break
+- Light Screen
+
+Tauros @ Persim Berry
+Ability: Intimidate
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Earthquake
+- Thrash
+- Swagger
+- Facade
+
+Slowbro @ Shell Bell
+Ability: Oblivious
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Quiet Nature
+- Surf
+- Rain Dance
+- Headbutt
+- Ice Punch
+
+Slowking @ Leftovers
+Ability: Oblivious
+Level: 50
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Psychic
+- Brick Break
+- Amnesia
+- Attract
+
+Miltank @ Focus Band
+Ability: Thick Fat
+Level: 50
+EVs: 170 HP / 0 Atk / 170 Def / 0 SpA / 170 SpD / 0 Spe
+Careful Nature
+- Facade
+- Shadow Ball
+- Counter
+- Milk Drink
+
+Altaria @ Cheri Berry
+Ability: Natural Cure
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Docile Nature
+- Dragon Claw
+- Aerial Ace
+- Refresh
+- Body Slam
+
+Nidoqueen @ Focus Band
+Ability: Poison Point
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Sludge Bomb
+- Double Kick
+- Body Slam
+- Counter
+
+Nidoking @ Quick Claw
+Ability: Poison Point
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Horn Drill
+- Double Kick
+- Body Slam
+- Counter
+
+Magmar @ Rawst Berry
+Ability: Flame Body
+Level: 50
+EVs: 170 HP / 0 Atk / 170 Def / 170 SpA / 0 SpD / 0 Spe
+Relaxed Nature
+- Flamethrower
+- Smokescreen
+- Brick Break
+- Barrier
+
+Cradily @ Leftovers
+Ability: Suction Cups
+Level: 50
+EVs: 170 HP / 0 Atk / 170 Def / 0 SpA / 170 SpD / 0 Spe
+Relaxed Nature
+- Giga Drain
+- Rock Slide
+- Barrier
+- Confuse Ray
+
+Armaldo @ Scope Lens
+Ability: Battle Armor
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Slash
+- Aerial Ace
+- Ancient Power
+- Protect
+
+Golduck @ Shell Bell
+Ability: Damp
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Hydro Pump
+- Dig
+- Brick Break
+- Light Screen
+
+Rapidash @ Charcoal
+Ability: Run Away
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Quiet Nature
+- Flamethrower
+- Double Kick
+- Quick Attack
+- Protect
+
+Muk @ Poison Barb
+Ability: Stench
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Sludge Bomb
+- Body Slam
+- Screech
+- Minimize
+
+Gengar @ Leftovers
+Ability: Levitate
+Level: 50
+EVs: 170 HP / 0 Atk / 0 Def / 170 SpA / 0 SpD / 170 Spe
+Timid Nature
+- Dream Eater
+- Hypnosis
+- Confuse Ray
+- Attract
 
 === TRAINER_LUCY ===
 Name: LUCY
@@ -38390,3 +38889,3141 @@ Modest Nature
 - Shadow Ball
 - Protect
 - Will-O-Wisp
+
+
+=== TRAINER_WALLY_BT ===
+Name: WALLY BT
+Class: Cooltrainer
+Pic: Wally
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Battle Type: Singles
+Party Size: 6
+Pool Rules: Basic
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Altaria @ Altarianite
+Ability: Natural Cure
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Dragon Dance
+- Dragon Rush
+- Giga Impact
+- Earthquake
+
+Gallade @ Scope Lens
+Ability: Justified
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Psycho Cut
+- Stone Edge
+- Shadow Sneak
+- X-Scissor
+
+Magnezone @ Bright Powder
+Ability: Magnet Pull
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Charge Beam
+- Flash Cannon
+- Magnet Rise
+- Thunder Wave
+
+Magnezone @ Bright Powder
+Ability: Magnet Pull
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Thunder
+- Flash Cannon
+- Magnet Rise
+- Thunder Wave
+
+Garchomp @ Choice Scarf
+Ability: Rough Skin
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Outrage
+- Earthquake
+- Fire Fang
+- Crunch
+
+Altaria @ Wide Lens
+Ability: Natural Cure
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Calm Nature
+- Cotton Guard
+- Sing
+- Moonblast
+- Dream Eater
+
+Gallade @ Galladite
+Ability: Justified
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Psycho Cut
+- Close Combat
+- Rock Slide
+- Destiny Bond
+
+Magnezone @ Assault Vest
+Ability: Magnet Pull
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 252 SpD / 0 Spe
+Modest Nature
+- Thunderbolt
+- Flash Cannon
+- Tri Attack
+- Volt Switch
+
+Magnezone @ Assault Vest
+Ability: Magnet Pull
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Thunderbolt
+- Flash Cannon
+- Tri Attack
+- Volt Switch
+
+Garchomp @ Garchompite
+Ability: Rough Skin
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Sandstorm
+- Stone Edge
+- Earthquake
+- Dragon Claw
+
+=== TRAINER_RED_BT ===
+Name: RED BT
+Class: Cooltrainer
+Pic: Red
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Battle Type: Singles
+Party Size: 6
+Pool Rules: Basic
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Venusaur @ Salac Berry
+Ability: Overgrow
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Energy Ball
+- Sludge Bomb
+- Grass Knot
+- Protect
+
+Charizard @ Charizardite Y
+Ability: Blaze
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Heat Wave
+- Solar Beam
+- Air Slash
+- Focus Blast
+
+Blastoise @ Leftovers
+Ability: Torrent
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Fake Out
+- Earthquake
+- Aqua Tail
+- Rock Slide
+
+Lapras @ Bright Powder
+Ability: Water Absorb
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Surf
+- Ice Beam
+- Thunderbolt
+- Psychic
+
+Snorlax @ Life Orb
+Ability: Thick Fat
+Level: 50
+EVs: 0 HP / 252 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Double-Edge
+- Earthquake
+- Crunch
+- Protect
+
+Venusaur @ Venusaurite
+Ability: Overgrow
+Level: 50
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Bold Nature
+- Synthesis
+- Substitute
+- Sludge Bomb
+- Giga Drain
+
+Charizard @ Charizardite X
+Ability: Blaze
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Dragon Rush
+- Flare Blitz
+- Dragon Dance
+- Rock Slide
+
+Blastoise @ Custap Berry
+Ability: Torrent
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Yawn
+- Hydro Pump
+- Blizzard
+- Dark Pulse
+
+Lapras @ Psychium Z
+Ability: Water Absorb
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Blizzard
+- Hydro Pump
+- Psychic
+- Ice Shard
+
+Snorlax @ Assault Vest
+Ability: Thick Fat
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Careful Nature
+- Body Slam
+- Fissure
+- Earthquake
+- Crunch
+
+=== TRAINER_BLUE_BT ===
+Name: BLUE BT
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Battle Type: Doubles
+Party Size: 6
+Pool Rules: Basic
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Pidgeot @ Pidgeotite
+Ability: Keen Eye
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Hurricane
+- Hyper Beam
+- Tailwind
+- Quick Attack
+
+Alakazam @ Alakazite
+Ability: Synchronize
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Psychic
+- Focus Blast
+- Shadow Ball
+- Grass Knot
+
+Machamp @ Choice Scarf
+Ability: No Guard
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Dynamic Punch
+- Ice Punch
+- Rock Slide
+- Earthquake
+
+Aerodactyl @ Aerodactylite
+Ability: Pressure
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Sky Drop
+- Iron Head
+- Fire Fang
+- Thunder Fang
+
+Exeggutor @ Grassium Z
+Ability: Chlorophyll
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Leaf Storm
+- Psychic
+- Sludge Bomb
+- Grassy Terrain
+
+Rhyperior @ Focus Sash
+Ability: Solid Rock
+Level: 50
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Impish Nature
+- Horn Drill
+- Reversal
+- Payback
+- Metal Burst
+
+Gyarados @ Wacan Berry
+Ability: Intimidate
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Dragon Dance
+- Waterfall
+- Ice Fang
+- Earthquake
+
+Arcanine @ White Herb
+Ability: Intimidate
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Overheat
+- Sunny Day
+- Solar Beam
+- Extreme Speed
+
+Tyranitar @ Chople Berry
+Ability: Sand Stream
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Rock Slide
+- Crunch
+- Earthquake
+- Dragon Dance
+
+Pidgeot @ Pidgeotite
+Ability: Keen Eye
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Hurricane
+- Feather Dance
+- Roost
+- Hyper Beam
+
+Alakazam @ Choice Specs
+Ability: Synchronize
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Psychic
+- Focus Blast
+- Dazzling Gleam
+- Trick
+
+Machamp @ Flame Orb
+Ability: Guts
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Adamant Nature
+- Protect
+- Earthquake
+- Close Combat
+- Payback
+
+Aerodactyl @ Choice Band
+Ability: Pressure
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Stone Edge
+- Aerial Ace
+- Earthquake
+- Crunch
+
+Rhyperior @ Rockium Z
+Ability: Solid Rock
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Brave Nature
+- Rock Slide
+- Hammer Arm
+- Earthquake
+- Protect
+
+Gyarados @ Gyaradosite
+Ability: Intimidate
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Dragon Dance
+- Waterfall
+- Stone Edge
+- Crunch
+
+Arcanine @ Fightinium Z
+Ability: Intimidate
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Close Combat
+- Flare Blitz
+- Crunch
+- Extreme Speed
+
+Tyranitar @ Tyranitarite
+Ability: Sand Stream
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Brave Nature
+- Stone Edge
+- Earthquake
+- Ice Fang
+- Payback
+
+=== TRAINER_ANABEL_BT ===
+Name: ANABEL BT
+Class: Cooltrainer
+Pic: Salon Maiden Anabel
+Gender: Female
+Music: Female
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Battle Type: Singles
+Party Size: 6
+Pool Rules: Basic
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Alakazam @ Alakazite
+Ability: Synchronize
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Psychic
+- Focus Blast
+- Shadow Ball
+- Grass Knot
+
+Lucario @ Lucarionite
+Ability: Steadfast
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Close Combat
+- Rock Slide
+- Blaze Kick
+- Bullet Punch
+
+Snorlax @ Life Orb
+Ability: Thick Fat
+Level: 50
+EVs: 0 HP / 252 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Double-Edge
+- Earthquake
+- Crunch
+- Protect
+
+Alakazam @ Choice Specs
+Ability: Synchronize
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Psychic
+- Focus Blast
+- Dazzling Gleam
+- Trick
+
+Lucario @ Weakness Policy
+Ability: Steadfast
+Level: 50
+EVs: 0 HP / 170 Atk / 0 Def / 170 SpA / 0 SpD / 170 Spe
+Serious Nature
+- Aura Sphere
+- Dragon Pulse
+- Stone Edge
+- Extreme Speed
+
+Snorlax @ Assault Vest
+Ability: Thick Fat
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Careful Nature
+- Body Slam
+- Fissure
+- Earthquake
+- Crunch
+
+Raikou @ Shuca Berry
+Ability: Pressure
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Thunderbolt
+- Volt Switch
+- Shadow Ball
+- Extrasensory
+
+Entei @ Focus Sash
+Ability: Pressure
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Lonely Nature
+- Overheat
+- Flame Charge
+- Fire Fang
+- Stone Edge
+
+Latios @ Lax Incense
+Ability: Levitate
+Level: 50
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Bold Nature
+- Calm Mind
+- Luster Purge
+- Dragon Pulse
+- Recover
+
+Raikou @ Electrium Z
+Ability: Pressure
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Charge Beam
+- Thunder Wave
+- Calm Mind
+- Shadow Ball
+
+Entei @ Chesto Berry
+Ability: Pressure
+Level: 50
+EVs: 170 HP / 0 Atk / 170 Def / 0 SpA / 170 SpD / 0 Spe
+Bold Nature
+- Calm Mind
+- Will-O-Wisp
+- Flamethrower
+- Rest
+
+Latios @ White Herb
+Ability: Levitate
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Draco Meteor
+- Thunderbolt
+- Psychic
+- Protect
+
+Raikou @ Electrium Z
+Ability: Pressure
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Thunderbolt
+- Volt Switch
+- Shadow Ball
+- Protect
+
+Entei @ Choice Scarf
+Ability: Pressure
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Eruption
+- Fire Blast
+- Extrasensory
+- Solar Beam
+
+Latios @ Choice Specs
+Ability: Levitate
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Draco Meteor
+- Thunder
+- Psychic
+- Energy Ball
+
+Raikou @ Air Balloon
+Ability: Pressure
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Thunder
+- Discharge
+- Reflect
+- Extrasensory
+
+Entei @ Life Orb
+Ability: Pressure
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Sacred Fire
+- Bulldoze
+- Stone Edge
+- Protect
+
+Latios @ Latiosite
+Ability: Levitate
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Zen Headbutt
+- Earthquake
+- Dragon Dance
+- Dragon Claw
+
+=== TRAINER_CYNTHIA_BT ===
+Name: CYNTHIA BT
+Class: Cooltrainer
+Pic: Cooltrainer F
+Gender: Female
+Music: Female
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Battle Type: Singles
+Party Size: 6
+Pool Rules: Basic
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Spiritomb @ Leftovers
+Ability: Pressure
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Careful Nature
+- Will-O-Wisp
+- Shadow Sneak
+- Swagger
+- Psych Up
+
+Lucario @ Lucarionite
+Ability: Steadfast
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Close Combat
+- Rock Slide
+- Blaze Kick
+- Bullet Punch
+
+Milotic @ Wide Lens
+Ability: Marvel Scale
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 252 SpD / 0 Spe
+Calm Nature
+- Hydro Pump
+- Blizzard
+- Mirror Coat
+- Recover
+
+Togekiss @ King's Rock
+Ability: Serene Grace
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Grass Knot
+- Thunder Wave
+- Air Slash
+- Shadow Ball
+
+Garchomp @ Garchompite
+Ability: Rough Skin
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Sandstorm
+- Stone Edge
+- Earthquake
+- Dragon Claw
+
+Spiritomb @ Custap Berry
+Ability: Pressure
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Careful Nature
+- Will-O-Wisp
+- Sucker Punch
+- Substitute
+- Pain Split
+
+Lucario @ Weakness Policy
+Ability: Steadfast
+Level: 50
+EVs: 0 HP / 170 Atk / 0 Def / 170 SpA / 0 SpD / 170 Spe
+Serious Nature
+- Aura Sphere
+- Dragon Pulse
+- Stone Edge
+- Extreme Speed
+
+Milotic @ Leftovers
+Ability: Marvel Scale
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Impish Nature
+- Ice Beam
+- Rest
+- Sleep Talk
+- Surf
+
+Togekiss @ Expert Belt
+Ability: Serene Grace
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Modest Nature
+- Aura Sphere
+- Air Slash
+- Grass Knot
+- Dazzling Gleam
+
+Garchomp @ Choice Scarf
+Ability: Rough Skin
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Outrage
+- Earthquake
+- Fire Fang
+- Crunch
+
+
+=== TRAINER_COLRESS_BT ===
+Name: COLRESS BT
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Battle Type: Singles
+Party Size: 6
+Pool Rules: Basic
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Muk @ Black Sludge
+Ability: Stench
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Relaxed Nature
+- Poison Jab
+- Stockpile
+- Swallow
+- Mud-Slap
+
+Muk @ Air Balloon
+Ability: Stench
+Level: 50
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Relaxed Nature
+- Minimize
+- Acid Spray
+- Rest
+- Snarl
+
+Electrode @ Air Balloon
+Ability: Soundproof
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Thunderbolt
+- Mirror Coat
+- Thief
+- Protect
+
+Muk @ Liechi Berry
+Ability: Stench
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Crunch
+- Belch
+- Shadow Sneak
+- Stone Edge
+
+Porygon2 @ Eviolite
+Ability: Trace
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Tri Attack
+- Thunderbolt
+- Psychic
+- Ice Beam
+
+Klinklang @ Steelium Z
+Ability: Plus
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Shift Gear
+- Gear Grind
+- Volt Switch
+- Giga Impact
+
+Magnezone @ Bright Powder
+Ability: Magnet Pull
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Charge Beam
+- Flash Cannon
+- Magnet Rise
+- Thunder Wave
+
+Magnezone @ Bright Powder
+Ability: Magnet Pull
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Thunder
+- Flash Cannon
+- Magnet Rise
+- Thunder Wave
+
+Porygon-Z @ Expert Belt
+Ability: Adaptability
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Psychic
+- Ice Beam
+- Signal Beam
+- Charge Beam
+
+Metagross @ Occa Berry
+Ability: Clear Body
+Level: 50
+EVs: 170 HP / 170 Atk / 0 Def / 0 SpA / 170 SpD / 0 Spe
+Adamant Nature
+- Earthquake
+- Meteor Mash
+- Bullet Punch
+- Explosion
+
+Electrode @ Damp Rock
+Ability: Soundproof
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Rain Dance
+- Thunder
+- Taunt
+- Light Screen
+
+Muk @ Quick Claw
+Ability: Stench
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Gunk Shot
+- Shadow Sneak
+- Brick Break
+- Explosion
+
+Porygon2 @ Eviolite
+Ability: Trace
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Tri Attack
+- Thunder Wave
+- Shadow Ball
+- Ice Beam
+
+Klinklang @ Leftovers
+Ability: Plus
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Modest Nature
+- Flash Cannon
+- Thunderbolt
+- Protect
+- Toxic
+
+Magnezone @ Assault Vest
+Ability: Magnet Pull
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 252 SpD / 0 Spe
+Modest Nature
+- Thunderbolt
+- Flash Cannon
+- Tri Attack
+- Volt Switch
+
+Magnezone @ Assault Vest
+Ability: Magnet Pull
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Thunderbolt
+- Flash Cannon
+- Tri Attack
+- Volt Switch
+
+Porygon-Z @ Normalium Z
+Ability: Adaptability
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Tri Attack
+- Thunderbolt
+- Shadow Ball
+- Recover
+
+Metagross @ Metagrossite
+Ability: Clear Body
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Zen Headbutt
+- Meteor Mash
+- Brick Break
+- Bullet Punch
+
+=== TRAINER_DEXIO_BT ===
+Name: DEXIO BT
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Battle Type: Singles
+Party Size: 6
+Pool Rules: Basic
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Turtonator @ Normalium Z
+Ability: Shell Armor
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Lonely Nature
+- Head Smash
+- Explosion
+- Overheat
+- Dragon Claw
+
+Turtonator @ Sitrus Berry
+Ability: Shell Armor
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Shell Smash
+- Fire Blast
+- Dragon Pulse
+- Flash Cannon
+
+Slowbro @ Leftovers
+Ability: Oblivious
+Level: 50
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Bold Nature
+- Psychic
+- Surf
+- Slack Off
+- Amnesia
+
+Whimsicott @ Leftovers
+Ability: Prankster
+Level: 50
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Bold Nature
+- Moonblast
+- Leech Seed
+- Substitute
+- Cotton Guard
+
+Passimian @ Choice Scarf
+Ability: Receiver
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Close Combat
+- Earthquake
+- U-turn
+- Rock Slide
+
+Ninetales @ Wide Lens
+Ability: Flash Fire
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Fire Blast
+- Dark Pulse
+- Hypnosis
+- Energy Ball
+
+Braviary @ Choice Scarf
+Ability: Keen Eye
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Brave Bird
+- Return
+- U-turn
+- Rock Slide
+
+Espeon @ Lum Berry
+Ability: Synchronize
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Modest Nature
+- Psychic
+- Shadow Ball
+- Hyper Beam
+- Grass Knot
+
+Slowbro @ Slowbronite
+Ability: Oblivious
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Psychic
+- Surf
+- Blizzard
+- Trick Room
+
+Whimsicott @ Fairium Z
+Ability: Prankster
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Calm Nature
+- Moonblast
+- Tailwind
+- Swagger
+- Energy Ball
+
+Passimian @ Hard Stone
+Ability: Receiver
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Close Combat
+- Rock Slide
+- Feint
+- Fling
+
+Ninetales @ Psychium Z
+Ability: Flash Fire
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Freeze-Dry
+- Dazzling Gleam
+- Extrasensory
+- Ice Shard
+
+Braviary @ Wacan Berry
+Ability: Keen Eye
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Brave Bird
+- Tailwind
+- Superpower
+- Giga Impact
+
+Espeon @ Expert Belt
+Ability: Synchronize
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Psychic
+- Shadow Ball
+- Grass Knot
+- Dazzling Gleam
+
+=== TRAINER_GRIMSLEY_BT ===
+Name: GRIMSLY BT
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Battle Type: Singles
+Party Size: 6
+Pool Rules: Basic
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Absol @ Focus Sash
+Ability: Pressure
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Night Slash
+- Zen Headbutt
+- Sucker Punch
+- Play Rough
+
+Sharpedo @ Sharpedonite
+Ability: Speed Boost
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Crunch
+- Ice Fang
+- Aqua Jet
+- Poison Jab
+
+Scrafty @ Fightinium Z
+Ability: Moxie
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Substitute
+- Payback
+- High Jump Kick
+- Focus Punch
+
+Bisharp @ Chople Berry
+Ability: Defiant
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Iron Head
+- Night Slash
+- Low Sweep
+- Sucker Punch
+
+Houndoom @ Air Balloon
+Ability: Flash Fire
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Flamethrower
+- Shadow Ball
+- Sludge Bomb
+- Will-O-Wisp
+
+Drapion @ Scope Lens
+Ability: Sniper
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Cross Poison
+- Night Slash
+- Fire Fang
+- Earthquake
+
+Honchkrow @ Darkinium Z
+Ability: Super Luck
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Psychic
+- Dark Pulse
+- Swagger
+- Shadow Ball
+
+Liepard @ Red Card
+Ability: Limber
+Level: 50
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Bold Nature
+- Foul Play
+- Sucker Punch
+- Sand Attack
+- Thunder Wave
+
+Tyranitar @ Chople Berry
+Ability: Sand Stream
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Rock Slide
+- Crunch
+- Earthquake
+- Dragon Dance
+
+Absol @ Absolite
+Ability: Pressure
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Sucker Punch
+- Megahorn
+- Play Rough
+- Stone Edge
+
+Sharpedo @ Focus Sash
+Ability: Speed Boost
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Modest Nature
+- Ice Beam
+- Hydro Pump
+- Dark Pulse
+- Protect
+
+Scrafty @ Leftovers
+Ability: Moxie
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Careful Nature
+- Bulk Up
+- Payback
+- Protect
+- Drain Punch
+
+Bisharp @ Focus Sash
+Ability: Defiant
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Taunt
+- Sucker Punch
+- Metal Burst
+- Iron Head
+
+Houndoom @ Houndoominite
+Ability: Flash Fire
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Fire Blast
+- Dark Pulse
+- Solar Beam
+- Sunny Day
+
+Drapion @ Razor Claw
+Ability: Sniper
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Careful Nature
+- Cross Poison
+- Night Slash
+- Earthquake
+- Swords Dance
+
+Liepard @ Focus Sash
+Ability: Limber
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Dark Pulse
+- Shadow Ball
+- Grass Knot
+- Nasty Plot
+
+Tyranitar @ Tyranitarite
+Ability: Sand Stream
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Brave Nature
+- Stone Edge
+- Earthquake
+- Ice Fang
+- Payback
+
+=== TRAINER_GUZMA_BT ===
+Name: GUZMA BT
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Battle Type: Singles
+Party Size: 6
+Pool Rules: Basic
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Toxapex @ Red Card
+Ability: Merciless
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Baneful Bunker
+- Venoshock
+- Surf
+- Ice Beam
+
+Golisopod @ Quick Claw
+Ability: Emergency Exit
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- First Impression
+- Liquidation
+- Leech Life
+- Brick Break
+
+Toxapex @ Black Sludge
+Ability: Merciless
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Careful Nature
+- Baneful Bunker
+- Liquidation
+- Payback
+- Stockpile
+
+Golisopod @ Life Orb
+Ability: Emergency Exit
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- First Impression
+- Aqua Jet
+- Sucker Punch
+- Rock Slide
+
+Toxicroak @ Focus Sash
+Ability: Anticipation
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Modest Nature
+- Sludge Bomb
+- Focus Blast
+- Shadow Ball
+- Dark Pulse
+
+Bisharp @ Chople Berry
+Ability: Defiant
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Iron Head
+- Night Slash
+- Low Sweep
+- Sucker Punch
+
+Pinsir @ Pinsirite
+Ability: Mold Breaker
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- X-Scissor
+- Superpower
+- Stone Edge
+- Thrash
+
+Honchkrow @ Darkinium Z
+Ability: Super Luck
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Psychic
+- Dark Pulse
+- Swagger
+- Shadow Ball
+
+Liepard @ Red Card
+Ability: Limber
+Level: 50
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Bold Nature
+- Foul Play
+- Sucker Punch
+- Sand Attack
+- Thunder Wave
+
+Toxicroak @ Wide Lens
+Ability: Anticipation
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Cross Chop
+- Sucker Punch
+- Poison Jab
+- Taunt
+
+Bisharp @ Focus Sash
+Ability: Defiant
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Taunt
+- Sucker Punch
+- Metal Burst
+- Iron Head
+
+Pinsir @ Choice Scarf
+Ability: Mold Breaker
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- X-Scissor
+- Earthquake
+- Close Combat
+- Guillotine
+
+Honchkrow @ Life Orb
+Ability: Super Luck
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Night Slash
+- Drill Peck
+- Sucker Punch
+- Thunder Wave
+
+Liepard @ Focus Sash
+Ability: Limber
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Dark Pulse
+- Shadow Ball
+- Grass Knot
+- Nasty Plot
+
+=== TRAINER_KIAWE_BT ===
+Name: KIAWE BT
+Class: Kindler
+Pic: Kindler
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Battle Type: Singles
+Party Size: 6
+Pool Rules: Basic
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Talonflame @ Focus Sash
+Ability: Gale Wings
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Swords Dance
+- Quick Attack
+- Flail
+- Acrobatics
+
+Talonflame @ Sitrus Berry
+Ability: Gale Wings
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Brave Bird
+- Flare Blitz
+- Quick Attack
+- Swords Dance
+
+Marowak @ Thick Club
+Ability: Rock Head
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Earthquake
+- Stone Edge
+- Brick Break
+- Brutal Swing
+
+Kangaskhan @ Kangaskhanite
+Ability: Early Bird
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Fake Out
+- Facade
+- Rock Slide
+- Sucker Punch
+
+Salazzle @ Focus Sash
+Ability: Corrosion
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Fire Blast
+- Sludge Bomb
+- Nasty Plot
+- Fake Out
+
+Arcanine @ White Herb
+Ability: Intimidate
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Overheat
+- Sunny Day
+- Solar Beam
+- Extreme Speed
+
+Marowak-Alola @ Thick Club
+Ability: Lightning Rod
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Shadow Bone
+- Flare Blitz
+- Detect
+- Stomping Tantrum
+
+Kangaskhan @ Kangaskhanite
+Ability: Early Bird
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Fake Out
+- Double-Edge
+- Earthquake
+- Sucker Punch
+
+Salazzle @ Firium Z
+Ability: Corrosion
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Modest Nature
+- Overheat
+- Sludge Wave
+- Dragon Pulse
+- Fake Out
+
+Arcanine @ Fightinium Z
+Ability: Intimidate
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Close Combat
+- Flare Blitz
+- Crunch
+- Extreme Speed
+
+
+=== TRAINER_KUKUI_BT ===
+Name: KUKUI BT
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Battle Type: Singles
+Party Size: 6
+Pool Rules: Basic
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Lycanroc @ Life Orb
+Ability: Keen Eye
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Quick Attack
+- Thunder Fang
+- Accelerock
+- Rock Slide
+
+Decidueye @ Life Orb
+Ability: Overgrow
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Spirit Shackle
+- Leaf Blade
+- Sucker Punch
+- Smack Down
+
+Incineroar @ Firium Z
+Ability: Blaze
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Darkest Lariat
+- Throat Chop
+- Earthquake
+- Flare Blitz
+
+Primarina @ Kebia Berry
+Ability: Torrent
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Hydro Pump
+- Moonblast
+- Psychic
+- Baby-Doll Eyes
+
+Lycanroc @ Expert Belt
+Ability: Keen Eye
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Sucker Punch
+- Stone Edge
+- Thunder Fang
+- Fire Fang
+
+Decidueye @ Bright Powder
+Ability: Overgrow
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Nasty Plot
+- Shadow Ball
+- Grass Knot
+- Baton Pass
+
+Incineroar @ Quick Claw
+Ability: Blaze
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Flare Blitz
+- Cross Chop
+- Crunch
+- U-turn
+
+Primarina @ Waterium Z
+Ability: Torrent
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Sparkling Aria
+- Dazzling Gleam
+- Blizzard
+- Aqua Jet
+
+Ninetales @ Passho Berry
+Ability: Flash Fire
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Modest Nature
+- Will-O-Wisp
+- Hex
+- Confuse Ray
+- Flame Burst
+
+Ninetales-Alola @ Icium Z
+Ability: Snow Cloak
+Level: 50
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Timid Nature
+- Aurora Veil
+- Hypnosis
+- Dream Eater
+- Blizzard
+
+Ninetales @ Wide Lens
+Ability: Flash Fire
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Fire Blast
+- Dark Pulse
+- Hypnosis
+- Energy Ball
+
+Braviary @ Choice Scarf
+Ability: Keen Eye
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Brave Bird
+- Return
+- U-turn
+- Rock Slide
+
+Magnezone @ Bright Powder
+Ability: Magnet Pull
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Thunder
+- Flash Cannon
+- Magnet Rise
+- Thunder Wave
+
+Snorlax @ Life Orb
+Ability: Thick Fat
+Level: 50
+EVs: 0 HP / 252 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Double-Edge
+- Earthquake
+- Crunch
+- Protect
+
+Ninetales-Alola @ Psychium Z
+Ability: Snow Cloak
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Freeze-Dry
+- Dazzling Gleam
+- Extrasensory
+- Ice Shard
+
+Braviary @ Wacan Berry
+Ability: Keen Eye
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Brave Bird
+- Tailwind
+- Superpower
+- Giga Impact
+
+Magnezone @ Assault Vest
+Ability: Magnet Pull
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Thunderbolt
+- Flash Cannon
+- Tri Attack
+- Volt Switch
+
+Snorlax @ Assault Vest
+Ability: Thick Fat
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Careful Nature
+- Body Slam
+- Fissure
+- Earthquake
+- Crunch
+
+=== TRAINER_MALLOW_BT ===
+Name: MALLOW BT
+Class: Aroma Lady
+Pic: Aroma Lady
+Gender: Female
+Music: Female
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Battle Type: Singles
+Party Size: 6
+Pool Rules: Basic
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Talonflame @ Focus Sash
+Ability: Gale Wings
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Swords Dance
+- Quick Attack
+- Flail
+- Acrobatics
+
+Trevenant @ Choice Band
+Ability: Frisk
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Horn Leech
+- Shadow Claw
+- Earthquake
+- X-Scissor
+
+Comfey @ Grassium Z
+Ability: Triage
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Dazzling Gleam
+- Petal Blizzard
+- Grassy Terrain
+- Floral Healing
+
+Lurantis @ Power Herb
+Ability: Leaf Guard
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Solar Blade
+- Leech Life
+- Poison Jab
+- Payback
+
+Talonflame @ Sitrus Berry
+Ability: Gale Wings
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Brave Bird
+- Flare Blitz
+- Quick Attack
+- Swords Dance
+
+Trevenant @ Iron Ball
+Ability: Frisk
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Trick Room
+- Focus Blast
+- Energy Ball
+- Shadow Ball
+
+Comfey @ Big Root
+Ability: Triage
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Calm Nature
+- Draining Kiss
+- Calm Mind
+- Sweet Kiss
+- Leech Seed
+
+Lurantis @ Quick Claw
+Ability: Leaf Guard
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Sunny Day
+- Solar Blade
+- X-Scissor
+- Brick Break
+
+Sceptile @ White Herb
+Ability: Overgrow
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Leaf Storm
+- Focus Blast
+- Energy Ball
+- Detect
+
+Toucannon @ Sitrus Berry
+Ability: Keen Eye
+Level: 50
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Impish Nature
+- Beak Blast
+- Roost
+- Rock Blast
+- Bullet Seed
+
+Tsareena @ Assault Vest
+Ability: Leaf Guard
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Adamant Nature
+- Trop Kick
+- Payback
+- High Jump Kick
+- Play Rough
+
+Sceptile @ Sceptilite
+Ability: Overgrow
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Leaf Blade
+- Dual Chop
+- Earthquake
+- Rock Slide
+
+Toucannon @ Rocky Helmet
+Ability: Keen Eye
+Level: 50
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Impish Nature
+- Beak Blast
+- Roost
+- Tailwind
+- Overheat
+
+Tsareena @ Choice Scarf
+Ability: Leaf Guard
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Trop Kick
+- High Jump Kick
+- Play Rough
+- U-turn
+
+=== TRAINER_PLUMERIA_BT ===
+Name: PLUMRIA BT
+Class: Cooltrainer
+Pic: Cooltrainer F
+Gender: Female
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Battle Type: Singles
+Party Size: 6
+Pool Rules: Basic
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Toxapex @ Red Card
+Ability: Merciless
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Baneful Bunker
+- Venoshock
+- Surf
+- Ice Beam
+
+Lurantis @ Power Herb
+Ability: Leaf Guard
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Solar Blade
+- Leech Life
+- Poison Jab
+- Payback
+
+Toxapex @ Black Sludge
+Ability: Merciless
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Careful Nature
+- Baneful Bunker
+- Liquidation
+- Payback
+- Stockpile
+
+Lurantis @ Quick Claw
+Ability: Leaf Guard
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Sunny Day
+- Solar Blade
+- X-Scissor
+- Brick Break
+
+Salazzle @ Focus Sash
+Ability: Corrosion
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Fire Blast
+- Sludge Bomb
+- Nasty Plot
+- Fake Out
+
+Gengar @ Payapa Berry
+Ability: Cursed Body
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Shadow Ball
+- Energy Ball
+- Dazzling Gleam
+- Round
+
+Crobat @ Wide Lens
+Ability: Inner Focus
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Hypnosis
+- Aerial Ace
+- Cross Poison
+- Taunt
+
+Salazzle @ Firium Z
+Ability: Corrosion
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Modest Nature
+- Overheat
+- Sludge Wave
+- Dragon Pulse
+- Fake Out
+
+Gengar @ Gengarite
+Ability: Cursed Body
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Sludge Bomb
+- Thunderbolt
+- Shadow Ball
+- Destiny Bond
+
+Crobat @ Razor Claw
+Ability: Inner Focus
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Cross Poison
+- Brave Bird
+- Zen Headbutt
+- X-Scissor
+
+=== TRAINER_SINA_BT ===
+Name: SINA BT
+Class: Cooltrainer
+Pic: Cooltrainer F
+Gender: Female
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Battle Type: Singles
+Party Size: 6
+Pool Rules: Basic
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Drampa @ Quick Claw
+Ability: Sap Sipper
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Hyper Voice
+- Dragon Pulse
+- Fire Blast
+- Roost
+
+Drampa @ Dragonium Z
+Ability: Sap Sipper
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Draco Meteor
+- Focus Blast
+- Hurricane
+- Glare
+
+Lilligant @ Leftovers
+Ability: Chlorophyll
+Level: 50
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Bold Nature
+- Quiver Dance
+- Energy Ball
+- Leech Seed
+- Protect
+
+Abomasnow @ Focus Sash
+Ability: Snow Warning
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Blizzard
+- Sheer Cold
+- Focus Blast
+- Ice Shard
+
+Oranguru @ Mental Herb
+Ability: Inner Focus
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 252 SpD / 252 Spe
+Sassy Nature
+- Psychic
+- Shadow Ball
+- Focus Blast
+- Trick Room
+
+Mandibuzz @ Sitrus Berry
+Ability: Big Pecks
+Level: 50
+EVs: 170 HP / 0 Atk / 170 Def / 0 SpA / 170 SpD / 0 Spe
+Modest Nature
+- Nasty Plot
+- Dark Pulse
+- Air Slash
+- Tailwind
+
+Glaceon @ Focus Sash
+Ability: Snow Cloak
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Hail
+- Blizzard
+- Mirror Coat
+- Hyper Beam
+
+Sandslash @ Smooth Rock
+Ability: Sand Veil
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Sandstorm
+- Earthquake
+- Stone Edge
+- X-Scissor
+
+Lilligant @ Grassium Z
+Ability: Chlorophyll
+Level: 50
+EVs: 127 HP / 0 Atk / 127 Def / 127 SpA / 0 SpD / 127 Spe
+Bold Nature
+- Solar Beam
+- Teeter Dance
+- Charm
+- Leech Seed
+
+Abomasnow @ Abomasite
+Ability: Snow Warning
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Blizzard
+- Focus Blast
+- Protect
+- Ice Shard
+
+Oranguru @ Electrium Z
+Ability: Inner Focus
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Foul Play
+- Psychic
+- Focus Blast
+- Thunder
+
+Mandibuzz @ Leftovers
+Ability: Big Pecks
+Level: 50
+EVs: 170 HP / 0 Atk / 170 Def / 0 SpA / 170 SpD / 0 Spe
+Careful Nature
+- Substitute
+- Swagger
+- Punishment
+- Roost
+
+Glaceon @ Bright Powder
+Ability: Snow Cloak
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Blizzard
+- Shadow Ball
+- Aurora Veil
+- Detect
+
+Sandslash-Alola @ Icium Z
+Ability: Snow Cloak
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Hail
+- Icicle Spear
+- Iron Head
+- Aurora Veil
+
+
+=== TRAINER_ARGENTA ===
+Name: ARGENTA
+Class: Cooltrainer
+Pic: Cooltrainer F
+Gender: Female
+Music: Female
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Battle Type: Singles
+Party Size: 6
+Pool Rules: Basic
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Venusaur @ Focus Sash
+Ability: Overgrow
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Toxic
+- Frenzy Plant
+- Sludge
+- Protect
+
+Charizard @ Focus Sash
+Ability: Blaze
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Will-O-Wisp
+- Air Slash
+- Protect
+- Blast Burn
+
+Blastoise @ Focus Sash
+Ability: Torrent
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 252 SpD / 0 Spe
+Quiet Nature
+- Yawn
+- Hydro Cannon
+- Return
+- Protect
+
+Ninetales @ White Herb
+Ability: Flash Fire
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Mild Nature
+- Will-O-Wisp
+- Confuse Ray
+- Quick Attack
+- Overheat
+
+Golduck @ Petaya Berry
+Ability: Damp
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Mild Nature
+- Brine
+- Aqua Jet
+- Hydro Pump
+- Return
+
+Arcanine @ Razor Claw
+Ability: Intimidate
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Extreme Speed
+- Flare Blitz
+- Facade
+- Will-O-Wisp
+
+Poliwrath @ Zoom Lens
+Ability: Water Absorb
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 252 SpD / 0 Spe
+Quiet Nature
+- Focus Blast
+- Surf
+- Hypnosis
+- Vacuum Wave
+
+Machamp @ Focus Band
+Ability: No Guard
+Level: 50
+EVs: 0 HP / 252 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Brave Nature
+- Dynamic Punch
+- Vacuum Wave
+- Foresight
+- Revenge
+
+Tentacruel @ Bright Powder
+Ability: Clear Body
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Adamant Nature
+- Waterfall
+- Poison Jab
+- Toxic
+- Dive
+
+Rapidash @ Razor Fang
+Ability: Flash Fire
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Lonely Nature
+- Flare Blitz
+- Quick Attack
+- Stomp
+- Overheat
+
+Muk @ Black Sludge
+Ability: Stench
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 0 SpA / 252 SpD / 0 Spe
+Careful Nature
+- Gunk Shot
+- Frustration
+- Toxic
+- Acid Armor
+
+Cloyster @ Scope Lens
+Ability: Shell Armor
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Rash Nature
+- Ice Beam
+- Iron Defense
+- Spike Cannon
+- Brine
+
+Gengar @ Razor Fang
+Ability: Levitate
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Shadow Ball
+- Sludge Bomb
+- Hypnosis
+- Nightmare
+
+Exeggutor @ Liechi Berry
+Ability: Chlorophyll
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Wood Hammer
+- Zen Headbutt
+- Rest
+- Sleep Talk
+
+Starmie @ Bright Powder
+Ability: Natural Cure
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Hydro Pump
+- Psychic
+- Recover
+- Double Team
+
+Scyther @ Focus Sash
+Ability: Swarm
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- X-Scissor
+- Aerial Ace
+- Swords Dance
+- Quick Attack
+
+Pinsir @ Salac Berry
+Ability: Hyper Cutter
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- X-Scissor
+- Giga Impact
+- Swords Dance
+- Quick Attack
+
+Gyarados @ Life Orb
+Ability: Intimidate
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Lonely Nature
+- Bounce
+- Waterfall
+- Dragon Dance
+- Brine
+
+Lapras @ Lum Berry
+Ability: Water Absorb
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Blizzard
+- Surf
+- Rest
+- Sleep Talk
+
+Vaporeon @ Expert Belt
+Ability: Water Absorb
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Mild Nature
+- Surf
+- Quick Attack
+- Aqua Ring
+- Yawn
+
+Jolteon @ Expert Belt
+Ability: Volt Absorb
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Rash Nature
+- Discharge
+- Quick Attack
+- Double Team
+- Thunder Wave
+
+Flareon @ Expert Belt
+Ability: Flash Fire
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Mild Nature
+- Lava Plume
+- Quick Attack
+- Protect
+- Will-O-Wisp
+
+Aerodactyl @ Leftovers
+Ability: Pressure
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Stone Edge
+- Aerial Ace
+- Sandstorm
+- Fly
+
+Snorlax @ Choice Band
+Ability: Thick Fat
+Level: 50
+EVs: 0 HP / 252 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Brave Nature
+- Crunch
+- Giga Impact
+- Zen Headbutt
+- Brick Break
+
+Articuno @ Apicot Berry
+Ability: Pressure
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Blizzard
+- Air Cutter
+- Reflect
+- Roost
+
+Zapdos @ Ganlon Berry
+Ability: Pressure
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 252 SpD / 0 Spe
+Modest Nature
+- Thunder
+- Air Cutter
+- Light Screen
+- Roost
+
+Moltres @ Razor Claw
+Ability: Pressure
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Fire Blast
+- Air Cutter
+- Sky Attack
+- Roost
+
+Dragonite @ Lum Berry
+Ability: Inner Focus
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Roost
+- Outrage
+- Aerial Ace
+- Dragon Dance
+
+Meganium @ Focus Sash
+Ability: Overgrow
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Energy Ball
+- Magical Leaf
+- Body Slam
+- Counter
+
+Typhlosion @ White Herb
+Ability: Blaze
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Eruption
+- Quick Attack
+- Overheat
+- Swift
+
+Feraligatr @ Salac Berry
+Ability: Torrent
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Aqua Tail
+- Slash
+- Endure
+- Rain Dance
+
+Crobat @ Bright Powder
+Ability: Inner Focus
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Brave Bird
+- Cross Poison
+- Double Team
+- Toxic
+
+Ampharos @ Light Clay
+Ability: Static
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Light Screen
+- Rest
+- Thunder
+- Snore
+
+Politoed @ Lax Incense
+Ability: Water Absorb
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Modest Nature
+- Hyper Voice
+- Surf
+- Rest
+- Snore
+
+Espeon @ Bright Powder
+Ability: Synchronize
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Modest Nature
+- Psychic
+- Swift
+- Double Team
+- Morning Sun
+
+Umbreon @ Leftovers
+Ability: Synchronize
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 0 SpA / 252 SpD / 0 Spe
+Relaxed Nature
+- Facade
+- Sucker Punch
+- Confuse Ray
+- Moonlight
+
+Steelix @ Iron Ball
+Ability: Rock Head
+Level: 50
+EVs: 0 HP / 252 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Brave Nature
+- Gyro Ball
+- Dig
+- Sandstorm
+- Curse
+
+Scizor @ Focus Sash
+Ability: Technician
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Brave Nature
+- Swords Dance
+- X-Scissor
+- Counter
+- Bullet Punch
+
+Shuckle @ Smooth Rock
+Ability: Sturdy
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Careful Nature
+- Bug Bite
+- Rollout
+- Sandstorm
+- Protect
+
+Heracross @ Salac Berry
+Ability: Guts
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Megahorn
+- Close Combat
+- Facade
+- Reversal
+
+Ursaring @ Focus Band
+Ability: Guts
+Level: 50
+EVs: 0 HP / 252 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Frustration
+- Rest
+- Sleep Talk
+- Thunder Punch
+
+Houndoom @ Choice Scarf
+Ability: Flash Fire
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Mild Nature
+- Dark Pulse
+- Flamethrower
+- Crunch
+- Fire Fang
+
+Kingdra @ Scope Lens
+Ability: Swift Swim
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Modest Nature
+- Dragon Pulse
+- Hydro Pump
+- Yawn
+- Brine
+
+Donphan @ Leftovers
+Ability: Sturdy
+Level: 50
+EVs: 0 HP / 252 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Earthquake
+- Giga Impact
+- Protect
+- Sandstorm
+
+Porygon2 @ Quick Claw
+Ability: Trace
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Rash Nature
+- Tri Attack
+- Return
+- Psychic
+- Zen Headbutt
+
+Blissey @ Lum Berry
+Ability: Natural Cure
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 252 SpD / 252 Spe
+Sassy Nature
+- Return
+- Soft-Boiled
+- Fire Blast
+- Minimize
+
+Raikou @ Scope Lens
+Ability: Pressure
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Thunder
+- Quick Attack
+- Reflect
+- Thunder Fang
+
+Entei @ Quick Claw
+Ability: Pressure
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Rash Nature
+- Eruption
+- Rock Climb
+- Flamethrower
+- Fire Fang
+
+Suicune @ Sitrus Berry
+Ability: Pressure
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 0 SpA / 252 SpD / 0 Spe
+Bold Nature
+- Mirror Coat
+- Facade
+- Hydro Pump
+- Reflect
+
+Tyranitar @ Quick Claw
+Ability: Sand Stream
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Brave Nature
+- Stone Edge
+- Crunch
+- Dark Pulse
+- Ancient Power
+
+
+=== TRAINER_THORTON ===
+Name: THORTON
+Class: Factory Head
+Pic: Factory Head Noland
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Battle Type: Singles
+Party Size: 6
+Pool Rules: Basic
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Venusaur @ White Herb
+Ability: Overgrow
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 252 SpD / 0 Spe
+Modest Nature
+- Leaf Storm
+- Sludge Bomb
+- Amnesia
+- Sleep Powder
+
+Charizard @ Petaya Berry
+Ability: Blaze
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Modest Nature
+- Flamethrower
+- Air Slash
+- Smokescreen
+- Scary Face
+
+Blastoise @ Mystic Water
+Ability: Torrent
+Level: 50
+EVs: 0 HP / 0 Atk / 170 Def / 170 SpA / 170 SpD / 0 Spe
+Modest Nature
+- Hydro Pump
+- Signal Beam
+- Icy Wind
+- Mirror Coat
+
+Meganium @ Heat Rock
+Ability: Overgrow
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 0 SpA / 252 SpD / 0 Spe
+Modest Nature
+- Solar Beam
+- Ancient Power
+- Synthesis
+- Sunny Day
+
+Typhlosion @ Scope Lens
+Ability: Blaze
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Fire Punch
+- Thunder Punch
+- Shadow Claw
+- Quick Attack
+
+Feraligatr @ King's Rock
+Ability: Torrent
+Level: 50
+EVs: 0 HP / 252 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Waterfall
+- Ice Fang
+- Rock Slide
+- Scary Face
+
+Sceptile @ Liechi Berry
+Ability: Overgrow
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Leaf Blade
+- Crunch
+- Quick Attack
+- Screech
+
+Blaziken @ Salac Berry
+Ability: Blaze
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Blaze Kick
+- Reversal
+- Aerial Ace
+- Endure
+
+Swampert @ Shell Bell
+Ability: Torrent
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Waterfall
+- Earthquake
+- Ice Punch
+- Protect
+
+Torterra @ Yache Berry
+Ability: Overgrow
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Earthquake
+- Grass Knot
+- Rock Slide
+- Curse
+
+Infernape @ Coba Berry
+Ability: Blaze
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Close Combat
+- Fire Punch
+- U-turn
+- Fake Out
+
+Empoleon @ Razor Claw
+Ability: Torrent
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Adamant Nature
+- Waterfall
+- Metal Claw
+- Brick Break
+- Knock Off
+
+Dugtrio @ Grip Claw
+Ability: Sand Veil
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Earthquake
+- Rock Slide
+- Astonish
+- Sand Tomb
+
+Marowak @ Razor Claw
+Ability: Rock Head
+Level: 50
+EVs: 0 HP / 252 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Bone Rush
+- Brick Break
+- Iron Tail
+- Sandstorm
+
+Medicham @ Salac Berry
+Ability: Pure Power
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Zen Headbutt
+- Reversal
+- Endure
+- Fake Out
+
+Quagsire @ Rindo Berry
+Ability: Damp
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Earthquake
+- Aqua Tail
+- Brick Break
+- Counter
+
+Granbull @ Razor Claw
+Ability: Intimidate
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Return
+- Rock Slide
+- Crunch
+- Thunder Wave
+
+Jynx @ Chesto Berry
+Ability: Oblivious
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 252 SpD / 0 Spe
+Calm Nature
+- Psychic
+- Ice Beam
+- Lovely Kiss
+- Fake Tears
+
+Mr. Mime @ Cheri Berry
+Ability: Soundproof
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 252 SpD / 0 Spe
+Calm Nature
+- Psychic
+- Signal Beam
+- Copycat
+- Mimic
+
+Lanturn @ Rindo Berry
+Ability: Volt Absorb
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Surf
+- Discharge
+- Thunder Wave
+- Aqua Ring
+
+Breloom @ Focus Sash
+Ability: Effect Spore
+Level: 50
+EVs: 0 HP / 252 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Impish Nature
+- Seed Bomb
+- Sky Uppercut
+- Rock Slide
+- Counter
+
+Forretress @ Occa Berry
+Ability: Sturdy
+Level: 50
+EVs: 0 HP / 252 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Brave Nature
+- Gyro Ball
+- Bug Bite
+- Revenge
+- Counter
+
+Skarmory @ Occa Berry
+Ability: Keen Eye
+Level: 50
+EVs: 0 HP / 252 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Impish Nature
+- Drill Peck
+- Steel Wing
+- Spikes
+- Roar
+
+Absol @ Chople Berry
+Ability: Pressure
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Sucker Punch
+- Facade
+- Double Team
+- Taunt
+
+Whiscash @ Shell Bell
+Ability: Oblivious
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Surf
+- Earth Power
+- Icy Wind
+- Amnesia
+
+Hariyama @ Persim Berry
+Ability: Thick Fat
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Arm Thrust
+- Earthquake
+- Facade
+- Fake Out
+
+Vespiquen @ Scope Lens
+Ability: Pressure
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 0 SpA / 252 SpD / 0 Spe
+Modest Nature
+- Silver Wind
+- Air Cutter
+- Ominous Wind
+- Swagger
+
+Raichu @ Wide Lens
+Ability: Static
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Thunder Punch
+- Iron Tail
+- Slam
+- Quick Attack
+
+Dewgong @ Razor Fang
+Ability: Thick Fat
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Careful Nature
+- Waterfall
+- Avalanche
+- Headbutt
+- Fake Out
+
+Manectric @ Shuca Berry
+Ability: Static
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Thunder Fang
+- Crunch
+- Roar
+- Thunder Wave
+
+Staraptor @ King's Rock
+Ability: Intimidate
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Return
+- Aerial Ace
+- Double Team
+- Roost
+
+Gastrodon @ Focus Sash
+Ability: Sticky Hold
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Careful Nature
+- Waterfall
+- Earthquake
+- Recover
+- Mirror Coat
+
+Skuntank @ Razor Claw
+Ability: Stench
+Level: 50
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Sucker Punch
+- Poison Jab
+- Slash
+- Screech
+
+Vileplume @ Big Root
+Ability: Chlorophyll
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Giga Drain
+- Sludge Bomb
+- Sleep Powder
+- Ingrain
+
+Victreebel @ Payapa Berry
+Ability: Chlorophyll
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Leaf Storm
+- Sludge Bomb
+- Sleep Powder
+- Gastro Acid
+
+Electrode @ Chesto Berry
+Ability: Soundproof
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Modest Nature
+- Thunderbolt
+- Swift
+- Thunder Wave
+- Light Screen
+
+Ludicolo @ Muscle Band
+Ability: Swift Swim
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Adamant Nature
+- Waterfall
+- Razor Leaf
+- Drain Punch
+- Swords Dance
+
+Shiftry @ Persim Berry
+Ability: Chlorophyll
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Seed Bomb
+- Feint Attack
+- X-Scissor
+- Fake Out
+
+Exploud @ Chople Berry
+Ability: Soundproof
+Level: 50
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Hyper Voice
+- Extrasensory
+- Water Pulse
+- Torment
+
+Glalie @ Iron Ball
+Ability: Inner Focus
+Level: 50
+EVs: 170 HP / 0 Atk / 170 Def / 0 SpA / 170 SpD / 0 Spe
+Brave Nature
+- Avalanche
+- Payback
+- Gyro Ball
+- Ice Shard
+
+Lopunny @ Focus Band
+Ability: Cute Charm
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Return
+- Drain Punch
+- Charm
+- Mirror Coat
+
+Froslass @ Cheri Berry
+Ability: Snow Cloak
+Level: 50
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Ice Beam
+- Ominous Wind
+- Confuse Ray
+- Attract
+
+Ambipom @ Muscle Band
+Ability: Technician
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Double Hit
+- Shadow Claw
+- Brick Break
+- Knock Off
+
+Hypno @ Iron Ball
+Ability: Insomnia
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Brave Nature
+- Psycho Cut
+- Fling
+- Hypnosis
+- Trick Room
+
+Golem @ Focus Band
+Ability: Rock Head
+Level: 50
+EVs: 0 HP / 252 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Impish Nature
+- Earthquake
+- Rock Slide
+- Sucker Punch
+- Sandstorm
+
+Rhydon @ Passho Berry
+Ability: Lightning Rod
+Level: 50
+EVs: 0 HP / 252 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Earthquake
+- Rock Slide
+- Crunch
+- Scary Face
+
+Slowbro @ Chesto Berry
+Ability: Oblivious
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 252 SpA / 0 SpD / 0 Spe
+Bold Nature
+- Psychic
+- Surf
+- Calm Mind
+- Yawn
+
+Weezing @ Payapa Berry
+Ability: Levitate
+Level: 50
+EVs: 0 HP / 0 Atk / 252 Def / 252 SpA / 0 SpD / 0 Spe
+Bold Nature
+- Sludge Bomb
+- Dark Pulse
+- Shock Wave
+- Grudge
+
+Kangaskhan @ Salac Berry
+Ability: Early Bird
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Double-Edge
+- Crunch
+- Reversal
+- Endure
+
+Tauros @ Persim Berry
+Ability: Intimidate
+Level: 50
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Thrash
+- Zen Headbutt
+- Pursuit
+- Scary Face
+

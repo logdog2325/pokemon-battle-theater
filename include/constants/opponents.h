@@ -1332,6 +1332,28 @@
 #define TRAINER_BENGA                       1170  // B2W2 Boss (Latios/Garchomp/Volcarona/Latias/Dragonite)
 #define TRAINER_INGO                        1171  // BW/B2W2 Subway Boss — Single + Super Single combined (6)
 #define TRAINER_EMMET                       1172  // BW/B2W2 Subway Boss — Single + Super Double, 3 best of 4 from each pool
+// v2.0.4.10 — Alola Battle Tree pool trainers (USUM). Pool-style: full canon roster
+// as partySize/poolSize, engine samples per match. _USUM entries at 1080-1082 stay
+// as their existing custom fixed teams; new _BT IDs below are the canon pool data.
+#define TRAINER_RED_BT                      1187  // Battle Tree Red — full canon Tree pool
+#define TRAINER_BLUE_BT                     1188  // Battle Tree Blue — full canon Tree pool
+#define TRAINER_ANABEL_BT                   1189  // Battle Tree Anabel — full canon Tree pool with legendary trio
+#define TRAINER_WALLY_BT                    1173  // Battle Tree Wally — Altaria/Gallade/Magnezone/Garchomp pool
+#define TRAINER_CYNTHIA_BT                  1174  // Battle Tree Cynthia — Sinnoh champion pool
+#define TRAINER_COLRESS_BT                  1175  // Battle Tree Colress — Steel/Electric pool
+#define TRAINER_DEXIO_BT                    1176  // Battle Tree Dexio
+#define TRAINER_GRIMSLEY_BT                 1177  // Battle Tree Grimsley — Dark pool
+#define TRAINER_GUZMA_BT                    1178  // Battle Tree Guzma — Bug/Dark pool
+#define TRAINER_KIAWE_BT                    1179  // Battle Tree Kiawe — Fire pool
+#define TRAINER_KUKUI_BT                    1180  // Battle Tree Kukui — Alola starters + variety pool
+#define TRAINER_MALLOW_BT                   1181  // Battle Tree Mallow — Grass pool
+#define TRAINER_PLUMERIA_BT                 1182  // Battle Tree Plumeria — Poison pool
+#define TRAINER_SINA_BT                     1183  // Battle Tree Sina
+// v2.0.4.10 — Gen 4 Frontier Brain pool trainers (curated ~20-mon slices).
+// Noland reuses vanilla Emerald ID 809 (his L5 Beldum placeholder gets
+// upgraded to the curated pool in trainers.party).
+#define TRAINER_ARGENTA                     1185  // Battle Hall Hall Matron — curated pool
+#define TRAINER_THORTON                     1186  // Battle Tower Tower Tycoon Pt — curated pool
 
 // NOTE: Because each Trainer uses a flag to determine when they are defeated, there is only space for 9 additional trainers before trainer flag space overflows
 //       More space can be made by shifting flags around in constants/flags.h or changing how trainer flags are handled
