@@ -425,7 +425,12 @@
 // + one Z-crystal. Stops Wally BT from rolling two Magnezones or Blue BT
 // from rolling two megas in the same party.
 #define B_POOL_RULE_SPECIES_CLAUSE          TRUE     // Only pick a single pokemon of a unique NatDex number
-#define B_POOL_RULE_EXCLUDE_FORMS           TRUE     // Different forms count as same species (Charizard X = Y)
+// v2.0.5.4 fix: the variable name is inverted from intuition. TRUE means
+// "exclude forms FROM the species clause" — i.e. forms are ALLOWED to
+// coexist (Ninetales + Ninetales-Alola both in party). FALSE means
+// forms COUNT as duplicates (natDex match → disable). We want the latter
+// for pool variety, so this needs to be FALSE.
+#define B_POOL_RULE_EXCLUDE_FORMS           FALSE    // Form variants count as duplicates (Ninetales = Ninetales-Alola)
 #define B_POOL_RULE_ITEM_CLAUSE             TRUE     // Only allow each item to be picked once
 #define B_POOL_RULES_USE_ITEM_EXCLUSIONS    TRUE     // Exclude items listed in poolItemClauseExclusions (berries can repeat)
 #define B_POOL_RULE_MEGA_STONE_CLAUSE       TRUE     // Pick only 1 mon with mega stone
