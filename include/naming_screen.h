@@ -15,6 +15,12 @@ enum {
     // of the vanilla 7-12 chars; uses Ditto icon for thematic "transform-into-
     // a-Pokemon-via-code" flavor.
     NAMING_SCREEN_TEAMCODE,
+    // v2.0.6 — Pokemon Battle Theater name-search keyboards for the species
+    // + held-item pickers. 16-char buffer for long species names (e.g.
+    // "Iron Treads") and long item names (e.g. "Choice Specs"). Title text
+    // asks the search context explicitly: "What Pokemon?" / "What item?".
+    NAMING_SCREEN_SEARCH_SPECIES,
+    NAMING_SCREEN_SEARCH_ITEM,
 };
 
 extern void BattleMainCB2(void);

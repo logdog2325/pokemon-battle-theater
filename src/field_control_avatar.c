@@ -272,6 +272,20 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
         return TRUE;
     }
 
+    // v2.0.6 — Name-search re-entry. SELECT inside the species/held-item
+    // picker opens a naming-screen keyboard, user types a partial name,
+    // confirms. We come back here, run the prefix scan, apply the first
+    // match to sBuildTrainerWorkMon, and re-open the per-mon editor.
+    if (gSimSearchPickerPending && DEBUG_OVERWORLD_MENU && !DEBUG_OVERWORLD_IN_MENU)
+    {
+        gSimSearchPickerPending = FALSE;
+        gSimAutoOpenPending = FALSE;
+        PlaySE(SE_WIN_OPEN);
+        FreezeObjectEvents();
+        Debug_FinishSearchAndReopen();
+        return TRUE;
+    }
+
     // v1.7 — Frontier Challenge post-warp party restore. Something in the
     // CB2_LoadMap → DoMapLoadLoop sequence resets BOTH gPlayerParty[] AND
     // gPlayerPartyCount after Sim_StartFrontierChallenge writes them, which

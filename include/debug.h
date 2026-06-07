@@ -54,6 +54,15 @@ void SimRequestWrapperReopen(void);
 extern EWRAM_DATA bool8 gSimImportCodePending;
 extern EWRAM_DATA u8 gSimTeamCodeBuffer[32];
 void Debug_DecodeImportedTeamCodeAndReopen(void);
+// v2.0.6 — name-search re-entry from species/item picker (see debug.c).
+// SELECT in the picker opens NAMING_SCREEN_PLAYER, user types a partial
+// name. On return, field_control_avatar runs Debug_FinishSearchAndReopen
+// which scans species or item list (per gSimSearchPickerTarget) and
+// applies the first prefix match to sBuildTrainerWorkMon.
+extern EWRAM_DATA bool8 gSimSearchPickerPending;
+extern EWRAM_DATA u8    gSimSearchPickerTarget;
+extern EWRAM_DATA u8    gSimSearchBuffer[16];
+void Debug_FinishSearchAndReopen(void);
 // v1.7 — set TRUE by Sim_StartFrontierChallenge before the warp to a Frontier
 // facility lobby. field_control_avatar's input poll picks this up on the
 // first frame after the warp lands, re-runs CalculatePlayerPartyCount (which

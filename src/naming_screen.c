@@ -1812,7 +1812,12 @@ static void (*const sDrawTextEntryBoxFuncs[])(void) =
     // v1.3 — Pokemon Battle Theater team-code import reuses the same
     // underline-per-slot rendering as PLAYER/BOX/CODE/etc.
     [NAMING_SCREEN_TEAMCODE]   = DrawNormalTextEntryBox,
-    [NAMING_SCREEN_RIVAL]      = DrawNormalTextEntryBox
+    [NAMING_SCREEN_RIVAL]      = DrawNormalTextEntryBox,
+    // v2.0.6 — species + item search keyboards reuse the underline-per-slot
+    // rendering. The bigger 12-char box for these gets its width from the
+    // template's maxChars field, same as TEAMCODE.
+    [NAMING_SCREEN_SEARCH_SPECIES] = DrawNormalTextEntryBox,
+    [NAMING_SCREEN_SEARCH_ITEM]    = DrawNormalTextEntryBox,
 };
 
 static void DrawTextEntryBox(void)
@@ -2257,6 +2262,31 @@ static const struct NamingScreenTemplate sRivalNamingScreenTemplate =
     .title = sText_RivalsName,
 };
 
+// v2.0.6 — name-search keyboards for the species + held-item pickers.
+// 12-char buffer for long species/item names (Tyranitar=9, Iron Treads=11,
+// Choice Specs=12). iconFunction=3 reuses the Pokémon-icon style so the
+// search screen shows a thematic Ditto sprite (passed via monSpecies arg).
+static const struct NamingScreenTemplate sSearchSpeciesScreenTemplate =
+{
+    .copyExistingString = FALSE,
+    .maxChars = 12,
+    .iconFunction = 3,
+    .addGenderIcon = FALSE,
+    .initialPage = KBPAGE_LETTERS_UPPER,
+    .unused = 35,
+    .title = COMPOUND_STRING("What Pokémon?"),
+};
+static const struct NamingScreenTemplate sSearchItemScreenTemplate =
+{
+    .copyExistingString = FALSE,
+    .maxChars = 12,
+    .iconFunction = 3,
+    .addGenderIcon = FALSE,
+    .initialPage = KBPAGE_LETTERS_UPPER,
+    .unused = 35,
+    .title = COMPOUND_STRING("What item?"),
+};
+
 static const struct NamingScreenTemplate *const sNamingScreenTemplates[] =
 {
     [NAMING_SCREEN_PLAYER]     = &sPlayerNamingScreenTemplate,
@@ -2267,6 +2297,10 @@ static const struct NamingScreenTemplate *const sNamingScreenTemplates[] =
     [NAMING_SCREEN_CODE]       = &sCodeScreenTemplate,
     [NAMING_SCREEN_RIVAL]      = &sRivalNamingScreenTemplate,
     [NAMING_SCREEN_TEAMCODE]   = &sTeamCodeScreenTemplate,
+    // v2.0.6 — species + item name-search keyboards (12-char buffer +
+    // contextual title text). See sSearchSpeciesScreenTemplate above.
+    [NAMING_SCREEN_SEARCH_SPECIES] = &sSearchSpeciesScreenTemplate,
+    [NAMING_SCREEN_SEARCH_ITEM]    = &sSearchItemScreenTemplate,
 };
 
 static const struct OamData sOam_8x8 =

@@ -186,6 +186,14 @@ enum DebugTrainerSelection
     // warps to MAP_BATTLE_FRONTIER_OUTSIDE_WEST so the user can walk into
     // any facility. Cancel returns to the wrapper menu.
     TRAINERS_DEBUG_SELECTION_FRONTIER,
+    // v2.0.6 — picker is being used as "import a single mon from a preset
+    // trainer's party into the currently-active per-mon editor slot." DPAD-
+    // LEFT/RIGHT cycles the source mon index (sBuildTrainerSourceMonIdx)
+    // through 0..min(partySize,6)-1; A copies trainer->party[sourceIdx]
+    // into sBuildTrainerWorkMon; B cancels back to the per-mon editor. The
+    // existing "Copy preset team" flow remains separate (whole-team copy
+    // committed to the slot directly, not the live work buffer).
+    TRAINERS_DEBUG_SELECTION_COPY_MON_TO_CUSTOM,
 };
 
 // Battle Simulator: tier color prefix for picker display.
@@ -218,7 +226,15 @@ static enum SimTier Sim_GetTier(u16 trainerId)
      || trainerId == 887
      || (trainerId >= 895 && trainerId <= 898)
      || (trainerId >= 899 && trainerId <= 901)
-     || trainerId == 904)
+     || trainerId == 904
+     // v2.0.6 — Battle Frontier brains: route to MUS_VS_FRONTIER_BRAIN
+     // via the existing SIM_TIER_E4 → brain music mapping. Without this
+     // they fell through to SIM_TIER_NONE and got the Hoenn champion
+     // fallback theme. Gen 3 brains: 805-811. Gen 4 brains: 1167-1169,
+     // 1185-1186 (Argenta + Thorton from v2.0.5.1).
+     || (trainerId >= 805 && trainerId <= 811)
+     || (trainerId >= 1167 && trainerId <= 1169)
+     || trainerId == 1185 || trainerId == 1186)
         return SIM_TIER_E4;
     if (trainerId == 773 || trainerId == 777 || trainerId == 781 || trainerId == 785
      || trainerId == 789 || trainerId == 793 || trainerId == 797 || trainerId == 801
@@ -901,6 +917,16 @@ static const u16 sCupBW[]         = {
     1171, 1172,                                      // Ingo / Emmet (Battle Subway)
 };
 
+// v2.0.6 — Battle Frontier Brains cup. All 12 canon Frontier brains across
+// Gen 3 (Hoenn) and Gen 4 (Sinnoh/HGSS) Frontiers. Bracket picks 8 of 12
+// random per run. Sim_GetTier classifies these IDs as SIM_TIER_E4 so the
+// battle music routes to MUS_VS_FRONTIER_BRAIN — perfect thematic fit
+// for "Frontier brain gauntlet."
+static const u16 sCupFrontierBrains[] = {
+    805, 806, 807, 808, 809, 810, 811,             // Hoenn: Anabel/Tucker/Spenser/Greta/Noland/Lucy/Brandon
+    1167, 1168, 1169, 1185, 1186,                  // Gen 4: Palmer/Dahlia/Darach/Argenta/Thorton
+};
+
 // v2.0.5.3 — Battle Tree (USUM) tournament cup. All 14 canon Tree pool
 // trainers — each match in the bracket re-rolls a fresh 6-mon team from
 // their canon Tree pool, so even back-to-back fights against the same
@@ -1005,6 +1031,8 @@ static const u8 sCupName_AllStars[]     = _("All Stars");
 // v2.0.5.3 — new tournament cups
 static const u8 sCupName_BW[]           = _("BW");
 static const u8 sCupName_BattleTree[]   = _("BattleTree");
+// v2.0.6 — Frontier brain cup: all 12 Gen 3 + Gen 4 brains in one bracket.
+static const u8 sCupName_FrontierBrains[] = _("Brains");
 
 static const struct SimCup sSimCups[] =
 {
@@ -1021,6 +1049,7 @@ static const struct SimCup sSimCups[] =
     { sCupName_SwSh,        sCupSwSh,        21 },   // Galar gyms + Melony + Leon × 3 + Hop × 3 + Mustard × 2 + Marnie/Bede + Klara/Avery/Peony
     { sCupName_Alola,       sCupAlola,       32 },   // Every non-RR Alola trainer: trial captains + kahunas + E4 + Kukui/Hau/Gladion variants + Faba/Dexio/Plumeria/Ryuki/Guzma/Lusamine/Tristan + Blue/Red/Anabel USUM
     { sCupName_BattleTree,  sCupBattleTree,  14 },   // v2.0.5.3 — all 14 canon Tree pool trainers, fresh roll each match
+    { sCupName_FrontierBrains, sCupFrontierBrains, 12 },   // v2.0.6 — Gen 3 + Gen 4 Frontier brain gauntlet
     { sCupName_RRocket,     sCupRRocket,      8 },   // RR bosses (USUM Rainbow Rocket)
     { sCupName_Lgpe,        sCupLgpe,         7 },   // Lorelei, Agatha, Lance, Red, Blue, Bruno, Green
     { sCupName_Champions,   sCupChampions,   12 },   // 11 in-game champions (+ Cynthia in both BDSP and Platinum)
@@ -1218,6 +1247,16 @@ EWRAM_DATA bool8 gSimBuildTrainerReopenSlot = FALSE;
 EWRAM_DATA bool8 gSimImportCodePending = FALSE;
 // Buffer the naming screen writes into. Up to 30 chars + EOS + slack.
 EWRAM_DATA u8 gSimTeamCodeBuffer[32] = {0};
+// v2.0.6 — Name-search re-entry. Mirrors gSimImportCodePending pattern. SELECT
+// in the species or held-item picker tears down the menu, sets this flag +
+// SearchTarget, and opens NAMING_SCREEN_TEAMCODE for a short text entry. On
+// confirm, field_control_avatar's input poll sees the flag, calls
+// Debug_FinishSearchAndReopen which scans the species/item list for the first
+// entry whose name starts with the typed prefix (case-insensitive), writes
+// the result into sBuildTrainerWorkMon, and re-opens the originating picker.
+EWRAM_DATA bool8 gSimSearchPickerPending = FALSE;
+EWRAM_DATA u8 gSimSearchPickerTarget = 0;   // 0 = species picker, 1 = held-item picker
+EWRAM_DATA u8 gSimSearchBuffer[16] = {0};   // 10-char Pokémon name max, plus EOS + slack
 // v0.52.15 — TRUE while a sim battle is running in pilot mode. battle_main.c
 // reads this to apply the level cap, since the AI-vs-AI flag (the cap's
 // existing gate) is intentionally skipped in pilot mode.
@@ -1380,6 +1419,14 @@ static void DebugAction_BuildTrainer_OpenMon6(u8 taskId);
 static void DebugAction_BuildTrainer_SaveSlot(u8 taskId);
 static void DebugAction_BuildTrainer_MonSaveBack(u8 taskId);
 static void DebugAction_BuildTrainer_MonCancel(u8 taskId);
+// v2.0.6 — name-search launcher; called from species + held-item picker
+// input handlers when SELECT is pressed (full def is way below).
+static void Debug_LaunchSearchPicker(u8 taskId, u8 target);
+// v2.0.6 — thin wrappers so the per-mon editor menu can launch the search
+// directly without first opening the browse picker. Mirrors the SELECT-in-
+// picker shortcut so users can pick whichever access path they prefer.
+static void DebugAction_BuildTrainer_OpenSpeciesSearch(u8 taskId);
+static void DebugAction_BuildTrainer_OpenItemSearch(u8 taskId);
 // v1.3 — Showdown team-code import. Pushes the user into the naming screen
 // (NAMING_SCREEN_TEAMCODE template) with a 30-char buffer; on confirm,
 // field_control_avatar runs Sim_DecodeTeamCode and re-opens the per-mon
@@ -1411,6 +1458,12 @@ static void DebugAction_BuildTrainer_EditEV_SpD(u8 taskId);
 static void DebugAction_BuildTrainer_EditEV_Spe(u8 taskId);
 static void DebugAction_BuildTrainer_EVs_Reset(u8 taskId);
 static void DebugAction_BuildTrainer_EVs_Back(u8 taskId);
+// v2.0.6 — DPAD-LEFT decrement helpers, called from
+// DebugTask_HandleMenuInput_General which is defined ABOVE their bodies.
+static void BuildTrainer_CycleEV(u8 taskId, u8 statIndex);
+static void BuildTrainer_CycleEVDown(u8 taskId, u8 statIndex);
+static void BuildTrainer_CycleIV(u8 taskId, u8 statIndex);
+static void BuildTrainer_CycleIVDown(u8 taskId, u8 statIndex);
 static void DebugAction_BuildTrainer_EditIV_HP(u8 taskId);
 static void DebugAction_BuildTrainer_EditIV_Atk(u8 taskId);
 static void DebugAction_BuildTrainer_EditIV_Def(u8 taskId);
@@ -1438,6 +1491,10 @@ static u8 Debug_GenerateListBuildTrainerIVsMenu(void);
 static EWRAM_DATA u8 sBuildTrainerActiveSlot = 0;  // 0-5 = which slot is being edited (v1.1 bumped 0-2 → 0-5)
 static EWRAM_DATA u8 sBuildTrainerActiveMon = 0;   // 0-5 = which Pokémon in slot
 static EWRAM_DATA struct SimCustomTrainerMon sBuildTrainerWorkMon = {0};  // working buffer; committed on Save
+// v2.0.6 — which mon in the SOURCE trainer's party gets copied by the
+// "Import single mon from preset" flow. Cycled with DPAD-LEFT/RIGHT in the
+// COPY_MON picker; reset to 0 each time the user opens that picker.
+static EWRAM_DATA u8 sBuildTrainerSourceMonIdx = 0;
 // v0.52.3 — Picker state. Set when a picker opens so Cancel (B) can restore the
 // pre-edit value. Move pickers also stash which move slot (0-3) is being edited.
 static EWRAM_DATA u16 sBuildTrainerPickerOriginal = 0;
@@ -1943,7 +2000,13 @@ static const u8 *const sDebugMenu_Actions_BagUse_Options[] =
 static const struct DebugMenuOption sDebugMenu_Actions_BuildTrainerMon[] =
 {
     { COMPOUND_STRING("Species: {STR_VAR_1}"),     DebugAction_BuildTrainer_EditSpecies,  },
+    // v2.0.6 — type a partial name (e.g. "garc") to jump to the first match.
+    // Shortcut to the same keyboard the species picker opens on SELECT, so
+    // users who prefer typing don't have to enter the browse picker first.
+    { COMPOUND_STRING("Search species…"),          DebugAction_BuildTrainer_OpenSpeciesSearch },
     { COMPOUND_STRING("Held Item: {STR_VAR_1}"),   DebugAction_BuildTrainer_EditHeldItem, },
+    // v2.0.6 — same name-search shortcut for the held-item list.
+    { COMPOUND_STRING("Search item…"),             DebugAction_BuildTrainer_OpenItemSearch },
     { COMPOUND_STRING("Ability: {STR_VAR_1}"),     DebugAction_BuildTrainer_EditAbility,  },
     { COMPOUND_STRING("Move 1: {STR_VAR_1}"),      DebugAction_BuildTrainer_EditMove1,    },
     { COMPOUND_STRING("Move 2: {STR_VAR_1}"),      DebugAction_BuildTrainer_EditMove2,    },
@@ -1971,6 +2034,14 @@ static const struct DebugMenuOption sDebugMenu_Actions_BuildTrainerMon[] =
     // hook that decodes the buffer via Sim_DecodeTeamCode and re-opens this
     // per-mon editor with the imported values populated.
     { COMPOUND_STRING("Import from code…"),        DebugAction_BuildTrainer_OpenImportCode },
+    // v2.0.6 — Single-mon preset import. Opens the trainer picker in
+    // COPY_MON_TO_CUSTOM mode; DPAD-LEFT/RIGHT cycles which mon of the
+    // source trainer's party to import (top label shows the mon name); A
+    // copies that mon into the live work buffer; B cancels back here. The
+    // separate "Copy preset team" row at the slot level (v1.1) covers the
+    // whole-team case — this is for grabbing one specific mon (e.g.
+    // Cynthia's Garchomp into your custom slot 1, mon 3).
+    { COMPOUND_STRING("Import single mon…"),       DebugAction_Trainers_ChooseTrainer, (void *)TRAINERS_DEBUG_SELECTION_COPY_MON_TO_CUSTOM },
     { COMPOUND_STRING("Save & Back"),              DebugAction_BuildTrainer_MonSaveBack,  },
     { COMPOUND_STRING("Cancel"),                   DebugAction_BuildTrainer_MonCancel,    },
     { NULL }
@@ -3411,6 +3482,31 @@ static void DebugTask_HandleMenuInput_General(u8 taskId)
     u32 input = ListMenu_ProcessInput(gTasks[taskId].tMenuTaskId);
     struct DebugMenuOption option = options[input];
 
+    // v2.0.6 — DPAD-LEFT/RIGHT in the EVs / IVs sub-menus adjust the
+    // highlighted stat without needing an A-press. RIGHT mirrors the
+    // existing A-cycle (increment by 4 / by 1), LEFT does the reverse so
+    // you can correct over-shoots without scrolling all the way around.
+    // Rows 0-5 are the six stats; rows 6-8 (Total / Reset / Back for EVs;
+    // similar for IVs) ignore the direction press.
+    if (sDebugMenuListData != NULL
+     && (sDebugMenuListData->listId == DEBUG_LISTID_BUILD_TRAINER_EVS
+      || sDebugMenuListData->listId == DEBUG_LISTID_BUILD_TRAINER_IVS)
+     && (JOY_NEW(DPAD_LEFT) || JOY_NEW(DPAD_RIGHT)))
+    {
+        u16 scroll, row;
+        ListMenuGetScrollAndRow(gTasks[taskId].tMenuTaskId, &scroll, &row);
+        u8 statIdx = (u8)(scroll + row);
+        if (statIdx <= 5)
+        {
+            bool32 isUp = JOY_NEW(DPAD_RIGHT);
+            if (sDebugMenuListData->listId == DEBUG_LISTID_BUILD_TRAINER_EVS)
+                isUp ? BuildTrainer_CycleEV(taskId, statIdx) : BuildTrainer_CycleEVDown(taskId, statIdx);
+            else
+                isUp ? BuildTrainer_CycleIV(taskId, statIdx) : BuildTrainer_CycleIVDown(taskId, statIdx);
+            return;
+        }
+    }
+
     if (JOY_NEW(A_BUTTON))
     {
         PlaySE(SE_SELECT);
@@ -4133,6 +4229,61 @@ static bool32 BuildTrainer_CopyFromTrainer(u16 trainerId)
     return TRUE;
 }
 
+// v2.0.6 — Copy ONE mon from a preset trainer's party into the per-mon
+// editor's live work buffer (sBuildTrainerWorkMon). Same field mapping as
+// BuildTrainer_CopyFromTrainer's per-mon loop, just for a single source
+// index instead of all six. Writes to the work buffer (not the slot
+// directly) so the user can still tweak the imported mon before hitting
+// "Save & Back" — matches the "Import from code" flow's UX.
+static bool32 BuildTrainer_CopyMonFromTrainer(u16 trainerId, u8 sourceIdx)
+{
+    const struct Trainer *src = GetTrainerStructFromId(trainerId);
+    if (src == NULL || src->party == NULL || src->partySize == 0)
+        return FALSE;
+    // For pool trainers, src->partySize is the "how many to bring" cap, NOT
+    // the count of available mons — those live in poolSize entries. Clamp
+    // the source index against the larger of the two so users can browse
+    // the full pool (e.g. all 50 of Noland's mons) rather than just the
+    // first 6.
+    u8 totalAvailable = (src->poolSize > src->partySize) ? src->poolSize : src->partySize;
+    if (sourceIdx >= totalAvailable)
+        return FALSE;
+    const struct TrainerMon *psrc = &src->party[sourceIdx];
+    struct SimCustomTrainerMon *pdst = &sBuildTrainerWorkMon;
+    memset(pdst, 0, sizeof(*pdst));
+    pdst->species  = psrc->species;
+    pdst->heldItem = psrc->heldItem;
+    for (u8 j = 0; j < 4; j++)
+        pdst->moves[j] = psrc->moves[j];
+    pdst->nature   = psrc->nature;
+    pdst->gender   = psrc->gender;
+    pdst->shiny    = psrc->isShiny;
+    pdst->level    = (psrc->lvl == 0) ? 50 : psrc->lvl;
+    pdst->teraType = psrc->teraType;
+    pdst->abilityNum = 0;  // primary ability default; user can cycle later
+    // IV unpack — same logic as the whole-team copy.
+    u32 packedIv = psrc->iv;
+    if (packedIv == 0)
+    {
+        // .party convention: iv=0 means "default perfect 31s."
+        for (u8 j = 0; j < 6; j++) pdst->ivs[j] = 31;
+    }
+    else
+    {
+        pdst->ivs[0] = (packedIv >> 0)  & 0x1F;  // HP
+        pdst->ivs[1] = (packedIv >> 5)  & 0x1F;  // Atk
+        pdst->ivs[2] = (packedIv >> 10) & 0x1F;  // Def
+        pdst->ivs[3] = (packedIv >> 20) & 0x1F;  // SpA
+        pdst->ivs[4] = (packedIv >> 25) & 0x1F;  // SpD
+        pdst->ivs[5] = (packedIv >> 15) & 0x1F;  // Spe
+    }
+    if (psrc->ev != NULL)
+    {
+        for (u8 j = 0; j < 6; j++) pdst->evs[j] = psrc->ev[j];
+    }
+    return TRUE;
+}
+
 // Open the per-mon editor for the given Pokémon index (0-5).
 // v0.52.3 — Uses listId 4 so each row is generated through
 // Debug_GenerateListBuildTrainerMonMenu, which formats the current work-buffer
@@ -4300,15 +4451,40 @@ static void DebugAction_BuildTrainer_OpenIVsMenu(u8 taskId)
 // to a low value without backing out. Stats are u8 so values are clamped to
 // 252; engine SetMonData also clamps. Refreshes the EVs menu (which also
 // shows the running total).
+// v2.0.6 — Step size changed 4 → 2 per user request. Values now cycle
+// 0, 2, 4, 6, ... 248, 250, 252 → 0. Two steps per stat-point of yield
+// (each 4 EVs = +1 stat point) so the +2 step doubles the granularity
+// without losing the 252 cap. Snap-to-252 from 250+ kept so you can
+// hit the cap from above with a single press if you over-shoot.
 static void BuildTrainer_CycleEV(u8 taskId, u8 statIndex)
 {
     u8 v = sBuildTrainerWorkMon.evs[statIndex];
     if (v >= 252)
         v = 0;
-    else if (v > 248)
-        v = 252;  // snap to 252 from 248+
+    else if (v > 250)
+        v = 252;  // snap to 252 from 251
     else
-        v += 4;
+        v += 2;
+    sBuildTrainerWorkMon.evs[statIndex] = v;
+    PlaySE(SE_SELECT);
+    Debug_GenerateListBuildTrainerEVsMenu();
+    RedrawListMenu(gTasks[taskId].tMenuTaskId);
+}
+
+// v2.0.6 — Reverse of BuildTrainer_CycleEV; DPAD-LEFT in the EVs menu drops
+// the highlighted stat by 2 (wrapping 0 → 252). Symmetric snap-back so
+// going from 252 → 250 in one press still works.
+static void BuildTrainer_CycleEVDown(u8 taskId, u8 statIndex)
+{
+    u8 v = sBuildTrainerWorkMon.evs[statIndex];
+    if (v == 0)
+        v = 252;
+    else if (v >= 252)
+        v = 250;  // mirror of the up-snap from 251
+    else if (v < 2)
+        v = 0;
+    else
+        v -= 2;
     sBuildTrainerWorkMon.evs[statIndex] = v;
     PlaySE(SE_SELECT);
     Debug_GenerateListBuildTrainerEVsMenu();
@@ -4352,6 +4528,18 @@ static void BuildTrainer_CycleIV(u8 taskId, u8 statIndex)
 {
     u8 v = sBuildTrainerWorkMon.ivs[statIndex];
     v = (v + 1) % 32;
+    sBuildTrainerWorkMon.ivs[statIndex] = v;
+    PlaySE(SE_SELECT);
+    Debug_GenerateListBuildTrainerIVsMenu();
+    RedrawListMenu(gTasks[taskId].tMenuTaskId);
+}
+
+// v2.0.6 — Reverse of BuildTrainer_CycleIV; DPAD-LEFT decrements the
+// highlighted IV stat by 1 (wrapping 0 → 31).
+static void BuildTrainer_CycleIVDown(u8 taskId, u8 statIndex)
+{
+    u8 v = sBuildTrainerWorkMon.ivs[statIndex];
+    v = (v == 0) ? 31 : v - 1;
     sBuildTrainerWorkMon.ivs[statIndex] = v;
     PlaySE(SE_SELECT);
     Debug_GenerateListBuildTrainerIVsMenu();
@@ -4474,18 +4662,29 @@ static u8 Debug_GenerateListBuildTrainerMonMenu(void)
     for (u32 i = 0; i < totalItems; i++)
     {
         gStringVar1[0] = EOS;
+        // v2.0.6 — case indices renumbered for the two new "Search …" rows
+        // inserted under Species (idx 1) and Held Item (idx 3). Without this
+        // shift the old case 1 (Held Item value) fired on the NEW idx 1 row
+        // (Search species…) and the case for the actual Held Item row (now
+        // idx 2) fell through to default, so the Held Item label rendered
+        // with the Ability's text. Case-index drift bug — keep cases in
+        // sync with sDebugMenu_Actions_BuildTrainerMon's row order.
         switch (i)
         {
         case 0:  // Species
             StringCopy(gStringVar1, GetSpeciesName(sBuildTrainerWorkMon.species));
             break;
-        case 1:  // Held Item
+        case 1:  // Search species…  (no value to format)
+            break;
+        case 2:  // Held Item
             if (sBuildTrainerWorkMon.heldItem == ITEM_NONE)
                 StringCopy(gStringVar1, COMPOUND_STRING("None"));
             else
                 CopyItemName(sBuildTrainerWorkMon.heldItem, gStringVar1);
             break;
-        case 2:  // Ability
+        case 3:  // Search item…  (no value to format)
+            break;
+        case 4:  // Ability
             {
                 enum Ability ab = GetSpeciesAbility(sBuildTrainerWorkMon.species,
                                                     sBuildTrainerWorkMon.abilityNum);
@@ -4495,20 +4694,19 @@ static u8 Debug_GenerateListBuildTrainerMonMenu(void)
                     StringCopy(gStringVar1, gAbilitiesInfo[ab].name);
             }
             break;
-        case 3:  // Move 1
-        case 4:  // Move 2
-        case 5:  // Move 3
-        case 6:  // Move 4
+        case 5:  // Move 1
+        case 6:  // Move 2
+        case 7:  // Move 3
+        case 8:  // Move 4
             {
-                u16 mv = sBuildTrainerWorkMon.moves[i - 3];
+                u16 mv = sBuildTrainerWorkMon.moves[i - 5];
                 if (mv == MOVE_NONE)
                     StringCopy(gStringVar1, COMPOUND_STRING("-"));
                 else
                     StringCopy(gStringVar1, GetMoveName(mv));
             }
             break;
-        case 7:  // EVs — running total / 510 (shows at a glance how full
-                 //       the spread is; expand sub-menu for per-stat editing)
+        case 9:  // EVs — running total / 510
             {
                 u16 total = 0;
                 for (u8 j = 0; j < 6; j++) total += sBuildTrainerWorkMon.evs[j];
@@ -4518,8 +4716,7 @@ static u8 Debug_GenerateListBuildTrainerMonMenu(void)
                 StringAppend(gStringVar1, COMPOUND_STRING("/510"));
             }
             break;
-        case 8:  // IVs — show count of perfect 31s, or "perfect" if all 6.
-                 //       Visualizes IV quality in one glance.
+        case 10:  // IVs
             {
                 u8 perfectCount = 0;
                 for (u8 j = 0; j < 6; j++)
@@ -4529,8 +4726,6 @@ static u8 Debug_GenerateListBuildTrainerMonMenu(void)
                     if (sBuildTrainerWorkMon.ivs[j] != 0) { allZero = FALSE; break; }
                 if (allZero)
                 {
-                    // Backward-compat: all-zero is treated as "perfect 31s" by
-                    // the synthesizer so legacy saves don't suddenly look bad.
                     StringCopy(gStringVar1, COMPOUND_STRING("31s (def)"));
                 }
                 else if (perfectCount == 6)
@@ -4546,14 +4741,14 @@ static u8 Debug_GenerateListBuildTrainerMonMenu(void)
                 }
             }
             break;
-        case 9:  // Level
+        case 11:  // Level
             ConvertIntToDecimalStringN(gStringVar1, sBuildTrainerWorkMon.level,
                                        STR_CONV_MODE_LEFT_ALIGN, 3);
             break;
-        case 10:  // Nature
+        case 12:  // Nature
             StringCopy(gStringVar1, gNaturesInfo[sBuildTrainerWorkMon.nature].name);
             break;
-        case 11:  // Gender
+        case 13:  // Gender
             if (sBuildTrainerWorkMon.gender == 0)
                 StringCopy(gStringVar1, COMPOUND_STRING("Any"));
             else if (sBuildTrainerWorkMon.gender == 1)
@@ -4561,13 +4756,13 @@ static u8 Debug_GenerateListBuildTrainerMonMenu(void)
             else
                 StringCopy(gStringVar1, COMPOUND_STRING("Female"));
             break;
-        case 12:  // Shiny
+        case 14:  // Shiny
             if (sBuildTrainerWorkMon.shiny)
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR GREEN}YES"));
             else
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR RED}NO"));
             break;
-        case 13:  // v1.21 — Tera Type. TYPE_NONE shows "None" (no Tera).
+        case 15:  // Tera Type
             if (sBuildTrainerWorkMon.teraType == TYPE_NONE
              || sBuildTrainerWorkMon.teraType >= NUMBER_OF_MON_TYPES
              || sBuildTrainerWorkMon.teraType == TYPE_MYSTERY)
@@ -4576,7 +4771,8 @@ static u8 Debug_GenerateListBuildTrainerMonMenu(void)
                 StringCopy(gStringVar1, gTypesInfo[sBuildTrainerWorkMon.teraType].name);
             break;
         default:
-            // Import / Save & Back / Cancel — no value
+            // Import from code / Import single mon / Save & Back / Cancel
+            //   — no value to format
             break;
         }
         StringExpandPlaceholders(gStringVar4, sDebugMenu_Actions_BuildTrainerMon[i].text);
@@ -4749,6 +4945,14 @@ static void BuildTrainer_DropIllegalMoves(void)
 
 static void DebugAction_BuildTrainer_SpeciesPicker_Select(u8 taskId)
 {
+    // v2.0.6 — SELECT opens name-search keyboard. Skip the rest of input
+    // handling this frame so the menu tear-down doesn't fight with the
+    // L/R/DPAD step logic.
+    if (JOY_NEW(SELECT_BUTTON))
+    {
+        Debug_LaunchSearchPicker(taskId, 0);  // 0 = species target
+        return;
+    }
     bool32 redraw = FALSE;
     if (JOY_NEW(L_BUTTON))
     {
@@ -4902,6 +5106,12 @@ static void Debug_Display_BuildTrainerItem(u16 itemId, u8 windowId)
 
 static void DebugAction_BuildTrainer_ItemPicker_Select(u8 taskId)
 {
+    // v2.0.6 — SELECT opens name-search keyboard.
+    if (JOY_NEW(SELECT_BUTTON))
+    {
+        Debug_LaunchSearchPicker(taskId, 1);  // 1 = held-item target
+        return;
+    }
     bool32 redraw = FALSE;
     if (JOY_NEW(L_BUTTON))
     {
@@ -5843,6 +6053,26 @@ static void Debug_Display_TrainerID(u32 trainerID, u32 selection, u32 digit, u8 
         ConvertIntToDecimalStringN(lvBuf, maxLvl, STR_CONV_MODE_LEFT_ALIGN, 3);
         end = StringAppend(gStringVar1, lvBuf);
     }
+    // v2.0.6 — in COPY_MON_TO_CUSTOM mode, append "[N: SpeciesName]" so the
+    // user knows which mon they're about to import. DPAD-LEFT/RIGHT cycles N.
+    if (selection == TRAINERS_DEBUG_SELECTION_COPY_MON_TO_CUSTOM)
+    {
+        const struct Trainer *srcTr = GetTrainerStructFromId(trainerID);
+        if (srcTr != NULL && srcTr->party != NULL && srcTr->partySize > 0)
+        {
+            u8 maxIdx = (srcTr->partySize > 6 ? 6 : srcTr->partySize) - 1;
+            if (sBuildTrainerSourceMonIdx > maxIdx)
+                sBuildTrainerSourceMonIdx = 0;
+            u16 species = srcTr->party[sBuildTrainerSourceMonIdx].species;
+            u8 numBuf[4];
+            end = StringAppend(gStringVar1, COMPOUND_STRING(" ("));
+            ConvertIntToDecimalStringN(numBuf, sBuildTrainerSourceMonIdx + 1, STR_CONV_MODE_LEFT_ALIGN, 2);
+            end = StringAppend(gStringVar1, numBuf);
+            end = StringAppend(gStringVar1, COMPOUND_STRING(":"));
+            end = StringAppend(gStringVar1, GetSpeciesName(species));
+            end = StringAppend(gStringVar1, COMPOUND_STRING(")"));
+        }
+    }
     WrapFontIdToFit(gStringVar1, end, DEBUG_MENU_FONT, WindowWidthPx(windowId));
     StringCopyPadded(gStringVar1, gStringVar1, CHAR_SPACE, 15);
     ConvertIntToDecimalStringN(gStringVar3, trainerID, STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_TRAINERS);
@@ -5996,13 +6226,19 @@ static void DebugAction_ChooseTrainerID_Select(u8 taskId)
                      // the picker falls through to the generic 0..1310
                      // numeric scroll and shows every vanilla Emerald
                      // trainer ID, not just our ~120 curated entries.
-                     || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_FRONTIER);
+                     || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_FRONTIER
+                     // v2.0.6 — single-mon-copy picker uses the same curated
+                     // roster + section-jump UX as the whole-team-copy picker.
+                     || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_COPY_MON_TO_CUSTOM);
     // v1.1 — copy mode is read-only against sDebugMenuListData->data[] (it
     // never writes back into a sim slot); cached separately so the scroll
     // handlers can skip the data[X] = tInput write for COPY entries.
     // v1.7 — same goes for FRONTIER mode.
+    // v2.0.6 — and the single-mon-copy picker.
     bool32 isCopyMode = (gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_COPY_TO_CUSTOM
-                      || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_FRONTIER);
+                      || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_FRONTIER
+                      || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_COPY_MON_TO_CUSTOM);
+    bool32 isCopyMon = (gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_COPY_MON_TO_CUSTOM);
     if (isSimSlot && (JOY_NEW(L_BUTTON) || JOY_NEW(R_BUTTON)))
     {
         PlaySE(SE_SELECT);
@@ -6047,10 +6283,33 @@ static void DebugAction_ChooseTrainerID_Select(u8 taskId)
             min = 0;
             max = PARTNER_COUNT - 1;
         }
+        // v2.0.6 — COPY_MON_TO_CUSTOM intercepts DPAD-LEFT/RIGHT to cycle
+        // sBuildTrainerSourceMonIdx through the source trainer's party slots
+        // instead of the standard digit cursor / numeric ID step. UP/DOWN
+        // still rosters-step the trainer ID below.
+        if (isCopyMon && (JOY_NEW(DPAD_LEFT) || JOY_NEW(DPAD_RIGHT)))
+        {
+            const struct Trainer *srcTr = GetTrainerStructFromId((u16)gTasks[taskId].tInput);
+            u8 maxIdx = (srcTr != NULL && srcTr->partySize > 0)
+                      ? (srcTr->partySize > 6 ? 6 : srcTr->partySize) - 1
+                      : 0;
+            if (JOY_NEW(DPAD_RIGHT))
+                sBuildTrainerSourceMonIdx = (sBuildTrainerSourceMonIdx >= maxIdx) ? 0 : sBuildTrainerSourceMonIdx + 1;
+            else
+                sBuildTrainerSourceMonIdx = (sBuildTrainerSourceMonIdx == 0) ? maxIdx : sBuildTrainerSourceMonIdx - 1;
+            // Skip the standard switch/display below and refresh.
+            Debug_Display_TrainerID(gTasks[taskId].tInput, gTasks[taskId].tSelection, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+            return;
+        }
         if (isSimSlot && (JOY_NEW(DPAD_UP) || JOY_NEW(DPAD_DOWN)))
         {
             s32 dir = JOY_NEW(DPAD_UP) ? 1 : -1;
             gTasks[taskId].tInput = SimulatorRoster_Step(gTasks[taskId].tInput, dir);
+            // v2.0.6 — when the trainer changes, reset source mon idx to 0
+            // so the display doesn't reference an out-of-range mon if the
+            // new trainer's partySize is smaller.
+            if (isCopyMon)
+                sBuildTrainerSourceMonIdx = 0;
         }
         else
             Debug_HandleInput_Numeric(taskId, min, max, DEBUG_NUMBER_DIGITS_TRAINERS);
@@ -6083,9 +6342,20 @@ static void DebugAction_ChooseTrainerID_Select(u8 taskId)
         // user came in from the wrapper).
         bool32 isFrontier = (gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_FRONTIER);
         bool32 frontierLaunch = isFrontier && JOY_NEW(A_BUTTON);
+        // v2.0.6 — single-mon-copy picker. A copies trainer->party[sourceIdx]
+        // into sBuildTrainerWorkMon and returns to the per-mon editor with
+        // the imported values live; B returns to the per-mon editor unchanged.
+        bool32 isCopyMonConfirm = (gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_COPY_MON_TO_CUSTOM);
         if (isCopyConfirm && JOY_NEW(A_BUTTON))
         {
             if (BuildTrainer_CopyFromTrainer((u16)gTasks[taskId].tInput))
+                PlaySE(SE_SUCCESS);
+            else
+                PlaySE(SE_FAILURE);
+        }
+        else if (isCopyMonConfirm && JOY_NEW(A_BUTTON))
+        {
+            if (BuildTrainer_CopyMonFromTrainer((u16)gTasks[taskId].tInput, sBuildTrainerSourceMonIdx))
                 PlaySE(SE_SUCCESS);
             else
                 PlaySE(SE_FAILURE);
@@ -6114,6 +6384,16 @@ static void DebugAction_ChooseTrainerID_Select(u8 taskId)
         {
             sDebugMenuListData->listId = DEBUG_LISTID_BUILD_TRAINER_SLOT;
             Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_BuildTrainerSlot);
+        }
+        else if (isCopyMonConfirm)
+        {
+            // v2.0.6 — single-mon-copy returns to the per-mon editor (where
+            // the user came from), whether A succeeded or B cancelled. The
+            // work buffer was already updated by BuildTrainer_CopyMonFromTrainer
+            // on the A path, so the editor rows will reflect the imported
+            // values immediately.
+            sDebugMenuListData->listId = DEBUG_LISTID_BUILD_TRAINER_MON;
+            Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_BuildTrainerMon);
         }
         else if (frontierLaunch)
         {
@@ -6178,6 +6458,13 @@ static void DebugAction_Trainers_ChooseTrainer(u8 taskId, u32 selection)
         // first roster trainer so L/R section-jump and D-pad scroll work
         // immediately.
         gTasks[taskId].tInput = sSimulatorRoster[0];
+        break;
+    case TRAINERS_DEBUG_SELECTION_COPY_MON_TO_CUSTOM:
+        // v2.0.6 — same initial-value strategy as COPY_TO_CUSTOM. Also reset
+        // the source-mon index so we start at mon 1 of whatever trainer the
+        // user lands on.
+        gTasks[taskId].tInput = sSimulatorRoster[0];
+        sBuildTrainerSourceMonIdx = 0;
         break;
     }
     gTasks[taskId].tInitial = gTasks[taskId].tInput;
@@ -6993,6 +7280,119 @@ void Debug_DecodeImportedTeamCodeAndReopen(void)
     // Re-open the per-mon editor by simulating the OpenMonEditor path.
     // sDebugMenuListData was freed by Debug_DestroyMenu_Full when we left for
     // the naming screen, so allocate fresh + reload the work buffer.
+    sDebugMenuListData = AllocZeroed(sizeof(*sDebugMenuListData));
+    sDebugMenuListData->listId = DEBUG_LISTID_BUILD_TRAINER_MON;
+    BuildTrainer_LoadWorkBufferFromSaveblock();
+    Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_BuildTrainerMon);
+}
+
+// v2.0.6 — Case-insensitive prefix match using the pokeemerald charset's
+// CHAR_A..CHAR_Z / CHAR_a..CHAR_z mapping. EOS in the prefix marks the end of
+// the typed search; the name can have more chars after the matched prefix.
+// Returns TRUE if `name` starts with `prefix` (case-insensitive).
+static bool32 Debug_NameStartsWith(const u8 *name, const u8 *prefix)
+{
+    while (*prefix != EOS && *prefix != CHAR_SPACE)
+    {
+        if (*name == EOS) return FALSE;
+        u8 a = *name, b = *prefix;
+        if (a >= CHAR_a && a <= CHAR_z) a -= (CHAR_a - CHAR_A);   // -> uppercase
+        if (b >= CHAR_a && b <= CHAR_z) b -= (CHAR_a - CHAR_A);
+        if (a != b) return FALSE;
+        name++;
+        prefix++;
+    }
+    return TRUE;
+}
+
+// v2.0.6 — Launch a name-search naming screen. Called by the SELECT handlers
+// inside the species + held-item pickers. target = 0 for species, 1 for item.
+// Tear-down + reopen pattern mirrors DebugAction_BuildTrainer_OpenImportCode.
+static void Debug_LaunchSearchPicker(u8 taskId, u8 target)
+{
+    PlaySE(SE_SELECT);
+    memset(gSimSearchBuffer, EOS, sizeof(gSimSearchBuffer));
+    gSimSearchPickerTarget = target;
+    Debug_DestroyMenu_Full(taskId);
+    gSimSearchPickerPending = TRUE;
+    // v2.0.6 — Use the v2.0.6 SEARCH_SPECIES / SEARCH_ITEM templates so the
+    // title text asks "What Pokémon?" / "What item?" and the buffer holds
+    // 12 chars (enough for "Iron Treads", "Choice Specs", etc.). Pass
+    // SPECIES_DITTO so the icon function shows a Ditto sprite as the
+    // search-context mascot for either keyboard.
+    u8 template = (target == 0) ? NAMING_SCREEN_SEARCH_SPECIES : NAMING_SCREEN_SEARCH_ITEM;
+    DoNamingScreen(template, gSimSearchBuffer, SPECIES_DITTO, 0, 0, CB2_ReturnToField);
+}
+
+// v2.0.6 — Menu-row entry points so the per-mon editor's "Search species…"
+// and "Search item…" rows can launch the same naming-screen flow that
+// SELECT triggers from inside the browse pickers.
+static void DebugAction_BuildTrainer_OpenSpeciesSearch(u8 taskId)
+{
+    Debug_LaunchSearchPicker(taskId, 0);  // 0 = species
+}
+static void DebugAction_BuildTrainer_OpenItemSearch(u8 taskId)
+{
+    Debug_LaunchSearchPicker(taskId, 1);  // 1 = held item
+}
+
+// v2.0.6 — Called from field_control_avatar after the search naming screen
+// returns. Scans species or item list for the first entry whose name starts
+// with the typed prefix (case-insensitive), writes the result into
+// sBuildTrainerWorkMon, and re-opens the originating picker. If no match
+// found, picker state is unchanged.
+void Debug_FinishSearchAndReopen(void)
+{
+    bool32 found = FALSE;
+    if (gSimSearchPickerTarget == 0)
+    {
+        // Species search. NUM_SPECIES is the engine cap; SPECIES_NONE is index 0
+        // which gets skipped. GetSpeciesName returns the display string.
+        for (u16 s = 1; s < NUM_SPECIES; s++)
+        {
+            const u8 *name = GetSpeciesName(s);
+            if (name == NULL) continue;
+            if (Debug_NameStartsWith(name, gSimSearchBuffer))
+            {
+                sBuildTrainerWorkMon.species = s;
+                // Same defensive snap as the species step path: ensure
+                // abilityNum is valid for the new species.
+                if (GetSpeciesAbility(sBuildTrainerWorkMon.species, sBuildTrainerWorkMon.abilityNum) == ABILITY_NONE)
+                    sBuildTrainerWorkMon.abilityNum = 0;
+                found = TRUE;
+                break;
+            }
+        }
+    }
+    else
+    {
+        // Held-item search. Iterate the held-item whitelist, skipping items
+        // that aren't battle-meaningful (matches the picker's standard step
+        // behavior so search can't land on a key item or TM).
+        for (u16 i = 1; i < ITEMS_COUNT; i++)
+        {
+            if (!BuildTrainerPicker_IsBattleHeldItem(i)) continue;
+            u8 nameBuf[ITEM_NAME_LENGTH + 1];
+            CopyItemName(i, nameBuf);
+            if (Debug_NameStartsWith(nameBuf, gSimSearchBuffer))
+            {
+                sBuildTrainerWorkMon.heldItem = i;
+                found = TRUE;
+                break;
+            }
+        }
+    }
+    PlaySE(found ? SE_SUCCESS : SE_FAILURE);
+    // v2.0.6 — Commit our work-buffer change to the saveblock BEFORE re-
+    // opening the menu. The team-code import flow does the same dance:
+    // write to sBuildTrainerWorkMon, commit, then load on menu reopen. If
+    // we skip the commit and let BuildTrainer_LoadWorkBufferFromSaveblock
+    // run, it reads the stale slot state from saveblock and clobbers the
+    // species/item we just searched up — that was the v2.0.6 initial-test
+    // bug where the picker returned to the editor unchanged. Committing
+    // means the change persists across the menu's reload cycle.
+    if (found)
+        BuildTrainer_CommitWorkBufferToSaveblock();
     sDebugMenuListData = AllocZeroed(sizeof(*sDebugMenuListData));
     sDebugMenuListData->listId = DEBUG_LISTID_BUILD_TRAINER_MON;
     BuildTrainer_LoadWorkBufferFromSaveblock();
