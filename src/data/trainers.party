@@ -15916,13 +15916,76 @@ Name: ANABEL
 Class: Salon Maiden
 Pic: Salon Maiden Anabel
 Gender: Female
-Music: Male
+Music: Female
+Items: Full Restore / Full Restore / Full Restore / Full Restore
 Double Battle: No
-AI: Basic Trainer
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
 
-Beldum
-Level: 5
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Alakazam @ Bright Powder
+Ability: Synchronize
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 106 HP / 0 Atk / 152 Def / 100 SpA / 0 SpD / 152 Spe
+Modest Nature
+- Thunder Punch
+- Fire Punch
+- Ice Punch
+- Disable
+
+Entei @ Lum Berry
+Ability: Pressure
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 100 HP / 152 Atk / 152 Def / 100 SpA / 6 SpD / 0 Spe
+Lonely Nature
+- Fire Blast
+- Calm Mind
+- Return
+- Roar
+
+Snorlax @ Quick Claw
+Ability: Thick Fat
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 152 HP / 152 Atk / 0 Def / 106 SpA / 100 SpD / 0 Spe
+Adamant Nature
+- Body Slam
+- Belly Drum
+- Yawn
+- Shadow Ball
+
+Raikou @ Lum Berry
+Ability: Pressure
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 158 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 100 Spe
+Modest Nature
+- Thunderbolt
+- Calm Mind
+- Reflect
+- Rest
+
+Latios @ Bright Powder
+Ability: Levitate
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 6 Spe
+Modest Nature
+- Psychic
+- Dragon Claw
+- Calm Mind
+- Recover
+
+Snorlax @ Chesto Berry
+Ability: Thick Fat
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 6 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Curse
+- Return
+- Rest
+- Shadow Ball
 
 === TRAINER_TUCKER ===
 Name: TUCKER
@@ -15930,12 +15993,75 @@ Class: Dome Ace
 Pic: Dome Ace Tucker
 Gender: Male
 Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
 Double Battle: No
-AI: Basic Trainer
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
 
-Beldum
-Level: 5
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Swampert @ Focus Band
+Ability: Torrent
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 152 HP / 152 Atk / 106 Def / 100 SpA / 0 SpD / 0 Spe
+Brave Nature
+- Surf
+- Earthquake
+- Ice Beam
+- Counter
+
+Salamence @ Lum Berry
+Ability: Intimidate
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 152 HP / 152 Atk / 106 Def / 0 SpA / 0 SpD / 100 Spe
+Adamant Nature
+- Earthquake
+- Brick Break
+- Dragon Claw
+- Aerial Ace
+
+Charizard @ White Herb
+Ability: Blaze
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 100 HP / 152 Atk / 106 Def / 0 SpA / 0 SpD / 152 Spe
+Quiet Nature
+- Overheat
+- Rock Slide
+- Aerial Ace
+- Earthquake
+
+Swampert @ Leftovers
+Ability: Torrent
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 6 Def / 0 SpA / 0 SpD / 0 Spe
+Brave Nature
+- Surf
+- Earthquake
+- Ice Beam
+- Mirror Coat
+
+Metagross @ Quick Claw
+Ability: Clear Body
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 6 Def / 0 SpA / 0 SpD / 0 Spe
+Brave Nature
+- Psychic
+- Meteor Mash
+- Earthquake
+- Protect
+
+Latias @ Chesto Berry
+Ability: Levitate
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 6 Spe
+Modest Nature
+- Thunderbolt
+- Psychic
+- Calm Mind
+- Rest
 
 === TRAINER_SPENSER ===
 Name: SPENSER
@@ -15943,25 +16069,151 @@ Class: Palace Maven
 Pic: Palace Maven Spenser
 Gender: Male
 Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
 Double Battle: No
-AI: Basic Trainer
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
 
-Beldum
-Level: 5
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Crobat @ Bright Powder
+Ability: Inner Focus
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 152 HP / 0 Atk / 0 Def / 100 SpA / 106 SpD / 152 Spe
+Adamant Nature
+- Confuse Ray
+- Double Team
+- Toxic
+- Fly
+
+Slaking @ Scope Lens
+Ability: Truant
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 152 HP / 152 Atk / 0 Def / 100 SpA / 0 SpD / 106 Spe
+Hardy Nature
+- Earthquake
+- Swagger
+- Shadow Ball
+- Brick Break
+
+Lapras @ Quick Claw
+Ability: Water Absorb
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 0 Atk / 252 Def / 106 SpA / 152 SpD / 0 Spe
+Quiet Nature
+- Ice Beam
+- Horn Drill
+- Confuse Ray
+- Protect
+
+Arcanine @ White Herb
+Ability: Intimidate
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 6 HP / 252 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Hasty Nature
+- Overheat
+- Extreme Speed
+- Roar
+- Protect
+
+Slaking @ Scope Lens
+Ability: Truant
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 6 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Hardy Nature
+- Hyper Beam
+- Earthquake
+- Shadow Ball
+- Yawn
+
+Suicune @ King's Rock
+Ability: Pressure
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 6 Spe
+Hasty Nature
+- Blizzard
+- Surf
+- Bite
+- Calm Mind
 
 === TRAINER_GRETA ===
 Name: GRETA
 Class: Arena Tycoon
 Pic: Arena Tycoon Greta
 Gender: Female
-Music: Male
+Music: Female
+Items: Full Restore / Full Restore / Full Restore / Full Restore
 Double Battle: No
-AI: Basic Trainer
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
 
-Beldum
-Level: 5
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Heracross @ Salac Berry
+Ability: Guts
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 106 HP / 152 Atk / 0 Def / 0 SpA / 0 SpD / 100 Spe
+Jolly Nature
+- Megahorn
+- Rock Tomb
+- Endure
+- Reversal
+
+Umbreon @ Leftovers
+Ability: Synchronize
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 152 HP / 0 Atk / 100 Def / 152 SpA / 106 SpD / 0 Spe
+Calm Nature
+- Body Slam
+- Confuse Ray
+- Psychic
+- Feint Attack
+
+Shedinja @ Bright Powder
+Ability: Wonder Guard
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 6 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Shadow Ball
+- Return
+- Confuse Ray
+- Aerial Ace
+
+Umbreon @ Chesto Berry
+Ability: Synchronize
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 6 SpD / 0 Spe
+Calm Nature
+- Double-Edge
+- Confuse Ray
+- Rest
+- Psychic
+
+Gengar @ Leftovers
+Ability: Levitate
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 6 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Psychic
+- Hypnosis
+- Dream Eater
+- Destiny Bond
+
+Breloom @ Lum Berry
+Ability: Effect Spore
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 6 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Spore
+- Focus Punch
+- Giga Drain
+- Headbutt
 
 === TRAINER_NOLAND ===
 Name: NOLAND
@@ -15981,13 +16233,76 @@ Name: LUCY
 Class: Pike Queen
 Pic: Pike Queen Lucy
 Gender: Female
-Music: Male
+Music: Female
+Items: Full Restore / Full Restore / Full Restore / Full Restore
 Double Battle: No
-AI: Basic Trainer
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
 
-Beldum
-Level: 5
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Seviper @ Quick Claw
+Ability: Shed Skin
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 6 SpA / 0 SpD / 0 Spe
+Brave Nature
+- Swagger
+- Crunch
+- Poison Fang
+- Giga Drain
+
+Shuckle @ Chesto Berry
+Ability: Sturdy
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 0 Def / 106 SpA / 252 SpD / 0 Spe
+Bold Nature
+- Toxic
+- Sandstorm
+- Protect
+- Rest
+
+Milotic @ Leftovers
+Ability: Marvel Scale
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 152 HP / 0 Atk / 100 Def / 152 SpA / 106 SpD / 0 Spe
+Modest Nature
+- Ice Beam
+- Mirror Coat
+- Surf
+- Recover
+
+Seviper @ Focus Band
+Ability: Shed Skin
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 6 SpD / 0 Spe
+Bold Nature
+- Swagger
+- Crunch
+- Sludge Bomb
+- Giga Drain
+
+Steelix @ Bright Powder
+Ability: Sturdy
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 0 Def / 6 SpA / 252 SpD / 0 Spe
+Brave Nature
+- Earthquake
+- Rock Slide
+- Explosion
+- Screech
+
+Gyarados @ Chesto Berry
+Ability: Intimidate
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 6 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Adamant Nature
+- Dragon Dance
+- Return
+- Rest
+- Roar
 
 === TRAINER_BRANDON ===
 Name: BRANDON
@@ -15995,12 +16310,75 @@ Class: Pyramid King
 Pic: Pyramid King Brandon
 Gender: Male
 Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
 Double Battle: No
-AI: Basic Trainer
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
 
-Beldum
-Level: 5
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Regirock @ Quick Claw
+Ability: Clear Body
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 152 HP / 152 Atk / 0 Def / 106 SpA / 100 SpD / 0 Spe
+Adamant Nature
+- Explosion
+- Superpower
+- Earthquake
+- Ancient Power
+
+Registeel @ Leftovers
+Ability: Clear Body
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 152 HP / 152 Atk / 0 Def / 6 SpA / 200 SpD / 0 Spe
+Adamant Nature
+- Earthquake
+- Metal Claw
+- Toxic
+- Iron Defense
+
+Regice @ Chesto Berry
+Ability: Clear Body
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 106 HP / 0 Atk / 152 Def / 100 SpA / 152 SpD / 0 Spe
+Modest Nature
+- Ice Beam
+- Amnesia
+- Thunder
+- Rest
+
+Articuno @ Scope Lens
+Ability: Pressure
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 6 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 252 Spe
+Mild Nature
+- Blizzard
+- Water Pulse
+- Aerial Ace
+- Reflect
+
+Zapdos @ Lum Berry
+Ability: Pressure
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 6 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 252 Spe
+Mild Nature
+- Thunder
+- Detect
+- Drill Peck
+- Light Screen
+
+Moltres @ Bright Powder
+Ability: Pressure
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 6 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 252 Spe
+Mild Nature
+- Fire Blast
+- Hyper Beam
+- Aerial Ace
+- Safeguard
 
 === TRAINER_ANDRES_2 ===
 Name: ANDRES
@@ -37556,3 +37934,459 @@ Timid Nature
 - Hyper Beam
 - Detect
 - Flash Cannon
+
+=== TRAINER_PALMER ===
+Name: PALMER
+Class: Cooltrainer
+Pic: Elite Four Drake
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Milotic @ Shell Bell
+Ability: Marvel Scale
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 6 SpD / 0 Spe
+Modest Nature
+- Surf
+- Ice Beam
+- Attract
+- Hypnosis
+
+Dragonite @ Lum Berry
+Ability: Inner Focus
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 252 SpD / 6 Spe
+Adamant Nature
+- Dragon Claw
+- Aerial Ace
+- Thunder Wave
+- Dragon Dance
+
+Rhyperior @ Focus Band
+Ability: Solid Rock
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 6 HP / 252 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Rock Wrecker
+- Earthquake
+- Crunch
+- Roar
+
+Regigigas @ Bright Powder
+Ability: Slow Start
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 6 SpD / 0 Spe
+Adamant Nature
+- Crush Grip
+- Earthquake
+- Stone Edge
+- Drain Punch
+
+Heatran @ Focus Sash
+Ability: Flash Fire
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 6 HP / 252 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Magma Storm
+- Flash Cannon
+- Earth Power
+- Explosion
+
+Cresselia @ Leftovers
+Ability: Levitate
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 170 HP / 0 Atk / 170 Def / 0 SpA / 170 SpD / 0 Spe
+Modest Nature
+- Psychic
+- Ice Beam
+- Signal Beam
+- Moonlight
+
+=== TRAINER_DAHLIA ===
+Name: DAHLIA
+Class: Beauty
+Pic: Beauty
+Gender: Female
+Music: Female
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Dusknoir
+Ability: Pressure
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 6 HP / 252 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Brave Nature
+- Shadow Punch
+- Fling
+- Will-O-Wisp
+- Trick Room
+
+Medicham
+Ability: Pure Power
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 6 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Zen Headbutt
+- Reversal
+- Endure
+- Fake Out
+
+Ludicolo
+Ability: Swift Swim
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 6 HP / 252 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Adamant Nature
+- Waterfall
+- Razor Leaf
+- Drain Punch
+- Swords Dance
+
+Zapdos
+Ability: Pressure
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 6 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Modest Nature
+- Thunderbolt
+- Air Cutter
+- Heat Wave
+- Signal Beam
+
+Blaziken
+Ability: Blaze
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 6 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Flare Blitz
+- Superpower
+- Thunder Punch
+- Night Slash
+
+Togekiss
+Ability: Serene Grace
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 6 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Modest Nature
+- Hyper Beam
+- Air Slash
+- Aura Sphere
+- Psychic
+
+=== TRAINER_DARACH ===
+Name: DARACH
+Class: Gentleman
+Pic: Gentleman
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Houndoom @ Focus Sash
+Ability: Flash Fire
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 6 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Fire Fang
+- Crunch
+- Roar
+- Counter
+
+Empoleon @ Razor Claw
+Ability: Torrent
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 6 HP / 252 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Adamant Nature
+- Waterfall
+- Metal Claw
+- Brick Break
+- Knock Off
+
+Staraptor @ King's Rock
+Ability: Intimidate
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 6 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Return
+- Aerial Ace
+- Double Team
+- Roost
+
+Entei @ Shuca Berry
+Ability: Pressure
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 6 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Modest Nature
+- Overheat
+- Extrasensory
+- Shadow Ball
+- Calm Mind
+
+Empoleon @ Quick Claw
+Ability: Torrent
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 6 HP / 252 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Brave Nature
+- Surf
+- Earthquake
+- Blizzard
+- Signal Beam
+
+Gallade @ Scope Lens
+Ability: Steadfast
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 6 HP / 252 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Adamant Nature
+- Psycho Cut
+- Close Combat
+- Leaf Blade
+- Night Slash
+
+=== TRAINER_BENGA ===
+Name: BENGA
+Class: Cooltrainer
+Pic: Youngster
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Latios (M) @ White Herb
+Ability: Levitate
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Draco Meteor
+- Psychic
+- Icy Wind
+- Thunderbolt
+
+Garchomp (M) @ Life Orb
+Ability: Sand Veil
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Outrage
+- Earthquake
+- Fire Blast
+- Stone Edge
+
+Volcarona (M) @ Focus Sash
+Ability: Flame Body
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Quiver Dance
+- Bug Buzz
+- Fire Blast
+- Psychic
+
+Latias (F) @ White Herb
+Ability: Levitate
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Draco Meteor
+- Psychic
+- Icy Wind
+- Thunderbolt
+
+Dragonite (M) @ Life Orb
+Ability: Inner Focus
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Outrage
+- Dragon Dance
+- Fire Blast
+- Focus Blast
+
+Volcarona (M) @ Focus Sash
+Ability: Flame Body
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Quiver Dance
+- Bug Buzz
+- Fire Blast
+- Psychic
+
+=== TRAINER_INGO ===
+Name: INGO
+Class: Gentleman
+Pic: Gentleman
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Crustle @ Rocky Helmet
+Ability: Sturdy
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 255 Atk / 255 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Stone Edge
+- X-Scissor
+- Earthquake
+- Flail
+
+Klinklang @ Occa Berry
+Ability: Clear Body
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 255 Atk / 0 Def / 0 SpA / 0 SpD / 255 Spe
+Adamant Nature
+- Shift Gear
+- Gear Grind
+- Volt Switch
+- Giga Impact
+
+Garbodor @ Black Sludge
+Ability: Aftermath
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 255 HP / 0 Atk / 0 Def / 255 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Venoshock
+- Psychic
+- Focus Blast
+- Toxic
+
+Excadrill @ Life Orb
+Ability: Mold Breaker
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 170 Atk / 170 Def / 0 SpA / 170 SpD / 0 Spe
+Adamant Nature
+- Earthquake
+- Aerial Ace
+- Poison Jab
+- Rock Slide
+
+Haxorus @ Yache Berry
+Ability: Mold Breaker
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 255 Atk / 0 Def / 0 SpA / 0 SpD / 255 Spe
+Jolly Nature
+- Dragon Dance
+- Dragon Claw
+- Dragon Tail
+- Earthquake
+
+Chandelure @ White Herb
+Ability: Flash Fire
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 255 HP / 0 Atk / 0 Def / 255 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Overheat
+- Shadow Ball
+- Protect
+- Will-O-Wisp
+
+=== TRAINER_EMMET ===
+Name: EMMET
+Class: Gentleman
+Pic: Gentleman
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Crustle @ Rocky Helmet
+Ability: Sturdy
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 255 Atk / 255 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Stone Edge
+- X-Scissor
+- Earthquake
+- Flail
+
+Garbodor @ Black Sludge
+Ability: Aftermath
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 255 HP / 0 Atk / 0 Def / 255 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Venoshock
+- Psychic
+- Focus Blast
+- Toxic
+
+Durant @ Occa Berry
+Ability: Hustle
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 255 Atk / 0 Def / 0 SpA / 0 SpD / 255 Spe
+Jolly Nature
+- X-Scissor
+- Iron Head
+- Rock Slide
+- Shadow Claw
+
+Excadrill @ Life Orb
+Ability: Mold Breaker
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 170 Atk / 170 Def / 0 SpA / 170 SpD / 0 Spe
+Adamant Nature
+- Earthquake
+- Aerial Ace
+- Poison Jab
+- Rock Slide
+
+Haxorus @ Yache Berry
+Ability: Mold Breaker
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 255 Atk / 0 Def / 0 SpA / 0 SpD / 255 Spe
+Jolly Nature
+- Dragon Dance
+- Dragon Claw
+- Dragon Tail
+- Earthquake
+
+Chandelure @ White Herb
+Ability: Flash Fire
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 255 HP / 0 Atk / 0 Def / 255 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Overheat
+- Shadow Ball
+- Protect
+- Will-O-Wisp

@@ -672,6 +672,9 @@ static const u16 sSimulatorRoster[] = {
     773, 777, 781, 785, 789, 793, 797, 801,              // Hoenn gym _5 rematches
     261, 262, 263, 264,                                  // Hoenn E4
     335, 804,                                            // Steven + Wallace champion
+    // v2.0.4.9 — Gen 3 Battle Frontier brains, Silver+Gold print combined.
+    // Noland omitted (pool-only, separate treatment TBD).
+    805, 806, 807, 808, 810, 811,                        // Anabel/Tucker/Spenser/Greta/Lucy/Brandon
     // ---- ORAS section (Hoenn remake post-game) ----
     895, 896, 897, 898,                                  // Hoenn ORAS Elite Four
     894, 893, 892, 891,                                  // Brendan/May/Steven Delta/Wally
@@ -681,6 +684,9 @@ static const u16 sSimulatorRoster[] = {
     996, 997, 998, 999, 1000,                            // Stat trainers (Cheryl..Buck)
     1001, 1002, 1003, 1004,                              // Sinnoh Elite Four (high lvl)
     1005,                                                // Cynthia Pt rematch
+    // v2.0.4.9 — Gen 4 Battle Frontier brains (Platinum/HGSS canon, Silver+
+    // Gold print combined). Argenta/Caitlin/Thorton TBD when canon data arrives.
+    1167, 1168, 1169,                                    // Palmer/Dahlia/Darach
     // ---- BDSP section (Sinnoh remake — adjacent to Platinum) ----
     1006, 1007, 1008,                                    // Barry BDSP (3 starter variants)
     1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016,      // BDSP gym leader rematches
@@ -721,6 +727,8 @@ static const u16 sSimulatorRoster[] = {
     1067, 1068, 1069, 1070,                              // Unova E4 (Shauntal/Marshal/Grimsley/Caitlin)
     1071,                                                // Ghetsis (Team Plasma boss)
     1072,                                                // Colress (B2W2 Plasma scientist, Steel/Electric)
+    1170,                                                // v2.0.4.9: Benga (B2W2 Black Tower / White Treehollow boss)
+    1171, 1172,                                          // v2.0.4.9: Ingo / Emmet (Battle Subway bosses)
     // ---- XY section (Kalos) ----
     1083, 1084, 1085,                                    // v0.49: Diantha / Serena / Calem
     // ---- Anime section ----
@@ -5839,26 +5847,26 @@ static const u16 sSimulatorRosterSectionStarts[] = {
     CUSTOM_OFFSET,           // LGPE — Green + Lorelei/Agatha/Lance/Red/Blue/Bruno + Trace (9)
     9 + CUSTOM_OFFSET,       // FRLG — Indigo E4 + Blue starter variants (7)
     16 + CUSTOM_OFFSET,      // HGSS — Red + Blue HGSS + 3 Silvers + gym/E4/Champion (25)
-    41 + CUSTOM_OFFSET,      // Emerald — Hoenn 5 gyms + E4 + Steven + Wallace (14)
-    55 + CUSTOM_OFFSET,      // ORAS — Hoenn ORAS E4 + Wally/Steven/May/Brendan (8)
-    63 + CUSTOM_OFFSET,      // Platinum — 3 Barrys + Battleground + stat + E4 + Cynthia Pt (21)
-    84 + CUSTOM_OFFSET,      // BDSP — 3 Barrys + 8 gym + 4 E4 + Cynthia + 3 Lucas + 3 Dawn (22)
-    106 + CUSTOM_OFFSET,     // SwSh — Leon x3 + Hop x6 + Mustard x2 + Marnie/Bede + 9 gym + Klara/Avery/Peony (25)
-    131 + CUSTOM_OFFSET,     // Alola — Trial Captains + Kahunas + E4 + Champion + Variants + v0.48 USUM (32)
-    163 + CUSTOM_OFFSET,     // Rainbow Rocket — Episode RR bosses (10)
-    173 + CUSTOM_OFFSET,     // PWT Kanto (8)
-    181 + CUSTOM_OFFSET,     // PWT Hoenn (9)
-    190 + CUSTOM_OFFSET,     // PWT Johto (8)
-    198 + CUSTOM_OFFSET,     // PWT Sinnoh (8)
-    206 + CUSTOM_OFFSET,     // PWT Unova (8 base + 5 v1.5 = 13: Lenora..Marlon + Cilan/Chili/Cress/Cheren/Roxie)
-    219 + CUSTOM_OFFSET,     // PWT Champs — Red/Blue/Lance/Steven/Wallace + Cynthia/Iris/Alder + v1.5 Bianca World Leaders (9)
-    228 + CUSTOM_OFFSET,     // BW — N x2 + Alder + Cheren x3 + Bianca x3 + Hugh x3 + Unova E4 + Ghetsis + Colress (18)
-    246 + CUSTOM_OFFSET,     // XY — Diantha/Serena/Calem (3)
-    249 + CUSTOM_OFFSET,     // Anime — Ash World Champion (1)
-    250 + CUSTOM_OFFSET,     // VGC — v1.5: Wolfe Glick + Ray Rizo (2012 World Finals) (2)
-    252 + CUSTOM_OFFSET,     // Custom — v0.51 + v1.1 user-built slots (6: 3 original + 3 added)
-    258 + CUSTOM_OFFSET,     // Legends Arceus — v0.53 Volo/Adaman/Irida/Ingo/Akari + v0.53.2 Kamado/Zisu/Beni/Rei (9)
-    267 + CUSTOM_OFFSET,     // RGBY — v1.6: Prof. Oak Glitch x3 (Venusaur/Charizard/Blastoise variants based on player's starter)
+    41 + CUSTOM_OFFSET,      // Emerald — Hoenn 5 gyms + E4 + Steven + Wallace + v2.0.4.9 Gen 3 Brains x6 (20)
+    61 + CUSTOM_OFFSET,      // ORAS — Hoenn ORAS E4 + Wally/Steven/May/Brendan (8)
+    69 + CUSTOM_OFFSET,      // Platinum — 3 Barrys + Battleground + stat + E4 + Cynthia Pt + v2.0.4.9 Gen 4 Brains x3 (24)
+    93 + CUSTOM_OFFSET,      // BDSP — 3 Barrys + 8 gym + 4 E4 + Cynthia + 3 Lucas + 3 Dawn (22)
+    115 + CUSTOM_OFFSET,     // SwSh — Leon x3 + Hop x6 + Mustard x2 + Marnie/Bede + 9 gym + Klara/Avery/Peony (25)
+    140 + CUSTOM_OFFSET,     // Alola — Trial Captains + Kahunas + E4 + Champion + Variants + v0.48 USUM (32)
+    172 + CUSTOM_OFFSET,     // Rainbow Rocket — Episode RR bosses (10)
+    182 + CUSTOM_OFFSET,     // PWT Kanto (8)
+    190 + CUSTOM_OFFSET,     // PWT Hoenn (9)
+    199 + CUSTOM_OFFSET,     // PWT Johto (8)
+    207 + CUSTOM_OFFSET,     // PWT Sinnoh (8)
+    215 + CUSTOM_OFFSET,     // PWT Unova (8 base + 5 v1.5 = 13)
+    228 + CUSTOM_OFFSET,     // PWT Champs — Red/Blue/Lance/Steven/Wallace + Cynthia/Iris/Alder + v1.5 Bianca (9)
+    237 + CUSTOM_OFFSET,     // BW — N x2 + Alder + Cheren x3 + Bianca x3 + Hugh x3 + Unova E4 + Ghetsis + Colress + v2.0.4.9 Benga/Ingo/Emmet (21)
+    258 + CUSTOM_OFFSET,     // XY — Diantha/Serena/Calem (3)
+    261 + CUSTOM_OFFSET,     // Anime — Ash World Champion (1)
+    262 + CUSTOM_OFFSET,     // VGC — v1.5: Wolfe Glick + Ray Rizo (2012 World Finals) (2)
+    264 + CUSTOM_OFFSET,     // Custom — v0.51 + v1.1 user-built slots (6)
+    270 + CUSTOM_OFFSET,     // Legends Arceus — v0.53 Volo/Adaman/Irida/Ingo/Akari + v0.53.2 Kamado/Zisu/Beni/Rei (9)
+    279 + CUSTOM_OFFSET,     // RGBY — v1.6: Prof. Oak Glitch x3 (Venusaur/Charizard/Blastoise variants)
 };
 #define SIMULATOR_ROSTER_SECTION_COUNT (sizeof(sSimulatorRosterSectionStarts) / sizeof(sSimulatorRosterSectionStarts[0]))
 

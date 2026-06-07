@@ -1323,6 +1323,15 @@
 #define TRAINER_JOSEE                       1164  // Royale Fighting (no Mega)
 #define TRAINER_ANDY                        1165  // Royale Fairy/Normal (no Mega)
 #define TRAINER_KORRINA_ZA                  1166  // Royale Fighting (6 Megas including Lucarionite Z)
+// v2.0.4.9 Gen 4 Battle Frontier Brains (Platinum / HGSS canon, Silver+Gold print combined)
+//          + Benga (B2W2 Black Tower / White Treehollow boss). Use existing vanilla
+//          sprites as fallback pics since no Sinnoh Frontier sprites exist.
+#define TRAINER_PALMER                      1167  // Tower Tycoon (Milotic/Dragonite/Rhyperior + Regigigas/Heatran/Cresselia)
+#define TRAINER_DAHLIA                      1168  // Arcade Star (Dusknoir/Medicham/Ludicolo — Silver only, Gold TBD)
+#define TRAINER_DARACH                      1169  // Castle Valet (Houndoom/Empoleon/Staraptor + Entei/Empoleon/Gallade)
+#define TRAINER_BENGA                       1170  // B2W2 Boss (Latios/Garchomp/Volcarona/Latias/Dragonite)
+#define TRAINER_INGO                        1171  // BW/B2W2 Subway Boss — Single + Super Single combined (6)
+#define TRAINER_EMMET                       1172  // BW/B2W2 Subway Boss — Single + Super Double, 3 best of 4 from each pool
 
 // NOTE: Because each Trainer uses a flag to determine when they are defeated, there is only space for 9 additional trainers before trainer flag space overflows
 //       More space can be made by shifting flags around in constants/flags.h or changing how trainer flags are handled
