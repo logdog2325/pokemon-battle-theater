@@ -649,18 +649,34 @@ static const u8 *GetSimSourceSuffix(u16 trainerId)
 //   (Kanto / Hoenn / Johto / Sinnoh / Unova / Champs) all consecutively.
 static const u16 sSimulatorRoster[] = {
 #ifndef RELEASE_BUILD
-    // ---- Custom challengers (Logan, Taylor) — dev-only ----
+    // ---- Custom challengers (Logan, Taylor) — dev-only, top of list ----
     905,                                                 // Logan (custom Gen-9 challenger)
     1054,                                                // Taylor (rain team, Drake sprite)
 #endif
-    // ---- LGPE section (Kanto, Let's Go remakes) ----
-    906,                                                 // Green LGPE (Mega Blastoise)
-    899, 900, 901, 902, 903, 904,                        // Lorelei/Agatha/Lance/Red/Blue/Bruno LGPE
-    982, 983,                                            // Trace LGPE Pikachu/Eevee variants
-    // ---- FRLG section (Kanto, original, Lv 63-75 ports) ----
+    // v2.0.5.3 — ROSTER REORDERED INTO MAINLINE RELEASE ORDER per user
+    // request. Sections flow FRLG -> Emerald -> Platinum -> HGSS -> BW ->
+    // XY -> ORAS -> SM/USUM (Alola/BT/RR) -> LGPE -> SwSh -> BDSP ->
+    // Legends Arceus -> SV -> Legends ZA, then misc (PWT, Anime, VGC,
+    // Custom, RGBY) at the end. Every section has a corresponding entry
+    // in sSimulatorRosterSectionStarts[] so L/R cleanly cycle through all
+    // of them — SV and ZA were missing in v2.0.5.2 and are now wired up.
+    //
+    // ---- FRLG (1996, Gen 3 Kanto remake — original Lv 63-75 ports) ----
     855, 856, 857, 858,                                  // Indigo E4 FRLG rematch
     859, 860, 861,                                       // Blue starter variants
-    // ---- HGSS section (Johto/Kanto remake, unified) ----
+    // ---- Emerald (2004, Gen 3 Hoenn) + Hoenn Battle Frontier brains ----
+    773, 777, 781, 785, 789, 793, 797, 801,              // Hoenn gym _5 rematches
+    261, 262, 263, 264,                                  // Hoenn E4
+    335, 804,                                            // Wallace champion + Steven
+    805, 806, 807, 808, 809, 810, 811,                   // Frontier brains: Anabel/Tucker/Spenser/Greta/Noland/Lucy/Brandon
+    // ---- Platinum (2008, Gen 4 Sinnoh) + Gen 4 Battle Frontier brains ----
+    985, 986, 987,                                       // Barry rival variants
+    988, 989, 990, 991, 992, 993, 994, 995,              // Battleground gym leaders
+    996, 997, 998, 999, 1000,                            // Stat trainers (Cheryl..Buck)
+    1001, 1002, 1003, 1004,                              // Sinnoh Elite Four
+    1005,                                                // Cynthia Pt
+    1167, 1168, 1169, 1185, 1186,                        // Gen 4 brains: Palmer/Dahlia/Darach/Argenta/Thorton
+    // ---- HGSS (2009, Gen 4 Johto remake — shares Frontier with Platinum) ----
     851,                                                 // Red HGSS @ Mt. Silver
     966,                                                 // Blue HGSS
     967, 968, 984,                                       // Silver (Cyndaquil/Totodile/Chikorita paths)
@@ -668,114 +684,95 @@ static const u16 sSimulatorRoster[] = {
     862, 863, 864, 865, 866, 867, 868,                   // Kanto gym HGSS rematches
     977, 978, 979, 980,                                  // Johto Elite Four
     981,                                                 // Lance HGSS Champion
-    // ---- Emerald section (Hoenn base game) ----
-    773, 777, 781, 785, 789, 793, 797, 801,              // Hoenn gym _5 rematches
-    261, 262, 263, 264,                                  // Hoenn E4
-    335, 804,                                            // Steven + Wallace champion
-    // v2.0.4.9 — Gen 3 Battle Frontier brains, Silver+Gold print combined.
-    // v2.0.4.10 — Noland added (vanilla ID 809) with 20-mon Pool Rules: Basic.
-    805, 806, 807, 808, 809, 810, 811,                   // Anabel/Tucker/Spenser/Greta/Noland/Lucy/Brandon
-    // ---- ORAS section (Hoenn remake post-game) ----
-    895, 896, 897, 898,                                  // Hoenn ORAS Elite Four
+    // ---- BW (2010-11, Gen 5 Unova) + Subway Bosses + Black Tower boss ----
+    1055, 1056,                                          // N (Zekrom, Reshiram versions)
+    1057,                                                // Alder BW
+    1058, 1059, 1060,                                    // Cheren x3 starter variants
+    1061, 1062, 1063,                                    // Bianca x3 starter variants
+    1064, 1065, 1066,                                    // Hugh x3 B2W2 starter variants
+    1067, 1068, 1069, 1070,                              // Unova E4 (Shauntal/Marshal/Grimsley/Caitlin)
+    1071,                                                // Ghetsis
+    1072,                                                // Colress BW
+    1170,                                                // Benga (Black Tower / White Treehollow)
+    1171, 1172,                                          // Ingo / Emmet (Battle Subway)
+    // ---- XY (2013, Gen 6 Kalos) ----
+    1083, 1084, 1085,                                    // Diantha / Serena / Calem
+    // ---- ORAS (2014, Gen 6 Hoenn remake) ----
+    895, 896, 897, 898,                                  // Hoenn ORAS E4
     894, 893, 892, 891,                                  // Brendan/May/Steven Delta/Wally
-    // ---- Platinum section (Sinnoh) ----
-    985, 986, 987,                                       // Barry rival variants
-    988, 989, 990, 991, 992, 993, 994, 995,              // Battleground gym leaders
-    996, 997, 998, 999, 1000,                            // Stat trainers (Cheryl..Buck)
-    1001, 1002, 1003, 1004,                              // Sinnoh Elite Four (high lvl)
-    1005,                                                // Cynthia Pt rematch
-    // v2.0.4.9 — Gen 4 Battle Frontier brains (Platinum/HGSS canon, Silver+
-    // Gold print combined). v2.0.4.10 — Argenta + Thorton added as Pool Rules
-    // trainers (20-mon curated pools). Caitlin Pt still TBD when canon data
-    // arrives.
-    1167, 1168, 1169, 1185, 1186,                        // Palmer/Dahlia/Darach/Argenta/Thorton
-    // ---- BDSP section (Sinnoh remake — adjacent to Platinum) ----
-    1006, 1007, 1008,                                    // Barry BDSP (3 starter variants)
-    1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016,      // BDSP gym leader rematches
-    1017, 1018, 1019, 1020,                              // BDSP Sinnoh Elite Four
-    1021,                                                // Cynthia BDSP Champion
-    1022, 1023, 1025,                                    // Lucas BDSP (BT/BI/BE — BE skips bad ID 1024)
-    1026, 1027, 1028,                                    // Dawn BDSP (BT/BI/BE — shifted +1 around bad slot)
-    // ---- SwSh section (Sword/Shield + Isle of Armor + Crown Tundra) ----
-    1029, 1030, 1031,                                    // Leon variants (Cinderace/Inteleon/Rillaboom counters)
-    1032, 1033, 1034, 1035, 1036, 1037,                  // Hop x6 (Sword/Shield x Grookey/Scorbunny/Sobble)
-    1038, 1039,                                          // Mustard Single/Rapid Strike
-    1040, 1041,                                          // Marnie, Bede
-    1042, 1043, 1044, 1045, 1046, 1047, 1048, 1049, 1050, // 9 Galar gym leaders
-    1051, 1052,                                          // Klara, Avery (Isle of Armor)
-    1053,                                                // Peony (Crown Tundra)
-    // ---- Alola section (Sun/Moon USUM) ----
+    // ---- SM/USUM (2016-17, Gen 7 Alola) — Alola cast, then Battle Tree,
+    //      then Rainbow Rocket. Three jumpable sub-sections all USUM-era.
     917, 918, 919, 920, 921, 922, 923,                   // Trial captains
     924, 925, 926, 927, 928, 929, 930, 931,              // Kahunas/E4/Champion
-    932, 933, 934, 935, 936, 937, 938,                   // Hau/Kukui/Gladion variants
-    1073, 1074, 1075, 1076, 1077, 1078, 1079,            // v0.48: Faba/Dexio/Plumeria/Ryuki/Guzma/Lusamine/Tristan
-    1080, 1081, 1082,                                    // v0.48: Blue USUM / Red USUM / Anabel USUM
-    // ---- Battle Tree (USUM) section (v2.0.5.2 — moved here from BW-adjacent
-    //      so all USUM-era trainers cluster together) — canon Battle Tree
-    //      pool rosters distinct from each trainer's story team. Suffix "_BT"
-    //      used to disambiguate from existing _USUM and story IDs.
+    932, 933, 934, 935, 936, 937, 938,                   // Kukui/Hau/Gladion variants
+    1073, 1074, 1075, 1076, 1077, 1078, 1079,            // Faba/Dexio/Plumeria/Ryuki/Guzma/Lusamine/Tristan
+    1080, 1081, 1082,                                    // Blue USUM / Red USUM / Anabel USUM
+    // Battle Tree (USUM)
     1187, 1188, 1189,                                    // Red BT / Blue BT / Anabel BT
     1173,                                                // Wally BT
     1174,                                                // Cynthia BT
     1175,                                                // Colress BT
     1176, 1183,                                          // Dexio BT / Sina BT
     1177,                                                // Grimsley BT
-    1178, 1182,                                          // Guzma BT / Plumeria BT (Team Skull duo)
+    1178, 1182,                                          // Guzma BT / Plumeria BT
     1179, 1180, 1181,                                    // Kiawe BT / Kukui BT / Mallow BT
-    // ---- Rainbow Rocket section (USUM Episode RR) ----
+    // Rainbow Rocket
     907, 908, 909, 910, 911, 912, 913, 914, 915, 916,    // RR bosses
-    // ---- PWT chunk (BW2 World Tournament rosters, all together) ----
-    869, 870, 871, 872, 873, 874, 875, 876,              // PWT Kanto
-    877, 878, 879, 880, 881, 882, 883, 884, 885,         // PWT Hoenn
-    939, 940, 941, 942, 943, 944, 945, 946,              // PWT Johto
-    947, 948, 949, 950, 951, 952, 953, 954,              // PWT Sinnoh
-    955, 956, 957, 958, 959, 960, 961, 962,              // PWT Unova
-    1102, 1103, 1104, 1105, 1106,                        // v1.5: Cilan/Chili/Cress/Cheren/Roxie PWT
-    890, 886, 887, 888, 889, 963, 964, 965, 1107,        // PWT Champs (+ v1.5 Bianca World Leaders)
-    // ---- BW section (v0.40 Black/White + B2W2) ----
-    1055, 1056,                                          // N (Zekrom, Reshiram versions)
-    1057,                                                // Alder BW (Unova champion)
-    1058, 1059, 1060,                                    // Cheren x3 (Emboar/Samurott/Serperior aces)
-    1061, 1062, 1063,                                    // Bianca x3 (Samurott/Serperior/Emboar aces)
-    1064, 1065, 1066,                                    // Hugh x3 BW2 (Emboar/Samurott/Serperior aces)
-    1067, 1068, 1069, 1070,                              // Unova E4 (Shauntal/Marshal/Grimsley/Caitlin)
-    1071,                                                // Ghetsis (Team Plasma boss)
-    1072,                                                // Colress (B2W2 Plasma scientist, Steel/Electric)
-    1170,                                                // v2.0.4.9: Benga (B2W2 Black Tower / White Treehollow boss)
-    1171, 1172,                                          // v2.0.4.9: Ingo / Emmet (Battle Subway bosses)
-    // ---- XY section (Kalos) ----
-    1083, 1084, 1085,                                    // v0.49: Diantha / Serena / Calem
-    // ---- Anime section ----
-    1086,                                                // v0.50: Ash World Champion (Z + Mega + Gmax)
-    // ---- VGC section (2012 World Championships finals exhibition) ----
-    1108, 1109,                                          // v1.5: Wolfe Glick (runner-up), Ray Rizo (champion)
-    // ---- Custom section (user-built trainers, v0.51 + v1.1) ----
-    1087, 1088, 1089,                                    // Custom 1/2/3 (v0.51)
-    1099, 1100, 1101,                                    // Custom 4/5/6 (v1.1)
-    // ---- Legends Arceus section (v0.53) — placed AFTER custom slots so
-    //      adding them didn't shift TRAINER_SIM_CUSTOM_* IDs and break
-    //      existing user saveblocks. Volo is the climax sweeper (Giratina-
-    //      Origin ace); Adaman + Irida bring Dialga/Palkia-Origin trios;
-    //      Ingo runs Hisuian forms; Akari is the PC rival.
+    // ---- LGPE (2018, Gen 7 Kanto remake) ----
+    906,                                                 // Green LGPE (Mega Blastoise)
+    899, 900, 901, 902, 903, 904,                        // Lorelei/Agatha/Lance/Red/Blue/Bruno LGPE
+    982, 983,                                            // Trace LGPE Pikachu/Eevee variants
+    // ---- SwSh (2019-20, Gen 8 Galar + Isle of Armor + Crown Tundra) ----
+    1029, 1030, 1031,                                    // Leon variants
+    1032, 1033, 1034, 1035, 1036, 1037,                  // Hop x6
+    1038, 1039,                                          // Mustard Single/Rapid Strike
+    1040, 1041,                                          // Marnie, Bede
+    1042, 1043, 1044, 1045, 1046, 1047, 1048, 1049, 1050,// 9 Galar gym leaders
+    1051, 1052,                                          // Klara, Avery (Isle of Armor)
+    1053,                                                // Peony (Crown Tundra)
+    // ---- BDSP (2021, Gen 8 Sinnoh remake) ----
+    1006, 1007, 1008,                                    // Barry BDSP
+    1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016,      // BDSP gym leaders
+    1017, 1018, 1019, 1020,                              // BDSP Sinnoh E4
+    1021,                                                // Cynthia BDSP
+    1022, 1023, 1025,                                    // Lucas BDSP (BE skips bad ID 1024)
+    1026, 1027, 1028,                                    // Dawn BDSP
+    // ---- Legends Arceus (2022, Hisui) ----
     1090, 1091, 1092, 1093, 1094,                        // Volo / Adaman / Irida / Ingo / Akari
-    1095, 1096, 1097, 1098,                              // v0.53.2: Kamado / Zisu / Beni / Rei
-    // ---- RGBY section (Gen 1 unused content — Prof. Oak Glitch boss) ----
-    1110, 1111, 1112,                                    // v1.6: Oak Venusaur/Charizard/Blastoise variants
-    // ---- v1.21 Scarlet/Violet section (Paldea base + Indigo Disk DLC) ----
+    1095, 1096, 1097, 1098,                              // Kamado / Zisu / Beni / Rei
+    // ---- SV (2022-23, Gen 9 Paldea + Teal Mask + Indigo Disk) ----
     1113, 1114, 1115,                                    // Nemona ×3 starter variants
-    1116, 1117, 1118, 1119, 1120,                        // Geeta + Paldea E4 (Rika/Poppy/Larry/Hassel)
-    1121, 1122, 1123,                                    // Penny, AI Sada, AI Turo
+    1116, 1117, 1118, 1119, 1120,                        // Geeta + Paldea E4
+    1121, 1122, 1123,                                    // Penny / AI Sada / AI Turo
     1124, 1125, 1126, 1127, 1128, 1129, 1130,            // 7 Paldea gym leaders
     1131, 1132, 1133, 1134, 1135, 1136,                  // 6 Academy professors
-    1137,                                                // Carmine (Teal Mask rival)
-    1138, 1139, 1140, 1141, 1142,                        // BB Elite Four + Kieran champion
-    // ---- v1.21 Legends: Z-A section (Kalos, Lumiose City Royale) ----
+    1137,                                                // Carmine
+    1138, 1139, 1140, 1141, 1142,                        // BB Elite Four + Kieran
+    // ---- Legends ZA (2025, Kalos Lumiose Royale) ----
     1143, 1144,                                          // Urbain / Taunie final rivals
     1145, 1146, 1147, 1148,                              // Vinnie / Canari / Ivor / Corbeau
     1149, 1150, 1151, 1152, 1153,                        // L / Naveen / Tarragon / Grisham / Jacinthe
     1154, 1155, 1156,                                    // Rintaro / Xavi / Yvon
     1157, 1158, 1159, 1160, 1161, 1162, 1163,            // Griselle / Gwynn / Lidia / Lebanne / Mani / Emma / Philippe
     1164, 1165, 1166,                                    // Josee / Andy / Korrina Z-A
+    // ==== MISC sections below ====
+    // ---- PWT (B2W2 Pokemon World Tournament — cross-region) ----
+    869, 870, 871, 872, 873, 874, 875, 876,              // PWT Kanto
+    877, 878, 879, 880, 881, 882, 883, 884, 885,         // PWT Hoenn
+    939, 940, 941, 942, 943, 944, 945, 946,              // PWT Johto
+    947, 948, 949, 950, 951, 952, 953, 954,              // PWT Sinnoh
+    955, 956, 957, 958, 959, 960, 961, 962,              // PWT Unova
+    1102, 1103, 1104, 1105, 1106,                        // Cilan/Chili/Cress/Cheren/Roxie PWT
+    890, 886, 887, 888, 889, 963, 964, 965, 1107,        // PWT Champs + Bianca World Leaders
+    // ---- Anime section ----
+    1086,                                                // Ash World Champion
+    // ---- VGC 2012 World Championships ----
+    1108, 1109,                                          // Wolfe Glick / Ray Rizo
+    // ---- Custom section (user-built trainers, v0.51 + v1.1) ----
+    1087, 1088, 1089,                                    // Custom 1/2/3
+    1099, 1100, 1101,                                    // Custom 4/5/6
+    // ---- RGBY section (Gen 1 unused — Prof. Oak Glitch boss) ----
+    1110, 1111, 1112,                                    // Oak Venusaur/Charizard/Blastoise variants
 };
 #define SIMULATOR_ROSTER_COUNT (sizeof(sSimulatorRoster) / sizeof(sSimulatorRoster[0]))
 
@@ -799,10 +796,13 @@ struct SimCup
 // builder shuffles and picks 7 random opponents per run.
 
 // Emerald — 8 gym leader Match-Call rematches (_5) + 4 E4 + Wallace + Steven
+// v2.0.5.3: Added Hoenn Battle Frontier brains (Anabel/Tucker/Spenser/Greta/
+// Noland/Lucy/Brandon) so the Emerald cup mirrors a full Hoenn challenge.
 static const u16 sCupEmerald[]    = {
     773, 777, 781, 785, 789, 793, 797, 801,         // Roxanne/Brawly/Wattson/Flannery/Norman/Winona/T&L/Juan _5
     261, 262, 263, 264,                              // Sidney, Phoebe, Glacia, Drake
     335, 804,                                        // Wallace champion, Steven
+    805, 806, 807, 808, 809, 810, 811,               // Frontier brains (Anabel/Tucker/Spenser/Greta/Noland/Lucy/Brandon)
 };
 
 // FRLG — Indigo E4 + 3 Blue starter variants + Red
@@ -817,19 +817,25 @@ static const u16 sCupFRLG[]       = {
 };
 
 // HGSS — Red + Blue HGSS + 3 Silvers + Johto gyms + Kanto HGSS gyms + Johto E4 + Lance HGSS
+// v2.0.5.3: HGSS shares the Sinnoh Battle Frontier in canon, so Gen 4 brains
+// (Palmer/Dahlia/Darach/Argenta/Thorton) added here too — same brains as the
+// Platinum cup gets them.
 static const u16 sCupHGSS[]       = {
     851, 966, 967, 968, 984,                         // Red, Blue HGSS, Silver Cynd/Toto/Chik
     969, 970, 971, 972, 973, 974, 975, 976,          // Johto gym leaders HGSS
     862, 863, 864, 865, 866, 867, 868,               // Kanto gym HGSS rematches
     977, 978, 979, 980,                              // Johto E4 HGSS
     981,                                             // Lance HGSS
+    1167, 1168, 1169, 1185, 1186,                    // Gen 4 brains (Palmer/Dahlia/Darach/Argenta/Thorton)
 };
 
 // Platinum — Sinnoh gyms + Sinnoh E4 + Cynthia Pt + Barry + Riley + Buck
+// v2.0.5.3: Gen 4 Battle Frontier brains added (Platinum's Frontier canon).
 static const u16 sCupPlatinum[]   = {
     988, 989, 990, 991, 992, 993, 994, 995,          // Roark/Gardenia/Maylene/Wake/Fantina/Byron/Candice/Volkner
     1001, 1002, 1003, 1004, 1005,                    // Aaron, Bertha, Flint, Lucian, Cynthia Pt
     986, 998, 1000,                                  // Barry, Riley, Buck
+    1167, 1168, 1169, 1185, 1186,                    // Gen 4 brains (Palmer/Dahlia/Darach/Argenta/Thorton)
 };
 
 // BDSP — same Sinnoh roster, BDSP-era teams (Cynthia BDSP w/ Garchomp Lv 88, etc.)
@@ -879,6 +885,33 @@ static const u16 sCupChampions[]  = {
     1005,                                            // Cynthia Platinum
     982,                                             // Trace LGPE (Pikachu variant)
     930,                                             // Kukui Alola
+};
+
+// v2.0.5.3 — BW Unova tournament cup. All canon BW/B2W2 trainers (N x2 +
+// Alder + Cheren x3 + Bianca x3 + Hugh x3 + Unova E4 + Ghetsis + Colress +
+// Benga + Ingo + Emmet). Bracket picks 7 random per run.
+static const u16 sCupBW[]         = {
+    1055, 1056, 1057,                                // N (Zekrom/Reshiram) + Alder
+    1058, 1059, 1060,                                // Cheren x3
+    1061, 1062, 1063,                                // Bianca x3
+    1064, 1065, 1066,                                // Hugh x3
+    1067, 1068, 1069, 1070,                          // Unova E4 (Shauntal/Marshal/Grimsley/Caitlin)
+    1071, 1072,                                      // Ghetsis + Colress
+    1170,                                            // Benga (Black Tower / White Treehollow)
+    1171, 1172,                                      // Ingo / Emmet (Battle Subway)
+};
+
+// v2.0.5.3 — Battle Tree (USUM) tournament cup. All 14 canon Tree pool
+// trainers — each match in the bracket re-rolls a fresh 6-mon team from
+// their canon Tree pool, so even back-to-back fights against the same
+// trainer feel different.
+static const u16 sCupBattleTree[] = {
+    1187, 1188, 1189,                                // Red BT / Blue BT / Anabel BT
+    1173, 1174, 1175,                                // Wally BT / Cynthia BT / Colress BT
+    1176, 1183,                                      // Dexio BT / Sina BT
+    1177,                                            // Grimsley BT
+    1178, 1182,                                      // Guzma BT / Plumeria BT
+    1179, 1180, 1181,                                // Kiawe BT / Kukui BT / Mallow BT
 };
 
 // v1.21 — Scarlet/Violet tournament pool. All 30 SV trainers (1113-1142).
@@ -969,19 +1002,25 @@ static const u8 sCupName_PwtWorld[]     = _("PWT World");
 static const u8 sCupName_SV[]           = _("SV");
 static const u8 sCupName_ZA[]           = _("Z-A");
 static const u8 sCupName_AllStars[]     = _("All Stars");
+// v2.0.5.3 — new tournament cups
+static const u8 sCupName_BW[]           = _("BW");
+static const u8 sCupName_BattleTree[]   = _("BattleTree");
 
 static const struct SimCup sSimCups[] =
 {
     { sCupName_Off,         NULL,             0 },   // 0: Off
     // v1.20 — consolidated per-game cups (one pool per game, bracket picks 7 random per run)
-    { sCupName_Emerald,     sCupEmerald,     14 },   // 8 gym _5 rematches + 4 E4 + Wallace + Steven
+    // v2.0.5.3 — Emerald +7 (Hoenn brains), HGSS +5 / Platinum +5 (Gen 4 brains)
+    { sCupName_Emerald,     sCupEmerald,     21 },   // 8 gym _5 rematches + 4 E4 + Wallace + Steven + Hoenn Frontier brains
     { sCupName_FRLG,        sCupFRLG,         8 },   // Red, Indigo E4, 3 Blue starter variants
-    { sCupName_HGSS,        sCupHGSS,        25 },   // Red, Blue HGSS, 3 Silvers, Johto gyms, Kanto HGSS gyms, Johto E4, Lance HGSS
-    { sCupName_Platinum,    sCupPlatinum,    16 },   // Sinnoh gyms + E4 + Cynthia Pt + Barry + Riley + Buck
+    { sCupName_HGSS,        sCupHGSS,        30 },   // Red, Blue HGSS, 3 Silvers, Johto gyms, Kanto HGSS gyms, Johto E4, Lance HGSS + Gen 4 brains
+    { sCupName_Platinum,    sCupPlatinum,    21 },   // Sinnoh gyms + E4 + Cynthia Pt + Barry + Riley + Buck + Gen 4 brains
     { sCupName_BDSP,        sCupBDSP,        16 },   // Same Sinnoh roster, BDSP-era teams
+    { sCupName_BW,          sCupBW,          21 },   // v2.0.5.3 — N + Alder + Cheren + Bianca + Hugh + E4 + Ghetsis + Colress + Benga + Ingo + Emmet
     { sCupName_Oras,        sCupOras,         8 },   // Wally, Steven ORAS, May, Brendan, Hoenn E4 ORAS
     { sCupName_SwSh,        sCupSwSh,        21 },   // Galar gyms + Melony + Leon × 3 + Hop × 3 + Mustard × 2 + Marnie/Bede + Klara/Avery/Peony
     { sCupName_Alola,       sCupAlola,       32 },   // Every non-RR Alola trainer: trial captains + kahunas + E4 + Kukui/Hau/Gladion variants + Faba/Dexio/Plumeria/Ryuki/Guzma/Lusamine/Tristan + Blue/Red/Anabel USUM
+    { sCupName_BattleTree,  sCupBattleTree,  14 },   // v2.0.5.3 — all 14 canon Tree pool trainers, fresh roll each match
     { sCupName_RRocket,     sCupRRocket,      8 },   // RR bosses (USUM Rainbow Rocket)
     { sCupName_Lgpe,        sCupLgpe,         7 },   // Lorelei, Agatha, Lance, Red, Blue, Bruno, Green
     { sCupName_Champions,   sCupChampions,   12 },   // 11 in-game champions (+ Cynthia in both BDSP and Platinum)
@@ -5858,30 +5897,35 @@ static const u16 sSimulatorRosterSectionStarts[] = {
 #ifndef RELEASE_BUILD
     0,                       // Custom challengers — Logan, Taylor (2) — dev only
 #endif
-    CUSTOM_OFFSET,           // LGPE — Green + Lorelei/Agatha/Lance/Red/Blue/Bruno + Trace (9)
-    9 + CUSTOM_OFFSET,       // FRLG — Indigo E4 + Blue starter variants (7)
-    16 + CUSTOM_OFFSET,      // HGSS — Red + Blue HGSS + 3 Silvers + gym/E4/Champion (25)
-    41 + CUSTOM_OFFSET,      // Emerald — Hoenn 5 gyms + E4 + Steven + Wallace + v2.0.4.9 Gen 3 Brains x6 + v2.0.4.10 Noland (21)
-    62 + CUSTOM_OFFSET,      // ORAS — Hoenn ORAS E4 + Wally/Steven/May/Brendan (8)
-    70 + CUSTOM_OFFSET,      // Platinum — 3 Barrys + Battleground + stat + E4 + Cynthia Pt + v2.0.4.9 Gen 4 Brains x3 + v2.0.4.10 Argenta/Thorton (26)
-    96 + CUSTOM_OFFSET,      // BDSP — 3 Barrys + 8 gym + 4 E4 + Cynthia + 3 Lucas + 3 Dawn (22)
-    118 + CUSTOM_OFFSET,     // SwSh — Leon x3 + Hop x6 + Mustard x2 + Marnie/Bede + 9 gym + Klara/Avery/Peony (25)
-    143 + CUSTOM_OFFSET,     // Alola — Trial Captains + Kahunas + E4 + Champion + Variants + v0.48 USUM (32)
-    175 + CUSTOM_OFFSET,     // Battle Tree (USUM) — v2.0.5.2 moved here from BW-adjacent: Red/Blue/Anabel + Wally/Cynthia/Colress/Dexio/Sina/Grimsley/Guzma/Plumeria/Kiawe/Kukui/Mallow BT (14)
-    189 + CUSTOM_OFFSET,     // Rainbow Rocket — Episode RR bosses (10)
-    199 + CUSTOM_OFFSET,     // PWT Kanto (8)
-    207 + CUSTOM_OFFSET,     // PWT Hoenn (9)
-    216 + CUSTOM_OFFSET,     // PWT Johto (8)
-    224 + CUSTOM_OFFSET,     // PWT Sinnoh (8)
-    232 + CUSTOM_OFFSET,     // PWT Unova (8 base + 5 v1.5 = 13)
-    245 + CUSTOM_OFFSET,     // PWT Champs — Red/Blue/Lance/Steven/Wallace + Cynthia/Iris/Alder + v1.5 Bianca (9)
-    254 + CUSTOM_OFFSET,     // BW — N x2 + Alder + Cheren x3 + Bianca x3 + Hugh x3 + Unova E4 + Ghetsis + Colress + v2.0.4.9 Benga/Ingo/Emmet (21)
-    275 + CUSTOM_OFFSET,     // XY — Diantha/Serena/Calem (3)
-    278 + CUSTOM_OFFSET,     // Anime — Ash World Champion (1)
-    279 + CUSTOM_OFFSET,     // VGC — v1.5: Wolfe Glick + Ray Rizo (2012 World Finals) (2)
-    281 + CUSTOM_OFFSET,     // Custom — v0.51 + v1.1 user-built slots (6)
-    287 + CUSTOM_OFFSET,     // Legends Arceus — v0.53 Volo/Adaman/Irida/Ingo/Akari + v0.53.2 Kamado/Zisu/Beni/Rei (9)
-    296 + CUSTOM_OFFSET,     // RGBY — v1.6: Prof. Oak Glitch x3 (Venusaur/Charizard/Blastoise variants)
+    // v2.0.5.3 — Section starts MATCH new release-order roster layout.
+    // Every section now has its own jump point including SV and ZA which
+    // were silently missing from L/R rotation in earlier versions.
+    CUSTOM_OFFSET,           // FRLG (7)
+    7 + CUSTOM_OFFSET,       // Emerald — gyms + E4 + Steven + Wallace + Hoenn Frontier brains (21)
+    28 + CUSTOM_OFFSET,      // Platinum — Barrys + Battleground + stat + E4 + Cynthia Pt + Gen 4 brains (26)
+    54 + CUSTOM_OFFSET,      // HGSS — Red + Blue HGSS + 3 Silvers + gym/E4/Champion (25)
+    79 + CUSTOM_OFFSET,      // BW — N x2 + Alder + Cheren x3 + Bianca x3 + Hugh x3 + E4 + Ghetsis + Colress + Benga + Ingo + Emmet (21)
+    100 + CUSTOM_OFFSET,     // XY — Diantha/Serena/Calem (3)
+    103 + CUSTOM_OFFSET,     // ORAS — Hoenn ORAS E4 + Wally/Steven/May/Brendan (8)
+    111 + CUSTOM_OFFSET,     // Alola — Trial Captains + Kahunas + E4 + Variants + v0.48 USUM (32)
+    143 + CUSTOM_OFFSET,     // Battle Tree (USUM) — Red/Blue/Anabel + Wally/Cynthia/Colress/Dexio/Sina/Grimsley/Guzma/Plumeria/Kiawe/Kukui/Mallow BT (14)
+    157 + CUSTOM_OFFSET,     // Rainbow Rocket — USUM Episode RR bosses (10)
+    167 + CUSTOM_OFFSET,     // LGPE — Green + Lorelei/Agatha/Lance/Red/Blue/Bruno + Trace (9)
+    176 + CUSTOM_OFFSET,     // SwSh — Leon x3 + Hop x6 + Mustard x2 + Marnie/Bede + 9 gym + Klara/Avery/Peony (25)
+    201 + CUSTOM_OFFSET,     // BDSP — Barrys + 8 gym + 4 E4 + Cynthia + 3 Lucas + 3 Dawn (22)
+    223 + CUSTOM_OFFSET,     // Legends Arceus — Volo/Adaman/Irida/Ingo/Akari + Kamado/Zisu/Beni/Rei (9)
+    232 + CUSTOM_OFFSET,     // SV — Nemona + Geeta + Paldea E4 + Penny + Sada/Turo + 7 gyms + 6 profs + Carmine + BB E4 + Kieran (30)
+    262 + CUSTOM_OFFSET,     // Legends ZA — Urbain/Taunie + Royale challengers (24)
+    286 + CUSTOM_OFFSET,     // PWT Kanto (8)
+    294 + CUSTOM_OFFSET,     // PWT Hoenn (9)
+    303 + CUSTOM_OFFSET,     // PWT Johto (8)
+    311 + CUSTOM_OFFSET,     // PWT Sinnoh (8)
+    319 + CUSTOM_OFFSET,     // PWT Unova (8 base + 5 v1.5 = 13)
+    332 + CUSTOM_OFFSET,     // PWT Champs — Red/Blue/Lance/Steven/Wallace + Cynthia/Iris/Alder + Bianca (9)
+    341 + CUSTOM_OFFSET,     // Anime — Ash World Champion (1)
+    342 + CUSTOM_OFFSET,     // VGC — Wolfe Glick + Ray Rizo 2012 World Finals (2)
+    344 + CUSTOM_OFFSET,     // Custom — v0.51 + v1.1 user-built slots (6)
+    350 + CUSTOM_OFFSET,     // RGBY — Prof. Oak Glitch x3 (Venusaur/Charizard/Blastoise variants)
 };
 #define SIMULATOR_ROSTER_SECTION_COUNT (sizeof(sSimulatorRosterSectionStarts) / sizeof(sSimulatorRosterSectionStarts[0]))
 
