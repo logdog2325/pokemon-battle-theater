@@ -65,6 +65,7 @@
 #include "strings.h"
 #include "string_util.h"
 #include "task.h"
+#include "trainer_pools.h"
 #include "tv.h"
 #include "pokemon_summary_screen.h"
 #include "wild_encounter.h"
@@ -7034,6 +7035,248 @@ static void Sim_PickTopN(const struct Trainer *me, const u16 *oppSpecies, const 
     *outCount = pickCount;
 }
 
+// v2.0.6 — Pool-aware variant. For trainers with poolSize > 0, the fixed-party
+// picker above only sees party[0..partySize-1] which are the FIRST few entries
+// of a much larger pool (e.g. Noland Group 3 has poolSize=50, partySize=6 so
+// we'd be picking from 6 of 50). This version iterates the FULL pool, scores
+// each entry against the opposing teamsheet, then top-N picks while applying
+// pool clauses (species/item/mega-stone/Z-crystal/form) and honoring lead/ace
+// tags. Output is pool indices (also = party indices, since trainer->party[]
+// is sized to poolSize when poolSize > 0). The caller writes these directly
+// into monIndices[] in CreateNPCTrainerPartyFromTrainer, REPLACING the random
+// pool sample DoTrainerPartyPool just produced.
+//
+// Clauses use the same global rules table the engine uses (gPoolRulesetsList +
+// poolItemClauseExclusions, both defined in src/data/battle_pool_rules.h and
+// linked from trainer_pools.c) so behavior matches the trainer template's
+// declared Pool Rules entry (Basic/Doubles/etc.).
+extern const struct PoolRules gPoolRulesetsList[];
+extern const u16 poolItemClauseExclusions[];
+#define SIM_POOL_ITEM_EXCLUSIONS_COUNT 2  // matches battle_pool_rules.h
+
+static bool32 Sim_PoolItemIsExcluded(u16 item)
+{
+    for (u8 i = 0; i < SIM_POOL_ITEM_EXCLUSIONS_COUNT; i++)
+        if (item == poolItemClauseExclusions[i])
+            return TRUE;
+    return FALSE;
+}
+
+// Disable every still-available entry that conflicts with `picked` under the
+// supplied rules. Mirrors the clause-enforcement block in PickMonFromPool.
+static void Sim_PoolDisableConflicts(const struct Trainer *trainer,
+                                      const struct PoolRules *rules,
+                                      bool8 *avail, u8 picked)
+{
+    u16 pickedSpecies = trainer->party[picked].species;
+    u16 pickedItem    = trainer->party[picked].heldItem;
+    enum NationalDexOrder pickedNatDex = gSpeciesInfo[pickedSpecies].natDexNum;
+
+    for (u8 i = 0; i < trainer->poolSize; i++)
+    {
+        if (!avail[i])
+            continue;
+        u16 curSpecies = trainer->party[i].species;
+        u16 curItem    = trainer->party[i].heldItem;
+        enum NationalDexOrder curNatDex = gSpeciesInfo[curSpecies].natDexNum;
+
+        if (rules->speciesClause && pickedSpecies == curSpecies)
+            avail[i] = FALSE;
+        if (!rules->excludeForms && pickedNatDex == curNatDex)
+            avail[i] = FALSE;
+        if (rules->itemClause && curItem != ITEM_NONE && pickedItem == curItem)
+        {
+            if (!rules->itemClauseExclusions || !Sim_PoolItemIsExcluded(pickedItem))
+                avail[i] = FALSE;
+        }
+        if (rules->megaStoneClause
+         && gItemsInfo[curItem].sortType == ITEM_TYPE_MEGA_STONE
+         && gItemsInfo[pickedItem].sortType == ITEM_TYPE_MEGA_STONE)
+            avail[i] = FALSE;
+        if (rules->zCrystalClause
+         && gItemsInfo[curItem].sortType == ITEM_TYPE_Z_CRYSTAL
+         && gItemsInfo[pickedItem].sortType == ITEM_TYPE_Z_CRYSTAL)
+            avail[i] = FALSE;
+    }
+}
+
+// Pick the highest-scoring still-available entry whose tag mask matches
+// `requireTag` (or any if requireTag==0). Returns -1 if none.
+static s32 Sim_PoolPickBest(const struct Trainer *trainer,
+                             const u32 *scores, const bool8 *avail,
+                             u32 requireTag, u32 forbidTag)
+{
+    s32 bestIdx = -1;
+    u32 bestScore = 0;
+    for (u8 i = 0; i < trainer->poolSize; i++)
+    {
+        if (!avail[i])
+            continue;
+        u32 tags = trainer->party[i].tags;
+        if (requireTag != 0 && !(tags & requireTag))
+            continue;
+        if (forbidTag != 0 && (tags & forbidTag))
+            continue;
+        if (bestIdx < 0 || scores[i] > bestScore)
+        {
+            bestIdx = i;
+            bestScore = scores[i];
+        }
+    }
+    return bestIdx;
+}
+
+static void Sim_PickTopNFromPool(const struct Trainer *me,
+                                  const u16 *oppSpecies,
+                                  const struct TrainerMon * const *oppMons,
+                                  u8 oppCount, u8 pickCount,
+                                  u8 *outIndices, u8 *outCount)
+{
+    u8 poolSize = me->poolSize;
+    if (poolSize == 0)
+    {
+        *outCount = 0;
+        return;
+    }
+    if (pickCount > SIM_PICK_INDICES_MAX)
+        pickCount = SIM_PICK_INDICES_MAX;
+    if (pickCount > poolSize)
+        pickCount = poolSize;
+
+    // Look up the trainer's declared rules. Falls back to defaultPoolRules
+    // (== gPoolRulesetsList[POOL_RULESET_BASIC]) on out-of-range index.
+    struct PoolRules rules = gPoolRulesetsList[0];
+    if (me->poolRuleIndex < 5)  // 5 = number of POOL_RULESET_* enum entries
+        rules = gPoolRulesetsList[me->poolRuleIndex];
+
+    // Variable-length stack arrays sized to actual pool size (pokeemerald uses
+    // VLAs in battle_main.c too — see line 2020 `u32 monIndices[monsCount]`).
+    // `avail` flips FALSE both when we pick an entry AND when a still-avail
+    // entry gets clause-disabled by a picked one. `picked` only flips when
+    // we actually output an index — that lets PASS 5 relax clauses by
+    // ignoring `avail` and using only `picked`, matching Smogon-style
+    // "best-effort clauses" behavior: if the pool's unique species count
+    // is less than partySize (e.g. Red BT: 5 species, partySize=6), we'd
+    // rather ship a duplicate than undershoot pickCount and OOB the caller.
+    u32 scores[poolSize];
+    bool8 avail[poolSize];
+    bool8 picked[poolSize];
+
+    for (u8 i = 0; i < poolSize; i++)
+    {
+        scores[i] = Sim_ScoreMonForPick(&me->party[i], oppSpecies, oppMons, oppCount);
+        avail[i]  = TRUE;
+        picked[i] = FALSE;
+    }
+
+    u8 written = 0;
+    #define POOL_PICK_MARK(idx) do { avail[(idx)] = FALSE; picked[(idx)] = TRUE; } while (0)
+
+    // PASS 1 — Lead slot(s). Pick up to rules.tagMaxMembers[LEAD] highest-
+    // scoring LEAD-tagged entries into the FRONT of the output. Most rulesets
+    // cap this at 1 (singles) or 2 (doubles).
+    {
+        u8 leadCap = rules.tagMaxMembers[POOL_TAG_LEAD];
+        if (leadCap == 0 || leadCap == POOL_MEMBER_COUNT_NONE) leadCap = 1;
+        for (u8 k = 0; k < leadCap && written < pickCount; k++)
+        {
+            s32 best = Sim_PoolPickBest(me, scores, avail, MON_POOL_TAG_LEAD, 0);
+            if (best < 0) break;
+            outIndices[written++] = (u8)best;
+            POOL_PICK_MARK((u8)best);
+            Sim_PoolDisableConflicts(me, &rules, avail, (u8)best);
+        }
+    }
+
+    // PASS 2 — Reserve ace slot(s). Find the best ACE-tagged entries; we'll
+    // place them at the BACK of the output after middle slots fill. Stash
+    // their indices + remove from avail so middle pass doesn't grab them.
+    u8 reservedAce[SIM_PICK_INDICES_MAX] = {0};
+    u8 reservedAceCount = 0;
+    {
+        u8 aceCap = rules.tagMaxMembers[POOL_TAG_ACE];
+        if (aceCap == 0 || aceCap == POOL_MEMBER_COUNT_NONE) aceCap = 1;
+        u8 remaining = (pickCount > written) ? (pickCount - written) : 0;
+        if (aceCap > remaining) aceCap = remaining;
+        for (u8 k = 0; k < aceCap; k++)
+        {
+            s32 best = Sim_PoolPickBest(me, scores, avail, MON_POOL_TAG_ACE, MON_POOL_TAG_LEAD);
+            if (best < 0) break;
+            reservedAce[reservedAceCount++] = (u8)best;
+            // Reserve without marking as picked yet — we'll commit during PASS 4.
+            avail[best] = FALSE;
+        }
+    }
+
+    // PASS 3 — Fill middle slots. Skip LEAD-tagged and ACE-tagged here (they
+    // were handled / reserved). Stop when we'd run into the reserved ace tail.
+    u8 middleTarget = pickCount - reservedAceCount;
+    while (written < middleTarget)
+    {
+        s32 best = Sim_PoolPickBest(me, scores, avail, 0,
+                                     MON_POOL_TAG_LEAD | MON_POOL_TAG_ACE);
+        if (best < 0) break;
+        outIndices[written++] = (u8)best;
+        POOL_PICK_MARK((u8)best);
+        Sim_PoolDisableConflicts(me, &rules, avail, (u8)best);
+    }
+
+    // PASS 4 — Place reserved aces at the tail. Commit them as picked now.
+    for (u8 k = 0; k < reservedAceCount && written < pickCount; k++)
+    {
+        outIndices[written++] = reservedAce[k];
+        picked[reservedAce[k]] = TRUE;
+        Sim_PoolDisableConflicts(me, &rules, avail, reservedAce[k]);
+    }
+
+    // PASS 5 — Strict fallback: any still-clause-respecting entry.
+    while (written < pickCount)
+    {
+        s32 best = Sim_PoolPickBest(me, scores, avail, 0, 0);
+        if (best < 0) break;
+        outIndices[written++] = (u8)best;
+        POOL_PICK_MARK((u8)best);
+    }
+
+    // PASS 6 — Clause-relaxed fallback. Pools like Red BT (5 unique species,
+    // partySize 6) physically can't fill the roster while honoring species
+    // clause — there are only 5 unique mons to pick. Undershooting pickCount
+    // would leave the caller reading garbage from an uninitialized pickRow[]
+    // (see battle_main.c's CreateNPCTrainerPartyFromTrainer pool override
+    // block). Smogon-style "best-effort" semantics: pick the highest-scoring
+    // pool entry that hasn't ALREADY been output as an index, ignoring item/
+    // mega/Z/species clauses. This may produce a duplicate species in the
+    // tail slot — preferable to a crash. Iterate by `picked[]`, not `avail[]`,
+    // so we see the full pool again.
+    while (written < pickCount)
+    {
+        s32 bestIdx = -1;
+        u32 bestScore = 0;
+        for (u8 i = 0; i < poolSize; i++)
+        {
+            if (picked[i]) continue;
+            if (bestIdx < 0 || scores[i] > bestScore)
+            {
+                bestIdx = i;
+                bestScore = scores[i];
+            }
+        }
+        if (bestIdx < 0) break;  // pool fully exhausted (poolSize < pickCount)
+        outIndices[written++] = (u8)bestIdx;
+        picked[bestIdx] = TRUE;
+    }
+
+    // PASS 7 — Absolute fallback. Pool is literally smaller than pickCount
+    // (configuration error — can't happen with valid data, but be safe).
+    // Fill remaining slots by recycling pool index 0 so monIndices[] is fully
+    // initialized. The engine will probably misbehave but won't OOB-crash.
+    while (written < pickCount)
+        outIndices[written++] = 0;
+
+    *outCount = written;
+    #undef POOL_PICK_MARK
+}
+
 // Build a flat species[] + mon-pointer[] list for an opposing pair so each AI
 // can score against the combined teamsheet. tA/tB may be NULL (no opp on that
 // slot, e.g. VGC singles vs trainer or partner-less player AI).
@@ -7063,7 +7306,15 @@ static u8 Sim_BuildOpposingTeamsheet(
         }
         else
         {
-            for (u8 i = 0; i < tA->partySize && count < 12; i++)
+            // v2.0.6 — When the opp is a pool trainer, walk the FULL pool
+            // (capped at 12 to fit outSpecies[]) instead of just partySize.
+            // The scorer's threat-modeling is meaningfully better when it
+            // sees all possible mons the pool can bring — e.g. Dexio BT's
+            // 14-mon pool exposes Mega Slowbro, Aegislash, etc. that the
+            // first 4 partySize slots wouldn't surface. Without this, we'd
+            // be scoring our picks against a phantom 4-mon team.
+            u8 cap = (tA->poolSize > 0) ? tA->poolSize : tA->partySize;
+            for (u8 i = 0; i < cap && count < 12; i++)
             {
                 outSpecies[count] = tA->party[i].species;
                 outMons[count] = &tA->party[i];
@@ -7087,7 +7338,8 @@ static u8 Sim_BuildOpposingTeamsheet(
         }
         else
         {
-            for (u8 i = 0; i < tB->partySize && count < 12; i++)
+            u8 cap = (tB->poolSize > 0) ? tB->poolSize : tB->partySize;
+            for (u8 i = 0; i < cap && count < 12; i++)
             {
                 outSpecies[count] = tB->party[i].species;
                 outMons[count] = &tB->party[i];
@@ -7140,7 +7392,34 @@ static void Sim_QueuePicksFor(u16 meId, const struct Trainer *me,
         oppSpecies, oppMons);
 
     u8 written = 0;
-    Sim_PickTopN(me, oppSpecies, oppMons, oppCount, pickCount, gSimPickIndices[row], &written);
+    // v2.0.6 — Pool trainers (poolSize > 0) need the pool-aware picker so they
+    // sample from the FULL pool with clause enforcement. The fixed-party
+    // picker would only see party[0..partySize-1] which for pool trainers is
+    // the raw front of the pool — duplicates included (e.g. Dexio BT's pool
+    // opens with Turtonator x2 from different itemsets) — and would lose the
+    // depth of e.g. Noland Group 3's 50-mon roster down to just the first 6.
+    if (me->poolSize > 0)
+    {
+        // CRITICAL: Pool trainers don't team-preview-clip — DoTrainerPartyPool
+        // brings the trainer's full `partySize` mons every battle. So our
+        // override needs to supply that many picks; if we only output the
+        // team-preview `pickCount` (3 multi / 4 VGC) the caller in
+        // battle_main.c writes monIndices[pickCount..monsCount-1] from the
+        // UNINITIALIZED tail of its stack-local pickRow[6], producing OOB
+        // party-index reads — manifests as "invalid move: 1030" asserts in
+        // dev builds because the engine constructs battlers from garbage
+        // TrainerMons whose moves[] happens to contain past-MOVES_COUNT_ALL
+        // values. Cap at SIM_PICK_INDICES_MAX (6) which matches the engine-
+        // side pickRow[6] buffer.
+        u8 poolPickCount = me->partySize;
+        if (poolPickCount < pickCount) poolPickCount = pickCount;
+        if (poolPickCount > SIM_PICK_INDICES_MAX) poolPickCount = SIM_PICK_INDICES_MAX;
+        Sim_PickTopNFromPool(me, oppSpecies, oppMons, oppCount, poolPickCount, gSimPickIndices[row], &written);
+    }
+    else
+    {
+        Sim_PickTopN(me, oppSpecies, oppMons, oppCount, pickCount, gSimPickIndices[row], &written);
+    }
 
     // Battle Simulator: Taylor always leads with Pelipper. Pelipper is at party
     // index 0 in TRAINER_TAYLOR_BRO's team. If the matchup-aware Sim_PickTopN

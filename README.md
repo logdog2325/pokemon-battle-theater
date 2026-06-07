@@ -9,7 +9,7 @@ An AI vs AI Pokemon battle simulator built on
 Pit any two trainers from the mainline games (Gens 1-9) against each other,
 or pilot one side via Pilot Mode.
 
-**Download the latest patch:** [v1.19 — Sim wrapper re-entry from inside Frontier Challenge](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
+**Download the latest patch:** [v2.0.7 — Pool-aware team preview + Build Trainer QoL](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
 All releases live on the [Releases page](https://github.com/logdog2325/pokemon-battle-theater/releases).
 
 ---
@@ -30,6 +30,21 @@ All releases live on the [Releases page](https://github.com/logdog2325/pokemon-b
 
 ## What this is
 
+- **Battle Tree + Frontier Brain pool trainers (v2.0.5.1+)** — canon Red BT,
+  Blue BT, Wally BT, Cynthia BT, Dexio BT, Sina BT, Plumeria BT and more,
+  each with a 10-50 mon pool that resamples per battle. Frontier Brains
+  (Anabel, Tucker, Spenser, Greta, Noland, Lucy, Brandon, Palmer, Dahlia,
+  Darach, Argenta, Thorton) all run their canon pools with the correct
+  Battle Frontier music
+- **"Brains" tournament cup (v2.0.6)** — all 12 Battle Frontier brains in
+  one bracket, picks 8 of 12 per run
+- **Pool-aware team preview (v2.0.7)** — for pool trainers (Battle Tree,
+  Frontier Brains), the matchup-aware picker iterates the *full pool* and
+  selects the best counter-team against your roster with species / item /
+  mega / Z-crystal clauses respected. Tip: **most Battle Tree trainers
+  shine in VGC mode** (4-pick-of-pool) because their pools are tight
+  enough that 6v6 sometimes runs out of unique species and falls back to
+  duplicates
 - ~120 curated rosters spanning Kanto / Johto / Hoenn / Sinnoh / Unova /
   Kalos / Alola / Galar / Hisui, plus the PWT and Ash's anime World
   Champion team
@@ -80,13 +95,29 @@ opening menu, then choose a slot (1–6).
 - Per Pokémon: species, held item, ability, 4 moves, EVs, IVs, nature,
   gender, level, shiny toggle
 
-**Two shortcuts to skip the from-scratch build:**
+**Three shortcuts to skip the from-scratch build:**
 - **Copy preset** — start from an existing trainer's team (Cynthia,
   Volo, Logan's team, etc.) and tweak from there. Saves you ~10 minutes
   per team if you mostly want to swap moves or items on a known set
+- **Import single mon from preset (v2.0.6)** — inside the per-mon editor,
+  pick "Import single mon…", choose a source trainer, then DPAD-LEFT /
+  RIGHT cycles through their party slots. Press A to import just that one
+  mon into your active slot. Pool trainers expose their full pool (browse
+  all 50 of Noland Group 3's rentals, all 14 of Dexio BT's pool — not just
+  the first 6)
 - **Import from code** — paste a ≤24-character Showdown team code to
   instantly load a team you built externally — see
   [Showdown team codes](#showdown-team-codes) below for the full flow
+
+**Quality-of-life shortcuts (v2.0.6):**
+- **Name search in species + item pickers** — press SELECT inside the
+  picker, OR use the "Search species… / Search item…" rows in the per-mon
+  editor. Type the first few letters (e.g. `garc`, `lefto`) and the picker
+  jumps to the first match. Ditto mascot, contextual titles ("What
+  Pokémon?" / "What item?"). Way faster than scrolling 1000+ entries
+- **EV/IV bidirectional editing** — DPAD-LEFT decrements, DPAD-RIGHT
+  increments, both with no menu round-trips. EVs step by ±2 (was ±4), IVs
+  step by ±1. Lets you hit odd-multiples-of-2 EV spreads precisely
 
 **Persistence:** as of v1.4, every edit you confirm flushes to your
 save automatically — close the ROM, reopen it, your custom trainers

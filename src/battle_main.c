@@ -2026,17 +2026,19 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
         // ace-priority sort (N highest-level mons) so the trainer's ace still
         // shows up first when team preview isn't applicable.
         //
-        // v2.0.5.6: SKIP this override for pool trainers (poolSize > 0). For
-        // pools, DoTrainerPartyPool above already produced clause-respecting
-        // picks (no duplicate species/items, single mega/Z, ace-tag biased).
-        // The team-preview/ace-priority override scans trainer->party[0..
-        // partySize-1] which for pool trainers is the FIRST partySize entries
-        // of the pool — those can include duplicate species (e.g. Dexio BT's
-        // pool starts with Turtonator x2). Letting the override run replaces
-        // the pool sample with raw-pool picks and reintroduces duplicates.
+        // v2.0.5.6 skipped this override for pool trainers because the override
+        // wrote PARTY indices but pools needed POOL indices — running it would
+        // reintroduce duplicates (Dexio BT's pool starts Turtonator x2). v2.0.6
+        // makes the pick queue itself pool-aware: Sim_PickTopNFromPool now
+        // iterates the full pool with clause enforcement (species/item/mega/Z)
+        // and emits pool indices directly. So we can re-enable the override
+        // for pool trainers — the picks it consumes ARE pool indices, which
+        // overwrite DoTrainerPartyPool's random sample with our matchup-aware
+        // sample. The fixed-party ace-priority fallback is left gated to
+        // non-pool trainers since it scans party[0..partySize-1] which would
+        // re-bug pools as before.
         if (B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE)
-            && monsCount < trainer->partySize
-            && trainer->poolSize == 0)
+            && (monsCount < trainer->partySize || trainer->poolSize > 0))
         {
             u8 pickRow[6];
             if (Sim_ConsumeNextPickRow(pickRow, monsCount))
@@ -2044,7 +2046,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
                 for (i = 0; i < monsCount; i++)
                     monIndices[i] = pickRow[i];
             }
-            else
+            else if (trainer->poolSize == 0)
             {
                 for (i = 0; i < monsCount; i++)
                     monIndices[i] = i;
@@ -2069,6 +2071,8 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
                     monIndices[i] = bestIdx;
                 }
             }
+            // else: pool trainer with no pre-computed picks — keep
+            // DoTrainerPartyPool's random sample (already clause-respecting).
         }
 
         for (i = 0; i < monsCount; i++)
