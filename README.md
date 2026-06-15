@@ -149,23 +149,58 @@ Hearthstone deck imports.
 
 ### The flow
 
-1. **Build a team on [Pokémon Showdown](https://pokemonshowdown.com/teambuilder)**
-   (or anywhere that produces the standard Showdown text format)
-2. **Open the [offline encoder](tools/team-codes/encoder.html)** in your
-   browser. It's a single HTML file — no install, no network needed,
-   works on your phone or laptop. (Also attached to every GitHub
-   release if you want to download it standalone.)
-3. **Paste your Showdown team** into the encoder. It spits out one
-   short text code per Pokémon — typically 18-24 characters each — like
-   `PBMfzmBjIhtSolcMzVAn4AOQ`. Every code starts with `PB` so you can
-   spot-check that you pasted the right thing
-4. **In the ROM:** Build Trainer → pick a slot → **Import from code**
-5. **Type up to 24 characters** using the in-game keyboard (alphanumeric
-   + `-` and `_` from the symbols page; the encoder uses URL-safe
-   base64). Press confirm
-6. **The full team materializes** in the slot — species, item, ability
-   (including Hidden Ability), moves, EVs, IVs, nature, gender, shiny,
-   Tera Type, and trainer name, all decoded inside the ROM
+It's the same idea on every device: build a team on Showdown, run it
+through the offline encoder to get one short code per Pokémon, then type
+those codes into the ROM. The encoder is a single offline HTML file —
+download `encoder.html` from the
+[latest release](https://github.com/logdog2325/pokemon-battle-theater/releases/latest)
+(it's attached to each release) and it runs in any browser with no
+install and no network.
+
+A few things that hold on both platforms:
+
+- The ROM imports **one Pokémon at a time** — type the first code into
+  Pokémon 1, the second into Pokémon 2, and so on
+- Codes are typically 18-24 characters and **every code starts with `PB`**,
+  so you can spot-check you grabbed the right one — like
+  `PBMfzmBjIhtSolcMzVAn4AOQ`
+- The in-game keyboard can't be pasted into, so you read each code from
+  the encoder and type it on the GBA keyboard. The encoder uses URL-safe
+  base64, so the `-` and `_` characters live on the keyboard's symbols page
+
+#### On laptop / PC
+
+1. **Build a team** in [Showdown's teambuilder](https://pokemonshowdown.com/teambuilder),
+   then **Import/Export → copy** the text export
+2. **Open `encoder.html`** — double-click the downloaded file (or
+   [open it straight from the repo](tools/team-codes/encoder.html)). It
+   opens in your default browser, fully offline
+3. **Paste** the export into the top box. A code for each Pokémon appears
+   below, each with its own **copy** button
+4. **Type the codes into the ROM** — keep the browser open beside your
+   emulator, then in-game go Build Trainer → slot → **Import from code**,
+   type the first code, confirm, and repeat for each Pokémon
+
+#### On mobile
+
+1. **Build a team** on Showdown in your phone's browser and copy the export
+2. **Get the encoder onto your phone** — download `encoder.html` from the
+   [latest release](https://github.com/logdog2325/pokemon-battle-theater/releases/latest),
+   then open the downloaded file in your browser (Files app → tap
+   `encoder.html` → Open / "Open in browser"). It runs completely offline
+3. **Paste** the export into the top box. The codes appear below; tap
+   **copy** on each one — on mobile it confirms when copied, and if your
+   browser blocks the clipboard it selects the code so you can
+   long-press → Copy instead
+4. **Type the codes into the ROM** — switch to your GBA emulator app, go
+   Build Trainer → slot → **Import from code**, and type each code on the
+   in-game keyboard (flip back to the browser tab to read the next one)
+
+Once a code is entered, the full Pokémon materializes in the slot —
+species, item, ability (including Hidden Ability), moves, EVs, IVs,
+nature, gender, shiny, and Tera Type — with the trainer name decoded from
+the first code. Imported teams save to your cartridge and persist across
+power-offs (v1.4+).
 
 ### Encoding format details
 
