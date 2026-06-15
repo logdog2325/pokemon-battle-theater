@@ -33201,6 +33201,1662 @@ Dynamax Level: 0
 - Ice Fang
 - Water Gun
 
+/* v2.1.0 — Anime trainers. Moves + held items are canon to the anime (as */
+/* provided by the user); abilities + EV spreads are competitively chosen.  */
+/* NOTE: Alain's Metagross "Psychic" interprets the user's "psychock"; his   */
+/* Unfezant's 4th move (Quick Attack) fills an unspecified slot — confirm    */
+/* both if a different move was intended. Charizard runs Jolly physical (Mega */
+/* X) so Blast Burn is a situational nuke; Pikachu-Alola + Pikashunium Z +    */
+/* Thunderbolt fires 10,000,000 Volt Thunderbolt (cap-form gated in          */
+/* battle_z_move.c). */
+
+=== TRAINER_ALAIN ===
+Name: ALAIN
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Charizard (M) @ Charizardite X
+Ability: Blaze
+Tags: Ace
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Dragon Claw
+- Flare Blitz
+- Blast Burn
+- Thunder Punch
+
+Metagross @ Life Orb
+Ability: Clear Body
+Level: 78
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Metal Claw
+- Psychic
+- Meteor Mash
+- Rock Slide
+
+Tyranitar @ Smooth Rock
+Ability: Sand Stream
+Level: 78
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Dark Pulse
+- Stone Edge
+- Crunch
+- Protect
+
+Weavile @ Focus Sash
+Ability: Pressure
+Level: 78
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Protect
+- Night Slash
+- Ice Beam
+- Double Team
+
+Bisharp @ Black Glasses
+Ability: Defiant
+Level: 78
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Thunder Wave
+- Guillotine
+- Iron Head
+- Focus Blast
+
+Unfezant (M) @ Sharp Beak
+Ability: Super Luck
+Level: 78
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Steel Wing
+- Sky Attack
+- Air Slash
+- Quick Attack
+
+=== TRAINER_ASH_ALOLA ===
+Name: ASH
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Pikachu-Alola (M) @ Pikashunium Z
+Ability: Static
+Tags: Ace
+Level: 78
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Hardy Nature
+- Thunderbolt
+- Quick Attack
+- Iron Tail
+- Electroweb
+
+Rowlet @ Grassium Z
+Ability: Overgrow
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 248 HP / 252 Atk / 0 Def / 0 SpA / 8 SpD / 0 Spe
+Adamant Nature
+- Razor Leaf
+- Seed Bomb
+- Brave Bird
+- Feather Dance
+
+Lycanroc-Dusk @ Lycanium Z
+Ability: Tough Claws
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Bite
+- Accelerock
+- Stone Edge
+- Counter
+
+Melmetal @ Assault Vest
+Ability: Iron Fist
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Flash Cannon
+- Double Iron Bash
+- Thunderbolt
+- Headbutt
+
+Naganadel @ Electrium Z
+Ability: Beast Boost
+Level: 75
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Thunderbolt
+- X-Scissor
+- Sludge Bomb
+- Dragon Pulse
+
+Incineroar @ Firium Z
+Ability: Intimidate
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 248 HP / 252 Atk / 0 Def / 0 SpA / 8 SpD / 0 Spe
+Adamant Nature
+- Fire Blast
+- Darkest Lariat
+- Revenge
+- Flame Charge
+
+=== TRAINER_ASH_KALOS ===
+Name: ASH
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Pikachu-Kalos (M) @ Light Ball
+Ability: Static
+Tags: Ace
+Level: 78
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Hardy Nature
+- Thunderbolt
+- Quick Attack
+- Iron Tail
+- Electro Ball
+
+Greninja-Battle-Bond (M) @ Mystic Water
+Ability: Battle Bond
+Level: 75
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Water Shuriken
+- Aerial Ace
+- Cut
+- Double Team
+
+Talonflame (M) @ Sharp Beak
+Ability: Gale Wings
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Razor Wind
+- Steel Wing
+- Flame Charge
+- Brave Bird
+
+Noivern (M)
+Ability: Infiltrator
+Level: 75
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Supersonic
+- Acrobatics
+- Boomburst
+- Dragon Claw
+
+Goodra (M) @ Leftovers
+Ability: Hydration
+Level: 75
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 4 SpD / 0 Spe
+Modest Nature
+- Rain Dance
+- Dragon Pulse
+- Ice Beam
+- Bide
+
+Hawlucha (M) @ Sitrus Berry
+Ability: Unburden
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Karate Chop
+- High Jump Kick
+- Flying Press
+- X-Scissor
+
+=== TRAINER_ASH_SINNOH ===
+Name: ASH
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Pikachu-Sinnoh (M) @ Light Ball
+Ability: Static
+Tags: Ace
+Level: 78
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Hardy Nature
+- Thunderbolt
+- Quick Attack
+- Iron Tail
+- Volt Tackle
+
+Infernape (M) @ Life Orb
+Ability: Iron Fist
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Flamethrower
+- Mach Punch
+- Flare Blitz
+- Fire Punch
+
+Staraptor (M) @ Choice Band
+Ability: Reckless
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Quick Attack
+- Aerial Ace
+- Brave Bird
+- Close Combat
+
+Torterra (M) @ Sitrus Berry
+Ability: Overgrow
+Level: 75
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 4 SpD / 0 Spe
+Modest Nature
+- Frenzy Plant
+- Leaf Storm
+- Rock Climb
+- Energy Ball
+
+Gliscor (M) @ Toxic Orb
+Ability: Poison Heal
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 248 HP / 252 Atk / 0 Def / 0 SpA / 8 SpD / 0 Spe
+Adamant Nature
+- X-Scissor
+- Fire Fang
+- Giga Impact
+- Stone Edge
+
+Buizel (M) @ Mystic Water
+Ability: Swift Swim
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Ice Punch
+- Water Pulse
+- Sonic Boom
+- Aqua Jet
+
+=== TRAINER_ASH_HOENN ===
+Name: ASH
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Pikachu-Hoenn (M) @ Light Ball
+Ability: Static
+Tags: Ace
+Level: 78
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Hardy Nature
+- Thunderbolt
+- Quick Attack
+- Iron Tail
+- Volt Tackle
+
+Swellow (M) @ Sharp Beak
+Ability: Guts
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Air Slash
+- Double Team
+- Aerial Ace
+- Quick Attack
+
+Sceptile (M) @ Miracle Seed
+Ability: Overgrow
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 252 Spe
+Hasty Nature
+- Leaf Storm
+- Leaf Blade
+- Solar Beam
+- Quick Attack
+
+Torkoal @ Heat Rock
+Ability: Drought
+Level: 75
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 248 HP / 0 Atk / 0 Def / 252 SpA / 8 SpD / 0 Spe
+Modest Nature
+- Flamethrower
+- Heat Wave
+- Iron Defense
+- Body Slam
+
+Glalie (M) @ Never-Melt Ice
+Ability: Inner Focus
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 4 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Ice Beam
+- Headbutt
+- Double Team
+- Icy Wind
+
+Corphish (M) @ Eviolite
+Ability: Adaptability
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Crabhammer
+- Metal Claw
+- Aqua Jet
+- Vise Grip
+
+/* v2.1.0 — Ash's Unova team as a 10-mon ROTATION POOL. Ash rotated his Unova */
+/* roster constantly in Best Wishes, so this samples 6 of 10 per battle.      */
+/* Pikachu is tagged Lead so he is ALWAYS in the sampled six (he never left   */
+/* the team); the other 5 slots draw randomly from the remaining nine. All    */
+/* held items are distinct so the pool item-clause never blocks a pick. Moves */
+/* are canon to the anime; abilities/items/EVs are competitively chosen.      */
+=== TRAINER_ASH_UNOVA ===
+Name: ASH
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Battle Type: Singles
+Party Size: 6
+Pool Rules: Basic
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Pikachu-Unova (M) @ Light Ball
+Ability: Static
+Tags: Lead
+Level: 78
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Hardy Nature
+- Thunderbolt
+- Quick Attack
+- Iron Tail
+- Electro Ball
+
+Unfezant (M) @ Sharp Beak
+Ability: Super Luck
+Level: 75
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Aerial Ace
+- Air Cutter
+- Quick Attack
+- Gust
+
+Oshawott (M) @ Eviolite
+Ability: Torrent
+Level: 75
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Hydro Pump
+- Aqua Jet
+- Razor Shell
+- Tackle
+
+Pignite (M) @ Charcoal
+Ability: Blaze
+Level: 75
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Flame Charge
+- Flamethrower
+- Fire Pledge
+- Brick Break
+
+Snivy (M) @ Miracle Seed
+Ability: Overgrow
+Level: 75
+EVs: 0 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Attract
+- Vine Whip
+- Leaf Storm
+- Leaf Blade
+
+Scraggy (M) @ Black Belt
+Ability: Moxie
+Level: 75
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Focus Blast
+- High Jump Kick
+- Headbutt
+- Leer
+
+Leavanny (M) @ Silver Powder
+Ability: Swarm
+Level: 75
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Razor Leaf
+- Energy Ball
+- X-Scissor
+- Bug Bite
+
+Palpitoad (M) @ Mystic Water
+Ability: Swift Swim
+Level: 75
+EVs: 0 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 252 Spe
+Modest Nature
+- Mud Shot
+- Hydro Pump
+- Supersonic
+- Sludge Wave
+
+Boldore (M) @ Smooth Rock
+Ability: Sturdy
+Level: 75
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Sandstorm
+- Flash Cannon
+- Rock Blast
+- Rock Smash
+
+Krookodile (M) @ Life Orb
+Ability: Intimidate
+Level: 75
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Dig
+- Stone Edge
+- Dragon Claw
+- Crunch
+
+/* v2.1.0 — Ash's "Indigo" pool: every Kanto + Johto Pokémon he caught, as a  */
+/* 19-mon ROTATION POOL (samples 6 of 19 per battle). Pikachu tagged Lead so  */
+/* he is ALWAYS in the six; the other five draw from the remaining 18. Moves  */
+/* are canon to the anime (intentionally un-optimized — e.g. Butterfree's     */
+/* status kit, Kingler's Bubble). NOTE: the user gave only 2 moves for Muk    */
+/* (Sludge Bomb/Body Slam) and Lapras (Ice Beam/Water Gun); the 3rd+4th on    */
+/* each are filler (flagged) — swap freely. Noctowl is shiny (canon pink).    */
+/* All held items distinct so the pool item-clause never blocks a sample.     */
+=== TRAINER_ASH_INDIGO ===
+Name: ASH
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Battle Type: Singles
+Party Size: 6
+Pool Rules: Basic
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Pikachu-Original (M) @ Light Ball
+Ability: Static
+Tags: Lead
+Level: 78
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Hardy Nature
+- Thunderbolt
+- Quick Attack
+- Agility
+- Thunder
+
+Butterfree (M) @ Silver Powder
+Ability: Compound Eyes
+Level: 75
+EVs: 252 HP / 0 Atk / 4 Def / 0 SpA / 252 SpD / 0 Spe
+Calm Nature
+- Stun Spore
+- Whirlwind
+- Sleep Powder
+- Tackle
+
+Pidgeot (M) @ Sharp Beak
+Ability: Keen Eye
+Level: 75
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Wing Attack
+- Gust
+- Quick Attack
+- Double-Edge
+
+Bulbasaur (M) @ Miracle Seed
+Ability: Overgrow
+Level: 75
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Vine Whip
+- Razor Leaf
+- Leech Seed
+- Solar Beam
+
+Charizard (M) @ Charcoal
+Ability: Blaze
+Level: 75
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Dragon Tail
+- Flamethrower
+- Wing Attack
+- Seismic Toss
+
+Squirtle (M) @ Mystic Water
+Ability: Torrent
+Level: 75
+EVs: 0 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 252 Spe
+Modest Nature
+- Hydro Pump
+- Rapid Spin
+- Skull Bash
+- Water Gun
+
+Kingler (M) @ Muscle Band
+Ability: Hyper Cutter
+Level: 75
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Hyper Beam
+- Crabhammer
+- Bubble
+- Vise Grip
+
+Primeape (M) @ Black Belt
+Ability: Vital Spirit
+Level: 75
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Seismic Toss
+- Mega Kick
+- Scratch
+- Thrash
+
+Muk (M) @ Poison Barb
+Ability: Poison Touch
+Level: 75
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Sludge Bomb
+- Body Slam
+- Shadow Sneak
+- Minimize
+
+Tauros (M) @ Silk Scarf
+Ability: Intimidate
+Level: 75
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Fissure
+- Take Down
+- Horn Attack
+- Double Team
+
+Lapras (M) @ Never-Melt Ice
+Ability: Water Absorb
+Level: 75
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Ice Beam
+- Water Gun
+- Body Slam
+- Sing
+
+Snorlax (M) @ Leftovers
+Ability: Thick Fat
+Level: 75
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Mega Punch
+- Ice Punch
+- Body Slam
+- Hyper Beam
+
+Heracross (M) @ Life Orb
+Ability: Moxie
+Level: 75
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Megahorn
+- Sleep Talk
+- Hyper Beam
+- Horn Attack
+
+Bayleef (M) @ Sitrus Berry
+Ability: Overgrow
+Level: 75
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Razor Leaf
+- Vine Whip
+- Body Slam
+- Headbutt
+
+Quilava (M) @ Eviolite
+Ability: Blaze
+Level: 75
+EVs: 0 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Flamethrower
+- Eruption
+- Flame Wheel
+- Aerial Ace
+
+Totodile (M) @ Quick Claw
+Ability: Torrent
+Level: 75
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Water Gun
+- Bite
+- Headbutt
+- Scary Face
+
+Noctowl (M) @ Twisted Spoon
+Ability: Tinted Lens
+Shiny: Yes
+Level: 75
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 4 SpD / 0 Spe
+Modest Nature
+- Extrasensory
+- Air Slash
+- Sky Attack
+- Hypnosis
+
+Donphan (M) @ Hard Stone
+Ability: Sturdy
+Level: 75
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Hyper Beam
+- Rollout
+- Take Down
+- Earthquake
+
+Larvitar (M) @ Soft Sand
+Ability: Guts
+Level: 75
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Screech
+- Hidden Power
+- Bite
+- Dig
+
+/* v2.1.0 — Ash's COMPLETE roster: every Pokemon from the teams added
+ * above (Indigo/Hoenn/Sinnoh/Unova/Kalos/Alola + the Journeys World-
+ * Champion squad), merged into one 53-mon rotation pool that brings 6
+ * per battle. Pikachu is tagged Lead (always in); the seven regional
+ * aces — Charizard, Sceptile, Infernape, Krookodile, Greninja(-Ash),
+ * Incineroar, Lucario — are tagged Ace so one signature shows each
+ * battle (Basic ruleset caps aces at 1/team). Mon data is copied
+ * verbatim from the per-region entries. */
+=== TRAINER_ASH_ALL ===
+Name: ASH
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Battle Type: Singles
+Party Size: 6
+Pool Rules: Basic
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Pikachu-Original (M) @ Light Ball
+Ability: Static
+Tags: Lead
+Level: 78
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Hardy Nature
+- Thunderbolt
+- Quick Attack
+- Agility
+- Thunder
+
+Butterfree (M) @ Silver Powder
+Ability: Compound Eyes
+Level: 75
+EVs: 252 HP / 0 Atk / 4 Def / 0 SpA / 252 SpD / 0 Spe
+Calm Nature
+- Stun Spore
+- Whirlwind
+- Sleep Powder
+- Tackle
+
+Pidgeot (M) @ Sharp Beak
+Ability: Keen Eye
+Level: 75
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Wing Attack
+- Gust
+- Quick Attack
+- Double-Edge
+
+Bulbasaur (M) @ Miracle Seed
+Ability: Overgrow
+Level: 75
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Vine Whip
+- Razor Leaf
+- Leech Seed
+- Solar Beam
+
+Charizard (M) @ Charcoal
+Ability: Blaze
+Tags: Ace
+Level: 75
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Dragon Tail
+- Flamethrower
+- Wing Attack
+- Seismic Toss
+
+Squirtle (M) @ Mystic Water
+Ability: Torrent
+Level: 75
+EVs: 0 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 252 Spe
+Modest Nature
+- Hydro Pump
+- Rapid Spin
+- Skull Bash
+- Water Gun
+
+Kingler (M) @ Muscle Band
+Ability: Hyper Cutter
+Level: 75
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Hyper Beam
+- Crabhammer
+- Bubble
+- Vise Grip
+
+Primeape (M) @ Black Belt
+Ability: Vital Spirit
+Level: 75
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Seismic Toss
+- Mega Kick
+- Scratch
+- Thrash
+
+Muk (M) @ Poison Barb
+Ability: Poison Touch
+Level: 75
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Sludge Bomb
+- Body Slam
+- Shadow Sneak
+- Minimize
+
+Tauros (M) @ Silk Scarf
+Ability: Intimidate
+Level: 75
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Fissure
+- Take Down
+- Horn Attack
+- Double Team
+
+Lapras (M) @ Never-Melt Ice
+Ability: Water Absorb
+Level: 75
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Ice Beam
+- Water Gun
+- Body Slam
+- Sing
+
+Snorlax (M) @ Leftovers
+Ability: Thick Fat
+Level: 75
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Mega Punch
+- Ice Punch
+- Body Slam
+- Hyper Beam
+
+Heracross (M) @ Life Orb
+Ability: Moxie
+Level: 75
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Megahorn
+- Sleep Talk
+- Hyper Beam
+- Horn Attack
+
+Bayleef (M) @ Sitrus Berry
+Ability: Overgrow
+Level: 75
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Razor Leaf
+- Vine Whip
+- Body Slam
+- Headbutt
+
+Quilava (M) @ Eviolite
+Ability: Blaze
+Level: 75
+EVs: 0 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Flamethrower
+- Eruption
+- Flame Wheel
+- Aerial Ace
+
+Totodile (M) @ Quick Claw
+Ability: Torrent
+Level: 75
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Water Gun
+- Bite
+- Headbutt
+- Scary Face
+
+Noctowl (M) @ Twisted Spoon
+Ability: Tinted Lens
+Shiny: Yes
+Level: 75
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 4 SpD / 0 Spe
+Modest Nature
+- Extrasensory
+- Air Slash
+- Sky Attack
+- Hypnosis
+
+Donphan (M) @ Hard Stone
+Ability: Sturdy
+Level: 75
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Hyper Beam
+- Rollout
+- Take Down
+- Earthquake
+
+Larvitar (M) @ Soft Sand
+Ability: Guts
+Level: 75
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Screech
+- Hidden Power
+- Bite
+- Dig
+
+Swellow (M) @ Sharp Beak
+Ability: Guts
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Air Slash
+- Double Team
+- Aerial Ace
+- Quick Attack
+
+Sceptile (M) @ Miracle Seed
+Ability: Overgrow
+Tags: Ace
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 252 Spe
+Hasty Nature
+- Leaf Storm
+- Leaf Blade
+- Solar Beam
+- Quick Attack
+
+Torkoal @ Heat Rock
+Ability: Drought
+Level: 75
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 248 HP / 0 Atk / 0 Def / 252 SpA / 8 SpD / 0 Spe
+Modest Nature
+- Flamethrower
+- Heat Wave
+- Iron Defense
+- Body Slam
+
+Glalie (M) @ Never-Melt Ice
+Ability: Inner Focus
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 4 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Ice Beam
+- Headbutt
+- Double Team
+- Icy Wind
+
+Corphish (M) @ Eviolite
+Ability: Adaptability
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Crabhammer
+- Metal Claw
+- Aqua Jet
+- Vise Grip
+
+Infernape (M) @ Life Orb
+Ability: Iron Fist
+Tags: Ace
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Flamethrower
+- Mach Punch
+- Flare Blitz
+- Fire Punch
+
+Staraptor (M) @ Choice Band
+Ability: Reckless
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Quick Attack
+- Aerial Ace
+- Brave Bird
+- Close Combat
+
+Torterra (M) @ Sitrus Berry
+Ability: Overgrow
+Level: 75
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 4 SpD / 0 Spe
+Modest Nature
+- Frenzy Plant
+- Leaf Storm
+- Rock Climb
+- Energy Ball
+
+Gliscor (M) @ Toxic Orb
+Ability: Poison Heal
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 248 HP / 252 Atk / 0 Def / 0 SpA / 8 SpD / 0 Spe
+Adamant Nature
+- X-Scissor
+- Fire Fang
+- Giga Impact
+- Stone Edge
+
+Buizel (M) @ Mystic Water
+Ability: Swift Swim
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Ice Punch
+- Water Pulse
+- Sonic Boom
+- Aqua Jet
+
+Gible (M) @ Eviolite
+Ability: Rough Skin
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Dig
+- Draco Meteor
+- Dragon Pulse
+- Rock Smash
+
+Unfezant (M) @ Sharp Beak
+Ability: Super Luck
+Level: 75
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Aerial Ace
+- Air Cutter
+- Quick Attack
+- Gust
+
+Oshawott (M) @ Eviolite
+Ability: Torrent
+Level: 75
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Hydro Pump
+- Aqua Jet
+- Razor Shell
+- Tackle
+
+Pignite (M) @ Charcoal
+Ability: Blaze
+Level: 75
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Flame Charge
+- Flamethrower
+- Fire Pledge
+- Brick Break
+
+Snivy (M) @ Miracle Seed
+Ability: Overgrow
+Level: 75
+EVs: 0 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Attract
+- Vine Whip
+- Leaf Storm
+- Leaf Blade
+
+Scraggy (M) @ Black Belt
+Ability: Moxie
+Level: 75
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Focus Blast
+- High Jump Kick
+- Headbutt
+- Leer
+
+Leavanny (M) @ Silver Powder
+Ability: Swarm
+Level: 75
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Razor Leaf
+- Energy Ball
+- X-Scissor
+- Bug Bite
+
+Palpitoad (M) @ Mystic Water
+Ability: Swift Swim
+Level: 75
+EVs: 0 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 252 Spe
+Modest Nature
+- Mud Shot
+- Hydro Pump
+- Supersonic
+- Sludge Wave
+
+Boldore (M) @ Smooth Rock
+Ability: Sturdy
+Level: 75
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Sandstorm
+- Flash Cannon
+- Rock Blast
+- Rock Smash
+
+Krookodile (M) @ Life Orb
+Ability: Intimidate
+Tags: Ace
+Level: 75
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Dig
+- Stone Edge
+- Dragon Claw
+- Crunch
+
+Greninja-Battle-Bond (M) @ Mystic Water
+Ability: Battle Bond
+Tags: Ace
+Level: 75
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Water Shuriken
+- Aerial Ace
+- Cut
+- Double Team
+
+Talonflame (M) @ Sharp Beak
+Ability: Gale Wings
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Razor Wind
+- Steel Wing
+- Flame Charge
+- Brave Bird
+
+Noivern (M)
+Ability: Infiltrator
+Level: 75
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Supersonic
+- Acrobatics
+- Boomburst
+- Dragon Claw
+
+Goodra (M) @ Leftovers
+Ability: Hydration
+Level: 75
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 4 SpD / 0 Spe
+Modest Nature
+- Rain Dance
+- Dragon Pulse
+- Ice Beam
+- Bide
+
+Hawlucha (M) @ Sitrus Berry
+Ability: Unburden
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Karate Chop
+- High Jump Kick
+- Flying Press
+- X-Scissor
+
+Rowlet @ Grassium Z
+Ability: Overgrow
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 248 HP / 252 Atk / 0 Def / 0 SpA / 8 SpD / 0 Spe
+Adamant Nature
+- Razor Leaf
+- Seed Bomb
+- Brave Bird
+- Feather Dance
+
+Lycanroc-Dusk @ Lycanium Z
+Ability: Tough Claws
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Bite
+- Accelerock
+- Stone Edge
+- Counter
+
+Melmetal @ Assault Vest
+Ability: Iron Fist
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Flash Cannon
+- Double Iron Bash
+- Thunderbolt
+- Headbutt
+
+Naganadel @ Electrium Z
+Ability: Beast Boost
+Level: 75
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Thunderbolt
+- X-Scissor
+- Sludge Bomb
+- Dragon Pulse
+
+Incineroar @ Firium Z
+Ability: Intimidate
+Tags: Ace
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 248 HP / 252 Atk / 0 Def / 0 SpA / 8 SpD / 0 Spe
+Adamant Nature
+- Fire Blast
+- Darkest Lariat
+- Revenge
+- Flame Charge
+
+Lucario (M) @ Lucarionite
+Ability: Inner Focus
+Tags: Ace
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Serious Nature
+Dynamax Level: 0
+- Aura Sphere
+- Bullet Punch
+- Reversal
+- Steel Beam
+
+Sirfetch'd (M) @ Leek
+Ability: Steadfast
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 248 HP / 252 Atk / 0 Def / 0 SpA / 8 SpD / 0 Spe
+Brave Nature
+Dynamax Level: 0
+- Meteor Assault
+- Brutal Swing
+- Fury Cutter
+- Detect
+
+Gengar
+Ability: Cursed Body
+Level: 80
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 4 SpD / 252 Spe
+Naughty Nature
+Dynamax Level: 10
+Gigantamax: Yes
+- Shadow Ball
+- Sludge Bomb
+- Dazzling Gleam
+- Will-O-Wisp
+
+Dragonite
+Ability: Inner Focus
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Jolly Nature
+Dynamax Level: 0
+- Dragon Claw
+- Draco Meteor
+- Hurricane
+- Dragon Dance
+
+Dracovish
+Ability: Strong Jaw
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 0 Spe
+Naive Nature
+Dynamax Level: 0
+- Fishious Rend
+- Dragon Rush
+- Ice Fang
+- Water Gun
+
+/* v2.1.0 — Paul (Sinnoh anime rival) as a 17-mon ROTATION POOL, samples 6 per */
+/* battle. Electivire tagged Ace (his signature) so it's always in the six.    */
+/* Canon anime moves; abilities/EVs/items competitively chosen. The user gave  */
+/* <4 moves for several mons — FILLED slots (flagged, swap freely): Gyarados   */
+/* +Waterfall/Earthquake; Garchomp +Earthquake; Metagross +Earthquake; Ninjask */
+/* +X-Scissor; Hariyama +Brick Break/Rock Slide; Nidoking +Sludge Bomb;        */
+/* Froslass +Shadow Ball. Items all distinct (pool item-clause). */
+=== TRAINER_PAUL_ANIME ===
+Name: PAUL
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Battle Type: Singles
+Party Size: 6
+Pool Rules: Basic
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Electivire (M) @ Expert Belt
+Ability: Motor Drive
+Tags: Ace
+Level: 78
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Thunder
+- Protect
+- Brick Break
+- Thunder Punch
+
+Gyarados (M) @ Leftovers
+Ability: Intimidate
+Level: 75
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Ice Fang
+- Hyper Beam
+- Waterfall
+- Earthquake
+
+Garchomp (M) @ Rocky Helmet
+Ability: Rough Skin
+Level: 75
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Dragon Claw
+- Stone Edge
+- Draco Meteor
+- Earthquake
+
+Metagross @ Muscle Band
+Ability: Clear Body
+Level: 75
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Agility
+- Psychic
+- Meteor Mash
+- Earthquake
+
+Ursaring (M) @ Flame Orb
+Ability: Guts
+Level: 75
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Focus Blast
+- Hammer Arm
+- Bulk Up
+- Slash
+
+Weavile (M) @ Focus Sash
+Ability: Pressure
+Level: 75
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Blizzard
+- Ice Beam
+- Ice Shard
+- Metal Claw
+
+Honchkrow (M) @ Black Glasses
+Ability: Moxie
+Level: 75
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Haze
+- Sky Attack
+- Shadow Ball
+- Night Slash
+
+Torterra (M) @ Sitrus Berry
+Ability: Overgrow
+Level: 75
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Frenzy Plant
+- Giga Drain
+- Crunch
+- Stone Edge
+
+Ninjask (M) @ Wide Lens
+Ability: Speed Boost
+Level: 75
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Fury Cutter
+- Giga Drain
+- Agility
+- X-Scissor
+
+Gliscor (M) @ Toxic Orb
+Ability: Poison Heal
+Level: 75
+EVs: 248 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 8 Spe
+Adamant Nature
+- X-Scissor
+- Sandstorm
+- Knock Off
+- Guillotine
+
+Magmortar (M) @ Charcoal
+Ability: Flame Body
+Level: 75
+EVs: 0 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Flamethrower
+- Rock Tomb
+- Smog
+- Will-O-Wisp
+
+Hariyama (M) @ Assault Vest
+Ability: Thick Fat
+Level: 75
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Arm Thrust
+- Force Palm
+- Brick Break
+- Rock Slide
+
+Nidoking (M) @ Life Orb
+Ability: Sheer Force
+Level: 75
+EVs: 0 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Earth Power
+- Double Kick
+- Thunderbolt
+- Sludge Bomb
+
+Aggron (M) @ Metal Coat
+Ability: Rock Head
+Level: 75
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Flash Cannon
+- Metal Sound
+- Double-Edge
+- Metal Claw
+
+Gastrodon-East (M) @ Mystic Water
+Ability: Storm Drain
+Level: 75
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Muddy Water
+- Body Slam
+- Water Pulse
+- Ice Beam
+
+Drapion (M) @ Poison Barb
+Ability: Battle Armor
+Level: 75
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Pin Missile
+- Cross Poison
+- Toxic Spikes
+- Poison Fang
+
+Froslass (F) @ Never-Melt Ice
+Ability: Snow Cloak
+Level: 75
+EVs: 0 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Hail
+- Ice Shard
+- Ice Beam
+- Shadow Ball
+
+/* v2.1.0 — Gary Oak (Kanto rival) as a 12-mon ROTATION POOL, samples 6 per   */
+/* battle. Blastoise tagged Ace (his starter) so it's always in the six. Canon */
+/* anime moves; abilities/EVs/items competitively chosen. FILLED <4-move slots */
+/* (flagged, swap freely): Hatterene +Mystical Fire/Calm Mind; Regidrago       */
+/* +Dragon Claw; Nidoking +Earth Power/Sludge Bomb; Dodrio +Brave Bird/Quick   */
+/* Attack/Tri Attack; Magmar +Thunderbolt/Psychic; Golem +Stone Edge/Brick     */
+/* Break. Items all distinct (pool item-clause). */
+=== TRAINER_GARY ===
+Name: GARY
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Battle Type: Singles
+Party Size: 6
+Pool Rules: Basic
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Blastoise (M) @ Mystic Water
+Ability: Torrent
+Tags: Ace
+Level: 78
+EVs: 0 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 252 Spe
+Modest Nature
+- Hydro Pump
+- Skull Bash
+- Rapid Spin
+- Water Pulse
+
+Arcanine (M) @ Charcoal
+Ability: Intimidate
+Level: 75
+EVs: 0 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Flamethrower
+- Fire Blast
+- Take Down
+- Fire Spin
+
+Umbreon (M) @ Leftovers
+Ability: Synchronize
+Level: 75
+EVs: 252 HP / 0 Atk / 4 Def / 0 SpA / 252 SpD / 0 Spe
+Calm Nature
+- Confuse Ray
+- Shadow Ball
+- Psychic
+- Reflect
+
+Electivire (M) @ Expert Belt
+Ability: Motor Drive
+Level: 75
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Thunder
+- Thunderbolt
+- Iron Tail
+- Thunder Punch
+
+Hatterene (F) @ Life Orb
+Ability: Magic Bounce
+Level: 75
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Psycho Cut
+- Dazzling Gleam
+- Mystical Fire
+- Calm Mind
+
+Regidrago @ Dragon Fang
+Ability: Dragon's Maw
+Level: 75
+EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 4 SpD / 0 Spe
+Modest Nature
+- Dragon Energy
+- Hammer Arm
+- Twister
+- Dragon Claw
+
+Nidoking (M) @ Black Sludge
+Ability: Sheer Force
+Level: 75
+EVs: 0 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Tackle
+- Horn Attack
+- Earth Power
+- Sludge Bomb
+
+Dodrio (M) @ Sharp Beak
+Ability: Early Bird
+Level: 75
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Drill Peck
+- Brave Bird
+- Quick Attack
+- Tri Attack
+
+Nidoqueen (F) @ Sitrus Berry
+Ability: Sheer Force
+Level: 75
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Mega Punch
+- Strength
+- Hyper Beam
+- Double Kick
+
+Magmar (M) @ Eviolite
+Ability: Vital Spirit
+Level: 75
+EVs: 0 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Flamethrower
+- Fire Blast
+- Thunderbolt
+- Psychic
+
+Scizor (M) @ Metal Coat
+Ability: Technician
+Level: 75
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Quick Attack
+- Metal Claw
+- Swift
+- Steel Wing
+
+Golem (M) @ Rocky Helmet
+Ability: Sturdy
+Level: 75
+EVs: 0 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+- Magnitude
+- Rollout
+- Stone Edge
+- Brick Break
+
 /* v0.53.2 — Legends Arceus trainers. User-provided canonical rosters. */
 /* EV conversion: PLA's "Effort Levels" (0-10) map to modern EVs via */
 /* EL × 25.2, then total scaled down to fit the 510-EV cap. For "all-equal" */

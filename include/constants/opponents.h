@@ -1355,6 +1355,20 @@
 #define TRAINER_ARGENTA                     1185  // Battle Hall Hall Matron — curated pool
 #define TRAINER_THORTON                     1186  // Battle Tower Tower Tycoon Pt — curated pool
 
+// v2.1.0 — Anime trainers. Alain (XY, Mega Charizard X) + Ash's per-region
+// teams (starting with Alola). Moves/items are canon to the anime; abilities
+// + EV spreads are competitively chosen. See trainers.party for the rosters.
+#define TRAINER_ALAIN                       1190  // XY anime — Mega Charizard X ace
+#define TRAINER_ASH_ALOLA                   1191  // Anime — Ash's Alola team (Alola-cap Pikachu)
+#define TRAINER_ASH_KALOS                   1192  // Anime — Ash's XY/Kalos team (Ash-Greninja)
+#define TRAINER_ASH_SINNOH                  1193  // Anime — Ash's Sinnoh team (Infernape/Torterra)
+#define TRAINER_ASH_HOENN                   1194  // Anime — Ash's Hoenn team (Sceptile/Swellow)
+#define TRAINER_ASH_UNOVA                   1195  // Anime — Ash's Unova team (10-mon rotation pool)
+#define TRAINER_ASH_INDIGO                  1196  // Anime — Ash's Kanto+Johto pool (19-mon rotation)
+#define TRAINER_ASH_ALL                     1197  // Anime — Ash's complete 53-mon roster pool (all regions)
+#define TRAINER_PAUL_ANIME                  1198  // Anime — Paul (Sinnoh rival), 17-mon rotation pool, Electivire ace (vanilla TRAINER_PAUL=275 is an unrelated NPC)
+#define TRAINER_GARY                        1199  // Anime — Gary Oak (Kanto rival), 12-mon rotation pool, Blastoise ace
+
 // NOTE: Because each Trainer uses a flag to determine when they are defeated, there is only space for 9 additional trainers before trainer flag space overflows
 //       More space can be made by shifting flags around in constants/flags.h or changing how trainer flags are handled
 //       MAX_TRAINERS_COUNT can be increased but will take up additional saveblock space

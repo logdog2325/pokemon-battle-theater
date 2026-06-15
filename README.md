@@ -14,7 +14,7 @@ or pilot one side via Pilot Mode.
 Title screen + box art commissioned from
 **[u/CDRX73](https://www.reddit.com/user/CDRX73/)**.
 
-**Download the latest patch:** [v2.0.9 — Animated title screen + pool/encoder polish](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
+**Download the latest patch:** [v2.1.0 — Anime trainers (Alain, Ash's regional teams, Paul, Gary) + smart pool selection](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
 All releases live on the [Releases page](https://github.com/logdog2325/pokemon-battle-theater/releases).
 
 ---
@@ -50,9 +50,15 @@ All releases live on the [Releases page](https://github.com/logdog2325/pokemon-b
   shine in VGC mode** (4-pick-of-pool) because their pools are tight
   enough that 6v6 sometimes runs out of unique species and falls back to
   duplicates
-- ~120 curated rosters spanning Kanto / Johto / Hoenn / Sinnoh / Unova /
-  Kalos / Alola / Galar / Hisui, plus the PWT and Ash's anime World
-  Champion team
+- ~130 curated rosters spanning Kanto / Johto / Hoenn / Sinnoh / Unova /
+  Kalos / Alola / Galar / Hisui, plus the PWT and a full **anime section
+  (v2.1.0)** — Alain with Mega Charizard X, Ash's per-region teams (Alola,
+  Kalos, Sinnoh, Hoenn as fixed sixes; Unova / Indigo / Full-roster as
+  rotation pools), his Journeys World Champion team, and rivals Paul & Gary
+- **Smart pool selection (v2.1.0)** — rotation-pool trainers (Ash's Full
+  Team, Paul, Gary, the Battle Tree pools) now bring a *matchup-aware* six
+  scored against your roster, with light randomization so the team varies
+  battle-to-battle instead of repeating the same optimal six
 - **Hold L or R in the trainer picker to jump to the previous / next
   region** — fastest way to skip past the ~250 trainer entries instead of
   scrolling one at a time

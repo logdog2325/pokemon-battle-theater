@@ -2075,6 +2075,49 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             // DoTrainerPartyPool's random sample (already clause-respecting).
         }
 
+        // Battle Simulator (v2.1.0): sanitize the final index list before
+        // building the party. Two guarantees, both degrading to "lowest unused
+        // in-bounds slot":
+        //   (1) IN-BOUNDS. The party array holds poolSize entries for pool
+        //       trainers (Ash's 19/53-mon pools) and partySize otherwise. An
+        //       OOB index reads a garbage TrainerMon — the "INVALID MOVE" blue
+        //       screen / shiny Lv89 Alcremie.
+        //   (2) DISTINCT. A repeated index puts the same Pokemon in twice —
+        //       the old deterministic pool picker padded unfilled slots with
+        //       index 0 (the lead), which is why Ash's Indigo/Full pools showed
+        //       2-3 Pikachus. Random sampling shouldn't repeat, but this makes
+        //       it impossible regardless of pick path.
+        if (B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE))
+        {
+            u32 bound = (trainer->poolSize > 0) ? trainer->poolSize : trainer->partySize;
+            if (bound == 0)
+                bound = 1;
+            for (u32 a = 0; a < monsCount; a++)
+            {
+                bool32 bad = (monIndices[a] >= bound);
+                for (u32 b = 0; !bad && b < a; b++)
+                    if (monIndices[b] == monIndices[a])
+                        bad = TRUE;
+                if (!bad)
+                    continue;
+                for (u32 cand = 0; cand < bound; cand++)
+                {
+                    bool32 used = FALSE;
+                    for (u32 c = 0; c < monsCount; c++)
+                        if (c != a && monIndices[c] == cand)
+                        {
+                            used = TRUE;
+                            break;
+                        }
+                    if (!used)
+                    {
+                        monIndices[a] = cand;
+                        break;
+                    }
+                }
+            }
+        }
+
         for (i = 0; i < monsCount; i++)
         {
             u32 monIndex = monIndices[i];

@@ -519,6 +519,17 @@ static const u8 sSimSourceSuffixVGC[]    = _(" (VGC)");    // v1.5 VGC 2012 fina
 static const u8 sSimSourceSuffixRGBY[]   = _(" (RGBY)");   // v1.6 Prof. Oak Glitch boss
 static const u8 sSimSourceSuffixSV[]     = _(" (SV)");     // v1.21 Scarlet/Violet (Paldea)
 static const u8 sSimSourceSuffixZA[]     = _(" (Z-A)");    // v1.21 Legends: Z-A (Kalos)
+// v2.1.0 — Ash's per-region anime teams all share the name "ASH", so each
+// gets a region label to disambiguate them in the picker. 1086 (the old
+// "World Champion" squad) is relabeled "Journeys".
+static const u8 sSimSourceSuffixAshAlola[]    = _(" (Alola)");
+static const u8 sSimSourceSuffixAshKalos[]    = _(" (Kalos)");
+static const u8 sSimSourceSuffixAshSinnoh[]   = _(" (Sinnoh)");
+static const u8 sSimSourceSuffixAshHoenn[]    = _(" (Hoenn)");
+static const u8 sSimSourceSuffixAshUnova[]    = _(" (Unova)");
+static const u8 sSimSourceSuffixAshIndigo[]   = _(" (Indigo)");
+static const u8 sSimSourceSuffixAshJourneys[] = _(" (Journeys)");
+static const u8 sSimSourceSuffixAshAll[]      = _(" (Full Team)");
 // v2.0 — Nemona has 3 starter-variant teams; tag her ace so the picker
 // disambiguates them. Q = Quaquaval ace (player chose Fuecoco), M =
 // Meowscarada ace (Quaxly), S = Skeledirge ace (Sprigatito).
@@ -622,9 +633,24 @@ static const u8 *GetSimSourceSuffix(u16 trainerId)
     // v0.49 XY (Kalos) — Diantha, Serena, Calem.
     if (trainerId >= 1083 && trainerId <= 1085)
         return sSimSourceSuffixXY;
-    // v0.50 Anime — Ash's World Champion team.
-    if (trainerId == 1086)
-        return sSimSourceSuffixAnime;
+    // v0.50/v2.1.0 Anime — Ash's per-region teams + Alain. Each Ash entry gets
+    // its region label so the picker can tell the identically-named "ASH"
+    // trainers apart; 1086 is the Journeys (World Champion) squad. Alain keeps
+    // the XY tag (he's the XY rival, distinct name already).
+    switch (trainerId)
+    {
+        case 1086: return sSimSourceSuffixAshJourneys;
+        case 1190: return sSimSourceSuffixAnime;     // Alain (XY anime rival)
+        case 1191: return sSimSourceSuffixAshAlola;
+        case 1192: return sSimSourceSuffixAshKalos;
+        case 1193: return sSimSourceSuffixAshSinnoh;
+        case 1194: return sSimSourceSuffixAshHoenn;
+        case 1195: return sSimSourceSuffixAshUnova;
+        case 1196: return sSimSourceSuffixAshIndigo;
+        case 1197: return sSimSourceSuffixAshAll;
+        case 1198: return sSimSourceSuffixAnime;     // Paul (Sinnoh rival)
+        case 1199: return sSimSourceSuffixAnime;     // Gary Oak (Kanto rival)
+    }
     // v0.51 Custom — user-built trainer slots. v1.1: slots 4-6 (1099-1101)
     // sit AFTER the LA block, so the range is discontiguous.
     if ((trainerId >= TRAINER_SIM_CUSTOM_1 && trainerId <= TRAINER_SIM_CUSTOM_3)
@@ -783,6 +809,16 @@ static const u16 sSimulatorRoster[] = {
     890, 886, 887, 888, 889, 963, 964, 965, 1107,        // PWT Champs + Bianca World Leaders
     // ---- Anime section ----
     1086,                                                // Ash World Champion
+    1190,                                                // Alain (XY — Mega Charizard X)
+    1191,                                                // Ash (Alola team)
+    1192,                                                // Ash (XY/Kalos team — Ash-Greninja)
+    1193,                                                // Ash (Sinnoh team — Infernape)
+    1194,                                                // Ash (Hoenn team — Sceptile)
+    1195,                                                // Ash (Unova team — 10-mon rotation pool)
+    1196,                                                // Ash (Indigo — Kanto+Johto 19-mon pool)
+    1197,                                                // Ash (Full roster — 53-mon all-regions pool)
+    1198,                                                // Paul (Sinnoh rival — 17-mon pool, Electivire ace)
+    1199,                                                // Gary Oak (Kanto rival — 12-mon pool, Blastoise ace)
     // ---- VGC 2012 World Championships ----
     1108, 1109,                                          // Wolfe Glick / Ray Rizo
     // ---- Custom section (user-built trainers, v0.51 + v1.1) ----
@@ -6174,10 +6210,10 @@ static const u16 sSimulatorRosterSectionStarts[] = {
     311 + CUSTOM_OFFSET,     // PWT Sinnoh (8)
     319 + CUSTOM_OFFSET,     // PWT Unova (8 base + 5 v1.5 = 13)
     332 + CUSTOM_OFFSET,     // PWT Champs — Red/Blue/Lance/Steven/Wallace + Cynthia/Iris/Alder + Bianca (9)
-    341 + CUSTOM_OFFSET,     // Anime — Ash World Champion (1)
-    342 + CUSTOM_OFFSET,     // VGC — Wolfe Glick + Ray Rizo 2012 World Finals (2)
-    344 + CUSTOM_OFFSET,     // Custom — v0.51 + v1.1 user-built slots (6)
-    350 + CUSTOM_OFFSET,     // RGBY — Prof. Oak Glitch x3 (Venusaur/Charizard/Blastoise variants)
+    341 + CUSTOM_OFFSET,     // Anime — Ash (WC/Journeys + 7 region teams) + Alain + Paul + Gary (11)
+    352 + CUSTOM_OFFSET,     // VGC — Wolfe Glick + Ray Rizo 2012 World Finals (2)
+    354 + CUSTOM_OFFSET,     // Custom — v0.51 + v1.1 user-built slots (6)
+    360 + CUSTOM_OFFSET,     // RGBY — Prof. Oak Glitch x3 (Venusaur/Charizard/Blastoise variants)
 };
 #define SIMULATOR_ROSTER_SECTION_COUNT (sizeof(sSimulatorRosterSectionStarts) / sizeof(sSimulatorRosterSectionStarts[0]))
 
@@ -7169,6 +7205,9 @@ static s32 Sim_PoolPickBest(const struct Trainer *trainer,
     return bestIdx;
 }
 
+// v2.1.0 — no longer wired into the pick queue (pool trainers use the random
+// DoTrainerPartyPool sample now); kept for reference / a future "smart pool"
+// toggle. UNUSED suppresses -Werror=unused-function.
 static void Sim_PickTopNFromPool(const struct Trainer *me,
                                   const u16 *oppSpecies,
                                   const struct TrainerMon * const *oppMons,
@@ -7208,6 +7247,15 @@ static void Sim_PickTopNFromPool(const struct Trainer *me,
     for (u8 i = 0; i < poolSize; i++)
     {
         scores[i] = Sim_ScoreMonForPick(&me->party[i], oppSpecies, oppMons, oppCount);
+        // v2.1.1 — anti-bias / variety jitter. Add 0..4095 of noise to each
+        // score so (a) equal scores no longer resolve by array position — which
+        // made big front-loaded pools (Ash's Full Team, Indigo block first)
+        // over-pick their opening block — and (b) the bring varies battle-to-
+        // battle instead of returning the identical optimal six. A real matchup
+        // edge runs into the thousands per opposing mon and still wins; only
+        // near-ties shuffle. Widen this mask for more variety, narrow it for a
+        // more deterministic "always brings the hard counters" feel.
+        scores[i] += (Random() & 0xFFF);
         avail[i]  = TRUE;
         picked[i] = FALSE;
     }
@@ -7310,11 +7358,28 @@ static void Sim_PickTopNFromPool(const struct Trainer *me,
     }
 
     // PASS 7 — Absolute fallback. Pool is literally smaller than pickCount
-    // (configuration error — can't happen with valid data, but be safe).
-    // Fill remaining slots by recycling pool index 0 so monIndices[] is fully
-    // initialized. The engine will probably misbehave but won't OOB-crash.
+    // (configuration error — can't happen with Ash's 19/54-mon pools, but be
+    // safe). Fill remaining slots with the lowest pool index not already
+    // output; only if the whole pool is exhausted (poolSize < pickCount) do we
+    // duplicate, and even then we cycle across the pool rather than recycling
+    // index 0 — padding with index 0 (the lead) is exactly what stacked 2-3
+    // Pikachus on Ash's pools before. Either way written == pickCount on exit,
+    // so the caller never reads an uninitialized pick, and battle_main's
+    // clamp+dedup pre-pass is the final safety net.
     while (written < pickCount)
-        outIndices[written++] = 0;
+    {
+        s32 padIdx = -1;
+        for (u8 i = 0; i < poolSize; i++)
+        {
+            bool8 dup = FALSE;
+            for (u8 j = 0; j < written; j++)
+                if (outIndices[j] == i) { dup = TRUE; break; }
+            if (!dup) { padIdx = i; break; }
+        }
+        if (padIdx < 0)
+            padIdx = written % poolSize;  // pool < pickCount: spread the dup
+        outIndices[written++] = (u8)padIdx;
+    }
 
     *outCount = written;
     #undef POOL_PICK_MARK
@@ -7435,33 +7500,34 @@ static void Sim_QueuePicksFor(u16 meId, const struct Trainer *me,
         oppSpecies, oppMons);
 
     u8 written = 0;
-    // v2.0.6 — Pool trainers (poolSize > 0) need the pool-aware picker so they
-    // sample from the FULL pool with clause enforcement. The fixed-party
-    // picker would only see party[0..partySize-1] which for pool trainers is
-    // the raw front of the pool — duplicates included (e.g. Dexio BT's pool
-    // opens with Turtonator x2 from different itemsets) — and would lose the
-    // depth of e.g. Noland Group 3's 50-mon roster down to just the first 6.
-    if (me->poolSize > 0)
+    // v2.1.1 — SMART (matchup-aware) selection for BOTH fixed-party and pool
+    // trainers. Each candidate is scored against the opposing teamsheet and the
+    // best `pickCount` are brought: fixed teams use the partySize slice
+    // (Sim_PickTopN); pools iterate the FULL roster (Sim_PickTopNFromPool).
+    //
+    // v2.1.0 had temporarily forced pools onto the engine's RANDOM Fisher-Yates
+    // sample because the deterministic picker (a) broke score ties toward
+    // earlier array entries, so Ash's Full Team over-picked its front-loaded
+    // Indigo block, and (b) brought the identical "best six" every battle. Both
+    // are now fixed inside Sim_PickTopNFromPool via per-mon score jitter: ties
+    // and near-ties shuffle, so the bring varies battle-to-battle and isn't
+    // position-biased, while genuine matchup / stat / item advantages still
+    // win. The result is "smart but not robotic" — Ash still counters the
+    // matchup, but you don't see the exact same six each run.
+    if (me->poolSize == 0)
     {
-        // CRITICAL: Pool trainers don't team-preview-clip — DoTrainerPartyPool
-        // brings the trainer's full `partySize` mons every battle. So our
-        // override needs to supply that many picks; if we only output the
-        // team-preview `pickCount` (3 multi / 4 VGC) the caller in
-        // battle_main.c writes monIndices[pickCount..monsCount-1] from the
-        // UNINITIALIZED tail of its stack-local pickRow[6], producing OOB
-        // party-index reads — manifests as "invalid move: 1030" asserts in
-        // dev builds because the engine constructs battlers from garbage
-        // TrainerMons whose moves[] happens to contain past-MOVES_COUNT_ALL
-        // values. Cap at SIM_PICK_INDICES_MAX (6) which matches the engine-
-        // side pickRow[6] buffer.
-        u8 poolPickCount = me->partySize;
-        if (poolPickCount < pickCount) poolPickCount = pickCount;
-        if (poolPickCount > SIM_PICK_INDICES_MAX) poolPickCount = SIM_PICK_INDICES_MAX;
-        Sim_PickTopNFromPool(me, oppSpecies, oppMons, oppCount, poolPickCount, gSimPickIndices[row], &written);
+        Sim_PickTopN(me, oppSpecies, oppMons, oppCount, pickCount, gSimPickIndices[row], &written);
     }
     else
     {
-        Sim_PickTopN(me, oppSpecies, oppMons, oppCount, pickCount, gSimPickIndices[row], &written);
+        // Pools sample their whole battle party from the larger roster, so they
+        // always bring partySize — not the (possibly smaller) VGC bring-N count.
+        // Cap at the pick-buffer size. battle_main caps to monsCount afterward.
+        u8 poolPick = (pickCount < me->partySize) ? me->partySize : pickCount;
+        if (poolPick > SIM_PICK_INDICES_MAX)
+            poolPick = SIM_PICK_INDICES_MAX;
+        Sim_PickTopNFromPool(me, oppSpecies, oppMons, oppCount, poolPick,
+                             gSimPickIndices[row], &written);
     }
 
     // Battle Simulator: Taylor always leads with Pelipper. Pelipper is at party
