@@ -1,7 +1,9 @@
 # Pokemon Battle Theater
 
 <p align="center">
-  <img src="docs/hero_title.png" alt="Pokemon Battle Theater — AI vs AI Simulator" width="600">
+  <img src="docs/title_animated.gif" alt="Pokemon Battle Theater — animated title screen, Mega Sceptile vs Mega Charizard X" width="480">
+  &nbsp;
+  <img src="docs/box_art.png" alt="Pokemon Battle Theater box art" width="240">
 </p>
 
 An AI vs AI Pokemon battle simulator built on
@@ -9,7 +11,10 @@ An AI vs AI Pokemon battle simulator built on
 Pit any two trainers from the mainline games (Gens 1-9) against each other,
 or pilot one side via Pilot Mode.
 
-**Download the latest patch:** [v2.0.7 — Pool-aware team preview + Build Trainer QoL](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
+Title screen + box art commissioned from
+**[u/CDRX73](https://www.reddit.com/user/CDRX73/)**.
+
+**Download the latest patch:** [v2.0.9 — Animated title screen + pool/encoder polish](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
 All releases live on the [Releases page](https://github.com/logdog2325/pokemon-battle-theater/releases).
 
 ---
@@ -76,8 +81,9 @@ All releases live on the [Releases page](https://github.com/logdog2325/pokemon-b
 - Pilot Mode — play *against* the AI yourself using a loaner team
   (see [Pilot Mode](#pilot-mode) below)
 - Custom Battle Theater background by LiYun
-- Fan-made placeholder title screen by u/Itchy-Hedgehog-3371
-  (Mega Blastoise vs Gigantamax Charizard)
+- **Animated title screen** commissioned from u/CDRX73 — Mega Sceptile vs
+  Mega Charizard X in the Battle Theater stadium, flames + poses animating
+  behind the logo *(v2.0.9)*
 - AI tweaks for Z-Move / Mega / Dynamax / Gmax bias
 - Custom singles AI controller (fixes vanilla post-KO crash)
 - Affection and Terastallization disabled
@@ -368,14 +374,16 @@ flow / debug menu reference.
 ## Credits
 
 - pokeemerald-expansion engine + decompilation project
+- [u/CDRX73](https://www.reddit.com/user/CDRX73/) — commissioned animated title
+  screen + box art (Mega Sceptile vs Mega Charizard X, v2.0.9)
 - LiYun — Battle Theater background art
 - Bulbapedia / Smogon archives — canonical trainer rosters
 - u/Healthy_Bug7977 and u/LordePachi — suggested the Marvel Snap / Hearthstone–style
   deck-code import that became v1.3's Showdown team-code feature
 - u/Itchy-Hedgehog-3371 — pitched the v1.7 Battle Frontier Challenge Mode idea
   ("make the forfeit exploit an official feature") AND drew the v1.6 placeholder
-  title screen (Mega Blastoise vs Gigantamax Charizard) while a real artist commission
-  is in progress
+  title screen (Mega Blastoise vs Gigantamax Charizard) that held the spot until
+  the CDRX73 commission landed
 
 Not affiliated with Nintendo, Game Freak, or The Pokémon Company.
 Pokémon and all related marks are trademarks of their respective owners.

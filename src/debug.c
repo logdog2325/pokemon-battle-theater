@@ -6626,6 +6626,23 @@ static u8 Sim_SimulateMatch(u8 slotA, u8 slotB)
 // places the Player AI into a random slot, then pre-simulates the 4 SIDE
 // QF matches that aren't the player's. SF and F outcomes are simulated
 // lazily as the player advances. Returns TRUE on success.
+// v2.0.9 — TRUE if `trainerId` is a custom slot whose saveblock entry is NOT
+// configured (inUse == 0). Used to drop empty custom slots from tournament
+// candidate lists — the "All Stars" cup aliases sSimulatorRoster, which
+// includes all 6 TRAINER_SIM_CUSTOM_* IDs, so unconfigured slots would
+// otherwise enter the bracket as free-win placeholder-Magikarp opponents.
+static bool32 Sim_IsEmptyCustomSlot(u16 trainerId)
+{
+    s32 slot = -1;
+    if (trainerId >= TRAINER_SIM_CUSTOM_1 && trainerId <= TRAINER_SIM_CUSTOM_3)
+        slot = trainerId - TRAINER_SIM_CUSTOM_1;
+    else if (trainerId >= TRAINER_SIM_CUSTOM_4 && trainerId <= TRAINER_SIM_CUSTOM_6)
+        slot = (trainerId - TRAINER_SIM_CUSTOM_4) + 3;
+    if (slot < 0 || slot >= SIM_NUM_CUSTOM_TRAINERS)
+        return FALSE;  // not a custom slot at all
+    return !gSaveBlock3Ptr->simCustomTrainers[slot].inUse;
+}
+
 static bool32 Sim_BuildTournamentBracket(u8 cupIndex, s32 playerSideId)
 {
     if (cupIndex == 0 || cupIndex >= SIM_CUP_COUNT)
@@ -6656,6 +6673,11 @@ static bool32 Sim_BuildTournamentBracket(u8 cupIndex, s32 playerSideId)
     for (u32 i = 0; i < cup->size && candidateCount < ARRAY_COUNT(candidates); i++)
     {
         if ((s32)cup->trainers[i] == playerSideId)
+            continue;
+        // v2.0.9 — skip unconfigured custom slots so the All Stars cup (which
+        // aliases sSimulatorRoster, including all 6 TRAINER_SIM_CUSTOM_* IDs)
+        // doesn't seed the bracket with placeholder-Magikarp free wins.
+        if (Sim_IsEmptyCustomSlot(cup->trainers[i]))
             continue;
         candidates[candidateCount++] = cup->trainers[i];
     }

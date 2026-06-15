@@ -84,14 +84,73 @@
   }
   .footer code { background: var(--code-bg); padding: 2px 6px; border-radius: 3px; color: var(--text); }
   .empty { color: var(--muted); font-style: italic; }
+
+  /* v2.0.9 — stepped how-to, mobile-first. */
+  .steps {
+    max-width: 1200px; margin: 0 auto 24px auto;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+  }
+  .step {
+    background: var(--panel); border-radius: 8px; padding: 14px 16px;
+    font-size: 14px; position: relative;
+  }
+  .step .num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--accent); color: #000; font-weight: 700; font-size: 14px;
+    margin-bottom: 8px;
+  }
+  .step b { color: var(--text); }
+  .step a { color: var(--accent); }
+  /* Mobile cue: a downward nudge telling users the codes appear below. */
+  .jump-hint {
+    display: none;
+    max-width: 1200px; margin: -8px auto 16px auto;
+    text-align: center; color: var(--accent); font-size: 13px; font-weight: 600;
+  }
+  @media (max-width: 800px) {
+    body { padding: 16px; }
+    h1 { font-size: 19px; }
+    .steps { grid-template-columns: 1fr; gap: 8px; }
+    /* Shrink the paste box on mobile so the generated codes are reachable
+       with one short scroll instead of a full screen-height of empty input. */
+    textarea { min-height: 160px; }
+    .jump-hint { display: block; }
+    /* Bigger touch targets for copy. */
+    .copy-btn { padding: 10px 14px; font-size: 14px; min-width: 84px; }
+    .code-row { flex-wrap: wrap; }
+    .code-value { flex-basis: 100%; order: 3; }
+    .code-meta { order: 2; }
+  }
 </style>
 </head>
 <body>
 
 <h1>Pokemon Battle Theater — Team Code Encoder</h1>
 <p class="subtitle">
-  Paste a <a href="https://www.smogon.com/forums/threads/3656476/" style="color: var(--accent)">Pokémon Showdown</a> team export on the left. Six codes appear on the right — one per Pokémon. Type each code into the ROM's <b>"Import from code…"</b> screen on the custom-trainer slot you want to fill.
+  Turn a Pokémon Showdown team into short codes you can type into the ROM. No app, no internet needed — this page does everything on your device.
 </p>
+
+<div class="steps">
+  <div class="step">
+    <div class="num">1</div><br>
+    <b>Get a team export.</b> In Pokémon Showdown's
+    <a href="https://play.pokemonshowdown.com/teambuilder">Teambuilder</a>, build a team, tap
+    <b>Import/Export</b>, and copy the text. (Or copy any team in Showdown's text format.)
+  </div>
+  <div class="step">
+    <div class="num">2</div><br>
+    <b>Paste it below.</b> Drop the export into the <b>Showdown export</b> box. Codes appear
+    instantly underneath — one per Pokémon. Tap <b>copy</b> on each.
+  </div>
+  <div class="step">
+    <div class="num">3</div><br>
+    <b>Type it into the ROM.</b> In-game: <b>Build Trainer → pick a slot → Import from code…</b>,
+    then type the code for Pokémon&nbsp;1. Repeat for each Pokémon.
+  </div>
+</div>
+
+<p class="jump-hint">↓ Your codes appear below the paste box ↓</p>
 
 <div class="grid">
   <div class="panel">
@@ -599,23 +658,59 @@ function emptyRowHtml(n) {
     </div>`;
 }
 
+function flashCopied(btn) {
+  const orig = btn.dataset.label || btn.textContent;
+  btn.dataset.label = orig;
+  btn.textContent = "copied!";
+  btn.classList.add("copied");
+  setTimeout(() => { btn.textContent = orig; btn.classList.remove("copied"); }, 1200);
+}
+
 function attachCopyHandlers() {
   for (const btn of document.querySelectorAll(".copy-btn[data-code]")) {
     btn.addEventListener("click", async () => {
+      const code = btn.dataset.code;
+      // Modern path: async clipboard API (needs a secure context — https or
+      // localhost). On mobile opened from a file:// or plain-http host this
+      // throws, so we fall through to the legacy path below.
+      if (navigator.clipboard && window.isSecureContext) {
+        try {
+          await navigator.clipboard.writeText(code);
+          flashCopied(btn);
+          return;
+        } catch (e) { /* fall through */ }
+      }
+      // Legacy path: hidden textarea + execCommand. setSelectionRange (not
+      // just select()) is required for the selection to register on iOS
+      // Safari. Show the SAME "copied!" feedback so mobile users get
+      // confirmation instead of a silent button — the silent fallback was a
+      // major source of "is this thing working?" confusion (v2.0.9).
       try {
-        await navigator.clipboard.writeText(btn.dataset.code);
-        const orig = btn.textContent;
-        btn.textContent = "copied!";
-        btn.classList.add("copied");
-        setTimeout(() => { btn.textContent = orig; btn.classList.remove("copied"); }, 1200);
-      } catch (e) {
-        // Older browsers: fall back to legacy execCommand path
         const tmp = document.createElement("textarea");
-        tmp.value = btn.dataset.code;
+        tmp.value = code;
+        tmp.setAttribute("readonly", "");
+        tmp.style.position = "fixed";
+        tmp.style.top = "0";
+        tmp.style.opacity = "0";
         document.body.appendChild(tmp);
+        tmp.focus();
         tmp.select();
-        document.execCommand("copy");
+        tmp.setSelectionRange(0, code.length);
+        const ok = document.execCommand("copy");
         document.body.removeChild(tmp);
+        if (ok) { flashCopied(btn); return; }
+      } catch (e) { /* fall through to manual */ }
+      // Last resort (some locked-down mobile webviews block both APIs):
+      // select the code text on the page so the user can long-press → Copy.
+      const valueEl = btn.parentElement.querySelector(".code-value");
+      if (valueEl) {
+        const range = document.createRange();
+        range.selectNodeContents(valueEl);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        btn.textContent = "select+hold";
+        setTimeout(() => { btn.textContent = btn.dataset.label || "copy"; }, 1600);
       }
     });
   }

@@ -70,17 +70,85 @@ const u16 gTitleScreenAlphaBlend[64] =
     [32 ... 63] = BLDALPHA_BLEND(0, 16),
 };
 
-// 240x160 Mode-4 framebuffer pixel data (row-major, 8bpp, 38400 bytes).
-// Declared as u32[] for natural 4-byte alignment so DmaCopy32 is legal.
-static const u32 sBattleTheaterBitmap[] = INCBIN_U32("graphics/title_screen/battle_theater_full.bitmap");
-// 256-color GBA-format palette (BGR555, 512 bytes).
+// v2.0.9 — Animated title screen. The commissioned art is a 5-frame loop
+// (the battle scene with flickering flames + Sceptile poses; the logo is
+// composited onto every frame so it stays rock-steady). Each frame is a
+// full 240x160 Mode-4 8bpp bitmap (38400 bytes). All frames share ONE
+// 256-color palette, so animation is pure pixel-index swapping — the palette
+// loads once and never changes.
+//
+// Frames play ping-pong (0,1,2,3,4,3,2,1) to match the artist's GIF, ~220ms
+// per step. Tearing is avoided with Mode-4 double-buffering: each step DMAs
+// the next frame into the OFF-SCREEN page during the main loop, then the
+// VBlank handler flips the DISPCNT display-frame bit so the just-written page
+// becomes visible atomically.
+//
+// Declared u32[] for 4-byte alignment (DmaCopy32 requirement). Frame 0 keeps
+// the legacy filename so a single-frame revert stays trivial.
+static const u32 sTitleFrame0[] = INCBIN_U32("graphics/title_screen/battle_theater_full.bitmap");
+static const u32 sTitleFrame1[] = INCBIN_U32("graphics/title_screen/battle_theater_f1.bitmap");
+static const u32 sTitleFrame2[] = INCBIN_U32("graphics/title_screen/battle_theater_f2.bitmap");
+static const u32 sTitleFrame3[] = INCBIN_U32("graphics/title_screen/battle_theater_f3.bitmap");
+static const u32 sTitleFrame4[] = INCBIN_U32("graphics/title_screen/battle_theater_f4.bitmap");
+static const u32 *const sTitleFrames[] = {
+    sTitleFrame0, sTitleFrame1, sTitleFrame2, sTitleFrame3, sTitleFrame4,
+};
+// 256-color GBA-format palette (BGR555, 512 bytes), shared by all frames.
 static const u16 sBattleTheaterPalette[256] = INCBIN_U16("graphics/title_screen/battle_theater_full.bgpal");
+
+#define TITLE_FRAME_BYTES       0x9600  // 38400 = 240*160 visible bytes
+#define MODE4_PAGE_STRIDE       0xA000  // page 1 begins at VRAM + 0xA000
+#define DISPCNT_PAGE_SELECT     0x0010  // DISPCNT bit 4: Mode 4/5 frame select
+#define TITLE_FRAME_DELAY       13      // ~220ms at 59.7fps (matches the GIF)
+#define TITLE_PINGPONG_STEPS    8       // 0,1,2,3,4,3,2,1
+
+// Base DISPCNT for the title (page-select bit added/cleared on flip).
+static u16 sTitleDispcntBase;
+static u8  sTitleAnimStep;      // 0..7 ping-pong step
+static u8  sTitleAnimTimer;     // vblanks since last advance
+static u8  sTitleDisplayPage;   // 0 or 1: Mode 4 page currently shown
+static bool8 sTitleFlipPending; // VBlank should flip the page this frame
+
+static void Task_TitleAnimate(u8);
 
 static void VBlankCB(void)
 {
+    // Atomic page flip: the off-screen page already holds the next frame
+    // (written during the main loop), so toggling the display-frame bit here
+    // swaps it in with zero tearing.
+    if (sTitleFlipPending)
+    {
+        sTitleDisplayPage ^= 1;
+        SetGpuReg(REG_OFFSET_DISPCNT,
+                  sTitleDisplayPage ? (sTitleDispcntBase | DISPCNT_PAGE_SELECT)
+                                    : sTitleDispcntBase);
+        sTitleFlipPending = FALSE;
+    }
     LoadOam();
     ProcessSpriteCopyRequests();
     TransferPlttBuffer();
+}
+
+// Every TITLE_FRAME_DELAY vblanks, advance the ping-pong step, DMA that frame
+// into the off-screen page, and arm the VBlank flip.
+static void Task_TitleAnimate(u8 taskId)
+{
+    void *dst;
+    u8 backPage, frame;
+
+    if (++sTitleAnimTimer < TITLE_FRAME_DELAY)
+        return;
+    sTitleAnimTimer = 0;
+
+    sTitleAnimStep = (sTitleAnimStep + 1) % TITLE_PINGPONG_STEPS;
+    // Map the 8-step ping-pong onto the 5 unique frames: 0,1,2,3,4,3,2,1.
+    frame = (sTitleAnimStep <= 4) ? sTitleAnimStep : (TITLE_PINGPONG_STEPS - sTitleAnimStep);
+
+    // Write to whichever page ISN'T currently displayed, then flip at VBlank.
+    backPage = sTitleDisplayPage ^ 1;
+    dst = (void *)(VRAM + (backPage ? MODE4_PAGE_STRIDE : 0));
+    DmaCopy32(3, sTitleFrames[frame], dst, TITLE_FRAME_BYTES);
+    sTitleFlipPending = TRUE;
 }
 
 void CB2_InitTitleScreen(void)
@@ -116,11 +184,17 @@ void CB2_InitTitleScreen(void)
         gMain.state = 1;
         break;
     case 1:
-        // Copy 38,400 bytes of bitmap into BG2 framebuffer (Mode 4 page 0 at
-        // VRAM 0x06000000). DmaCopy32 takes size in bytes; 38400/4 = 9600 units
-        // is well under the GBA DMA count limit.
-        DmaCopy32(3, sBattleTheaterBitmap, (void *)VRAM, sizeof(sBattleTheaterBitmap));
+        // Copy frame 0 into BG2 framebuffer page 0 (Mode 4, VRAM 0x06000000).
+        // DmaCopy32 takes size in bytes; 38400/4 = 9600 units is well under the
+        // GBA DMA count limit. Subsequent frames stream into the off-screen
+        // page from Task_TitleAnimate.
+        DmaCopy32(3, sTitleFrame0, (void *)VRAM, TITLE_FRAME_BYTES);
         LoadPalette(sBattleTheaterPalette, BG_PLTT_ID(0), sizeof(sBattleTheaterPalette));
+        // Reset animation state: frame 0 shown on page 0, timer primed.
+        sTitleAnimStep = 0;
+        sTitleAnimTimer = 0;
+        sTitleDisplayPage = 0;
+        sTitleFlipPending = FALSE;
         ScanlineEffect_Stop();
         ResetTasks();
         ResetSpriteData();
@@ -138,12 +212,18 @@ void CB2_InitTitleScreen(void)
         break;
     case 4:
         // Mode 4 + BG2 (bitmap) + OBJ. No window, no blending -- the image is
-        // fully composited at design time.
+        // fully composited at design time. Cache the base DISPCNT so the
+        // VBlank page-flip can OR in the frame-select bit without disturbing
+        // the other display flags.
         SetGpuReg(REG_OFFSET_BG2CNT, 0);
-        SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_4
-                                    | DISPCNT_OBJ_1D_MAP
-                                    | DISPCNT_BG2_ON
-                                    | DISPCNT_OBJ_ON);
+        sTitleDispcntBase = DISPCNT_MODE_4
+                          | DISPCNT_OBJ_1D_MAP
+                          | DISPCNT_BG2_ON
+                          | DISPCNT_OBJ_ON;
+        SetGpuReg(REG_OFFSET_DISPCNT, sTitleDispcntBase);
+        // Start the frame-cycling task only now that Mode 4 is live, so an
+        // early page-flip can't toggle DISPCNT before the display is set up.
+        CreateTask(Task_TitleAnimate, 0);
         EnableInterrupts(INTR_FLAG_VBLANK);
         m4aSongNumStart(MUS_B_FRONTIER);
         gMain.state = 5;
