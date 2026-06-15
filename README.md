@@ -382,28 +382,6 @@ yourself, using the chosen trainer's loaner team.
 pick which side you want to control. Run the battle as normal — the
 battle UI lets you select moves, swap mons, use items, the works.
 
-## Building from source
-
-You'll need [devkitARM](https://devkitpro.org/) and the standard
-pokeemerald-expansion toolchain. Then:
-
-```sh
-git clone https://github.com/logdog2325/pokemon-battle-theater.git
-cd pokemon-battle-theater
-make -j4   # produces pokeemerald.gba
-```
-
-## Distributing a patch
-
-The release ROM cannot be shared directly (Nintendo copyright). Use
-[Flips](https://github.com/Alcaro/Flips) to generate a `.bps` patch from
-your modded ROM against vanilla Emerald (USA, MD5
-`605b89b67018abcea91e693a4dd25be3`), and distribute just the `.bps`.
-
-```sh
-flips --create --bps vanilla-emerald.gba pokeemerald.gba pokemon-battle-theater.bps
-```
-
 ## Upstream
 
 This is a fork of
