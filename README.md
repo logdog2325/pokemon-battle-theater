@@ -14,7 +14,7 @@ or pilot one side via Pilot Mode.
 Title screen + box art commissioned from
 **[u/CDRX73](https://www.reddit.com/user/CDRX73/)**.
 
-**Download the latest patch:** [v2.1.0 — Anime trainers (Alain, Ash's regional teams, Paul, Gary) + smart pool selection](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
+**Download the latest patch:** [v2.1.1 — SV Academy / League Club Room trainers (Clavell, Miriam, Arven, Cyrano) + regional-form fixes](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
 All releases live on the [Releases page](https://github.com/logdog2325/pokemon-battle-theater/releases).
 
 ---
@@ -55,6 +55,11 @@ All releases live on the [Releases page](https://github.com/logdog2325/pokemon-b
   (v2.1.0)** — Alain with Mega Charizard X, Ash's per-region teams (Alola,
   Kalos, Sinnoh, Hoenn as fixed sixes; Unova / Indigo / Full-roster as
   rotation pools), his Journeys World Champion team, and rivals Paul & Gary
+- **Complete SV League Club Room (v2.1.1)** — every Blueberry Academy Club
+  Room trainer: Director Clavell (3 starter-variant teams), the Instructor
+  Miriam, Arven, and the secret boss Cyrano, plus a regional-form audit pass
+  (Alolan Ninetales / Sandslash / Persian / Dugtrio, Galarian Slowbro, Tyme's
+  Dusk-Form Lycanroc)
 - **Smart pool selection (v2.1.0)** — rotation-pool trainers (Ash's Full
   Team, Paul, Gary, the Battle Tree pools) now bring a *matchup-aware* six
   scored against your roster, with light randomization so the team varies

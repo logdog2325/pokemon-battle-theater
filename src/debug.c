@@ -346,6 +346,10 @@ bool32 Sim_TrainerCanTera(u16 trainerId)
     // just skip Tera engine-side via opponentMonCanTera bit logic.
     if (trainerId >= TRAINER_NEMONA_QUAQUAVAL && trainerId <= TRAINER_KIERAN)
         return TRUE;
+    // v2.1.1 — Clavell ×3 / Miriam / Arven / Cyrano (1200-1205) sit past the
+    // contiguous SV block; their aces carry a Tera Type, so allow Tera here too.
+    if (trainerId >= TRAINER_CLAVELL_SKELEDIRGE && trainerId <= TRAINER_CYRANO)
+        return TRUE;
     return FALSE;
 }
 
@@ -437,6 +441,7 @@ static const u8 *GetSimTierColorPrefix(u16 trainerId)
      || (trainerId >= TRAINER_NEMONA_QUAQUAVAL && trainerId <= TRAINER_GEETA)
      || (trainerId >= TRAINER_PENNY && trainerId <= TRAINER_TURO)
      || trainerId == TRAINER_KIERAN
+     || (trainerId >= TRAINER_CLAVELL_SKELEDIRGE && trainerId <= TRAINER_CYRANO) // SV Director Clavell ×3 / Miriam / Arven / Cyrano
      || trainerId == TRAINER_URBAIN || trainerId == TRAINER_TAUNIE
      || trainerId == TRAINER_KORRINA_ZA)
         return sSimTierColorChampion;
@@ -670,6 +675,14 @@ static const u8 *GetSimSourceSuffix(u16 trainerId)
     if (trainerId == TRAINER_NEMONA_QUAQUAVAL)  return sSimSourceSuffixSV_NemQ;
     if (trainerId == TRAINER_NEMONA_MEOWSCARADA) return sSimSourceSuffixSV_NemM;
     if (trainerId == TRAINER_NEMONA_SKELEDIRGE) return sSimSourceSuffixSV_NemS;
+    // v2.1.1 — Director Clavell's three variants reuse the ace-initial tag
+    // (S/Q/M = Skeledirge/Quaquaval/Meowscarada); the name "CLAVELL" keeps them
+    // distinct from Nemona's same-tagged teams in the picker.
+    if (trainerId == TRAINER_CLAVELL_SKELEDIRGE)  return sSimSourceSuffixSV_NemS;
+    if (trainerId == TRAINER_CLAVELL_QUAQUAVAL)   return sSimSourceSuffixSV_NemQ;
+    if (trainerId == TRAINER_CLAVELL_MEOWSCARADA) return sSimSourceSuffixSV_NemM;
+    // v2.1.1 — Miriam + Arven + Cyrano: single fixed SV teams, plain "(SV)" tag.
+    if (trainerId >= TRAINER_MIRIAM && trainerId <= TRAINER_CYRANO) return sSimSourceSuffixSV;
     if (trainerId >= TRAINER_NEMONA_QUAQUAVAL && trainerId <= TRAINER_KIERAN)
         return sSimSourceSuffixSV;
     // v1.21 Legends: Z-A trainers (1143-1166) — Royale ranks, Urbain/Taunie
@@ -791,6 +804,8 @@ static const u16 sSimulatorRoster[] = {
     1131, 1132, 1133, 1134, 1135, 1136,                  // 6 Academy professors
     1137,                                                // Carmine
     1138, 1139, 1140, 1141, 1142,                        // BB Elite Four + Kieran
+    1200, 1201, 1202,                                    // v2.1.1 Director Clavell ×3 starter variants
+    1203, 1204, 1205,                                    // v2.1.1 Miriam (Instructor) + Arven + Cyrano (Academy founder)
     // ---- Legends ZA (2025, Kalos Lumiose Royale) ----
     1143, 1144,                                          // Urbain / Taunie final rivals
     1145, 1146, 1147, 1148,                              // Vinnie / Canari / Ivor / Corbeau
@@ -986,6 +1001,8 @@ static const u16 sCupSV[] = {
     1131, 1132, 1133, 1134, 1135, 1136,              // 6 Academy professors
     1137,                                            // Carmine
     1138, 1139, 1140, 1141, 1142,                    // BB Elite Four + Kieran
+    1200, 1201, 1202,                                // v2.1.1 Director Clavell ×3 starter variants
+    1203, 1204, 1205,                                // v2.1.1 Miriam + Arven + Cyrano
 };
 
 // v1.21 — Legends: Z-A tournament pool. All 24 Z-A trainers (1143-1166).
@@ -1099,7 +1116,7 @@ static const struct SimCup sSimCups[] =
     { sCupName_PwtChamps,   sCupPwtChamps,    8 },   // Red/Blue/Lance/Steven/Wallace PWT + Cynthia/Iris/Alder PWT
     { sCupName_PwtWorld,    sCupPwtWorld,    49 },   // All PWT leaders + champions across every region
     // v1.21 — Scarlet/Violet + Legends Z-A + All-Stars pools
-    { sCupName_SV,          sCupSV,          30 },   // Every SV trainer (base + DLC)
+    { sCupName_SV,          sCupSV,          36 },   // Every SV trainer (base + DLC) + Clavell ×3 + Miriam + Arven + Cyrano
     { sCupName_ZA,          sCupZA,          24 },   // Every Z-A Royale trainer
     { sCupName_AllStars,    sSimulatorRoster, SIMULATOR_ROSTER_COUNT },  // EVERY curated trainer in the game
 };
@@ -6202,18 +6219,18 @@ static const u16 sSimulatorRosterSectionStarts[] = {
     176 + CUSTOM_OFFSET,     // SwSh — Leon x3 + Hop x6 + Mustard x2 + Marnie/Bede + 9 gym + Klara/Avery/Peony (25)
     201 + CUSTOM_OFFSET,     // BDSP — Barrys + 8 gym + 4 E4 + Cynthia + 3 Lucas + 3 Dawn (22)
     223 + CUSTOM_OFFSET,     // Legends Arceus — Volo/Adaman/Irida/Ingo/Akari + Kamado/Zisu/Beni/Rei (9)
-    232 + CUSTOM_OFFSET,     // SV — Nemona + Geeta + Paldea E4 + Penny + Sada/Turo + 7 gyms + 6 profs + Carmine + BB E4 + Kieran (30)
-    262 + CUSTOM_OFFSET,     // Legends ZA — Urbain/Taunie + Royale challengers (24)
-    286 + CUSTOM_OFFSET,     // PWT Kanto (8)
-    294 + CUSTOM_OFFSET,     // PWT Hoenn (9)
-    303 + CUSTOM_OFFSET,     // PWT Johto (8)
-    311 + CUSTOM_OFFSET,     // PWT Sinnoh (8)
-    319 + CUSTOM_OFFSET,     // PWT Unova (8 base + 5 v1.5 = 13)
-    332 + CUSTOM_OFFSET,     // PWT Champs — Red/Blue/Lance/Steven/Wallace + Cynthia/Iris/Alder + Bianca (9)
-    341 + CUSTOM_OFFSET,     // Anime — Ash (WC/Journeys + 7 region teams) + Alain + Paul + Gary (11)
-    352 + CUSTOM_OFFSET,     // VGC — Wolfe Glick + Ray Rizo 2012 World Finals (2)
-    354 + CUSTOM_OFFSET,     // Custom — v0.51 + v1.1 user-built slots (6)
-    360 + CUSTOM_OFFSET,     // RGBY — Prof. Oak Glitch x3 (Venusaur/Charizard/Blastoise variants)
+    232 + CUSTOM_OFFSET,     // SV — Nemona + Geeta + Paldea E4 + Penny + Sada/Turo + 7 gyms + 6 profs + Carmine + BB E4 + Kieran + Clavell ×3 + Miriam + Arven + Cyrano (36)
+    268 + CUSTOM_OFFSET,     // Legends ZA — Urbain/Taunie + Royale challengers (24)
+    292 + CUSTOM_OFFSET,     // PWT Kanto (8)
+    300 + CUSTOM_OFFSET,     // PWT Hoenn (9)
+    309 + CUSTOM_OFFSET,     // PWT Johto (8)
+    317 + CUSTOM_OFFSET,     // PWT Sinnoh (8)
+    325 + CUSTOM_OFFSET,     // PWT Unova (8 base + 5 v1.5 = 13)
+    338 + CUSTOM_OFFSET,     // PWT Champs — Red/Blue/Lance/Steven/Wallace + Cynthia/Iris/Alder + Bianca (9)
+    347 + CUSTOM_OFFSET,     // Anime — Ash (WC/Journeys + 7 region teams) + Alain + Paul + Gary (11)
+    358 + CUSTOM_OFFSET,     // VGC — Wolfe Glick + Ray Rizo 2012 World Finals (2)
+    360 + CUSTOM_OFFSET,     // Custom — v0.51 + v1.1 user-built slots (6)
+    366 + CUSTOM_OFFSET,     // RGBY — Prof. Oak Glitch x3 (Venusaur/Charizard/Blastoise variants)
 };
 #define SIMULATOR_ROSTER_SECTION_COUNT (sizeof(sSimulatorRosterSectionStarts) / sizeof(sSimulatorRosterSectionStarts[0]))
 

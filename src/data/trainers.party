@@ -37554,7 +37554,7 @@ Items: Full Restore / Full Restore / Full Restore / Full Restore
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
 
-Ninetales (M)
+Ninetales-Alola (M)
 Ability: Snow Warning
 Level: 80
 IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
@@ -37675,7 +37675,7 @@ Adamant Nature
 - Stone Edge
 - Body Press
 
-Slowbro (M)
+Slowbro-Galar (M)
 Ability: Quick Draw
 Level: 80
 IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
@@ -37796,7 +37796,7 @@ Jolly Nature
 - Night Slash
 - Aerial Ace
 
-Lycanroc (M)
+Lycanroc-Dusk (M)
 Ability: Tough Claws
 Level: 80
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
@@ -37884,7 +37884,7 @@ Jolly Nature
 - Dual Wingbeat
 - Heat Wave
 
-Persian (F)
+Persian-Alola (F)
 Ability: Technician
 Level: 80
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
@@ -37906,7 +37906,7 @@ Modest Nature
 - Sludge Bomb
 - Giga Drain
 
-Sandslash (M)
+Sandslash-Alola (M)
 Ability: Snow Cloak
 Level: 80
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
@@ -38258,7 +38258,7 @@ Bold Nature
 - Body Press
 - Dual Wingbeat
 
-Dugtrio (F) @ Focus Sash
+Dugtrio-Alola (F) @ Focus Sash
 Ability: Tangling Hair
 Level: 83
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
@@ -38357,7 +38357,7 @@ Modest Nature
 - Ice Beam
 - Shadow Ball
 
-Slowbro (F) @ Sitrus Berry
+Slowbro-Galar (F) @ Sitrus Berry
 Ability: Quick Draw
 Level: 84
 IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
@@ -38544,6 +38544,482 @@ Tera Type: Fighting
 - Gyro Ball
 - Tera Blast
 - Earth Power
+
+/* v2.1.1 — Director Clavell (League Club Room, Blueberry Academy DLC). His
+ * team has three starter-variant forms: the ace is whichever starter line is
+ * super-effective against the player's choice (Skeledirge vs Sprigatito,
+ * Quaquaval vs Fuecoco, Meowscarada vs Quaxly), and the 4th/5th support slots
+ * rotate among Amoonguss / Gyarados / Houndoom. Species, ability, level, moves,
+ * held item (none) and the ace's Tera Type are canon; EVs / IVs / natures are
+ * competitively filled (the in-game data doesn't specify them). */
+=== TRAINER_CLAVELL_SKELEDIRGE ===
+Name: CLAVELL
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Oranguru (M)
+Ability: Inner Focus
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 0 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Trick Room
+- Psychic
+- Thunderbolt
+- Foul Play
+
+Abomasnow (M)
+Ability: Snow Warning
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Aurora Veil
+- Blizzard
+- Giga Drain
+- Ice Shard
+
+Polteageist
+Ability: Weak Armor
+Level: 80
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Shell Smash
+- Shadow Ball
+- Stored Power
+- Strength Sap
+
+Amoonguss (M)
+Ability: Effect Spore
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 0 SpA / 252 SpD / 0 Spe
+Calm Nature
+- Spore
+- Sludge Bomb
+- Giga Drain
+- Hex
+
+Gyarados (M)
+Ability: Intimidate
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Waterfall
+- Dragon Dance
+- Stone Edge
+- Earthquake
+
+Skeledirge (M)
+Ability: Blaze
+Level: 81
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+Tera Type: Fire
+- Shadow Ball
+- Torch Song
+- Earth Power
+- Snarl
+
+=== TRAINER_CLAVELL_QUAQUAVAL ===
+Name: CLAVELL
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Oranguru (M)
+Ability: Inner Focus
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 0 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Trick Room
+- Psychic
+- Thunderbolt
+- Foul Play
+
+Abomasnow (M)
+Ability: Snow Warning
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Aurora Veil
+- Blizzard
+- Giga Drain
+- Ice Shard
+
+Polteageist
+Ability: Weak Armor
+Level: 80
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Shell Smash
+- Shadow Ball
+- Stored Power
+- Strength Sap
+
+Houndoom (M)
+Ability: Flash Fire
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 4 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Sucker Punch
+- Fire Blast
+- Sludge Bomb
+- Thunder Fang
+
+Amoonguss (M)
+Ability: Effect Spore
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 0 SpA / 252 SpD / 0 Spe
+Calm Nature
+- Spore
+- Sludge Bomb
+- Giga Drain
+- Hex
+
+Quaquaval (M)
+Ability: Torrent
+Level: 81
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+Tera Type: Water
+- Brick Break
+- Aqua Step
+- Aerial Ace
+- Ice Spinner
+
+=== TRAINER_CLAVELL_MEOWSCARADA ===
+Name: CLAVELL
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Oranguru (M)
+Ability: Inner Focus
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 0 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Trick Room
+- Psychic
+- Thunderbolt
+- Foul Play
+
+Abomasnow (M)
+Ability: Snow Warning
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Aurora Veil
+- Blizzard
+- Giga Drain
+- Ice Shard
+
+Polteageist
+Ability: Weak Armor
+Level: 80
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Shell Smash
+- Shadow Ball
+- Stored Power
+- Strength Sap
+
+Gyarados (M)
+Ability: Intimidate
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Waterfall
+- Dragon Dance
+- Stone Edge
+- Earthquake
+
+Houndoom (M)
+Ability: Flash Fire
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 4 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Sucker Punch
+- Fire Blast
+- Sludge Bomb
+- Thunder Fang
+
+Meowscarada (M)
+Ability: Overgrow
+Level: 81
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+Tera Type: Grass
+- Sucker Punch
+- Flower Trick
+- Thunder Punch
+- Play Rough
+
+/* v2.1.1 — Miriam (the Instructor) and Arven, two more SV League Club Room
+ * trainers. Species, ability, level, held item, moves and the ace's Tera Type
+ * are canon; EVs / IVs / natures are competitively filled. */
+=== TRAINER_MIRIAM ===
+Name: MIRIAM
+Class: Cooltrainer
+Pic: Cooltrainer F
+Gender: Female
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Hypno (M)
+Ability: Insomnia
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 248 HP / 8 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Impish Nature
+- Hypnosis
+- Zen Headbutt
+- Drain Punch
+- Reflect
+
+Pincurchin (M)
+Ability: Lightning Rod
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Zing Zap
+- Poison Jab
+- Sucker Punch
+- Spikes
+
+Meganium (F)
+Ability: Overgrow
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 4 SpD / 0 Spe
+Bold Nature
+- Body Press
+- Leech Seed
+- Substitute
+- Giga Drain
+
+Glalie (M)
+Ability: Inner Focus
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Ice Shard
+- Earthquake
+- Freeze-Dry
+- Iron Head
+
+Eelektross (F)
+Ability: Levitate
+Level: 80
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Supercell Slam
+- Drain Punch
+- Liquidation
+- Coil
+
+Toxapex (F)
+Ability: Merciless
+Level: 81
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 4 SpD / 0 Spe
+Bold Nature
+Tera Type: Poison
+- Baneful Bunker
+- Venoshock
+- Liquidation
+- Recover
+
+=== TRAINER_ARVEN ===
+Name: ARVEN
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Greedent (M)
+Ability: Cheek Pouch
+Level: 82
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Bullet Seed
+- Body Slam
+- Psychic Fangs
+- Earthquake
+
+Cloyster (M)
+Ability: Skill Link
+Level: 82
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Rock Blast
+- Icicle Spear
+- Liquidation
+- Light Screen
+
+Scovillain (F)
+Ability: Chlorophyll
+Level: 82
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 4 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Fire Blast
+- Energy Ball
+- Zen Headbutt
+- Crunch
+
+Toedscruel (F)
+Ability: Mycelium Might
+Level: 82
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 4 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Power Whip
+- Earth Power
+- Spore
+- Sludge Bomb
+
+Garganacl (M)
+Ability: Purifying Salt
+Level: 82
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 4 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
+Impish Nature
+- Stone Edge
+- Earthquake
+- Body Press
+- Stealth Rock
+
+Mabosstiff (M)
+Ability: Intimidate
+Level: 83
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Adamant Nature
+Tera Type: Dark
+- Crunch
+- Psychic Fangs
+- Fire Fang
+- Play Rough
+
+/* v2.1.1 — Cyrano, founder/director of Blueberry Academy and the Indigo Disk
+ * secret boss (fought once you've traded with 10 League Club coaches). Species,
+ * ability, held item, level, moves and Serperior's Tera Rock are canon; EVs /
+ * IVs / natures are competitively filled. */
+=== TRAINER_CYRANO ===
+Name: CYRANO
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Zebstrika (F) @ Air Balloon
+Ability: Sap Sipper
+Level: 86
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Bulldoze
+- Supercell Slam
+- Flame Charge
+- Trailblaze
+
+Mandibuzz (F) @ Sitrus Berry
+Ability: Overcoat
+Level: 86
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 4 SpD / 0 Spe
+Bold Nature
+- Toxic
+- Tailwind
+- Snarl
+- Protect
+
+Gothitelle (F) @ Chesto Berry
+Ability: Shadow Tag
+Level: 86
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Calm Mind
+- Stored Power
+- Thunderbolt
+- Rest
+
+Emboar (F) @ Life Orb
+Ability: Reckless
+Level: 87
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Adamant Nature
+- Flare Blitz
+- Head Smash
+- Hammer Arm
+- Sucker Punch
+
+Samurott (F) @ Assault Vest
+Ability: Torrent
+Level: 87
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Adamant Nature
+- Aqua Jet
+- Sacred Sword
+- X-Scissor
+- Drill Run
+
+Serperior (F) @ Leftovers
+Ability: Contrary
+Level: 87
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+Tera Type: Rock
+- Leaf Storm
+- Tera Blast
+- Scale Shot
+- Glare
 
 === TRAINER_URBAIN ===
 Name: URBAIN

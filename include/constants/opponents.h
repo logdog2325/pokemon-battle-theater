@@ -1369,6 +1369,16 @@
 #define TRAINER_PAUL_ANIME                  1198  // Anime — Paul (Sinnoh rival), 17-mon rotation pool, Electivire ace (vanilla TRAINER_PAUL=275 is an unrelated NPC)
 #define TRAINER_GARY                        1199  // Anime — Gary Oak (Kanto rival), 12-mon rotation pool, Blastoise ace
 
+// v2.1.1 — Director Clavell (SV League Club Room, Blueberry Academy). Three
+// starter-variant teams; ace is the starter line super-effective vs the
+// player's pick. Placed at 1200+ since the SV block (1113-1142) is full.
+#define TRAINER_CLAVELL_SKELEDIRGE          1200  // SV — vs Sprigatito player (Skeledirge ace, Tera Fire)
+#define TRAINER_CLAVELL_QUAQUAVAL           1201  // SV — vs Fuecoco player (Quaquaval ace, Tera Water)
+#define TRAINER_CLAVELL_MEOWSCARADA         1202  // SV — vs Quaxly player (Meowscarada ace, Tera Grass)
+#define TRAINER_MIRIAM                      1203  // SV League Club Room — Academy Instructor (Toxapex ace, Tera Poison)
+#define TRAINER_ARVEN                       1204  // SV League Club Room — story rival (Mabosstiff ace, Tera Dark)
+#define TRAINER_CYRANO                      1205  // SV League Club Room — Blueberry Academy founder / Indigo Disk secret boss (Serperior ace, Tera Rock)
+
 // NOTE: Because each Trainer uses a flag to determine when they are defeated, there is only space for 9 additional trainers before trainer flag space overflows
 //       More space can be made by shifting flags around in constants/flags.h or changing how trainer flags are handled
 //       MAX_TRAINERS_COUNT can be increased but will take up additional saveblock space
