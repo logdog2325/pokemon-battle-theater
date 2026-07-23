@@ -14,7 +14,7 @@ or pilot one side via Pilot Mode.
 Title screen + box art commissioned from
 **[u/CDRX73](https://www.reddit.com/user/CDRX73/)**.
 
-**Download the latest patch:** [v2.1.1 — SV Academy / League Club Room trainers (Clavell, Miriam, Arven, Cyrano) + regional-form fixes](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
+**Download the latest patch:** [v2.2.0 — Classic Gen 1/2 + XY Elite Four rosters, dedicated Tournament menu, spectator mode](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
 All releases live on the [Releases page](https://github.com/logdog2325/pokemon-battle-theater/releases).
 
 ---
@@ -60,6 +60,25 @@ All releases live on the [Releases page](https://github.com/logdog2325/pokemon-b
   Miriam, Arven, and the secret boss Cyrano, plus a regional-form audit pass
   (Alolan Ninetales / Sandslash / Persian / Dugtrio, Galarian Slowbro, Tyme's
   Dusk-Form Lycanroc)
+- **Classic Gen 1 + Gen 2 rosters (v2.2.0)** — the RBY Elite Four, Champion
+  Blue in all six variants (3 RGB starters + 3 Yellow Eeveelutions), the GSC
+  Kanto gym leaders, Viridian Leader Blue, the Johto E4, Champion Lance,
+  rival Silver ×3, and Red at Mt. Silver — canon movesets, era-accurate (no
+  held items, 3-move sets where the games had them)
+- **XY Elite Four + Team Flare (v2.2.0)** — Malva, Siebold, Wikstrom, Drasna,
+  Lysandre's final battle (Mega Gyarados), and the Route 19 rival trio
+  (Tierno, Shauna, Trevor)
+- **N's B2W2 mega-pool (v2.2.0)** — his BW final team + all four B2W2
+  seasonal teams + Reshiram AND Zekrom as a 31-mon rotation pool that always
+  brings one legendary
+- **Dedicated Tournament menu (v2.2.0)** — Tournament now lives on the first
+  menu: pick any of 27 cups (RGBY / GSC / XY cups are new), then Random
+  Spectate, choose a trainer to follow, or pilot one yourself
+- **Tournament spectator mode (v2.2.0)** — getting eliminated no longer ends
+  the show: the bracket keeps playing as watchable AI-vs-AI battles until a
+  real champion is crowned
+- **Generation-order pickers (v2.2.0)** — both the trainer picker and the cup
+  list now run Gen 1 → Gen 9, with PWT grouped beside Gen 5 where it belongs
 - **Smart pool selection (v2.1.0)** — rotation-pool trainers (Ash's Full
   Team, Paul, Gary, the Battle Tree pools) now bring a *matchup-aware* six
   scored against your roster, with light randomization so the team varies

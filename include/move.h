@@ -209,10 +209,13 @@ extern const struct BattleMoveEffect gBattleMoveEffects[];
 
 static inline enum Move SanitizeMoveId(enum Move moveId)
 {
-    assertf(moveId < MOVES_COUNT_ALL, "invalid move: %d", moveId)
-    {
+    // Battle Theater: an out-of-range move ID must NEVER surface the resumable
+    // "invalid move" crash screen during play. The engine already recovers by
+    // treating it as MOVE_NONE; we ship non-RELEASE (the whole sim rides on the
+    // debug/battle-test infra), so the stock assertf would blue-screen players.
+    // Silently clamp to MOVE_NONE instead — identical recovery, no screen.
+    if (moveId >= MOVES_COUNT_ALL)
         return MOVE_NONE;
-    }
 
     return moveId;
 }

@@ -187,6 +187,10 @@ enum DebugTrainerSelection
     // warps to MAP_BATTLE_FRONTIER_OUTSIDE_WEST so the user can walk into
     // any facility. Cancel returns to the wrapper menu.
     TRAINERS_DEBUG_SELECTION_FRONTIER,
+    // v2.1.3 — Tournament wrapper flow: pick the trainer to follow through a
+    // cup bracket. SPECTATE = watch them AI-vs-AI; PILOT = play as them.
+    TRAINERS_DEBUG_SELECTION_TOURNAMENT_SPECTATE,
+    TRAINERS_DEBUG_SELECTION_TOURNAMENT_PILOT,
     // v2.0.6 — picker is being used as "import a single mon from a preset
     // trainer's party into the currently-active per-mon editor slot." DPAD-
     // LEFT/RIGHT cycles the source mon index (sBuildTrainerSourceMonIdx)
@@ -442,6 +446,9 @@ static const u8 *GetSimTierColorPrefix(u16 trainerId)
      || (trainerId >= TRAINER_PENNY && trainerId <= TRAINER_TURO)
      || trainerId == TRAINER_KIERAN
      || (trainerId >= TRAINER_CLAVELL_SKELEDIRGE && trainerId <= TRAINER_CYRANO) // SV Director Clavell ×3 / Miriam / Arven / Cyrano
+     || trainerId == TRAINER_N_B2W2               // v2.1.2 N's B2W2 legendary rotation pool
+     || (trainerId >= TRAINER_BLUE_RGB_CHARIZARD && trainerId <= TRAINER_BLUE_YELLOW_FLAREON) // v2.1.2 Champion Blue ×6
+     || trainerId == TRAINER_LANCE_GSC || trainerId == TRAINER_RED_GSC // v2.1.2 GSC Champion + Mt. Silver Red
      || trainerId == TRAINER_URBAIN || trainerId == TRAINER_TAUNIE
      || trainerId == TRAINER_KORRINA_ZA)
         return sSimTierColorChampion;
@@ -471,6 +478,14 @@ static const u8 *GetSimTierColorPrefix(u16 trainerId)
     // v1.21 DLC: Indigo Disk BB Elite Four (Crispin/Amarys/Lacey/Drayton).
     if (trainerId >= TRAINER_CRISPIN && trainerId <= TRAINER_DRAYTON)
         return sSimTierColorE4;
+    // v2.1.2: RBY Elite Four (Lorelei/Bruno/Agatha/Lance) + GSC Johto E4
+    // (Will/Koga/Bruno/Karen).
+    if ((trainerId >= TRAINER_LORELEI_RBY && trainerId <= TRAINER_LANCE_RBY)
+     || (trainerId >= TRAINER_WILL_GSC && trainerId <= TRAINER_KAREN_GSC))
+        return sSimTierColorE4;
+    // v2.1.3: XY Elite Four (Malva/Siebold/Wikstrom/Drasna) + Lysandre (boss).
+    if (trainerId >= TRAINER_MALVA && trainerId <= TRAINER_LYSANDRE)
+        return sSimTierColorE4;
     // v1.21 Z-A: Royale Rank A-tier rivals (Vinnie / Canari / Ivor / Corbeau /
     // L / Naveen / Tarragon / Grisham / Jacinthe / Griselle / Gwynn / Lidia /
     // Lebanne / Emma / Philippe). The mid-tier trainers (Rintaro / Xavi /
@@ -498,6 +513,9 @@ static const u8 *GetSimTierColorPrefix(u16 trainerId)
     // Academy professors, and Carmine (Teal Mask rival).
     if (trainerId >= TRAINER_KATY && trainerId <= TRAINER_CARMINE)
         return sSimTierColorGym;
+    // v2.1.2: GSC Kanto gym leaders (Brock..Blaine + Blue at Viridian).
+    if (trainerId >= TRAINER_BROCK_GSC && trainerId <= TRAINER_BLUE_GSC)
+        return sSimTierColorGym;
     return sSimTierColorNone;
 }
 
@@ -517,11 +535,25 @@ static const u8 sSimSourceSuffixPT[]   = _(" (Pt)");      // v0.11 Platinum (DPP
 static const u8 sSimSourceSuffixBDSP[] = _(" (BDSP)");    // v0.12 Brilliant Diamond/Shining Pearl
 static const u8 sSimSourceSuffixSWSH[] = _(" (SwSh)");    // v0.14 Sword/Shield
 static const u8 sSimSourceSuffixBW[]   = _(" (BW)");      // v0.40 Black/White + B2W2
+static const u8 sSimSourceSuffixB2W2[] = _(" (B2W2)");   // v2.1.2 B2W2-specific (N pool, Iris rematch)
 static const u8 sSimSourceSuffixXY[]   = _(" (XY)");      // v0.49 X/Y (Kalos)
 static const u8 sSimSourceSuffixAnime[] = _(" (Anime)");  // v0.50 Anime team builds
 static const u8 sSimSourceSuffixCustom[] = _(" (Custom)"); // v0.51 user-built trainer slots
 static const u8 sSimSourceSuffixVGC[]    = _(" (VGC)");    // v1.5 VGC 2012 finals (Wolfe / Ray)
 static const u8 sSimSourceSuffixRGBY[]   = _(" (RGBY)");   // v1.6 Prof. Oak Glitch boss
+// v2.1.2 — Classic Gen 1/2 era tags. Blue ×6 + Silver ×3 carry ace tags since
+// their display names repeat within a section.
+static const u8 sSimSourceSuffixRBY[]       = _(" (RBY)");
+static const u8 sSimSourceSuffixGSC[]       = _(" (GSC)");
+static const u8 sSimSourceSuffixRGB_Zard[]  = _(" (RGB Zard)");
+static const u8 sSimSourceSuffixRGB_Toise[] = _(" (RGB Toise)");
+static const u8 sSimSourceSuffixRGB_Saur[]  = _(" (RGB Saur)");
+static const u8 sSimSourceSuffixYel_Vap[]   = _(" (Y Vapor)");
+static const u8 sSimSourceSuffixYel_Jolt[]  = _(" (Y Jolt)");
+static const u8 sSimSourceSuffixYel_Flare[] = _(" (Y Flare)");
+static const u8 sSimSourceSuffixGSC_Typh[]  = _(" (GSC Typh)");
+static const u8 sSimSourceSuffixGSC_Fera[]  = _(" (GSC Fera)");
+static const u8 sSimSourceSuffixGSC_Mega[]  = _(" (GSC Mega)");
 static const u8 sSimSourceSuffixSV[]     = _(" (SV)");     // v1.21 Scarlet/Violet (Paldea)
 static const u8 sSimSourceSuffixZA[]     = _(" (Z-A)");    // v1.21 Legends: Z-A (Kalos)
 // v2.1.0 — Ash's per-region anime teams all share the name "ASH", so each
@@ -595,6 +627,10 @@ static const u8 *GetSimSourceSuffix(u16 trainerId)
     if ((trainerId >= 917 && trainerId <= 938)
      || (trainerId >= 1073 && trainerId <= 1082))
         return sSimSourceSuffixSM;
+    // v2.1.2 — Iris's "PWT" entry is really her B2W2 Champion rematch, and the
+    // new N B2W2 pool; tag both B2W2 so they read right in the Gen 5 group.
+    if (trainerId == TRAINER_IRIS_PWT || trainerId == TRAINER_N_B2W2)
+        return sSimSourceSuffixB2W2;
     // v0.10 PWT regional gym leaders + champions (Johto/Sinnoh/Unova).
     if (trainerId >= 939 && trainerId <= 965)
         return sSimSourceSuffixPWT;
@@ -635,8 +671,10 @@ static const u8 *GetSimSourceSuffix(u16 trainerId)
     }
     if (trainerId >= 1055 && trainerId <= 1072)
         return sSimSourceSuffixBW;
-    // v0.49 XY (Kalos) — Diantha, Serena, Calem.
-    if (trainerId >= 1083 && trainerId <= 1085)
+    // v0.49 XY (Kalos) — Diantha, Serena, Calem. v2.1.3 adds the XY E4
+    // (Malva/Siebold/Wikstrom/Drasna), Lysandre, and Tierno/Shauna/Trevor.
+    if ((trainerId >= 1083 && trainerId <= 1085)
+     || (trainerId >= TRAINER_MALVA && trainerId <= TRAINER_TREVOR))
         return sSimSourceSuffixXY;
     // v0.50/v2.1.0 Anime — Ash's per-region teams + Alain. Each Ash entry gets
     // its region label so the picker can tell the identically-named "ASH"
@@ -667,6 +705,25 @@ static const u8 *GetSimSourceSuffix(u16 trainerId)
     // v1.6 Prof. Oak Glitch boss — the 3 starter variants.
     if (trainerId >= TRAINER_OAK_GLITCH_VENUSAUR && trainerId <= TRAINER_OAK_GLITCH_BLASTOISE)
         return sSimSourceSuffixRGBY;
+    // v2.1.2 — Classic Gen 1/2. Blue's six Champion variants and Silver's three
+    // rival variants share their display name, so each gets an ace tag; the
+    // rest take a plain era tag.
+    switch (trainerId)
+    {
+        case TRAINER_BLUE_RGB_CHARIZARD:     return sSimSourceSuffixRGB_Zard;
+        case TRAINER_BLUE_RGB_BLASTOISE:     return sSimSourceSuffixRGB_Toise;
+        case TRAINER_BLUE_RGB_VENUSAUR:      return sSimSourceSuffixRGB_Saur;
+        case TRAINER_BLUE_YELLOW_VAPOREON:   return sSimSourceSuffixYel_Vap;
+        case TRAINER_BLUE_YELLOW_JOLTEON:    return sSimSourceSuffixYel_Jolt;
+        case TRAINER_BLUE_YELLOW_FLAREON:    return sSimSourceSuffixYel_Flare;
+        case TRAINER_SILVER_GSC_TYPHLOSION:  return sSimSourceSuffixGSC_Typh;
+        case TRAINER_SILVER_GSC_FERALIGATR:  return sSimSourceSuffixGSC_Fera;
+        case TRAINER_SILVER_GSC_MEGANIUM:    return sSimSourceSuffixGSC_Mega;
+    }
+    if (trainerId >= TRAINER_LORELEI_RBY && trainerId <= TRAINER_LANCE_RBY)
+        return sSimSourceSuffixRBY;
+    if (trainerId >= TRAINER_BROCK_GSC && trainerId <= TRAINER_RED_GSC)
+        return sSimSourceSuffixGSC;
     // v1.21 Scarlet/Violet base game + DLC champion-tier (Nemona ×3 variants,
     // Geeta, E4, Penny, AI Sada/Turo, Paldea gyms, Academy professors,
     // Carmine, BB Elite Four, Kieran). All flagged Gen 9 in Sim_TrainerCanTera
@@ -709,15 +766,26 @@ static const u16 sSimulatorRoster[] = {
     905,                                                 // Logan (custom Gen-9 challenger)
     1054,                                                // Taylor (rain team, Drake sprite)
 #endif
-    // v2.0.5.3 — ROSTER REORDERED INTO MAINLINE RELEASE ORDER per user
-    // request. Sections flow FRLG -> Emerald -> Platinum -> HGSS -> BW ->
-    // XY -> ORAS -> SM/USUM (Alola/BT/RR) -> LGPE -> SwSh -> BDSP ->
-    // Legends Arceus -> SV -> Legends ZA, then misc (PWT, Anime, VGC,
-    // Custom, RGBY) at the end. Every section has a corresponding entry
-    // in sSimulatorRosterSectionStarts[] so L/R cleanly cycle through all
-    // of them — SV and ZA were missing in v2.0.5.2 and are now wired up.
+    // v2.1.2 — ROSTER IN TRUE GENERATION ORDER per user request: RGBY (Gen 1)
+    // and GSC (Gen 2) now LEAD the list, then FRLG -> Emerald -> Platinum ->
+    // HGSS -> BW (+ PWT) -> XY -> ORAS -> SM/USUM (Alola/BT/RR) -> LGPE ->
+    // SwSh -> BDSP -> Legends Arceus -> SV -> Legends ZA, then misc (Anime,
+    // VGC, Custom) at the end. Every section has a corresponding entry in
+    // sSimulatorRosterSectionStarts[] so L/R cleanly cycle through all of them.
     //
-    // ---- FRLG (1996, Gen 3 Kanto remake — original Lv 63-75 ports) ----
+    // ---- RGBY (1996-98, Gen 1 — RBY E4, Champion Blue variants, Oak Glitch boss) ----
+    1207, 1208, 1209, 1210,                              // v2.1.2 RBY Elite Four: Lorelei/Bruno/Agatha/Lance
+    1211, 1212, 1213,                                    // v2.1.2 Champion Blue RGB ×3 starter variants
+    1214, 1215, 1216,                                    // v2.1.2 Champion Blue Yellow ×3 Eeveelution variants
+    1110, 1111, 1112,                                    // Oak Venusaur/Charizard/Blastoise variants
+    // ---- GSC (1999-2000, Gen 2 — Kanto gyms, Johto E4, Lance, Silver, Red) ----
+    1217, 1218, 1219, 1220, 1221, 1222, 1223,            // v2.1.2 GSC Kanto gyms: Brock/Misty/Erika/Surge/Janine/Sabrina/Blaine
+    1224,                                                // v2.1.2 Blue (Viridian Gym Leader)
+    1225, 1226, 1227, 1228,                              // v2.1.2 GSC Johto E4: Will/Koga/Bruno/Karen
+    1229,                                                // v2.1.2 Lance (GSC Champion)
+    1230, 1231, 1232,                                    // v2.1.2 Silver ×3 starter variants
+    1233,                                                // v2.1.2 Red @ Mt. Silver (GSC final boss)
+    // ---- FRLG (2004, Gen 3 Kanto remake — original Lv 63-75 ports) ----
     855, 856, 857, 858,                                  // Indigo E4 FRLG rematch
     859, 860, 861,                                       // Blue starter variants
     // ---- Emerald (2004, Gen 3 Hoenn) + Hoenn Battle Frontier brains ----
@@ -741,8 +809,10 @@ static const u16 sSimulatorRoster[] = {
     977, 978, 979, 980,                                  // Johto Elite Four
     981,                                                 // Lance HGSS Champion
     // ---- BW (2010-11, Gen 5 Unova) + Subway Bosses + Black Tower boss ----
-    1055, 1056,                                          // N (Zekrom, Reshiram versions)
+    1055, 1056,                                          // N (Zekrom, Reshiram — BW final battle)
+    1206,                                                // v2.1.2 N B2W2 rotation pool (BW final + 4 seasonal teams + Reshiram/Zekrom)
     1057,                                                // Alder BW
+    964,                                                 // v2.1.2 Iris (B2W2 Champion Challenge-Mode rematch — moved here from PWT; it's a B2W2 team, not a PWT team)
     1058, 1059, 1060,                                    // Cheren x3 starter variants
     1061, 1062, 1063,                                    // Bianca x3 starter variants
     1064, 1065, 1066,                                    // Hugh x3 B2W2 starter variants
@@ -751,8 +821,19 @@ static const u16 sSimulatorRoster[] = {
     1072,                                                // Colress BW
     1170,                                                // Benga (Black Tower / White Treehollow)
     1171, 1172,                                          // Ingo / Emmet (Battle Subway)
+    // ---- PWT (B2W2 Pokemon World Tournament) — a Gen 5 feature, grouped with BW ----
+    869, 870, 871, 872, 873, 874, 875, 876,              // PWT Kanto
+    877, 878, 879, 880, 881, 882, 883, 884, 885,         // PWT Hoenn
+    939, 940, 941, 942, 943, 944, 945, 946,              // PWT Johto
+    947, 948, 949, 950, 951, 952, 953, 954,              // PWT Sinnoh
+    955, 956, 957, 958, 959, 960, 961, 962,              // PWT Unova
+    1102, 1103, 1104, 1105, 1106,                        // Cilan/Chili/Cress/Cheren/Roxie PWT
+    890, 886, 887, 888, 889, 963, 965, 1107,             // PWT Champs + Bianca WL (Iris moved to BW)
     // ---- XY (2013, Gen 6 Kalos) ----
     1083, 1084, 1085,                                    // Diantha / Serena / Calem
+    1234, 1235, 1236, 1237,                              // v2.1.3 XY Elite Four: Malva/Siebold/Wikstrom/Drasna
+    1238,                                                // v2.1.3 Lysandre (Team Flare boss, Mega Gyarados)
+    1239, 1240, 1241,                                    // v2.1.3 Route 19 rivals: Tierno/Shauna/Trevor
     // ---- ORAS (2014, Gen 6 Hoenn remake) ----
     895, 896, 897, 898,                                  // Hoenn ORAS E4
     894, 893, 892, 891,                                  // Brendan/May/Steven Delta/Wally
@@ -814,14 +895,6 @@ static const u16 sSimulatorRoster[] = {
     1157, 1158, 1159, 1160, 1161, 1162, 1163,            // Griselle / Gwynn / Lidia / Lebanne / Mani / Emma / Philippe
     1164, 1165, 1166,                                    // Josee / Andy / Korrina Z-A
     // ==== MISC sections below ====
-    // ---- PWT (B2W2 Pokemon World Tournament — cross-region) ----
-    869, 870, 871, 872, 873, 874, 875, 876,              // PWT Kanto
-    877, 878, 879, 880, 881, 882, 883, 884, 885,         // PWT Hoenn
-    939, 940, 941, 942, 943, 944, 945, 946,              // PWT Johto
-    947, 948, 949, 950, 951, 952, 953, 954,              // PWT Sinnoh
-    955, 956, 957, 958, 959, 960, 961, 962,              // PWT Unova
-    1102, 1103, 1104, 1105, 1106,                        // Cilan/Chili/Cress/Cheren/Roxie PWT
-    890, 886, 887, 888, 889, 963, 964, 965, 1107,        // PWT Champs + Bianca World Leaders
     // ---- Anime section ----
     1086,                                                // Ash World Champion
     1190,                                                // Alain (XY — Mega Charizard X)
@@ -839,8 +912,6 @@ static const u16 sSimulatorRoster[] = {
     // ---- Custom section (user-built trainers, v0.51 + v1.1) ----
     1087, 1088, 1089,                                    // Custom 1/2/3
     1099, 1100, 1101,                                    // Custom 4/5/6
-    // ---- RGBY section (Gen 1 unused — Prof. Oak Glitch boss) ----
-    1110, 1111, 1112,                                    // Oak Venusaur/Charizard/Blastoise variants
 };
 #define SIMULATOR_ROSTER_COUNT (sizeof(sSimulatorRoster) / sizeof(sSimulatorRoster[0]))
 
@@ -960,6 +1031,8 @@ static const u16 sCupChampions[]  = {
 // Benga + Ingo + Emmet). Bracket picks 7 random per run.
 static const u16 sCupBW[]         = {
     1055, 1056, 1057,                                // N (Zekrom/Reshiram) + Alder
+    1206,                                            // v2.1.2 N B2W2 rotation pool
+    964,                                             // v2.1.2 Iris (B2W2 Champion rematch — moved from PWT Champs)
     1058, 1059, 1060,                                // Cheren x3
     1061, 1062, 1063,                                // Bianca x3
     1064, 1065, 1066,                                // Hugh x3
@@ -1024,7 +1097,7 @@ static const u16 sCupPwtHoenn[]   = { 877, 878, 879, 880, 881, 882, 883, 884 }; 
 static const u16 sCupLgpe[]       = { 899, 900, 901, 902, 903, 904, 906 };                // LGPE E4 + Red + Blue + Bruno + Green
 static const u16 sCupRRocket[]    = { 907, 908, 909, 910, 911, 913, 915, 916 };           // RR bosses: Archie, Maxie, Cyrus US/UM, Lysandre US, Ghetsis US, Giovanni US/UM
 // PWT CHAMPIONS — Red/Blue/Lance/Steven/Wallace PWT + Cynthia/Iris/Alder PWT
-static const u16 sCupPwtChamps[]  = { 890, 886, 887, 888, 889, 963, 964, 965 };
+static const u16 sCupPwtChamps[]  = { 890, 886, 887, 888, 889, 963, 965, 1107 }; // v2.1.2 — Iris (964) moved to BW cup (hers is a B2W2 rematch team, not PWT); Bianca WL fills the slot
 
 // v0.10 PWT REGIONAL CUPS (each region has its own 8-leader tournament).
 // Johto PWT (8 leaders): Falkner, Bugsy, Whitney, Morty, Chuck, Jasmine, Pryce, Clair
@@ -1054,7 +1127,36 @@ static const u16 sCupPwtWorld[]   = {
     947, 948, 949, 950, 951, 952, 953, 954,         // Sinnoh PWT (8)
     955, 956, 957, 958, 959, 960, 961, 962,         // Unova PWT (8)
     1102, 1103, 1104, 1105, 1106, 1107,             // v1.5: Cilan/Chili/Cress/Cheren/Roxie/Bianca (6)
-    963, 964, 965,                                  // Champions (Cynthia/Iris/Alder)
+    963, 965,                                       // Champions (Cynthia/Alder) — v2.1.2: Iris moved to BW cup (B2W2 rematch team, not PWT)
+};
+
+// v2.1.2 — Classic Gen 1 cup: RBY Elite Four + Champion Blue ×6 variants +
+// Prof. Oak Glitch ×3. 13 trainers, bracket samples 7 + player per run.
+static const u16 sCupRGBY[] = {
+    1207, 1208, 1209, 1210,                         // Lorelei / Bruno / Agatha / Lance RBY
+    1211, 1212, 1213,                               // Blue RGB ×3 starter variants
+    1214, 1215, 1216,                               // Blue Yellow ×3 Eeveelution variants
+    1110, 1111, 1112,                               // Prof. Oak Glitch ×3
+};
+
+// v2.1.3 — XY cup: Diantha + Serena/Calem + the Kalos E4 + Lysandre +
+// the Route 19 rival trio. 11 trainers.
+static const u16 sCupXY[] = {
+    1083, 1084, 1085,                               // Diantha / Serena / Calem
+    1234, 1235, 1236, 1237,                         // Malva / Siebold / Wikstrom / Drasna
+    1238,                                           // Lysandre (Mega Gyarados)
+    1239, 1240, 1241,                               // Tierno / Shauna / Trevor
+};
+
+// v2.1.2 — Classic Gen 2 cup: GSC Kanto gyms + Blue + Johto E4 + Lance +
+// Silver ×3 + Red @ Mt. Silver. 17 trainers.
+static const u16 sCupGSC[] = {
+    1217, 1218, 1219, 1220, 1221, 1222, 1223,       // Brock/Misty/Erika/Surge/Janine/Sabrina/Blaine
+    1224,                                           // Blue (Viridian)
+    1225, 1226, 1227, 1228,                         // Will/Koga/Bruno/Karen
+    1229,                                           // Lance (Champion)
+    1230, 1231, 1232,                               // Silver ×3 starter variants
+    1233,                                           // Red @ Mt. Silver
 };
 
 static const u8 sCupName_Off[]      = _("Off");
@@ -1087,38 +1189,42 @@ static const u8 sCupName_BW[]           = _("BW");
 static const u8 sCupName_BattleTree[]   = _("BattleTree");
 // v2.0.6 — Frontier brain cup: all 12 Gen 3 + Gen 4 brains in one bracket.
 static const u8 sCupName_FrontierBrains[] = _("Brains");
+static const u8 sCupName_RGBY2[]        = _("RGBY");       // v2.1.2 classic Gen 1
+static const u8 sCupName_GSC[]          = _("GSC");        // v2.1.2 classic Gen 2
+static const u8 sCupName_XY[]           = _("XY");         // v2.1.3 Kalos
 
 static const struct SimCup sSimCups[] =
 {
     { sCupName_Off,         NULL,             0 },   // 0: Off
-    // v1.20 — consolidated per-game cups (one pool per game, bracket picks 7 random per run)
-    // v2.0.5.3 — Emerald +7 (Hoenn brains), HGSS +5 / Platinum +5 (Gen 4 brains)
-    { sCupName_Emerald,     sCupEmerald,     21 },   // 8 gym _5 rematches + 4 E4 + Wallace + Steven + Hoenn Frontier brains
-    { sCupName_FRLG,        sCupFRLG,         8 },   // Red, Indigo E4, 3 Blue starter variants
-    { sCupName_HGSS,        sCupHGSS,        30 },   // Red, Blue HGSS, 3 Silvers, Johto gyms, Kanto HGSS gyms, Johto E4, Lance HGSS + Gen 4 brains
-    { sCupName_Platinum,    sCupPlatinum,    21 },   // Sinnoh gyms + E4 + Cynthia Pt + Barry + Riley + Buck + Gen 4 brains
-    { sCupName_BDSP,        sCupBDSP,        16 },   // Same Sinnoh roster, BDSP-era teams
-    { sCupName_BW,          sCupBW,          21 },   // v2.0.5.3 — N + Alder + Cheren + Bianca + Hugh + E4 + Ghetsis + Colress + Benga + Ingo + Emmet
-    { sCupName_Oras,        sCupOras,         8 },   // Wally, Steven ORAS, May, Brendan, Hoenn E4 ORAS
-    { sCupName_SwSh,        sCupSwSh,        21 },   // Galar gyms + Melony + Leon × 3 + Hop × 3 + Mustard × 2 + Marnie/Bede + Klara/Avery/Peony
-    { sCupName_Alola,       sCupAlola,       32 },   // Every non-RR Alola trainer: trial captains + kahunas + E4 + Kukui/Hau/Gladion variants + Faba/Dexio/Plumeria/Ryuki/Guzma/Lusamine/Tristan + Blue/Red/Anabel USUM
-    { sCupName_BattleTree,  sCupBattleTree,  14 },   // v2.0.5.3 — all 14 canon Tree pool trainers, fresh roll each match
-    { sCupName_FrontierBrains, sCupFrontierBrains, 12 },   // v2.0.6 — Gen 3 + Gen 4 Frontier brain gauntlet
-    { sCupName_RRocket,     sCupRRocket,      8 },   // RR bosses (USUM Rainbow Rocket)
-    { sCupName_Lgpe,        sCupLgpe,         7 },   // Lorelei, Agatha, Lance, Red, Blue, Bruno, Green
-    { sCupName_Champions,   sCupChampions,   12 },   // 11 in-game champions (+ Cynthia in both BDSP and Platinum)
-    // PWT cups (unchanged from earlier versions)
-    { sCupName_PwtKanto,    sCupPwtKanto,     8 },
+    // v2.1.2 — cups cycle in GENERATION ORDER (Gen 1 -> 9), with the
+    // cross-generation pools (Champions, All Stars) at the end.
+    { sCupName_RGBY2,       sCupRGBY,        13 },   // Gen 1 — RBY E4 + Blue ×6 + Oak ×3
+    { sCupName_GSC,         sCupGSC,         17 },   // Gen 2 — GSC Kanto gyms + Blue + Johto E4 + Lance + Silver ×3 + Red
+    { sCupName_FRLG,        sCupFRLG,         8 },   // Gen 3 — Red, Indigo E4, 3 Blue starter variants
+    { sCupName_Emerald,     sCupEmerald,     21 },   // Gen 3 — 8 gym _5 rematches + 4 E4 + Wallace + Steven + Hoenn Frontier brains
+    { sCupName_Platinum,    sCupPlatinum,    21 },   // Gen 4 — Sinnoh gyms + E4 + Cynthia Pt + Barry + Riley + Buck + Gen 4 brains
+    { sCupName_HGSS,        sCupHGSS,        30 },   // Gen 4 — Red, Blue HGSS, 3 Silvers, Johto gyms, Kanto HGSS gyms, Johto E4, Lance HGSS + Gen 4 brains
+    { sCupName_FrontierBrains, sCupFrontierBrains, 12 },   // Gen 3+4 — Frontier brain gauntlet
+    { sCupName_BW,          sCupBW,          23 },   // Gen 5 — + N B2W2 pool + Iris (moved from PWT Champs)
+    { sCupName_PwtKanto,    sCupPwtKanto,     8 },   // Gen 5 (B2W2 PWT)
     { sCupName_PwtHoenn,    sCupPwtHoenn,     8 },
     { sCupName_PwtJohto,    sCupPwtJohto,     8 },
     { sCupName_PwtSinnoh,   sCupPwtSinnoh,    8 },
     { sCupName_PwtUnova,    sCupPwtUnova,    13 },   // 8 Unova leaders + Striaton trio + Cheren + Roxie
-    { sCupName_PwtChamps,   sCupPwtChamps,    8 },   // Red/Blue/Lance/Steven/Wallace PWT + Cynthia/Iris/Alder PWT
-    { sCupName_PwtWorld,    sCupPwtWorld,    49 },   // All PWT leaders + champions across every region
-    // v1.21 — Scarlet/Violet + Legends Z-A + All-Stars pools
-    { sCupName_SV,          sCupSV,          36 },   // Every SV trainer (base + DLC) + Clavell ×3 + Miriam + Arven + Cyrano
-    { sCupName_ZA,          sCupZA,          24 },   // Every Z-A Royale trainer
-    { sCupName_AllStars,    sSimulatorRoster, SIMULATOR_ROSTER_COUNT },  // EVERY curated trainer in the game
+    { sCupName_PwtChamps,   sCupPwtChamps,    8 },   // Red/Blue/Lance/Steven/Wallace PWT + Cynthia/Alder + Bianca WL (Iris -> BW cup)
+    { sCupName_PwtWorld,    sCupPwtWorld,    48 },   // All PWT leaders + champions across every region (Iris -> BW cup)
+    { sCupName_XY,          sCupXY,          11 },   // v2.1.3 Gen 6 — Diantha + rivals + Kalos E4 + Lysandre + Tierno/Shauna/Trevor
+    { sCupName_Oras,        sCupOras,         8 },   // Gen 6 — Wally, Steven ORAS, May, Brendan, Hoenn E4 ORAS
+    { sCupName_Alola,       sCupAlola,       32 },   // Gen 7 — every non-RR Alola trainer
+    { sCupName_BattleTree,  sCupBattleTree,  14 },   // Gen 7 — all 14 canon Tree pool trainers, fresh roll each match
+    { sCupName_RRocket,     sCupRRocket,      8 },   // Gen 7 — RR bosses (USUM Rainbow Rocket)
+    { sCupName_Lgpe,        sCupLgpe,         7 },   // Gen 7 — Lorelei, Agatha, Lance, Red, Blue, Bruno, Green
+    { sCupName_SwSh,        sCupSwSh,        21 },   // Gen 8 — Galar gyms + Leon ×3 + Hop ×3 + Mustard ×2 + Marnie/Bede + Klara/Avery/Peony
+    { sCupName_BDSP,        sCupBDSP,        16 },   // Gen 8 — Sinnoh roster, BDSP-era teams
+    { sCupName_SV,          sCupSV,          36 },   // Gen 9 — every SV trainer (base + DLC) + Clavell ×3 + Miriam + Arven + Cyrano
+    { sCupName_ZA,          sCupZA,          24 },   // Gen 9 — every Z-A Royale trainer
+    { sCupName_Champions,   sCupChampions,   12 },   // Cross-gen — 11 in-game champions (+ Cynthia twice)
+    { sCupName_AllStars,    sSimulatorRoster, SIMULATOR_ROSTER_COUNT },  // Cross-gen — EVERY curated trainer in the game
 };
 #define SIM_CUP_COUNT (sizeof(sSimCups) / sizeof(sSimCups[0]))
 
@@ -1211,7 +1317,12 @@ static const struct SimCup sSimCups[] =
 #define DEBUG_NUMBER_ICON_X 210
 #define DEBUG_NUMBER_ICON_Y 50
 
-#define DEBUG_MAX_MENU_ITEMS 20
+// v2.1.3 — bumped 20 → 32. The tournament cup picker lists every cup (27 rows
+// with the XY cup) in one menu; at 20, rows 21+ overflowed listItems[] +
+// itemNames[] inside sDebugMenuListData, corrupting the heap block — symptom
+// was mojibake on the first row and on every row past the 20th. Cost is
+// ~12×(40+8) bytes of heap per open menu. The fill loop now also clamps here.
+#define DEBUG_MAX_MENU_ITEMS 32
 // v0.52.6 — Bumped from 4 to 8 because the Build Trainer hierarchy now nests
 // 5 levels deep (Wrapper → BuildTrainer → Slot → Mon → EVs/IVs), and
 // Debug_SaveCallbackMenu was silently failing at depth 5, leaving the
@@ -1404,6 +1515,14 @@ EWRAM_DATA u8 gSimTournamentResults[SIM_TOURNAMENT_MATCH_COUNT] = {0};
 EWRAM_DATA u8 gSimTournamentPlayerSlot = 0;
 EWRAM_DATA bool8 gSimTournamentDone = FALSE;
 EWRAM_DATA bool8 gSimTournamentEliminated = FALSE;
+// v2.1.2 — SPECTATOR MODE (fan request): when the player's side is eliminated
+// before the final, the tournament no longer hard-ends. Instead the tracked
+// bracket slot is handed to the trainer who won that match, pilot mode is
+// forced off, and the remaining rounds play out as real AI-vs-AI battles the
+// user can watch, ending with the actual champion on the bracket screen.
+// gSimTournamentEliminated stays TRUE throughout so the summary still reads
+// as a loss for the player's own trainer.
+EWRAM_DATA bool8 gSimTournamentSpectating = FALSE;
 
 // Battle Simulator: team-preview pick queue. Sim_PrepareTeamPicks runs once per
 // match-round setup, computing which N mons each AI brings (out of their 6)
@@ -1602,6 +1721,11 @@ static void DebugAction_Trainers_ToggleLevelCap(u8 taskId);
 static void DebugAction_Trainers_ToggleBestOf(u8 taskId);
 static void DebugAction_Trainers_ToggleVGC(u8 taskId);
 static void DebugAction_Trainers_ToggleTournament(u8 taskId);
+// v2.1.3 — Tournament wrapper flow: cup picker -> spectate/pilot choice ->
+// (optional) trainer picker -> bracket run.
+static void DebugAction_Tournament_PickCup(u8 taskId, u32 cupIdx);
+static void DebugAction_Tournament_StartRandom(u8 taskId);
+static bool32 Sim_BeginTournamentRun(u16 playerSideId, bool32 pilot);
 static bool32 Sim_IsBestOfActive(void);
 static bool32 Sim_IsMatchDecided(void);
 static bool32 Sim_IsTournamentActive(void);
@@ -1986,7 +2110,8 @@ static const struct DebugMenuOption sDebugMenu_Actions_Trainers[] =
     { COMPOUND_STRING("Level Cap: {STR_VAR_1}"), DebugAction_ToggleFlag, DebugAction_Trainers_ToggleLevelCap },
     { COMPOUND_STRING("Best Of: {STR_VAR_1}"), DebugAction_ToggleFlag, DebugAction_Trainers_ToggleBestOf },
     { COMPOUND_STRING("VGC Mode: {STR_VAR_1}"), DebugAction_ToggleFlag, DebugAction_Trainers_ToggleVGC },
-    { COMPOUND_STRING("Tournament: {STR_VAR_1}"), DebugAction_ToggleFlag, DebugAction_Trainers_ToggleTournament },
+    // v2.1.3 — Tournament row moved to its own wrapper-menu flow (cup picker
+    // + spectate/pilot choice). Keep this menu lean.
     { COMPOUND_STRING("Double Battle: {STR_VAR_1}"), DebugAction_ToggleFlag, DebugAction_Trainers_SwitchDoublesFlag },
     { COMPOUND_STRING("Pilot Player: {STR_VAR_1}"), DebugAction_ToggleFlag, DebugAction_Trainers_TogglePilotMode },
     { COMPOUND_STRING("Matches {STR_VAR_1}/{STR_VAR_2}"), DebugAction_ToggleFlag, DebugAction_Trainers_SetRematch },
@@ -2180,10 +2305,61 @@ static const struct DebugMenuOption sDebugMenu_Actions_BuildTrainer[] =
 
 // v0.52 Phase 2 — Top-level Trainers wrapper. Split between editing custom
 // trainers and launching the existing simulation picker.
+// v2.1.3 — Tournament wrapper flow, step 2: who to follow through the bracket.
+// "Random Spectate" rolls a trainer from the chosen cup's pool; the other two
+// open the trainer picker in a tournament selection mode (spectate = pure
+// AI-vs-AI, pilot = you play as the chosen trainer).
+static const struct DebugMenuOption sDebugMenu_Actions_TournamentWho[] =
+{
+    { COMPOUND_STRING("Random Spectate"),   DebugAction_Tournament_StartRandom },
+    { COMPOUND_STRING("Spectate Trainer…"), DebugAction_Trainers_ChooseTrainer, (void *)TRAINERS_DEBUG_SELECTION_TOURNAMENT_SPECTATE },
+    { COMPOUND_STRING("Pilot Trainer…"),    DebugAction_Trainers_ChooseTrainer, (void *)TRAINERS_DEBUG_SELECTION_TOURNAMENT_PILOT },
+    { NULL }
+};
+
+// v2.1.3 — Tournament wrapper flow, step 1: the cup picker. Row params are
+// INDEXES INTO sSimCups[] and MUST stay in the same order as that table
+// (generation order, Off at 0 skipped here). Row text reuses the cup-name
+// string constants so the labels can never drift from the cup they launch.
+static const struct DebugMenuOption sDebugMenu_Actions_TournamentCups[] =
+{
+    { sCupName_RGBY2,          DebugAction_Tournament_PickCup, (void *) 1 },
+    { sCupName_GSC,            DebugAction_Tournament_PickCup, (void *) 2 },
+    { sCupName_FRLG,           DebugAction_Tournament_PickCup, (void *) 3 },
+    { sCupName_Emerald,        DebugAction_Tournament_PickCup, (void *) 4 },
+    { sCupName_Platinum,       DebugAction_Tournament_PickCup, (void *) 5 },
+    { sCupName_HGSS,           DebugAction_Tournament_PickCup, (void *) 6 },
+    { sCupName_FrontierBrains, DebugAction_Tournament_PickCup, (void *) 7 },
+    { sCupName_BW,             DebugAction_Tournament_PickCup, (void *) 8 },
+    { sCupName_PwtKanto,       DebugAction_Tournament_PickCup, (void *) 9 },
+    { sCupName_PwtHoenn,       DebugAction_Tournament_PickCup, (void *)10 },
+    { sCupName_PwtJohto,       DebugAction_Tournament_PickCup, (void *)11 },
+    { sCupName_PwtSinnoh,      DebugAction_Tournament_PickCup, (void *)12 },
+    { sCupName_PwtUnova,       DebugAction_Tournament_PickCup, (void *)13 },
+    { sCupName_PwtChamps,      DebugAction_Tournament_PickCup, (void *)14 },
+    { sCupName_PwtWorld,       DebugAction_Tournament_PickCup, (void *)15 },
+    { sCupName_XY,             DebugAction_Tournament_PickCup, (void *)16 },
+    { sCupName_Oras,           DebugAction_Tournament_PickCup, (void *)17 },
+    { sCupName_Alola,          DebugAction_Tournament_PickCup, (void *)18 },
+    { sCupName_BattleTree,     DebugAction_Tournament_PickCup, (void *)19 },
+    { sCupName_RRocket,        DebugAction_Tournament_PickCup, (void *)20 },
+    { sCupName_Lgpe,           DebugAction_Tournament_PickCup, (void *)21 },
+    { sCupName_SwSh,           DebugAction_Tournament_PickCup, (void *)22 },
+    { sCupName_BDSP,           DebugAction_Tournament_PickCup, (void *)23 },
+    { sCupName_SV,             DebugAction_Tournament_PickCup, (void *)24 },
+    { sCupName_ZA,             DebugAction_Tournament_PickCup, (void *)25 },
+    { sCupName_Champions,      DebugAction_Tournament_PickCup, (void *)26 },
+    { sCupName_AllStars,       DebugAction_Tournament_PickCup, (void *)27 },
+    { NULL }
+};
+
 static const struct DebugMenuOption sDebugMenu_Actions_TrainersWrapper[] =
 {
     { COMPOUND_STRING("Build Trainer…"),  DebugAction_OpenSubMenuBuildTrainer, sDebugMenu_Actions_BuildTrainer, },
     { COMPOUND_STRING("Run Simulation…"), DebugAction_OpenSubMenuTrainers,     sDebugMenu_Actions_Trainers,     },
+    // v2.1.3 — dedicated tournament flow: pick a cup, then spectate (random or
+    // chosen trainer) or pilot. Pulled out of Run Simulation to unclutter it.
+    { COMPOUND_STRING("{COLOR GREEN}Tournament…"), DebugAction_OpenSubMenu, sDebugMenu_Actions_TournamentCups, },
     // v1.7 — Frontier Challenge: skip the sim setup screen entirely, open
     // the trainer picker directly in FRONTIER selection mode. On confirm,
     // the chosen trainer's full team loads into gPlayerParty and the user
@@ -2781,6 +2957,12 @@ void Debug_ShowTrainersSubMenu(void)
         }
     }
 
+    // v2.1.3 — with the Tournament toggle row gone from the sim menu, a
+    // finished run's cup would linger armed and make the next Try Battle
+    // silently start a fresh bracket. Auto-disarm once a run resolves.
+    if (gSimTournamentCup != 0 && gSimTournamentDone)
+        gSimTournamentCup = 0;
+
     if (Sim_IsTournamentActive())
     {
         // Load the next opponent based on bracket + current round.
@@ -2978,7 +3160,9 @@ static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *
     }
     else
     {
-        for (u32 i = 0; items[i].text != NULL; i++)
+        // v2.1.3 — clamp at capacity: an oversized options array used to run
+        // straight past listItems[]/itemNames[] and corrupt the heap.
+        for (u32 i = 0; items[i].text != NULL && i < DEBUG_MAX_MENU_ITEMS; i++)
         {
             sDebugMenuListData->listItems[i].id = i;
             StringExpandPlaceholders(gStringVar4, items[i].text);
@@ -3237,46 +3421,21 @@ static u8 Debug_GenerateListTrainerMenu(void)
             else
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR RED} OFF"));
             break;
-        case 8: // Tournament — shows cup name + round progress (e.g. "ORAS 3/7")
-            if (gSimTournamentCup == 0 || gSimTournamentCup >= SIM_CUP_COUNT)
-            {
-                StringCopy(gStringVar1, COMPOUND_STRING("Off"));
-            }
-            else
-            {
-                StringCopy(gStringVar1, sSimCups[gSimTournamentCup].name);
-                if (gSimTournamentRound > 0 && !gSimTournamentDone)
-                {
-                    u8 buf[4];
-                    StringAppend(gStringVar1, COMPOUND_STRING(" "));
-                    ConvertIntToDecimalStringN(buf, gSimTournamentRound, STR_CONV_MODE_LEFT_ALIGN, 1);
-                    StringAppend(gStringVar1, buf);
-                    StringAppend(gStringVar1, COMPOUND_STRING("/"));
-                    ConvertIntToDecimalStringN(buf, gSimTournamentMaxRounds, STR_CONV_MODE_LEFT_ALIGN, 1);
-                    StringAppend(gStringVar1, buf);
-                }
-                else if (gSimTournamentDone)
-                {
-                    if (gSimTournamentEliminated)
-                        StringAppend(gStringVar1, COMPOUND_STRING(" X"));
-                    else
-                        StringAppend(gStringVar1, COMPOUND_STRING(" WIN"));
-                }
-            }
-            break;
-        case 9: // Double Battle
+        // v2.1.3 — Tournament row removed from this menu (now a dedicated
+        // wrapper-menu flow); cases below shifted up by one.
+        case 8: // Double Battle
             if (sDebugMenuListData->data[5] || trainer2Id != TRAINER_NONE || partnerId != PARTNER_NONE)
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR GREEN} TRUE"));
             else
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR RED} FALSE"));
             break;
-        case 10: // Pilot Mode (v0.51.1) — player slot becomes human-controlled
+        case 9: // Pilot Mode (v0.51.1) — player slot becomes human-controlled
             if (sDebugMenuListData->data[7])
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR GREEN} TRUE"));
             else
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR RED} FALSE"));
             break;
-        case 11: // Matches
+        case 10: // Matches
             if (!isRealFight)
             {
                 noDraw = TRUE;
@@ -3296,7 +3455,7 @@ static u8 Debug_GenerateListTrainerMenu(void)
                 ConvertIntToDecimalStringN(gStringVar2, CountMaxPossibleRematch(rematchTableId), STR_CONV_MODE_LEADING_ZEROS, 1);
             }
             break;
-        case 12: // Rematch Ready
+        case 11: // Rematch Ready
             if (FREE_MATCH_CALL || I_VS_SEEKER_CHARGING || !isRealFight || rematchTableId == -1)
             {
                 noDraw = TRUE;
@@ -3307,7 +3466,7 @@ static u8 Debug_GenerateListTrainerMenu(void)
             else
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR RED} FALSE"));
             break;
-        case 14: // Recharge VS Seeker (visibility)
+        case 13: // Recharge VS Seeker (visibility)
             if (FREE_MATCH_CALL || I_VS_SEEKER_CHARGING == 0)
                 noDraw = TRUE;
             break;
@@ -3583,6 +3742,11 @@ static void DebugTask_HandleMenuInput_General(u8 taskId)
             {
                 DebugAction_Trainers_ChooseTrainer(taskId, (u32)option.actionParams);
             }
+            else if (option.action == DebugAction_Tournament_PickCup)
+            {
+                // v2.1.3 — cup-picker rows carry the sSimCups index as param.
+                DebugAction_Tournament_PickCup(taskId, (u32)option.actionParams);
+            }
             else
             {
                 ((DebugFunc)option.action)(taskId);
@@ -3630,6 +3794,12 @@ static void DebugAction_OpenSubMenuTrainers(u8 taskId, const struct DebugMenuOpt
     Debug_DestroyMenu(taskId);
     sDebugMenuListData->listId = 2;
     sDebugMenuListData->data[0] = TRAINER_NONE;
+    // v2.1.3 — disarm a cup that was picked in the Tournament flow but never
+    // launched (user backed out of the who-to-follow menu). Without this,
+    // Try Battle here would silently start a bracket run. An in-flight run
+    // (round > 0) is left alone.
+    if (gSimTournamentCup != 0 && gSimTournamentRound == 0)
+        gSimTournamentCup = 0;
     Debug_ShowMenu(DebugTask_HandleMenuInput_General, items);
 }
 
@@ -6205,32 +6375,33 @@ static const u16 sSimulatorRosterSectionStarts[] = {
     // v2.0.5.3 — Section starts MATCH new release-order roster layout.
     // Every section now has its own jump point including SV and ZA which
     // were silently missing from L/R rotation in earlier versions.
-    CUSTOM_OFFSET,           // FRLG (7)
-    7 + CUSTOM_OFFSET,       // Emerald — gyms + E4 + Steven + Wallace + Hoenn Frontier brains (21)
-    28 + CUSTOM_OFFSET,      // Platinum — Barrys + Battleground + stat + E4 + Cynthia Pt + Gen 4 brains (26)
-    54 + CUSTOM_OFFSET,      // HGSS — Red + Blue HGSS + 3 Silvers + gym/E4/Champion (25)
-    79 + CUSTOM_OFFSET,      // BW — N x2 + Alder + Cheren x3 + Bianca x3 + Hugh x3 + E4 + Ghetsis + Colress + Benga + Ingo + Emmet (21)
-    100 + CUSTOM_OFFSET,     // XY — Diantha/Serena/Calem (3)
-    103 + CUSTOM_OFFSET,     // ORAS — Hoenn ORAS E4 + Wally/Steven/May/Brendan (8)
-    111 + CUSTOM_OFFSET,     // Alola — Trial Captains + Kahunas + E4 + Variants + v0.48 USUM (32)
-    143 + CUSTOM_OFFSET,     // Battle Tree (USUM) — Red/Blue/Anabel + Wally/Cynthia/Colress/Dexio/Sina/Grimsley/Guzma/Plumeria/Kiawe/Kukui/Mallow BT (14)
-    157 + CUSTOM_OFFSET,     // Rainbow Rocket — USUM Episode RR bosses (10)
-    167 + CUSTOM_OFFSET,     // LGPE — Green + Lorelei/Agatha/Lance/Red/Blue/Bruno + Trace (9)
-    176 + CUSTOM_OFFSET,     // SwSh — Leon x3 + Hop x6 + Mustard x2 + Marnie/Bede + 9 gym + Klara/Avery/Peony (25)
-    201 + CUSTOM_OFFSET,     // BDSP — Barrys + 8 gym + 4 E4 + Cynthia + 3 Lucas + 3 Dawn (22)
-    223 + CUSTOM_OFFSET,     // Legends Arceus — Volo/Adaman/Irida/Ingo/Akari + Kamado/Zisu/Beni/Rei (9)
-    232 + CUSTOM_OFFSET,     // SV — Nemona + Geeta + Paldea E4 + Penny + Sada/Turo + 7 gyms + 6 profs + Carmine + BB E4 + Kieran + Clavell ×3 + Miriam + Arven + Cyrano (36)
-    268 + CUSTOM_OFFSET,     // Legends ZA — Urbain/Taunie + Royale challengers (24)
-    292 + CUSTOM_OFFSET,     // PWT Kanto (8)
-    300 + CUSTOM_OFFSET,     // PWT Hoenn (9)
-    309 + CUSTOM_OFFSET,     // PWT Johto (8)
-    317 + CUSTOM_OFFSET,     // PWT Sinnoh (8)
-    325 + CUSTOM_OFFSET,     // PWT Unova (8 base + 5 v1.5 = 13)
-    338 + CUSTOM_OFFSET,     // PWT Champs — Red/Blue/Lance/Steven/Wallace + Cynthia/Iris/Alder + Bianca (9)
-    347 + CUSTOM_OFFSET,     // Anime — Ash (WC/Journeys + 7 region teams) + Alain + Paul + Gary (11)
-    358 + CUSTOM_OFFSET,     // VGC — Wolfe Glick + Ray Rizo 2012 World Finals (2)
-    360 + CUSTOM_OFFSET,     // Custom — v0.51 + v1.1 user-built slots (6)
-    366 + CUSTOM_OFFSET,     // RGBY — Prof. Oak Glitch x3 (Venusaur/Charizard/Blastoise variants)
+    CUSTOM_OFFSET,           // RGBY — RBY E4 (4) + Blue RGB ×3 + Blue Yellow ×3 + Oak Glitch ×3 (13)
+    13 + CUSTOM_OFFSET,      // GSC — Kanto gyms (7) + Blue + Johto E4 (4) + Lance + Silver ×3 + Red (17)
+    30 + CUSTOM_OFFSET,      // FRLG (7)
+    37 + CUSTOM_OFFSET,      // Emerald — gyms + E4 + Steven + Wallace + Hoenn Frontier brains (21)
+    58 + CUSTOM_OFFSET,      // Platinum — Barrys + Battleground + stat + E4 + Cynthia Pt + Gen 4 brains (26)
+    84 + CUSTOM_OFFSET,      // HGSS — Red + Blue HGSS + 3 Silvers + gym/E4/Champion (25)
+    109 + CUSTOM_OFFSET,     // BW — N x2 + N B2W2 pool + Alder + Iris + Cheren x3 + Bianca x3 + Hugh x3 + E4 + Ghetsis + Colress + Benga + Ingo + Emmet (23)
+    132 + CUSTOM_OFFSET,     // PWT Kanto (8)
+    140 + CUSTOM_OFFSET,     // PWT Hoenn (9)
+    149 + CUSTOM_OFFSET,     // PWT Johto (8)
+    157 + CUSTOM_OFFSET,     // PWT Sinnoh (8)
+    165 + CUSTOM_OFFSET,     // PWT Unova (8 base + 5 v1.5 = 13)
+    178 + CUSTOM_OFFSET,     // PWT Champs — Red/Blue/Lance/Steven/Wallace + Cynthia/Alder + Bianca (8, Iris moved to BW)
+    186 + CUSTOM_OFFSET,     // XY — Diantha/Serena/Calem + E4 (Malva/Siebold/Wikstrom/Drasna) + Lysandre + Tierno/Shauna/Trevor (11)
+    197 + CUSTOM_OFFSET,     // ORAS — Hoenn ORAS E4 + Wally/Steven/May/Brendan (8)
+    205 + CUSTOM_OFFSET,     // Alola — Trial Captains + Kahunas + E4 + Variants + v0.48 USUM (32)
+    237 + CUSTOM_OFFSET,     // Battle Tree (USUM) — Red/Blue/Anabel + Wally/Cynthia/Colress/Dexio/Sina/Grimsley/Guzma/Plumeria/Kiawe/Kukui/Mallow BT (14)
+    251 + CUSTOM_OFFSET,     // Rainbow Rocket — USUM Episode RR bosses (10)
+    261 + CUSTOM_OFFSET,     // LGPE — Green + Lorelei/Agatha/Lance/Red/Blue/Bruno + Trace (9)
+    270 + CUSTOM_OFFSET,     // SwSh — Leon x3 + Hop x6 + Mustard x2 + Marnie/Bede + 9 gym + Klara/Avery/Peony (25)
+    295 + CUSTOM_OFFSET,     // BDSP — Barrys + 8 gym + 4 E4 + Cynthia + 3 Lucas + 3 Dawn (22)
+    317 + CUSTOM_OFFSET,     // Legends Arceus — Volo/Adaman/Irida/Ingo/Akari + Kamado/Zisu/Beni/Rei (9)
+    326 + CUSTOM_OFFSET,     // SV — Nemona + Geeta + Paldea E4 + Penny + Sada/Turo + 7 gyms + 6 profs + Carmine + BB E4 + Kieran + Clavell ×3 + Miriam + Arven + Cyrano (36)
+    362 + CUSTOM_OFFSET,     // Legends ZA — Urbain/Taunie + Royale challengers (24)
+    386 + CUSTOM_OFFSET,     // Anime — Ash (WC/Journeys + 7 region teams) + Alain + Paul + Gary (11)
+    397 + CUSTOM_OFFSET,     // VGC — Wolfe Glick + Ray Rizo 2012 World Finals (2)
+    399 + CUSTOM_OFFSET,     // Custom — v0.51 + v1.1 user-built slots (6)
 };
 #define SIMULATOR_ROSTER_SECTION_COUNT (sizeof(sSimulatorRosterSectionStarts) / sizeof(sSimulatorRosterSectionStarts[0]))
 
@@ -6304,7 +6475,11 @@ static void DebugAction_ChooseTrainerID_Select(u8 taskId)
                      || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_FRONTIER
                      // v2.0.6 — single-mon-copy picker uses the same curated
                      // roster + section-jump UX as the whole-team-copy picker.
-                     || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_COPY_MON_TO_CUSTOM);
+                     || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_COPY_MON_TO_CUSTOM
+                     // v2.1.3 — tournament spectate/pilot pickers ride the
+                     // same curated roster + L/R section-jump UX.
+                     || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_TOURNAMENT_SPECTATE
+                     || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_TOURNAMENT_PILOT);
     // v1.1 — copy mode is read-only against sDebugMenuListData->data[] (it
     // never writes back into a sim slot); cached separately so the scroll
     // handlers can skip the data[X] = tInput write for COPY entries.
@@ -6312,7 +6487,10 @@ static void DebugAction_ChooseTrainerID_Select(u8 taskId)
     // v2.0.6 — and the single-mon-copy picker.
     bool32 isCopyMode = (gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_COPY_TO_CUSTOM
                       || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_FRONTIER
-                      || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_COPY_MON_TO_CUSTOM);
+                      || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_COPY_MON_TO_CUSTOM
+                      // v2.1.3 — tournament pickers are read-only vs data[]
+                      || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_TOURNAMENT_SPECTATE
+                      || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_TOURNAMENT_PILOT);
     bool32 isCopyMon = (gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_COPY_MON_TO_CUSTOM);
     if (isSimSlot && (JOY_NEW(L_BUTTON) || JOY_NEW(R_BUTTON)))
     {
@@ -6417,6 +6595,11 @@ static void DebugAction_ChooseTrainerID_Select(u8 taskId)
         // user came in from the wrapper).
         bool32 isFrontier = (gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_FRONTIER);
         bool32 frontierLaunch = isFrontier && JOY_NEW(A_BUTTON);
+        // v2.1.3 — tournament spectate/pilot pickers. A launches the cup run
+        // following the highlighted trainer; B cancels back to the wrapper.
+        bool32 isTourney = (gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_TOURNAMENT_SPECTATE
+                         || gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_TOURNAMENT_PILOT);
+        bool32 tourneyLaunched = FALSE;
         // v2.0.6 — single-mon-copy picker. A copies trainer->party[sourceIdx]
         // into sBuildTrainerWorkMon and returns to the per-mon editor with
         // the imported values live; B returns to the per-mon editor unchanged.
@@ -6443,7 +6626,14 @@ static void DebugAction_ChooseTrainerID_Select(u8 taskId)
             // is a no-op for this path — the warp takes over the next frame.
             Sim_StartFrontierChallenge((u16)gTasks[taskId].tInput);
         }
-        if (!isCopyConfirm && !isFrontier && gTasks[taskId].tInput != gTasks[taskId].tInitial)
+        else if (isTourney && JOY_NEW(A_BUTTON))
+        {
+            // v2.1.3 — build the bracket around the chosen trainer and launch
+            // round 1. On failure (bad cup) fall through to the wrapper reopen.
+            tourneyLaunched = Sim_BeginTournamentRun((u16)gTasks[taskId].tInput,
+                gTasks[taskId].tSelection == TRAINERS_DEBUG_SELECTION_TOURNAMENT_PILOT);
+        }
+        if (!isCopyConfirm && !isFrontier && !isTourney && gTasks[taskId].tInput != gTasks[taskId].tInitial)
         {
             sDebugMenuListData->data[3] = FALSE;
             sDebugMenuListData->data[1] = -1;
@@ -6475,9 +6665,15 @@ static void DebugAction_ChooseTrainerID_Select(u8 taskId)
             // Sim_StartFrontierChallenge already pushed CB2_LoadMap — don't
             // reopen any menu, the warp takes over.
         }
-        else if (isFrontier)
+        else if (tourneyLaunched)
         {
-            // B-button cancel: return to the wrapper menu the user came from.
+            // v2.1.3 — BattleSetup_StartTrainerBattle_Debug already queued the
+            // battle transition; don't reopen any menu, the fight takes over.
+        }
+        else if (isFrontier || isTourney)
+        {
+            // B-button cancel (or failed tournament launch): return to the
+            // wrapper menu the user came from.
             sDebugMenuListData->listId = 0;
             Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_TrainersWrapper);
         }
@@ -6526,6 +6722,12 @@ static void DebugAction_Trainers_ChooseTrainer(u8 taskId, u32 selection)
         // land on the first roster trainer (skipping all the vanilla Emerald
         // trainer IDs that aren't part of our curated sSimulatorRoster).
         // Mirrors COPY_TO_CUSTOM's initial-value logic.
+        gTasks[taskId].tInput = sSimulatorRoster[0];
+        break;
+    case TRAINERS_DEBUG_SELECTION_TOURNAMENT_SPECTATE:
+    case TRAINERS_DEBUG_SELECTION_TOURNAMENT_PILOT:
+        // v2.1.3 — tournament follow-target picker: same curated-roster
+        // landing as the Frontier picker.
         gTasks[taskId].tInput = sSimulatorRoster[0];
         break;
     case TRAINERS_DEBUG_SELECTION_COPY_TO_CUSTOM:
@@ -6640,7 +6842,9 @@ static bool32 UNUSED Sim_IsTournamentDone(void)
 // Battle Simulator: cycle Tournament cup selection. Toggles through Off and
 // each defined cup, resetting in-flight tournament state. 8-trainer
 // single-elim is fixed at 3 rounds (QF / SF / Final) for the player.
-static void DebugAction_Trainers_ToggleTournament(u8 taskId)
+// v2.1.3 — no longer wired to a menu row (tournaments start from the wrapper
+// flow now); kept for reference / possible future use.
+static void UNUSED DebugAction_Trainers_ToggleTournament(u8 taskId)
 {
     gSimTournamentCup++;
     if (gSimTournamentCup >= SIM_CUP_COUNT)
@@ -6845,9 +7049,11 @@ void Sim_AdvanceTournamentAfterMatch(bool32 playerWon)
         gSimTournamentResults[matchIdx] = gSimTournamentPlayerSlot;
         if (gSimTournamentRound >= gSimTournamentMaxRounds)
         {
-            // Won the final — champion!
+            // Final resolved. If we're spectating, the "player" slot is really
+            // the trainer who eliminated us (or a later winner we followed) —
+            // the player's own result stays a loss.
             gSimTournamentDone = TRUE;
-            gSimTournamentEliminated = FALSE;
+            gSimTournamentEliminated = gSimTournamentSpectating;
         }
         else
         {
@@ -6857,8 +7063,28 @@ void Sim_AdvanceTournamentAfterMatch(bool32 playerWon)
     else
     {
         gSimTournamentResults[matchIdx] = opponentSlot;
-        gSimTournamentDone = TRUE;
-        gSimTournamentEliminated = TRUE;
+        if (gSimTournamentRound >= gSimTournamentMaxRounds)
+        {
+            // Lost the final — bracket fully resolved either way.
+            gSimTournamentDone = TRUE;
+            gSimTournamentEliminated = TRUE;
+        }
+        else
+        {
+            // v2.1.2 — SPECTATOR MODE. A pre-final loss no longer ends the
+            // run. Follow the winner: hand the tracked slot (and the armed
+            // player-side trainer) to whoever won this match, force pilot
+            // mode off (the user shouldn't play AS the trainer that just
+            // beat them), and advance the round. The existing auto-advance +
+            // bracket-screen loop then plays the remaining matches as
+            // watchable AI-vs-AI battles until a champion is crowned.
+            gSimTournamentSpectating = TRUE;
+            gSimTournamentEliminated = TRUE;
+            gSimTournamentPlayerSlot = opponentSlot;
+            sSimMatchPlayerAI = gSimTournamentBracket[opponentSlot];
+            sSimMatchPilotMode = FALSE;
+            gSimTournamentRound++;
+        }
     }
 }
 
@@ -6875,6 +7101,7 @@ static void Sim_StartTournament(s32 playerSideId)
     gSimTournamentRound = 1;
     gSimTournamentDone = FALSE;
     gSimTournamentEliminated = FALSE;
+    gSimTournamentSpectating = FALSE; // v2.1.2 — fresh run, not spectating
 }
 
 // v2.0.1 — pick a random opponent partner for a tournament doubles match.
@@ -8700,6 +8927,93 @@ static void DebugAction_Trainers_TryBattle(u8 taskId)
     Sim_SetupMatchRound(trainer1Id, trainer2Id, partnerId, playerSideId);
     BattleSetup_StartTrainerBattle_Debug();
     Debug_DestroyMenu_Full(taskId);
+}
+
+// =====================================================================
+// v2.1.3 — Tournament wrapper flow
+// =====================================================================
+// "Tournament…" on the wrapper menu opens the cup picker (rows index into
+// sSimCups); picking a cup arms gSimTournamentCup and opens the who-to-follow
+// menu; from there Random Spectate rolls a trainer from the cup's own pool,
+// or the trainer picker opens in a tournament selection mode. All three paths
+// funnel into Sim_BeginTournamentRun, which mirrors the tournament branch of
+// DebugAction_Trainers_TryBattle: build the bracket around the chosen trainer,
+// stash the round-1 match state, and launch the first battle. Clean 1v1 cup
+// matches — no partner, no forced doubles (VGC mode still forces doubles
+// globally if the user left it on).
+static bool32 Sim_BeginTournamentRun(u16 playerSideId, bool32 pilot)
+{
+    if (gSimTournamentCup == 0 || gSimTournamentCup >= SIM_CUP_COUNT)
+        return FALSE;
+    if (playerSideId == TRAINER_NONE)
+        return FALSE;
+
+    Sim_StartTournament(playerSideId);
+    if (!Sim_IsTournamentActive())
+        return FALSE;  // bracket build failed (cup too small); cup was reset
+
+    s32 trainer1Id = gSimTournamentBracket[Sim_GetPlayerOpponentSlot()];
+    gSimT1Wins = 0;
+    gSimT2Wins = 0;
+    sSimMatchActive = FALSE;
+    Sim_ResetPickHistory();
+    sSimMatchOpponent1 = trainer1Id;
+    sSimMatchOpponent2 = TRAINER_NONE;
+    sSimMatchPartner = PARTNER_NONE;
+    sSimMatchPlayerAI = playerSideId;
+    sSimMatchForceDouble = FALSE;
+    sSimMatchPilotMode = pilot;
+    // Round 1 of Sim_SetupMatchRound reads pilot/doubles from the LIVE menu
+    // data (rounds 2+ use the sSimMatch* snapshot) — mirror the flags there.
+    if (sDebugMenuListData != NULL)
+    {
+        sDebugMenuListData->data[5] = FALSE;
+        sDebugMenuListData->data[7] = pilot;
+    }
+    Sim_SetupMatchRound(trainer1Id, TRAINER_NONE, PARTNER_NONE, playerSideId);
+    BattleSetup_StartTrainerBattle_Debug();
+    return TRUE;
+}
+
+// Cup-picker row action: arm the chosen cup, clear any finished-run state,
+// and advance to the who-to-follow menu.
+static void DebugAction_Tournament_PickCup(u8 taskId, u32 cupIdx)
+{
+    if (cupIdx == 0 || cupIdx >= SIM_CUP_COUNT)
+        return;
+    gSimTournamentCup = (u8)cupIdx;
+    gSimTournamentRound = 0;
+    gSimTournamentDone = FALSE;
+    gSimTournamentEliminated = FALSE;
+    gSimTournamentSpectating = FALSE;
+    Debug_DestroyMenu(taskId);
+    sDebugMenuListData->listId = 0;
+    Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_TournamentWho);
+}
+
+// "Random Spectate": roll a follow target from the armed cup's own pool
+// (skipping unconfigured custom slots) and launch the bracket AI-vs-AI.
+static void DebugAction_Tournament_StartRandom(u8 taskId)
+{
+    if (gSimTournamentCup == 0 || gSimTournamentCup >= SIM_CUP_COUNT)
+        return;
+    const struct SimCup *cup = &sSimCups[gSimTournamentCup];
+    if (cup->trainers == NULL || cup->size == 0)
+        return;
+    u16 pick = TRAINER_NONE;
+    for (u32 tries = 0; tries < 64; tries++)
+    {
+        u16 cand = cup->trainers[Random() % cup->size];
+        if (!Sim_IsEmptyCustomSlot(cand))
+        {
+            pick = cand;
+            break;
+        }
+    }
+    if (pick == TRAINER_NONE)
+        return;
+    if (Sim_BeginTournamentRun(pick, FALSE))
+        Debug_DestroyMenu_Full(taskId);
 }
 
 static void DebugAction_Trainers_RechargeVsSeeker(u8 taskId)

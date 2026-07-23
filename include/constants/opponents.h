@@ -1378,6 +1378,48 @@
 #define TRAINER_MIRIAM                      1203  // SV League Club Room — Academy Instructor (Toxapex ace, Tera Poison)
 #define TRAINER_ARVEN                       1204  // SV League Club Room — story rival (Mabosstiff ace, Tera Dark)
 #define TRAINER_CYRANO                      1205  // SV League Club Room — Blueberry Academy founder / Indigo Disk secret boss (Serperior ace, Tera Rock)
+#define TRAINER_N_B2W2                      1206  // Gen 5 — N B2W2 rotation pool: BW final team + 4 B2W2 seasonal teams + Reshiram/Zekrom (31-mon, samples 6)
+
+// v2.1.2 — Classic Gen 1 (RGB/Yellow). Canon movesets, no items/abilities era.
+#define TRAINER_LORELEI_RBY                 1207  // RBY Elite Four — Ice (Lapras ace)
+#define TRAINER_BRUNO_RBY                   1208  // RBY Elite Four — Fighting (Machamp ace)
+#define TRAINER_AGATHA_RBY                  1209  // RBY Elite Four — Ghost (Gengar ace)
+#define TRAINER_LANCE_RBY                   1210  // RBY Elite Four — Dragon (Dragonite ace)
+#define TRAINER_BLUE_RGB_CHARIZARD          1211  // RGB Champion — vs Bulbasaur player
+#define TRAINER_BLUE_RGB_BLASTOISE          1212  // RGB Champion — vs Charmander player
+#define TRAINER_BLUE_RGB_VENUSAUR           1213  // RGB Champion — vs Squirtle player
+#define TRAINER_BLUE_YELLOW_VAPOREON        1214  // Yellow Champion — Vaporeon path
+#define TRAINER_BLUE_YELLOW_JOLTEON         1215  // Yellow Champion — Jolteon path
+#define TRAINER_BLUE_YELLOW_FLAREON         1216  // Yellow Champion — Flareon path
+
+// v2.1.2 — Classic Gen 2 (GSC). Kanto gyms + Johto E4 + Champion + rival + Red.
+#define TRAINER_BROCK_GSC                   1217  // GSC Pewter Gym — Rock
+#define TRAINER_MISTY_GSC                   1218  // GSC Cerulean Gym — Water
+#define TRAINER_ERIKA_GSC                   1219  // GSC Celadon Gym — Grass
+#define TRAINER_SURGE_GSC                   1220  // GSC Vermilion Gym — Electric
+#define TRAINER_JANINE_GSC                  1221  // GSC Fuchsia Gym — Poison
+#define TRAINER_SABRINA_GSC                 1222  // GSC Saffron Gym — Psychic
+#define TRAINER_BLAINE_GSC                  1223  // GSC Seafoam Gym — Fire
+#define TRAINER_BLUE_GSC                    1224  // GSC Viridian Gym Leader (typeless master)
+#define TRAINER_WILL_GSC                    1225  // GSC Elite Four — Psychic (Xatu ace)
+#define TRAINER_KOGA_GSC                    1226  // GSC Elite Four — Poison (Crobat ace)
+#define TRAINER_BRUNO_GSC                   1227  // GSC Elite Four — Fighting (Machamp ace)
+#define TRAINER_KAREN_GSC                   1228  // GSC Elite Four — Dark (Houndoom ace)
+#define TRAINER_LANCE_GSC                   1229  // GSC Champion — 3 Dragonites
+#define TRAINER_SILVER_GSC_TYPHLOSION       1230  // GSC rival — if player chose Chikorita
+#define TRAINER_SILVER_GSC_FERALIGATR       1231  // GSC rival — if player chose Cyndaquil
+#define TRAINER_SILVER_GSC_MEGANIUM         1232  // GSC rival — if player chose Totodile
+#define TRAINER_RED_GSC                     1233  // GSC Mt. Silver — the final boss
+
+// v2.1.3 — XY Elite Four + Team Flare boss + Route 19 rival trio.
+#define TRAINER_MALVA                       1234  // XY Elite Four — Fire (Talonflame ace)
+#define TRAINER_SIEBOLD                     1235  // XY Elite Four — Water (Barbaracle ace)
+#define TRAINER_WIKSTROM                    1236  // XY Elite Four — Steel (Aegislash ace)
+#define TRAINER_DRASNA                      1237  // XY Elite Four — Dragon (Noivern ace)
+#define TRAINER_LYSANDRE                    1238  // XY Team Flare boss — final battle, Mega Gyarados (vanilla-XY Lysandre; TRAINER_L_ZA is his Z-A version)
+#define TRAINER_TIERNO                      1239  // XY rival — Route 19 (dance-themed movesets, canon)
+#define TRAINER_SHAUNA                      1240  // XY rival — Route 19 (Chesnaught variant)
+#define TRAINER_TREVOR                      1241  // XY rival — Route 19 (Florges ace)
 
 // NOTE: Because each Trainer uses a flag to determine when they are defeated, there is only space for 9 additional trainers before trainer flag space overflows
 //       More space can be made by shifting flags around in constants/flags.h or changing how trainer flags are handled
