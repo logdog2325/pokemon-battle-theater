@@ -8442,6 +8442,13 @@ uq4_12_t CalcTypeEffectivenessMultiplier(struct BattleContext *ctx)
         }
     }
 
+    // v2.3.0 — Colosseum/XD Shadow moves: super-effective against any
+    // non-Shadow Pokemon (i.e. everyone in this sim). Their TYPE_MYSTERY
+    // typing already skipped the type chart above, so no immunity or
+    // resistance can interfere — just pin the modifier at 2.0x.
+    if (IsShadowMove(ctx->move))
+        modifier = UQ_4_12(2.0);
+
     if (ctx->updateFlags)
         UpdateMoveResultFlags(modifier, &gBattleStruct->moveResultFlags[ctx->battlerDef]);
     return modifier;
@@ -8469,6 +8476,12 @@ uq4_12_t CalcPartyMonTypeEffectivenessMultiplier(enum Move move, u16 speciesDef,
         if (abilityDef == ABILITY_WONDER_GUARD && modifier <= UQ_4_12(1.0) && GetMovePower(move) != 0)
             modifier = UQ_4_12(0.0);
     }
+
+    // v2.3.0 — Shadow moves are super-effective vs everything (see
+    // CalcTypeEffectivenessMultiplier); keep the AI's party-preview scoring
+    // consistent with the real damage calc.
+    if (IsShadowMove(move))
+        modifier = UQ_4_12(2.0);
 
     return modifier;
 }

@@ -41477,6 +41477,1196 @@ Modest Nature
 - Misty Terrain
 
 
+/* v2.3.0 — Orre saga: Pokemon Colosseum (2003) + XD: Gale of Darkness (2005).
+ * Cipher admins and bosses with canon rosters — including their SHADOW
+ * Pokemon, whose Shadow moves are now real in this engine (typeless, always
+ * super-effective; see moves_info.h). Colosseum: Miror B. (the Ludicolo
+ * army + XD's Shadow Dragonite), Dakim, Venus, Ein, and Grand Master Evice
+ * (Shadow Tyranitar). XD: Lovrina, Snattle, Gorigan, Gonzap (Team Snagem),
+ * Ardos, Eldes, and Grand Master Greevil — six Shadow Pokemon including the
+ * legendary birds. Orre Colosseum "Lv 60-100" teams use the canon floor of
+ * 60. EVs / IVs / natures are competitively filled. */
+=== TRAINER_MIROR_B ===
+Name: MIROR B.
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Ludicolo (M)
+Ability: Swift Swim
+Level: 57
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Rain Dance
+- Hydro Pump
+- Giga Drain
+- Fake Out
+
+Ludicolo (M)
+Ability: Swift Swim
+Level: 57
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Rain Dance
+- Hydro Pump
+- Giga Drain
+- Counter
+
+Ludicolo (F)
+Ability: Swift Swim
+Level: 57
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Rain Dance
+- Waterfall
+- Giga Drain
+- Brick Break
+
+Ludicolo (F)
+Ability: Swift Swim
+Level: 57
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Adamant Nature
+- Rain Dance
+- Thunder Punch
+- Ice Punch
+- Fire Punch
+
+Ludicolo (M)
+Ability: Swift Swim
+Level: 57
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Rain Dance
+- Hydro Pump
+- Giga Drain
+- Seismic Toss
+
+Dragonite (M)
+Ability: Inner Focus
+Level: 55
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Adamant Nature
+- Shadow Down
+- Shadow Rush
+- Shadow Shed
+- Shadow Storm
+
+=== TRAINER_DAKIM ===
+Name: DAKIM
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Claydol
+Ability: Levitate
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Psychic
+- Earthquake
+- Sunny Day
+- Solar Beam
+
+Flygon (F)
+Ability: Levitate
+Level: 64
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 4 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Fire Blast
+- Earthquake
+- Sunny Day
+- Solar Beam
+
+Swampert (M)
+Ability: Torrent
+Level: 65
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Muddy Water
+- Earthquake
+- Ice Beam
+- Protect
+
+Solrock
+Ability: Levitate
+Level: 64
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Rock Slide
+- Earthquake
+- Sunny Day
+- Explosion
+
+Houndoom (M)
+Ability: Early Bird
+Level: 65
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Protect
+- Fire Blast
+- Sunny Day
+- Solar Beam
+
+=== TRAINER_VENUS ===
+Name: VENUS
+Class: Cooltrainer
+Pic: Cooltrainer F
+Gender: Female
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Blissey (F)
+Ability: Serene Grace
+Level: 65
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 0 SpA / 252 SpD / 0 Spe
+Calm Nature
+- Attract
+- Water Pulse
+- Flamethrower
+- Psychic
+
+Dusclops (M)
+Ability: Pressure
+Level: 64
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 4 SpD / 0 Spe
+Impish Nature
+- Attract
+- Confuse Ray
+- Will-O-Wisp
+- Shadow Punch
+
+Raichu (M)
+Ability: Static
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Thunderbolt
+- Attract
+- Thunder Wave
+- Sweet Kiss
+
+Meganium (F)
+Ability: Overgrow
+Level: 64
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 0 SpA / 252 SpD / 0 Spe
+Calm Nature
+- Leech Seed
+- Giga Drain
+- Attract
+- Ingrain
+
+Milotic (F)
+Ability: Marvel Scale
+Level: 65
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 4 SpD / 0 Spe
+Bold Nature
+- Attract
+- Ice Beam
+- Confuse Ray
+- Hydro Pump
+
+=== TRAINER_EIN ===
+Name: EIN
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Mantine (F)
+Ability: Swift Swim
+Level: 64
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 0 SpA / 252 SpD / 0 Spe
+Calm Nature
+- Rain Dance
+- Confuse Ray
+- Toxic
+- Twister
+
+Rhydon (M)
+Ability: Lightning Rod
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Rock Blast
+- Toxic
+- Earthquake
+- Protect
+
+Gyarados (M)
+Ability: Intimidate
+Level: 64
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 4 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Hydro Pump
+- Thunder
+- Earthquake
+- Rain Dance
+
+Crobat (F)
+Ability: Inner Focus
+Level: 65
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Jolly Nature
+- Bite
+- Confuse Ray
+- Toxic
+- Protect
+
+Manectric (F)
+Ability: Lightning Rod
+Level: 65
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Bite
+- Thunder
+- Toxic
+- Protect
+
+=== TRAINER_NASCOUR ===
+Name: NASCOUR
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Dusclops (F)
+Ability: Pressure
+Level: 55
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 4 SpD / 0 Spe
+Bold Nature
+- Shadow Ball
+- Psychic
+- Confuse Ray
+- Destiny Bond
+
+Gardevoir (M)
+Ability: Synchronize
+Level: 55
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Psychic
+- Thunderbolt
+- Taunt
+- Destiny Bond
+
+Blaziken (M)
+Ability: Blaze
+Level: 54
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Blaze Kick
+- Sky Uppercut
+- Swagger
+- Roar
+
+Xatu (F)
+Ability: Synchronize
+Level: 54
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Psychic
+- Drill Peck
+- Giga Drain
+- Confuse Ray
+
+Walrein (F)
+Ability: Thick Fat
+Level: 56
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 4 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Careful Nature
+- Attract
+- Ice Beam
+- Body Slam
+- Waterfall
+
+Alakazam (M)
+Ability: Synchronize
+Level: 57
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Psychic
+- Fire Punch
+- Light Screen
+- Reflect
+
+=== TRAINER_EVICE ===
+Name: EVICE
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Slowking (F)
+Ability: Own Tempo
+Level: 61
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Calm Nature
+- Shadow Ball
+- Psychic
+- Water Pulse
+- Skill Swap
+
+Scizor (F)
+Ability: Swarm
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 248 HP / 252 Atk / 0 Def / 0 SpA / 8 SpD / 0 Spe
+Adamant Nature
+- Metal Claw
+- Silver Wind
+- Baton Pass
+- Swords Dance
+
+Machamp (M)
+Ability: Guts
+Level: 61
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Cross Chop
+- Rock Slide
+- Earthquake
+- Bulk Up
+
+Salamence (M)
+Ability: Intimidate
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Jolly Nature
+- Dragon Dance
+- Double-Edge
+- Aerial Ace
+- Dragon Claw
+
+Slaking (M)
+Ability: Truant
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Adamant Nature
+- Crush Claw
+- Aerial Ace
+- Earthquake
+- Bulk Up
+
+Tyranitar (M) @ Nugget
+Ability: Sand Stream
+Level: 55
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Quiet Nature
+- Shadow Rush
+- Thunder
+- Rock Slide
+- Blizzard
+
+=== TRAINER_LOVRINA ===
+Name: LOVRINA
+Class: Cooltrainer
+Pic: Cooltrainer F
+Gender: Female
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Shuckle (M) @ Chesto Berry
+Ability: Sturdy
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 4 SpD / 0 Spe
+Impish Nature
+- Wrap
+- Toxic
+- Attract
+- Rest
+
+Milotic (F) @ Lax Incense
+Ability: Marvel Scale
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 4 SpD / 0 Spe
+Bold Nature
+- Wrap
+- Toxic
+- Attract
+- Confuse Ray
+
+Wobbuffet (F) @ Lum Berry
+Ability: Shadow Tag
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 128 Def / 0 SpA / 128 SpD / 0 Spe
+Calm Nature
+- Counter
+- Mirror Coat
+- Charm
+- Encore
+
+Blissey (F) @ Leftovers
+Ability: Serene Grace
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 0 SpA / 252 SpD / 0 Spe
+Calm Nature
+- Counter
+- Seismic Toss
+- Attract
+- Sing
+
+Misdreavus (M) @ Quick Claw
+Ability: Levitate
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Confuse Ray
+- Torment
+- Attract
+- Protect
+
+Meganium (F) @ Bright Powder
+Ability: Overgrow
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 0 SpA / 252 SpD / 0 Spe
+Calm Nature
+- Leech Seed
+- Toxic
+- Attract
+- Protect
+
+=== TRAINER_SNATTLE ===
+Name: SNATTLE
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Electrode @ Liechi Berry
+Ability: Soundproof
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Thunderbolt
+- Light Screen
+- Endure
+- Explosion
+
+Gengar (F) @ Scope Lens
+Ability: Levitate
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Sludge Bomb
+- Shadow Ball
+- Protect
+- Explosion
+
+Muk (M) @ Quick Claw
+Ability: Sticky Hold
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Substitute
+- Imprison
+- Protect
+- Explosion
+
+Glalie (F) @ Salac Berry
+Ability: Inner Focus
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 4 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Ice Beam
+- Shadow Ball
+- Endure
+- Explosion
+
+Regirock @ Lax Incense
+Ability: Clear Body
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Ancient Power
+- Earthquake
+- Protect
+- Explosion
+
+Regice @ Leftovers
+Ability: Clear Body
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Thunderbolt
+- Ice Beam
+- Protect
+- Explosion
+
+=== TRAINER_GORIGAN ===
+Name: GORIGAN
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Salamence (F) @ Bright Powder
+Ability: Intimidate
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 4 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Mild Nature
+- Hydro Pump
+- Flamethrower
+- Dragon Claw
+- Crunch
+
+Granbull (F) @ Quick Claw
+Ability: Intimidate
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Return
+- Brick Break
+- Shadow Ball
+- Hyper Beam
+
+Arcanine (M) @ White Herb
+Ability: Intimidate
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Adamant Nature
+- Extreme Speed
+- Overheat
+- Crunch
+- Protect
+
+Tauros (M) @ Chesto Berry
+Ability: Intimidate
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Adamant Nature
+- Return
+- Earthquake
+- Rest
+- Hyper Beam
+
+Hitmontop (M) @ Leftovers
+Ability: Intimidate
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Impish Nature
+- Body Slam
+- Brick Break
+- Earthquake
+- Detect
+
+Gyarados (F) @ Lum Berry
+Ability: Intimidate
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Double-Edge
+- Icy Wind
+- Earthquake
+- Thunder Wave
+
+=== TRAINER_GONZAP ===
+Name: GONZAP
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Blastoise (F) @ Leftovers
+Ability: Torrent
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Hydro Cannon
+- Ice Beam
+- Yawn
+- Roar
+
+Slaking (M) @ Choice Band
+Ability: Truant
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Adamant Nature
+- Earthquake
+- Shadow Ball
+- Hyper Beam
+
+Skarmory (M) @ Lax Incense
+Ability: Keen Eye
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 4 SpD / 0 Spe
+Impish Nature
+- Drill Peck
+- Attract
+- Sand Attack
+- Roar
+
+Salamence (F) @ Scope Lens
+Ability: Intimidate
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Adamant Nature
+- Aerial Ace
+- Brick Break
+- Earthquake
+- Hyper Beam
+
+Charizard (M) @ Bright Powder
+Ability: Blaze
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 4 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Mild Nature
+- Blast Burn
+- Dragon Claw
+- Bite
+- Roar
+
+Venusaur (F) @ Lum Berry
+Ability: Overgrow
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Frenzy Plant
+- Light Screen
+- Sleep Powder
+- Roar
+
+=== TRAINER_ARDOS ===
+Name: ARDOS
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Sceptile (M) @ Scope Lens
+Ability: Overgrow
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Jolly Nature
+- Leaf Blade
+- Dragon Claw
+- Thunder Punch
+- Crunch
+
+Charizard (F) @ Bright Powder
+Ability: Blaze
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 4 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Mild Nature
+- Fire Blast
+- Dragon Claw
+- Bite
+- Seismic Toss
+
+Gengar (M) @ Lax Incense
+Ability: Levitate
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Sludge Bomb
+- Shadow Ball
+- Brick Break
+- Confuse Ray
+
+Aerodactyl (F) @ King's Rock
+Ability: Rock Head
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Jolly Nature
+- Ancient Power
+- Aerial Ace
+- Iron Tail
+- Double-Edge
+
+Tauros (M) @ Choice Band
+Ability: Intimidate
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Adamant Nature
+- Return
+- Earthquake
+- Iron Tail
+
+Starmie @ Lum Berry
+Ability: Natural Cure
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Thunderbolt
+- Ice Beam
+- Psychic
+- Hydro Pump
+
+=== TRAINER_ELDES ===
+Name: ELDES
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Latios (M) @ Bright Powder
+Ability: Levitate
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Thunderbolt
+- Ice Beam
+- Dragon Claw
+- Psychic
+
+Latias (F) @ Scope Lens
+Ability: Levitate
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Thunderbolt
+- Waterfall
+- Dragon Claw
+- Psychic
+
+Gengar (M) @ Lax Incense
+Ability: Levitate
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Thunderbolt
+- Psychic
+- Fire Punch
+- Ice Punch
+
+Metagross @ Quick Claw
+Ability: Clear Body
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Shadow Ball
+- Meteor Mash
+- Earthquake
+- Protect
+
+Snorlax (F) @ Leftovers
+Ability: Thick Fat
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Body Slam
+- Earthquake
+- Shadow Ball
+- Protect
+
+Tauros (M) @ Choice Band
+Ability: Intimidate
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Adamant Nature
+- Return
+- Earthquake
+- Iron Tail
+
+=== TRAINER_FEIN ===
+Name: FEIN
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Armaldo (M)
+Ability: Battle Armor
+Level: 68
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Adamant Nature
+- Aerial Ace
+- Rock Blast
+- Earthquake
+- Slash
+
+Milotic (F)
+Ability: Marvel Scale
+Level: 68
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 4 SpD / 0 Spe
+Bold Nature
+- Hydro Pump
+- Ice Beam
+- Dragon Breath
+- Safeguard
+
+Manectric (F)
+Ability: Lightning Rod
+Level: 68
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Thunder Wave
+- Thunderbolt
+- Protect
+- Crunch
+
+Houndoom (M)
+Ability: Early Bird
+Level: 68
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 4 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Flamethrower
+- Reversal
+- Protect
+- Crunch
+
+Gyarados (M)
+Ability: Intimidate
+Level: 68
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Earthquake
+- Strength
+- Roar
+- Hydro Pump
+
+Togetic (M)
+Ability: Serene Grace
+Level: 20
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 128 Def / 0 SpA / 128 SpD / 0 Spe
+Calm Nature
+- Shadow Rush
+- Charm
+- Sweet Kiss
+- Yawn
+
+=== TRAINER_JUSTY ===
+Name: JUSTY
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Sandshrew (F)
+Ability: Sand Veil
+Level: 41
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Sandstorm
+- Double Team
+- Swift
+- Dig
+
+Cacnea (M)
+Ability: Sand Veil
+Level: 41
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Double Team
+- Sandstorm
+- Feint Attack
+- Needle Arm
+
+Gligar (M)
+Ability: Sand Veil
+Level: 41
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 0 Spe
+Impish Nature
+- Sandstorm
+- Double Team
+- Aerial Ace
+- Dig
+
+Azumarill (F)
+Ability: Huge Power
+Level: 40
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Double Team
+- Light Screen
+- Return
+- Surf
+
+Sunflora (F)
+Ability: Chlorophyll
+Level: 40
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Double Team
+- Ingrain
+- Helping Hand
+- Mega Drain
+
+Nosepass (M)
+Ability: Magnet Pull
+Level: 42
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 4 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Careful Nature
+- Double Team
+- Magnitude
+- Thunder Wave
+- Rock Slide
+
+=== TRAINER_CHOBIN ===
+Name: CHOBIN
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Scizor (F) @ Lax Incense
+Ability: Swarm
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 248 HP / 252 Atk / 0 Def / 0 SpA / 8 SpD / 0 Spe
+Adamant Nature
+- Silver Wind
+- Aerial Ace
+- Return
+- Steel Wing
+
+Mr. Mime (F) @ Lum Berry
+Ability: Soundproof
+Level: 60
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Fake Out
+- Psychic
+- Psych Up
+- Baton Pass
+
+Dragonite (M) @ Leftovers
+Ability: Inner Focus
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Aerial Ace
+- Brick Break
+- Earthquake
+- Return
+
+Marowak (M) @ Thick Club
+Ability: Rock Head
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 4 Def / 0 SpA / 0 SpD / 0 Spe
+Adamant Nature
+- Ancient Power
+- Double-Edge
+- Aerial Ace
+- Earthquake
+
+Kangaskhan (F) @ Scope Lens
+Ability: Early Bird
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Return
+- Earthquake
+- Shadow Ball
+- Protect
+
+Ninjask (F) @ White Herb
+Ability: Speed Boost
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Jolly Nature
+- Swords Dance
+- Baton Pass
+- Silver Wind
+- Protect
+
+=== TRAINER_GREEVIL ===
+Name: GREEVIL
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Rhydon (M)
+Ability: Lightning Rod
+Level: 46
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Shadow End
+- Shadow Down
+- Shadow Panic
+- Shadow Hold
+
+Moltres
+Ability: Pressure
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Shadow Fire
+- Shadow Shed
+- Shadow Hold
+- Shadow Rush
+
+Exeggutor (M)
+Ability: Chlorophyll
+Level: 46
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Shadow Storm
+- Shadow Shed
+- Shadow Hold
+- Shadow End
+
+Tauros (M)
+Ability: Intimidate
+Level: 46
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Adamant Nature
+- Shadow Rush
+- Shadow Hold
+- Shadow Shed
+- Shadow Sky
+
+Articuno
+Ability: Pressure
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Shadow Chill
+- Shadow Shed
+- Shadow Sky
+- Shadow Rush
+
+Zapdos
+Ability: Pressure
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Shadow Bolt
+- Shadow Shed
+- Shadow Sky
+- Shadow Rush
+
+
 === TRAINER_URBAIN ===
 Name: URBAIN
 Class: Cooltrainer

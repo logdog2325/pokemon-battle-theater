@@ -903,6 +903,30 @@ enum __attribute__((packed)) Move
     MOVE_PSYCHIC_NOISE = 845,
     MOVE_UPPER_HAND = 846,
     MOVE_MALIGNANT_CHAIN = 847,
+
+    // v2.3.0 — Shadow moves (Pokemon Colosseum / XD: Gale of Darkness).
+    // Typeless (TYPE_MYSTERY) and always super-effective vs non-Shadow
+    // Pokemon — which in this sim is everyone. See isShadowMove in
+    // struct MoveInfo and the 2.0x override in CalcTypeEffectivenessMultiplier.
+    MOVE_SHADOW_BLAST,
+    MOVE_SHADOW_BLITZ,
+    MOVE_SHADOW_BOLT,
+    MOVE_SHADOW_BREAK,
+    MOVE_SHADOW_CHILL,
+    MOVE_SHADOW_DOWN,
+    MOVE_SHADOW_END,
+    MOVE_SHADOW_FIRE,
+    MOVE_SHADOW_HALF,
+    MOVE_SHADOW_HOLD,
+    MOVE_SHADOW_MIST,
+    MOVE_SHADOW_PANIC,
+    MOVE_SHADOW_RAVE,
+    MOVE_SHADOW_RUSH,
+    MOVE_SHADOW_SHED,
+    MOVE_SHADOW_SKY,
+    MOVE_SHADOW_STORM,
+    MOVE_SHADOW_WAVE,
+
     MOVES_COUNT_GEN9,
 
     // Add any custom moves here, not further down!

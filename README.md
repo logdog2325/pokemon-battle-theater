@@ -14,7 +14,7 @@ or pilot one side via Pilot Mode.
 Title screen + box art commissioned from
 **[u/CDRX73](https://www.reddit.com/user/CDRX73/)**.
 
-**Download the latest patch:** [v2.2.0 — Classic Gen 1/2 + XY Elite Four rosters, dedicated Tournament menu, spectator mode](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
+**Download the latest patch:** [v2.3.0 — Shadow moves + the full Orre saga (Colosseum/XD), tournament format picker](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
 All releases live on the [Releases page](https://github.com/logdog2325/pokemon-battle-theater/releases).
 
 ---
@@ -79,6 +79,15 @@ All releases live on the [Releases page](https://github.com/logdog2325/pokemon-b
   real champion is crowned
 - **Generation-order pickers (v2.2.0)** — both the trainer picker and the cup
   list now run Gen 1 → Gen 9, with PWT grouped beside Gen 5 where it belongs
+- **Shadow moves + the Orre saga (v2.3.0)** — all 18 Colosseum/XD Shadow
+  moves are real in-engine (typeless, always super-effective, AI-aware), and
+  16 Orre trainers wield them: the Cipher admins, Nascour, Grand Master Evice
+  (Shadow Tyranitar), Miror B. and his Ludicolo army, Gonzap, Fein's infamous
+  Lv 20 Shadow Togetic, Justy, Chobin, and Grand Master Greevil with six
+  Shadow Pokemon including the legendary birds — plus an Orre cup
+- **Tournament format picker (v2.3.0)** — every cup run now chooses
+  Singles / Doubles / VGC and Best of 1 / Best of 3; series play inside
+  brackets (each round is its own best-of, with adaptive picks between games)
 - **Smart pool selection (v2.1.0)** — rotation-pool trainers (Ash's Full
   Team, Paul, Gary, the Battle Tree pools) now bring a *matchup-aware* six
   scored against your roster, with light randomization so the team varies

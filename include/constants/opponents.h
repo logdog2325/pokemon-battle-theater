@@ -1421,6 +1421,25 @@
 #define TRAINER_SHAUNA                      1240  // XY rival — Route 19 (Chesnaught variant)
 #define TRAINER_TREVOR                      1241  // XY rival — Route 19 (Florges ace)
 
+// v2.3.0 — Orre saga (Pokemon Colosseum + XD: Gale of Darkness). Cipher
+// admins/bosses; Shadow Pokemon carry real Shadow moves (see moves_info.h).
+#define TRAINER_MIROR_B                     1242  // Colosseum admin — 5 Ludicolo + Shadow Dragonite
+#define TRAINER_DAKIM                       1243  // Colosseum admin — sun team
+#define TRAINER_VENUS                       1244  // Colosseum admin — Attract stall
+#define TRAINER_EIN                         1245  // Colosseum admin — Toxic stall
+#define TRAINER_NASCOUR                     1246  // Colosseum — Cipher head figure, penultimate boss (Destiny Bond leads)
+#define TRAINER_EVICE                       1247  // Colosseum Grand Master — Shadow Tyranitar
+#define TRAINER_LOVRINA                     1248  // XD Cipher admin — Attract/Wrap stall
+#define TRAINER_SNATTLE                     1249  // XD Cipher admin — six Explosion users
+#define TRAINER_GORIGAN                     1250  // XD Cipher admin — all-Intimidate
+#define TRAINER_GONZAP                      1251  // XD Team Snagem boss — starter-ultimate-move team
+#define TRAINER_ARDOS                       1252  // XD Cipher admin — Greevil's bodyguard
+#define TRAINER_ELDES                       1253  // XD Cipher admin — Latios/Latias
+#define TRAINER_GREEVIL                     1254  // XD Grand Master — 6 Shadow mons incl. the legendary birds
+#define TRAINER_FEIN                        1255  // XD Cipher admin — poses as Wes to ruin his reputation; Shadow Togetic Lv20
+#define TRAINER_JUSTY                       1256  // Colosseum/XD — Phenac Pre Gym leader (Sand Veil / Double Team evasion stall)
+#define TRAINER_CHOBIN                      1257  // XD — Dr. Kaminko's assistant (Orre Colosseum team)
+
 // NOTE: Because each Trainer uses a flag to determine when they are defeated, there is only space for 9 additional trainers before trainer flag space overflows
 //       More space can be made by shifting flags around in constants/flags.h or changing how trainer flags are handled
 //       MAX_TRAINERS_COUNT can be increased but will take up additional saveblock space

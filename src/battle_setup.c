@@ -1445,11 +1445,28 @@ static void CB2_EndDebugBattle(void)
         }
         // Battle Simulator: tournament progression — single-elim bracket.
         // Win → record the player slot as match winner, bump round. Lose →
-        // record the opponent slot, mark eliminated. Forfeit → treated as
-        // elimination (same as a loss).
+        // record the opponent slot (v2.1.2: and enter spectator mode).
+        // Forfeit → treated as a loss.
+        //
+        // v2.3.0 — best-of composes with tournaments: when gSimBestOf > 1,
+        // each bracket round is a series. The win tallies above accumulate
+        // per game; the bracket only advances once a side clinches the
+        // series (or the player forfeits, which clinches for the opponent),
+        // and the tallies reset for the next round. Undecided series fall
+        // through — Debug_ShowTrainersSubMenu re-arms the same pairing.
         if (gSimTournamentCup > 0 && gSimTournamentRound > 0 && !gSimTournamentDone)
         {
-            if (gBattleOutcome == B_OUTCOME_WON)
+            if (gSimBestOf > 1)
+            {
+                u8 need = (gSimBestOf + 1) / 2;
+                if (gSimT1Wins >= need || gSimT2Wins >= need)
+                {
+                    Sim_AdvanceTournamentAfterMatch(gSimT1Wins > gSimT2Wins);
+                    gSimT1Wins = 0;
+                    gSimT2Wins = 0;
+                }
+            }
+            else if (gBattleOutcome == B_OUTCOME_WON)
                 Sim_AdvanceTournamentAfterMatch(TRUE);
             else if (gBattleOutcome == B_OUTCOME_LOST || playerForfeited)
                 Sim_AdvanceTournamentAfterMatch(FALSE);

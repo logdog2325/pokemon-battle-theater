@@ -152,7 +152,12 @@ struct MoveInfo
     bool32 dampBanned:1;
     //Other
     bool32 validApprenticeMove:1;
-    u32 padding2:17;
+    // v2.3.0 — Colosseum/XD Shadow move: typeless, always super-effective vs
+    // non-Shadow Pokemon (everyone in this sim). Forces a 2.0x type modifier
+    // in CalcTypeEffectivenessMultiplier and bypasses type immunities (the
+    // TYPE_MYSTERY early-out already skips the type chart).
+    bool32 isShadowMove:1;
+    u32 padding2:16;
     // end of word
 
     union {
@@ -511,6 +516,12 @@ static inline bool32 IsMoveMeFirstBanned(enum Move moveId)
 static inline bool32 IsMoveMimicBanned(enum Move moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].mimicBanned;
+}
+
+// v2.3.0 — Colosseum/XD Shadow move check (see isShadowMove).
+static inline bool32 IsShadowMove(enum Move moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].isShadowMove;
 }
 
 static inline bool32 IsMoveMetronomeBanned(enum Move moveId)

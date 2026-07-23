@@ -21408,6 +21408,423 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     },
 
     // Z-Moves
+
+    // =====================================================================
+    // v2.3.0 — Shadow moves (Pokemon Colosseum / XD: Gale of Darkness).
+    // Typeless (TYPE_MYSTERY, displays "???") and flagged isShadowMove: the
+    // damage calc forces a 2.0x type modifier vs everything (XD's "super
+    // effective on any non-Shadow Pokemon" rule — every mon here is
+    // non-Shadow), and TYPE_MYSTERY's type-chart early-out means no
+    // immunity can block them. Stats are canon to XD; PP is 10 (the GC
+    // games gave them unlimited PP). Mimic/Sketch bans are canon. Anim
+    // scripts reuse existing dark/ghost animations. Approximations, noted
+    // inline: Shadow Half (canon halves EVERY mon's HP; here it halves the
+    // target's), Shadow Shed (canon removes screens; mapped to Defog),
+    // Shadow Sky (canon shadow weather; mapped to hail weather).
+    // =====================================================================
+    [MOVE_SHADOW_BLAST] =
+    {
+        .name = COMPOUND_STRING("Shadow Blast"),
+        .description = COMPOUND_STRING(
+            "A wicked blade of air made\n"
+            "of shadowy aura."),
+        .effect = EFFECT_HIT,
+        .power = 80,
+        .type = TYPE_MYSTERY,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .isShadowMove = TRUE,
+        .mimicBanned = TRUE,
+        .sketchBanned = TRUE,
+        .metronomeBanned = TRUE,
+        .battleAnimScript = gBattleAnimMove_ShadowPunch,
+    },
+
+    [MOVE_SHADOW_BLITZ] =
+    {
+        .name = COMPOUND_STRING("Shadow Blitz"),
+        .description = COMPOUND_STRING(
+            "A tackling attack wrapped\n"
+            "in a shadowy aura."),
+        .effect = EFFECT_HIT,
+        .power = 40,
+        .type = TYPE_MYSTERY,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .isShadowMove = TRUE,
+        .mimicBanned = TRUE,
+        .sketchBanned = TRUE,
+        .metronomeBanned = TRUE,
+        .battleAnimScript = gBattleAnimMove_Pursuit,
+    },
+
+    [MOVE_SHADOW_BOLT] =
+    {
+        .name = COMPOUND_STRING("Shadow Bolt"),
+        .description = COMPOUND_STRING(
+            "A shadowy thunderbolt that\n"
+            "may paralyze the foe."),
+        .effect = EFFECT_HIT,
+        .power = 75,
+        .type = TYPE_MYSTERY,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .isShadowMove = TRUE,
+        .mimicBanned = TRUE,
+        .sketchBanned = TRUE,
+        .metronomeBanned = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_PARALYSIS,
+            .chance = 10,
+        }),
+        .battleAnimScript = gBattleAnimMove_DarkPulse,
+    },
+
+    [MOVE_SHADOW_BREAK] =
+    {
+        .name = COMPOUND_STRING("Shadow Break"),
+        .description = COMPOUND_STRING(
+            "A ramming attack wrapped\n"
+            "in a shadowy aura."),
+        .effect = EFFECT_HIT,
+        .power = 75,
+        .type = TYPE_MYSTERY,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .isShadowMove = TRUE,
+        .mimicBanned = TRUE,
+        .sketchBanned = TRUE,
+        .metronomeBanned = TRUE,
+        .battleAnimScript = gBattleAnimMove_ShadowPunch,
+    },
+
+    [MOVE_SHADOW_CHILL] =
+    {
+        .name = COMPOUND_STRING("Shadow Chill"),
+        .description = COMPOUND_STRING(
+            "A shadowy ice attack that\n"
+            "may freeze the foe."),
+        .effect = EFFECT_HIT,
+        .power = 75,
+        .type = TYPE_MYSTERY,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .isShadowMove = TRUE,
+        .mimicBanned = TRUE,
+        .sketchBanned = TRUE,
+        .metronomeBanned = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_FREEZE_OR_FROSTBITE,
+            .chance = 10,
+        }),
+        .battleAnimScript = gBattleAnimMove_DarkPulse,
+    },
+
+    [MOVE_SHADOW_DOWN] =
+    {
+        .name = COMPOUND_STRING("Shadow Down"),
+        .description = COMPOUND_STRING(
+            "A shadowy aura sharply\n"
+            "lowers the foe's Defense."),
+        .effect = EFFECT_DEFENSE_DOWN_2,
+        .power = 0,
+        .type = TYPE_MYSTERY,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .isShadowMove = TRUE,
+        .mimicBanned = TRUE,
+        .sketchBanned = TRUE,
+        .metronomeBanned = TRUE,
+        .magicCoatAffected = TRUE,
+        .battleAnimScript = gBattleAnimMove_Haze,
+    },
+
+    [MOVE_SHADOW_END] =
+    {
+        .name = COMPOUND_STRING("Shadow End"),
+        .description = COMPOUND_STRING(
+            "A reckless shadowy ram that\n"
+            "also hurts the user."),
+        .effect = EFFECT_RECOIL,
+        .power = 120,
+        .type = TYPE_MYSTERY,
+        .accuracy = 60,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .argument = { .recoilPercentage = 50 },
+        .isShadowMove = TRUE,
+        .mimicBanned = TRUE,
+        .sketchBanned = TRUE,
+        .metronomeBanned = TRUE,
+        .battleAnimScript = gBattleAnimMove_Pursuit,
+    },
+
+    [MOVE_SHADOW_FIRE] =
+    {
+        .name = COMPOUND_STRING("Shadow Fire"),
+        .description = COMPOUND_STRING(
+            "A shadowy fireball that\n"
+            "may burn the foe."),
+        .effect = EFFECT_HIT,
+        .power = 75,
+        .type = TYPE_MYSTERY,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .isShadowMove = TRUE,
+        .mimicBanned = TRUE,
+        .sketchBanned = TRUE,
+        .metronomeBanned = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_BURN,
+            .chance = 10,
+        }),
+        .battleAnimScript = gBattleAnimMove_DarkPulse,
+    },
+
+    [MOVE_SHADOW_HALF] =
+    {
+        .name = COMPOUND_STRING("Shadow Half"),
+        .description = COMPOUND_STRING(
+            "Shadowy aura cuts the\n"
+            "foe's HP in half."),
+        // Canon halves EVERY Pokemon's HP (user included); approximated as
+        // a Super Fang-style halving of the target.
+        .effect = EFFECT_FIXED_PERCENT_DAMAGE,
+        .power = 1,
+        .type = TYPE_MYSTERY,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .argument = { .damagePercentage = 50 },
+        .isShadowMove = TRUE,
+        .mimicBanned = TRUE,
+        .sketchBanned = TRUE,
+        .metronomeBanned = TRUE,
+        .battleAnimScript = gBattleAnimMove_NightShade,
+    },
+
+    [MOVE_SHADOW_HOLD] =
+    {
+        .name = COMPOUND_STRING("Shadow Hold"),
+        .description = COMPOUND_STRING(
+            "Shadowy tendrils prevent\n"
+            "the foe from escaping."),
+        .effect = EFFECT_MEAN_LOOK,
+        .power = 0,
+        .type = TYPE_MYSTERY,
+        .accuracy = 80,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .isShadowMove = TRUE,
+        .mimicBanned = TRUE,
+        .sketchBanned = TRUE,
+        .metronomeBanned = TRUE,
+        .magicCoatAffected = TRUE,
+        .battleAnimScript = gBattleAnimMove_Haze,
+    },
+
+    [MOVE_SHADOW_MIST] =
+    {
+        .name = COMPOUND_STRING("Shadow Mist"),
+        .description = COMPOUND_STRING(
+            "A shadowy mist sharply\n"
+            "lowers the foe's evasion."),
+        .effect = EFFECT_EVASION_DOWN_2,
+        .power = 0,
+        .type = TYPE_MYSTERY,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .isShadowMove = TRUE,
+        .mimicBanned = TRUE,
+        .sketchBanned = TRUE,
+        .metronomeBanned = TRUE,
+        .magicCoatAffected = TRUE,
+        .battleAnimScript = gBattleAnimMove_Haze,
+    },
+
+    [MOVE_SHADOW_PANIC] =
+    {
+        .name = COMPOUND_STRING("Shadow Panic"),
+        .description = COMPOUND_STRING(
+            "A shadowy wail that\n"
+            "confuses the foe."),
+        .effect = EFFECT_CONFUSE,
+        .power = 0,
+        .type = TYPE_MYSTERY,
+        .accuracy = 60,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .isShadowMove = TRUE,
+        .mimicBanned = TRUE,
+        .sketchBanned = TRUE,
+        .metronomeBanned = TRUE,
+        .magicCoatAffected = TRUE,
+        .battleAnimScript = gBattleAnimMove_Haze,
+    },
+
+    [MOVE_SHADOW_RAVE] =
+    {
+        .name = COMPOUND_STRING("Shadow Rave"),
+        .description = COMPOUND_STRING(
+            "Shadowy spikes erupt from\n"
+            "the ground under the foes."),
+        .effect = EFFECT_HIT,
+        .power = 70,
+        .type = TYPE_MYSTERY,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_BOTH,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .isShadowMove = TRUE,
+        .mimicBanned = TRUE,
+        .sketchBanned = TRUE,
+        .metronomeBanned = TRUE,
+        .battleAnimScript = gBattleAnimMove_NightShade,
+    },
+
+    [MOVE_SHADOW_RUSH] =
+    {
+        .name = COMPOUND_STRING("Shadow Rush"),
+        .description = COMPOUND_STRING(
+            "A tackle from a Pokemon\n"
+            "wrapped in shadowy aura."),
+        .effect = EFFECT_HIT,
+        .power = 55,
+        .type = TYPE_MYSTERY,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .isShadowMove = TRUE,
+        .mimicBanned = TRUE,
+        .sketchBanned = TRUE,
+        .metronomeBanned = TRUE,
+        .battleAnimScript = gBattleAnimMove_Pursuit,
+    },
+
+    [MOVE_SHADOW_SHED] =
+    {
+        .name = COMPOUND_STRING("Shadow Shed"),
+        .description = COMPOUND_STRING(
+            "Shadowy aura tears down\n"
+            "Reflect and other walls."),
+        // Canon removes screens field-wide; Defog is the closest engine
+        // effect (also clears hazards + drops evasion one stage).
+        .effect = EFFECT_DEFOG,
+        .power = 0,
+        .type = TYPE_MYSTERY,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .isShadowMove = TRUE,
+        .mimicBanned = TRUE,
+        .sketchBanned = TRUE,
+        .metronomeBanned = TRUE,
+        .battleAnimScript = gBattleAnimMove_Haze,
+    },
+
+    [MOVE_SHADOW_SKY] =
+    {
+        .name = COMPOUND_STRING("Shadow Sky"),
+        .description = COMPOUND_STRING(
+            "A shadowy sky rains harm\n"
+            "for five turns."),
+        // Canon: shadow weather chips every non-Shadow mon each turn.
+        // Mapped to hail weather — closest chip-damage-everyone analog.
+        .effect = EFFECT_WEATHER,
+        .power = 0,
+        .type = TYPE_MYSTERY,
+        .accuracy = 0,
+        .pp = 10,
+        .target = TARGET_FIELD,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .argument = { .weatherType = BATTLE_WEATHER_HAIL },
+        .isShadowMove = TRUE,
+        .mimicBanned = TRUE,
+        .sketchBanned = TRUE,
+        .metronomeBanned = TRUE,
+        .battleAnimScript = gBattleAnimMove_Haze,
+    },
+
+    [MOVE_SHADOW_STORM] =
+    {
+        .name = COMPOUND_STRING("Shadow Storm"),
+        .description = COMPOUND_STRING(
+            "A raging shadowy tornado\n"
+            "engulfs the foe."),
+        .effect = EFFECT_HIT,
+        .power = 95,
+        .type = TYPE_MYSTERY,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .isShadowMove = TRUE,
+        .mimicBanned = TRUE,
+        .sketchBanned = TRUE,
+        .metronomeBanned = TRUE,
+        .battleAnimScript = gBattleAnimMove_ShadowBall,
+    },
+
+    [MOVE_SHADOW_WAVE] =
+    {
+        .name = COMPOUND_STRING("Shadow Wave"),
+        .description = COMPOUND_STRING(
+            "A wave of shadowy aura\n"
+            "washes over the foes."),
+        .effect = EFFECT_HIT,
+        .power = 50,
+        .type = TYPE_MYSTERY,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_BOTH,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .isShadowMove = TRUE,
+        .mimicBanned = TRUE,
+        .sketchBanned = TRUE,
+        .metronomeBanned = TRUE,
+        .battleAnimScript = gBattleAnimMove_DarkPulse,
+    },
+
     [MOVE_BREAKNECK_BLITZ] =
     {
         .name = COMPOUND_STRING("Breakneck Blitz"),
