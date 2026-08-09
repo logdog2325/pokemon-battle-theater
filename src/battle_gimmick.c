@@ -77,6 +77,22 @@ bool32 ShouldTrainerBattlerUseGimmick(enum BattlerId battler, enum Gimmick gimmi
     // which trainerproc only sets > 0 for the 24 canonical SwSh targets.
     if (B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE))
     {
+        // v2.3.1 — defensive: pilot battles normally leave
+        // B_FLAG_AI_VS_AI_BATTLE clear (so this branch isn't taken and the
+        // piloted side uses the plain player path below), but if a piloted
+        // battler ever does land here, treat it as a controller-driven
+        // player, not an AI. The ACTUAL pilot Dynamax fix lives in
+        // CanDynamax (battle_dynamax.c): the normal-play
+        // B_FLAG_DYNAMAX_BATTLE gate was unconditionally vetoing piloted
+        // battlers. The Tera gate is preserved either way.
+        if (gSimPilotMode && IsOnPlayerSide(battler)
+            && !((gBattleTypeFlags & BATTLE_TYPE_MULTI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT))
+        {
+            if (gimmick == GIMMICK_TERA
+                && !Sim_TrainerCanTera(Sim_GetBattlerTrainerId(battler)))
+                return FALSE;
+            return TRUE;
+        }
         if (gimmick == GIMMICK_DYNAMAX)
         {
             struct Pokemon *mon = GetBattlerMon(battler);

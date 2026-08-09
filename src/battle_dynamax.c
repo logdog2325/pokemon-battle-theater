@@ -7,6 +7,7 @@
 #include "battle_script_commands.h"
 #include "battle_gimmick.h"
 #include "data.h"
+#include "debug.h" // v2.3.1 — gSimPilotMode for the pilot-mode Dynamax gate
 #include "event_data.h"
 #include "graphics.h"
 #include "item.h"
@@ -84,7 +85,16 @@ bool32 CanDynamax(enum BattlerId battler)
     // side is AI-controlled (B_FLAG_AI_VS_AI_BATTLE). The sim trainer's mon
     // either has dynamaxLevel > 0 set in trainer.party (and should dynamax)
     // or it doesn't (and won't). The Band/flag gating is for normal play.
+    //
+    // v2.3.1 — ALSO skip them in PILOT MODE. Pilot battles deliberately never
+    // set B_FLAG_AI_VS_AI_BATTLE (the human controller needs the normal player
+    // path), so piloted battlers fell through to this normal-play gate — and
+    // with the expansion's default B_FLAG_DYNAMAX_BATTLE == 0 config, the
+    // check below returns FALSE unconditionally. That is the community-
+    // reported "can't Dynamax/Gigantamax in pilot mode" bug: the Band in the
+    // bag never mattered because the unassigned progression flag vetoed it.
     if (!TESTING && !(B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE))
+        && !gSimPilotMode
         && (GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT
             || (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT)))
     {

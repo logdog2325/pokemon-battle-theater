@@ -1440,6 +1440,24 @@
 #define TRAINER_JUSTY                       1256  // Colosseum/XD — Phenac Pre Gym leader (Sand Veil / Double Team evasion stall)
 #define TRAINER_CHOBIN                      1257  // XD — Dr. Kaminko's assistant (Orre Colosseum team)
 
+// v2.3.1 — Unova E4, original Black/White rematch teams (Lv 71-73). The
+// *_BW constants at 1067-1070 are actually the B2W2 Lv 75/77 teams.
+#define TRAINER_SHAUNTAL_BW1                1258  // Unova E4 Ghost — BW rematch
+#define TRAINER_MARSHAL_BW1                 1259  // Unova E4 Fighting — BW rematch
+#define TRAINER_GRIMSLEY_BW1                1260  // Unova E4 Dark — BW rematch
+#define TRAINER_CAITLIN_BW1                 1261  // Unova E4 Psychic — BW rematch
+#define TRAINER_CYNTHIA_BW                  1262  // Cynthia — BW Undella villa rematch (Lv 75/77, Garchomp ace)
+
+// v2.3.1 — LGPE gym leader rematch teams (Lv 56/57, canon movesets).
+#define TRAINER_BROCK_LGPE                  1263  // LGPE Pewter rematch
+#define TRAINER_MISTY_LGPE                  1264  // LGPE Cerulean rematch
+#define TRAINER_SURGE_LGPE                  1265  // LGPE Vermilion rematch
+#define TRAINER_ERIKA_LGPE                  1266  // LGPE Celadon rematch
+#define TRAINER_KOGA_LGPE                   1267  // LGPE Fuchsia rematch
+#define TRAINER_SABRINA_LGPE                1268  // LGPE Saffron rematch
+#define TRAINER_BLAINE_LGPE                 1269  // LGPE Cinnabar rematch
+#define TRAINER_GIOVANNI_LGPE               1270  // LGPE Viridian Gym (final gym battle; LGPE has no higher rematch for him)
+
 // NOTE: Because each Trainer uses a flag to determine when they are defeated, there is only space for 9 additional trainers before trainer flag space overflows
 //       More space can be made by shifting flags around in constants/flags.h or changing how trainer flags are handled
 //       MAX_TRAINERS_COUNT can be increased but will take up additional saveblock space

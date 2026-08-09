@@ -14,7 +14,7 @@ or pilot one side via Pilot Mode.
 Title screen + box art commissioned from
 **[u/CDRX73](https://www.reddit.com/user/CDRX73/)**.
 
-**Download the latest patch:** [v2.3.0 — Shadow moves + the full Orre saga (Colosseum/XD), tournament format picker](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
+**Download the latest patch:** [v2.3.1 — Dynamax/Gigantamax in pilot mode fixed, LGPE gym circuit, BW Unova E4 + Cynthia BW](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
 All releases live on the [Releases page](https://github.com/logdog2325/pokemon-battle-theater/releases).
 
 ---
@@ -88,6 +88,10 @@ All releases live on the [Releases page](https://github.com/logdog2325/pokemon-b
 - **Tournament format picker (v2.3.0)** — every cup run now chooses
   Singles / Doubles / VGC and Best of 1 / Best of 3; series play inside
   brackets (each round is its own best-of, with adaptive picks between games)
+- **Pilot-mode Dynamax fixed + more rematch teams (v2.3.1)** — piloted teams
+  can finally Dynamax/Gigantamax (custom-built mons carry G-Max factor too);
+  plus the full LGPE gym-leader circuit (all 8, in the LGPE cup), the
+  original BW Unova E4 alongside the B2W2 versions, and Cynthia's BW team
 - **Smart pool selection (v2.1.0)** — rotation-pool trainers (Ash's Full
   Team, Paul, Gary, the Battle Tree pools) now bring a *matchup-aware* six
   scored against your roster, with light randomization so the team varies
