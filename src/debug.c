@@ -1521,6 +1521,12 @@ EWRAM_DATA bool8 gSimPilotMode = FALSE;
 // lookup and Sim_GetBattleMusic's tier check also key on gSimPlayerSideId.
 EWRAM_DATA u16 gSimPlayerSideId = 0;
 EWRAM_DATA s16 gSimLevelCap = 0; // First-run init to 50 happens in Debug_ShowTrainersSubMenu. .sbss only allows zero initializers.
+// v2.4.0 hotfix — ONE shared first-run latch for the 50 default. It used to
+// be two separate function-local statics (wrapper + picker); a session that
+// never opened Run Simulation still had the picker's latch unfired, so the
+// first between-rooms reopen of an E4 gauntlet "defaulted" the cap back to
+// 50 mid-run — community repro: cap Off flipping ON in room 2.
+static EWRAM_DATA bool8 sSimLevelCapDefaulted = FALSE;
 
 // Battle Simulator: best-of-N match state. gSimBestOf is the configured length
 // (0/1 = single battle, 3 = best of 3, 5 = best of 5). EWRAM globals on GBA can
@@ -3187,13 +3193,10 @@ void Debug_ShowTrainersSubMenu(void)
     // forces gSimLevelCap to 0 on boot ("off"); set it to 50 the first time
     // the picker opens so the default is VGC-standard. After that, the user's
     // L/R cycle (50 -> 75 -> 100 -> off) is preserved across picker opens.
+    if (!sSimLevelCapDefaulted)
     {
-        static bool8 sLevelCapInitialized;
-        if (!sLevelCapInitialized)
-        {
-            gSimLevelCap = 50;
-            sLevelCapInitialized = TRUE;
-        }
+        gSimLevelCap = 50;
+        sSimLevelCapDefaulted = TRUE;
     }
 
     // v2.1.3 — with the Tournament toggle row gone from the sim menu, a
@@ -3302,14 +3305,11 @@ void SimRequestWrapperReopen(void)
 void Debug_ShowTrainersWrapper(void)
 {
     // Mirror the picker's first-run level-cap default so the wrapper path
-    // doesn't lose that initialization.
+    // doesn't lose that initialization (shared latch — see sSimLevelCapDefaulted).
+    if (!sSimLevelCapDefaulted)
     {
-        static bool8 sLevelCapInitialized;
-        if (!sLevelCapInitialized)
-        {
-            gSimLevelCap = 50;
-            sLevelCapInitialized = TRUE;
-        }
+        gSimLevelCap = 50;
+        sSimLevelCapDefaulted = TRUE;
     }
 
     // In-progress tournament / best-of matches should jump straight to the
@@ -9029,6 +9029,18 @@ static void Sim_SetupMatchRound(s32 trainer1Id, s32 trainer2Id, s32 partnerId, s
     // as "I won the first round of a doubles pilot tournament and round 2
     // dumped me into AI-vs-AI." Re-test if the bracket flow regresses.
     if (Sim_IsTournamentActive() && gSimTournamentRound >= 2)
+    {
+        forceDouble = sSimMatchForceDouble;
+        pilotMode   = sSimMatchPilotMode;
+    }
+    // v2.4.0 hotfix — E4 gauntlet rooms 2+ arrive here via
+    // Sim_TriggerNextMatchRound with sDebugMenuListData already FREED (the
+    // launch menu was torn down), so the data[5]/data[7] reads above return
+    // garbage — community repro: a singles SPECTATED run turning into a
+    // doubles PILOT battle in room 2. Same freed-pointer trap the tournament
+    // override above patches; use the launch-time snapshots for every
+    // gauntlet room.
+    if (Sim_IsE4GauntletActive())
     {
         forceDouble = sSimMatchForceDouble;
         pilotMode   = sSimMatchPilotMode;
