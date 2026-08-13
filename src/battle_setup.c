@@ -1407,6 +1407,10 @@ static void CB2_EndDebugBattle(void)
     // exit back to the Battle Tower lobby + auto-reopen the picker.
     if ((B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE)) || gSimPilotMode)
     {
+        // v2.5.0 — snapshot the challenger's team for the Hall of Fame
+        // showcase BEFORE LoadPlayerParty clobbers it with the user's party.
+        if (Sim_IsE4GauntletActive())
+            Sim_E4SnapshotChallengerParty();
         LoadPlayerParty();
         FlagClear(B_FLAG_AI_VS_AI_BATTLE);
         gPartnerTrainerId = 0;

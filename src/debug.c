@@ -8,6 +8,7 @@
 #include "battle.h"
 #include "battle_main.h"
 #include "battle_setup.h"
+#include "hall_of_fame.h" // v2.5.0 — HoF showcase entry point
 #include "battle_util.h"
 // v1.2 — Showdown team-code import (decoder + keyboard widget).
 #include "sim_team_code.h"
@@ -1817,6 +1818,7 @@ static void DebugAction_E4_ConfirmLevelCap(u8 taskId);
 static void Sim_ShowE4LevelCapMenu(void);
 static void DebugAction_E4_StartRandom(u8 taskId);
 static bool32 Sim_BeginE4Gauntlet(u16 challengerId, bool32 pilot);
+static void Sim_E4RestoreChallengerPartyForHof(void);
 static EWRAM_DATA u8 sE4PendingLeague = 0;
 static EWRAM_DATA u8 sE4PendingLevelCap = 0;
 static EWRAM_DATA u16 sE4GauntletList[5] = {0};
@@ -1824,6 +1826,11 @@ static EWRAM_DATA u8 sE4GauntletLen = 0;
 static EWRAM_DATA u8 sE4GauntletIndex = 0;
 static EWRAM_DATA bool8 sE4GauntletActive = FALSE;
 static EWRAM_DATA u8 sE4GauntletResult = 0;      // 0 none / 1 champion / 2 defeated
+// v2.5.0 — Hall of Fame showcase: challenger party snapshot (taken during
+// battle cleanup, before LoadPlayerParty restores the user's real team) and
+// the flag hall_of_fame.c checks to return here instead of rolling credits.
+EWRAM_DATA bool8 gSimHofShowcase = FALSE;
+static EWRAM_DATA struct Pokemon sE4HofParty[PARTY_SIZE];
 static EWRAM_DATA u8 sE4GauntletLeague = 0;      // league of the active/last run
 static EWRAM_DATA u16 sE4GauntletChallenger = 0; // followed trainer of the run
 // v2.3.0 — format chosen in the tournament flow (doubles toggle; VGC and
@@ -3186,11 +3193,25 @@ void Debug_ShowTrainersSubMenu(void)
     if (gSimTournamentCup != 0 && gSimTournamentDone)
         gSimTournamentCup = 0;
 
-    // v2.4.0 hotfix — the crown/defeat field-message splash soft-locked the
-    // game after dismissal (ShowFieldMessage from this context has no script
-    // engine to hand control back to, so the overworld never resumed).
-    // Splash REMOVED until the proper Hall of Fame screen lands (v2.5) —
-    // just clear the result state and fall through to the picker.
+    // v2.5.0 — HALL OF FAME showcase for a crowned E4 Challenge champion.
+    // CB2_DoHallOfFameScreenDontSaveData plays the full sequence (mon
+    // spotlights, confetti, trainer congratulations frame) reading
+    // gPlayerParty, with ZERO save writes. StartCredits in hall_of_fame.c
+    // checks gSimHofShowcase and returns to the lobby (reopening this menu)
+    // instead of rolling the credits. Defeats still fall through quietly.
+    if (sE4GauntletResult == 1)
+    {
+        sE4GauntletResult = 0;
+        gSimHofShowcase = TRUE;
+        // The user's real party was restored during battle cleanup; put the
+        // challenger's snapshot back for the showcase (undone on exit).
+        Sim_E4RestoreChallengerPartyForHof();
+        // Champion card should credit the CHALLENGER, not the save file.
+        Sim_OverridePlayerName(sE4GauntletChallenger, FALSE);
+        gMain.state = 0;  // InitHallOfFameScreen is a gMain.state machine
+        SetMainCallback2(CB2_DoHallOfFameScreenDontSaveData);
+        return;
+    }
     sE4GauntletResult = 0;
 
     // v2.4.0 — E4 Challenge: still mid-run means the challenger just cleared
@@ -9419,6 +9440,20 @@ static void DebugAction_E4_StartRandom(u8 taskId)
         return;
     if (Sim_BeginE4Gauntlet(pick, FALSE))
         Debug_DestroyMenu_Full(taskId);
+}
+
+// v2.5.0 — called from CB2_EndDebugBattle BEFORE LoadPlayerParty() while an
+// E4 gauntlet is active: gPlayerParty still holds the challenger's team at
+// that point (both spectate and pilot load the followed side into it).
+void Sim_E4SnapshotChallengerParty(void)
+{
+    memcpy(sE4HofParty, gPlayerParty, sizeof(sE4HofParty));
+}
+
+// Blit the snapshot back so the Hall of Fame shows the CHALLENGER's team.
+static void Sim_E4RestoreChallengerPartyForHof(void)
+{
+    memcpy(gPlayerParty, sE4HofParty, sizeof(sE4HofParty));
 }
 
 static bool32 Sim_BeginE4Gauntlet(u16 challengerId, bool32 pilot)

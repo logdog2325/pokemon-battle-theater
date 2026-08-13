@@ -14,7 +14,7 @@ or pilot one side via Pilot Mode.
 Title screen + box art commissioned from
 **[u/CDRX73](https://www.reddit.com/user/CDRX73/)**.
 
-**Download the latest patch:** [v2.4.0 — E4 Challenge mode: run any league gauntlet with any trainer](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
+**Download the latest patch:** [v2.5.0 — Hall of Fame ceremony for E4 Challenge champions](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
 All releases live on the [Releases page](https://github.com/logdog2325/pokemon-battle-theater/releases).
 
 ---
@@ -100,6 +100,10 @@ All releases live on the [Releases page](https://github.com/logdog2325/pokemon-b
   roll per run: Blue's three starters, Kukui x3, Hau x3, Trace x2. Blueberry
   runs canon doubles; the SM-era Alola E4 (Hala with Primeape, Alolan-Golem
   Olivia) joins the roster to power its league
+- **HALL OF FAME ceremony (v2.5.0)** — crown an E4 Challenge champion and
+  the real Hall of Fame sequence plays for their team: every Pokémon
+  spotlighted, confetti, and the champion card bearing the challenger's
+  name — then straight back to the menu. No save writes, no credits roll
 - **Smart pool selection (v2.1.0)** — rotation-pool trainers (Ash's Full
   Team, Paul, Gary, the Battle Tree pools) now bring a *matchup-aware* six
   scored against your roster, with light randomization so the team varies

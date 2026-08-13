@@ -28,6 +28,8 @@
 #include "random.h"
 #include "event_data.h"
 #include "overworld.h"
+#include "debug.h"     // v2.5.0 — Battle Theater HoF showcase return hook
+#include "load_save.h"
 #include "menu.h"
 #include "fldeff_misc.h"
 #include "trainer_pokemon_sprites.h"
@@ -775,6 +777,21 @@ static void Task_Hof_HandleExit(u8 taskId)
 
 static void StartCredits(void)
 {
+    // v2.5.0 — Battle Theater: an E4 Challenge champion showcase returns to
+    // the Battle Tower lobby (auto-reopening the sim menu) instead of
+    // rolling the credits. Task_Hof_HandleExit already ran the identical
+    // teardown the PC-viewer path runs before ITS return-to-field, so this
+    // is the exact analogue of ReturnFromHallOfFamePC. Normal (GameClear)
+    // Hall of Fame entries are unaffected.
+    if (gSimHofShowcase)
+    {
+        gSimHofShowcase = FALSE;
+        LoadPlayerParty();        // undo the challenger-party blit
+        Sim_RestorePlayerName();  // undo the champion-card name override
+        gSimAutoOpenPending = TRUE;
+        SetMainCallback2(CB2_ReturnToFieldFadeFromBlack);
+        return;
+    }
     SetMainCallback2(CB2_StartCreditsSequence);
 }
 

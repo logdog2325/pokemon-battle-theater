@@ -127,6 +127,9 @@ void Sim_AdvanceTournamentAfterMatch(bool32 playerWon);
 // v2.4.0 — E4 Challenge gauntlet (debug.c): active check + post-battle advance.
 bool32 Sim_IsE4GauntletActive(void);
 void Sim_E4GauntletAfterMatch(bool32 challengerWon);
+// v2.5.0 — Hall of Fame showcase plumbing.
+extern EWRAM_DATA bool8 gSimHofShowcase;
+void Sim_E4SnapshotChallengerParty(void);
 
 // v1.1 — Player name override for sim battles. Swap gSaveBlock2Ptr->playerName
 // with the player AI trainer's name (Logan / Cynthia / etc.) so battle
