@@ -1458,6 +1458,13 @@
 #define TRAINER_BLAINE_LGPE                 1269  // LGPE Cinnabar rematch
 #define TRAINER_GIOVANNI_LGPE               1270  // LGPE Viridian Gym (final gym battle; LGPE has no higher rematch for him)
 
+// v2.4.0 — Sun/Moon Elite Four rematch (Lv 63): SM-exclusive comps (Hala on
+// the E4, Alolan Golem Olivia). USUM E4 = 925/928/929 + Acerola.
+#define TRAINER_HALA_SM_E4                  1271  // SM E4 Fighting (Crabominable, Fightinium Z)
+#define TRAINER_OLIVIA_SM_E4                1272  // SM E4 Rock (Lycanroc, Rockium Z)
+#define TRAINER_ACEROLA_SM_E4               1273  // SM E4 Ghost (Palossand, Ghostium Z)
+#define TRAINER_KAHILI_SM_E4                1274  // SM E4 Flying (Toucannon, Flyinium Z)
+
 // NOTE: Because each Trainer uses a flag to determine when they are defeated, there is only space for 9 additional trainers before trainer flag space overflows
 //       More space can be made by shifting flags around in constants/flags.h or changing how trainer flags are handled
 //       MAX_TRAINERS_COUNT can be increased but will take up additional saveblock space

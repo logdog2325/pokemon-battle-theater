@@ -124,6 +124,9 @@ void Sim_SnapshotPicksForNextRound(void);
 // mark the tournament as eliminated. Handles SF lazy-simulation as the player
 // moves to the final. Called from CB2_EndDebugBattle.
 void Sim_AdvanceTournamentAfterMatch(bool32 playerWon);
+// v2.4.0 — E4 Challenge gauntlet (debug.c): active check + post-battle advance.
+bool32 Sim_IsE4GauntletActive(void);
+void Sim_E4GauntletAfterMatch(bool32 challengerWon);
 
 // v1.1 — Player name override for sim battles. Swap gSaveBlock2Ptr->playerName
 // with the player AI trainer's name (Logan / Cynthia / etc.) so battle

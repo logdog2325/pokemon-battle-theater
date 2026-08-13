@@ -1443,6 +1443,13 @@ static void CB2_EndDebugBattle(void)
                 gSimT2Wins = (gSimBestOf + 1) / 2;
             }
         }
+        // v2.4.0 — E4 Challenge gauntlet: win → next Elite Four room (or the
+        // crown, after the champion); loss or forfeit → the run is over. The
+        // followed team is rebuilt fresh each battle, so it's fully healed
+        // between rooms — a clean "could this trainer become champion?" sim.
+        if (Sim_IsE4GauntletActive())
+            Sim_E4GauntletAfterMatch(gBattleOutcome == B_OUTCOME_WON && !playerForfeited);
+
         // Battle Simulator: tournament progression — single-elim bracket.
         // Win → record the player slot as match winner, bump round. Lose →
         // record the opponent slot (v2.1.2: and enter spectator mode).

@@ -14,7 +14,7 @@ or pilot one side via Pilot Mode.
 Title screen + box art commissioned from
 **[u/CDRX73](https://www.reddit.com/user/CDRX73/)**.
 
-**Download the latest patch:** [v2.3.1 — Dynamax/Gigantamax in pilot mode fixed, LGPE gym circuit, BW Unova E4 + Cynthia BW](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
+**Download the latest patch:** [v2.4.0 — E4 Challenge mode: run any league gauntlet with any trainer](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
 All releases live on the [Releases page](https://github.com/logdog2325/pokemon-battle-theater/releases).
 
 ---
@@ -92,6 +92,14 @@ All releases live on the [Releases page](https://github.com/logdog2325/pokemon-b
   can finally Dynamax/Gigantamax (custom-built mons carry G-Max factor too);
   plus the full LGPE gym-leader circuit (all 8, in the LGPE cup), the
   original BW Unova E4 alongside the B2W2 versions, and Cynthia's BW team
+- **E4 CHALLENGE MODE (v2.4.0)** — the new headline: send ANY trainer at any
+  of 16 league gauntlets (Gen 1 through Blueberry) — four Elite Four rooms in
+  canon order, then the champion. Spectate or pilot, random or hand-picked
+  challenger, level cap Off/50/75/100, full heal between rooms, and a
+  crowned-champion (or crushing-defeat) splash at the end. Variant champions
+  roll per run: Blue's three starters, Kukui x3, Hau x3, Trace x2. Blueberry
+  runs canon doubles; the SM-era Alola E4 (Hala with Primeape, Alolan-Golem
+  Olivia) joins the roster to power its league
 - **Smart pool selection (v2.1.0)** — rotation-pool trainers (Ash's Full
   Team, Paul, Gary, the Battle Tree pools) now bring a *matchup-aware* six
   scored against your roster, with light randomization so the team varies

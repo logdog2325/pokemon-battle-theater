@@ -43566,6 +43566,272 @@ Adamant Nature
 - Megahorn
 
 
+/* v2.4.0 — Sun/Moon Elite Four rematch teams (Lv 63). Distinct from the
+ * USUM E4 already in the roster: SM has HALA on the Elite Four (Primeape
+ * over his USUM Machamp) and different comps for Olivia (Alolan Golem) /
+ * Acerola / Kahili. Aces hold their canon Z-Crystals. Feeds the upcoming
+ * Alola (SM) E4 Challenge gauntlet, capped by a Kukui variant. */
+=== TRAINER_HALA_SM_E4 ===
+Name: HALA
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Hariyama (M)
+Ability: Thick Fat
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Fake Out
+- Close Combat
+- Knock Off
+- Heavy Slam
+
+Primeape (M)
+Ability: Anger Point
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Jolly Nature
+- Cross Chop
+- Rock Slide
+- Punishment
+- Stomping Tantrum
+
+Bewear (M)
+Ability: Fluffy
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Hammer Arm
+- Brutal Swing
+- Dragon Claw
+- Shadow Claw
+
+Poliwrath (M)
+Ability: Water Absorb
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Waterfall
+- Brick Break
+- Poison Jab
+- Payback
+
+Crabominable (M) @ Fightinium Z
+Ability: Iron Fist
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Ice Hammer
+- Close Combat
+- Stone Edge
+- Earthquake
+
+=== TRAINER_OLIVIA_SM_E4 ===
+Name: OLIVIA
+Class: Cooltrainer
+Pic: Cooltrainer F
+Gender: Female
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Relicanth (M)
+Ability: Swift Swim
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Head Smash
+- Waterfall
+- Yawn
+- Earthquake
+
+Carbink
+Ability: Clear Body
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 4 SpD / 0 Spe
+Calm Nature
+- Power Gem
+- Moonblast
+- Reflect
+- Stealth Rock
+
+Golem-Alola (F)
+Ability: Sturdy
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Thunder Punch
+- Stone Edge
+- Earthquake
+- Heavy Slam
+
+Probopass (F)
+Ability: Sturdy
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Earth Power
+- Power Gem
+- Dazzling Gleam
+- Flash Cannon
+
+Lycanroc (M) @ Rockium Z
+Ability: Keen Eye
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Jolly Nature
+- Crunch
+- Stone Edge
+- Brick Break
+- Rock Climb
+
+=== TRAINER_ACEROLA_SM_E4 ===
+Name: ACEROLA
+Class: Cooltrainer
+Pic: Cooltrainer F
+Gender: Female
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Sableye (F)
+Ability: Keen Eye
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Shadow Claw
+- Zen Headbutt
+- Brick Break
+- Fake Out
+
+Drifblim (F)
+Ability: Aftermath
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Shadow Ball
+- Thunderbolt
+- Psychic
+- Will-O-Wisp
+
+Dhelmise
+Ability: Steelworker
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Phantom Force
+- Heavy Slam
+- Earthquake
+- Brutal Swing
+
+Froslass (F)
+Ability: Snow Cloak
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Blizzard
+- Shadow Ball
+- Thunderbolt
+- Ice Shard
+
+Palossand (F) @ Ghostium Z
+Ability: Water Compaction
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Shadow Ball
+- Earth Power
+- Sludge Bomb
+- Giga Drain
+
+=== TRAINER_KAHILI_SM_E4 ===
+Name: KAHILI
+Class: Cooltrainer
+Pic: Cooltrainer F
+Gender: Female
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Skarmory (M)
+Ability: Sturdy
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 4 SpD / 0 Spe
+Impish Nature
+- Steel Wing
+- Rock Slide
+- Night Slash
+- Spikes
+
+Crobat (M)
+Ability: Inner Focus
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Air Slash
+- Shadow Ball
+- Dark Pulse
+- Sludge Bomb
+
+Oricorio (F)
+Ability: Dancer
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Revelation Dance
+- Teeter Dance
+- Air Slash
+- Feather Dance
+
+Mandibuzz (F)
+Ability: Big Pecks
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 0 SpA / 252 SpD / 0 Spe
+Careful Nature
+- Snarl
+- Air Slash
+- Roost
+- Toxic
+
+Toucannon (M) @ Flyinium Z
+Ability: Skill Link
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Adamant Nature
+- Bullet Seed
+- Rock Blast
+- Beak Blast
+- Brick Break
+
+
 === TRAINER_URBAIN ===
 Name: URBAIN
 Class: Cooltrainer
