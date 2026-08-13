@@ -1817,7 +1817,6 @@ static void DebugAction_E4_ConfirmLevelCap(u8 taskId);
 static void Sim_ShowE4LevelCapMenu(void);
 static void DebugAction_E4_StartRandom(u8 taskId);
 static bool32 Sim_BeginE4Gauntlet(u16 challengerId, bool32 pilot);
-static void Task_Sim_E4ResultWaitAndReopen(u8 taskId);
 static EWRAM_DATA u8 sE4PendingLeague = 0;
 static EWRAM_DATA u8 sE4PendingLevelCap = 0;
 static EWRAM_DATA u16 sE4GauntletList[5] = {0};
@@ -3163,24 +3162,6 @@ static void Task_Sim_BracketWaitAndLaunch(u8 taskId)
     }
 }
 
-// v2.4.0 — E4 Challenge result splash: wait for the field message to be
-// dismissed, then queue the wrapper reopen (same auto-open channel as the
-// lobby NPC uses).
-static void Task_Sim_E4ResultWaitAndReopen(u8 taskId)
-{
-    s16 *data = gTasks[taskId].data;
-    if (data[0] == 0)
-    {
-        if (!IsFieldMessageBoxHidden())
-            data[0] = 1;
-    }
-    else if (IsFieldMessageBoxHidden())
-    {
-        DestroyTask(taskId);
-        gSimAutoOpenPending = TRUE;
-    }
-}
-
 // Battle Simulator: open the Trainers picker directly (skipping the main debug menu).
 // Three auto-launch paths run before falling back to the picker:
 //   1. Tournament Mode: if a cup is mid-run, show a bracket message + auto-launch.
@@ -3205,38 +3186,12 @@ void Debug_ShowTrainersSubMenu(void)
     if (gSimTournamentCup != 0 && gSimTournamentDone)
         gSimTournamentCup = 0;
 
-    // v2.4.0 — E4 Challenge resolved last battle: crown or defeat, show the
-    // result splash as a field message, then reopen the wrapper when it's
-    // dismissed (Task_Sim_E4ResultWaitAndReopen).
-    if (sE4GauntletResult != 0)
-    {
-        const struct SimE4League *lg = &sSimE4Leagues[sE4GauntletLeague];
-        bool32 crowned = (sE4GauntletResult == 1);
-        sE4GauntletResult = 0;
-        StringCopy(gStringVar4, COMPOUND_STRING("{COLOR LIGHT_RED}E4 CHALLENGE: "));
-        StringAppend(gStringVar4, lg->name);
-        StringAppend(gStringVar4, COMPOUND_STRING("!{COLOR DARK_GRAY}\n"));
-        StringAppend(gStringVar4, GetTrainerNameFromId(sE4GauntletChallenger));
-        if (crowned)
-        {
-            StringAppend(gStringVar4, COMPOUND_STRING(" swept the gauntlet!\pThe Elite Four fell, Champion\n"));
-            StringAppend(gStringVar4, GetTrainerNameFromId(sE4GauntletList[4]));
-            StringAppend(gStringVar4, COMPOUND_STRING(" was dethroned…\pAll hail the new {COLOR LIGHT_RED}CHAMPION{COLOR DARK_GRAY}!"));
-        }
-        else
-        {
-            StringAppend(gStringVar4, COMPOUND_STRING("'s run is over…\pDefeated by "));
-            StringAppend(gStringVar4, GetTrainerNameFromId(sE4GauntletList[sE4GauntletIndex]));
-            StringAppend(gStringVar4, COMPOUND_STRING("\nin battle "));
-            ConvertIntToDecimalStringN(gStringVar1, sE4GauntletIndex + 1, STR_CONV_MODE_LEFT_ALIGN, 1);
-            StringAppend(gStringVar4, gStringVar1);
-            StringAppend(gStringVar4, COMPOUND_STRING(" of 5!"));
-        }
-        ShowFieldMessage(gStringVar4);
-        u8 msgTaskId = CreateTask(Task_Sim_E4ResultWaitAndReopen, 80);
-        gTasks[msgTaskId].data[0] = 0;
-        return;
-    }
+    // v2.4.0 hotfix — the crown/defeat field-message splash soft-locked the
+    // game after dismissal (ShowFieldMessage from this context has no script
+    // engine to hand control back to, so the overworld never resumed).
+    // Splash REMOVED until the proper Hall of Fame screen lands (v2.5) —
+    // just clear the result state and fall through to the picker.
+    sE4GauntletResult = 0;
 
     // v2.4.0 — E4 Challenge: still mid-run means the challenger just cleared
     // a room; arm the next Elite Four member (or the champion) and launch.
