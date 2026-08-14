@@ -1695,6 +1695,7 @@ static void DebugAction_BuildTrainer_EditAbility(u8 taskId);
 static void DebugAction_BuildTrainer_OpenEVsMenu(u8 taskId);
 static void DebugAction_BuildTrainer_OpenIVsMenu(u8 taskId);
 static void DebugAction_BuildTrainer_EditShiny(u8 taskId);
+static void DebugAction_BuildTrainer_EditDynamax(u8 taskId);  // v2.5.1
 static void DebugAction_BuildTrainer_EditTeraType(u8 taskId);  // v1.21
 // v0.52.3 Phase 2c — Scrollable pickers (PxHex-style hierarchical menus)
 static void DebugAction_BuildTrainer_EditSpecies(u8 taskId);
@@ -2316,6 +2317,12 @@ static const struct DebugMenuOption sDebugMenu_Actions_BuildTrainerMon[] =
     // the mon Terastallize to that type. Only honored for Custom + Gen 9
     // trainers; past-gen trainers are gated out engine-side.
     { COMPOUND_STRING("Tera Type: {STR_VAR_1}"),   DebugAction_BuildTrainer_EditTeraType, },
+    // v2.5.1 — per-mon Dynamax opt-in (community request: custom teams were
+    // auto-Dynamaxing after v2.3.1 made every custom mon capable). OFF by
+    // default; ON gives the mon Dynamax level 10 + the Gigantamax factor and
+    // lets the AI choose to Dynamax it. Stored as bit 1 of the shiny byte so
+    // the saveblock layout is untouched (legacy saves read as OFF).
+    { COMPOUND_STRING("Dynamax: {STR_VAR_1}"),     DebugAction_BuildTrainer_EditDynamax,  },
     // v1.3 — Showdown team-code import. Reuses the existing pokeemerald
     // naming screen (NAMING_SCREEN_TEAMCODE) instead of a from-scratch
     // keyboard, so the GBA's CHAR_* charset handles font rendering natively.
@@ -4137,7 +4144,7 @@ static void BuildTrainer_SanitizeSlot(struct SimCustomTrainer *slot)
         if (m->level > 100)                 m->level = 50;
         if (m->gender > 2)                  m->gender = 0;
         if (m->abilityNum >= NUM_ABILITY_SLOTS) m->abilityNum = 0;
-        if (m->shiny > 1)                   m->shiny = 0;
+        if (m->shiny > 3)                   m->shiny = 0;  // v2.5.1 — bits 0 (shiny) + 1 (Dynamax opt-in)
         // v1.21 — clamp teraType. Out-of-range / TYPE_MYSTERY both treated
         // as "no Tera". Legacy saves with the old `padding` byte = 0 read
         // through as TYPE_NONE which is already "no Tera".
@@ -4912,7 +4919,16 @@ static void DebugAction_BuildTrainer_EditAbility(u8 taskId)
 // XOR otId hit a shiny roll.
 static void DebugAction_BuildTrainer_EditShiny(u8 taskId)
 {
-    sBuildTrainerWorkMon.shiny = !sBuildTrainerWorkMon.shiny;
+    sBuildTrainerWorkMon.shiny ^= 1;  // v2.5.1 — bit 1 is the Dynamax opt-in
+    PlaySE(SE_SELECT);
+    Debug_GenerateListBuildTrainerMonMenu();
+    RedrawListMenu(gTasks[taskId].tMenuTaskId);
+}
+
+// v2.5.1 — Toggle the per-mon Dynamax opt-in (bit 1 of the shiny byte).
+static void DebugAction_BuildTrainer_EditDynamax(u8 taskId)
+{
+    sBuildTrainerWorkMon.shiny ^= 2;
     PlaySE(SE_SELECT);
     Debug_GenerateListBuildTrainerMonMenu();
     RedrawListMenu(gTasks[taskId].tMenuTaskId);
@@ -5274,8 +5290,8 @@ static u8 Debug_GenerateListBuildTrainerMonMenu(void)
             else
                 StringCopy(gStringVar1, COMPOUND_STRING("Female"));
             break;
-        case 14:  // Shiny
-            if (sBuildTrainerWorkMon.shiny)
+        case 14:  // Shiny (bit 0 — bit 1 is the Dynamax opt-in)
+            if (sBuildTrainerWorkMon.shiny & 1)
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR GREEN}YES"));
             else
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR RED}NO"));
@@ -5287,6 +5303,12 @@ static u8 Debug_GenerateListBuildTrainerMonMenu(void)
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR RED}None"));
             else
                 StringCopy(gStringVar1, gTypesInfo[sBuildTrainerWorkMon.teraType].name);
+            break;
+        case 16:  // Dynamax opt-in (bit 1 of the shiny byte)
+            if (sBuildTrainerWorkMon.shiny & 2)
+                StringCopy(gStringVar1, COMPOUND_STRING("{COLOR GREEN}YES"));
+            else
+                StringCopy(gStringVar1, COMPOUND_STRING("{COLOR RED}NO"));
             break;
         default:
             // Import from code / Import single mon / Save & Back / Cancel
@@ -8690,18 +8712,23 @@ const struct Trainer *Sim_GetCustomTrainerStruct(u16 trainerId)
             // v0.52.4 — propagate the shiny flag. The engine uses this in
             // battle_main.c CreateNPCTrainerPartyFromTrainer to set an OT_ID_PRESET
             // so personality XOR otId hits the shiny rolls.
-            dst->isShiny = (src->shiny != 0);
+            dst->isShiny = (src->shiny & 1);  // v2.5.1 — bit 1 is Dynamax
             // v1.21 — propagate the Tera Type. TYPE_NONE (0) means no Tera;
             // anything else makes the mon Terastallize to that type when the
             // owning trainer is allowed to Tera (Sim_TrainerCanTera).
             dst->teraType = (enum Type)src->teraType;
-            // v2.3.1 — custom-built mons are fully Dynamax-capable, like any
-            // player mon in SwSh: max dynamax level, and the Gigantamax
-            // factor so species with a G-Max form use it. (The memset above
-            // left both at 0, which locked custom teams out of Dynamax both
-            // piloted and AI-run — community-reported bug.)
-            dst->dynamaxLevel = 10;
-            dst->gigantamaxFactor = TRUE;
+            // v2.5.1 — Dynamax is now a PER-MON OPT-IN (bit 1 of the shiny
+            // byte, "Dynamax" row in the editor). v2.3.1 made every custom
+            // mon Dynamax-capable, which meant AI-run custom trainers
+            // auto-Dynamaxed — community asked for control. Opted-in mons
+            // get max level + the G-Max factor; others stay at 0 so the AI
+            // never picks them. (Piloted teams can still trigger Dynamax
+            // manually on any mon — the player gate doesn't read the level.)
+            if (src->shiny & 2)
+            {
+                dst->dynamaxLevel = 10;
+                dst->gigantamaxFactor = TRUE;
+            }
             // v2.0.5 — propagate the user's ability-slot pick (0/1/2 = primary
             // /secondary/hidden) by looking up the species's abilities table.
             // Previously this was hard-coded to ABILITY_NONE, which made
