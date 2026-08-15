@@ -455,6 +455,9 @@ static const u8 *GetSimTierColorPrefix(u16 trainerId)
      || trainerId == TRAINER_LANCE_GSC || trainerId == TRAINER_RED_GSC // v2.1.2 GSC Champion + Mt. Silver Red
      || trainerId == TRAINER_EVICE || trainerId == TRAINER_GREEVIL // v2.3.0 Orre Grand Masters
      || trainerId == TRAINER_CYNTHIA_BW // v2.3.1 Cynthia BW rematch
+     || trainerId == TRAINER_STEVEN_RS // v2.6.0 RS Champion
+     || trainerId == TRAINER_CYNTHIA_DP // v2.6.0 DP Champion
+     || trainerId == TRAINER_WALLACE_ORAS // v2.6.0 former champion (Delta Episode)
      || trainerId == TRAINER_URBAIN || trainerId == TRAINER_TAUNIE
      || trainerId == TRAINER_KORRINA_ZA)
         return sSimTierColorChampion;
@@ -530,6 +533,15 @@ static const u8 *GetSimTierColorPrefix(u16 trainerId)
     // v2.1.2: GSC Kanto gym leaders (Brock..Blaine + Blue at Viridian).
     if (trainerId >= TRAINER_BROCK_GSC && trainerId <= TRAINER_BLUE_GSC)
         return sSimTierColorGym;
+    // v2.6.0: RS Elite Four (Sidney/Phoebe/Glacia/Drake).
+    if (trainerId >= TRAINER_SIDNEY_RS && trainerId <= TRAINER_DRAKE_RS)
+        return sSimTierColorE4;
+    // v2.6.0: DP Elite Four (Aaron/Bertha/Flint/Lucian).
+    if (trainerId >= TRAINER_AARON_DP && trainerId <= TRAINER_LUCIAN_DP)
+        return sSimTierColorE4;
+    // v2.6.0: Zinnia (Delta Episode boss).
+    if (trainerId == TRAINER_ZINNIA)
+        return sSimTierColorE4;
     // v2.3.1: LGPE gym leader rematches (Brock..Blaine).
     if (trainerId >= TRAINER_BROCK_LGPE && trainerId <= TRAINER_GIOVANNI_LGPE)
         return sSimTierColorGym;
@@ -550,6 +562,8 @@ static const u8 *GetSimTierColorPrefix(u16 trainerId)
 static const u8 sSimSourceSuffixHGSS[] = _(" (HGSS)");
 static const u8 sSimSourceSuffixFRLG[] = _(" (FRLG)");    // v0.10.2 split off from HGSS
 static const u8 sSimSourceSuffixEMR[]  = _(" (EMR)");     // v0.10.2 Emerald base game
+static const u8 sSimSourceSuffixRS[]   = _(" (RS)");      // v2.6.0 Ruby/Sapphire originals
+static const u8 sSimSourceSuffixDP[]   = _(" (DP)");      // v2.6.0 Diamond/Pearl originals
 static const u8 sSimSourceSuffixPWT[]  = _(" (PWT)");
 static const u8 sSimSourceSuffixORAS[] = _(" (ORAS)");
 static const u8 sSimSourceSuffixLGPE[] = _(" (LGPE)");
@@ -622,6 +636,12 @@ static const u8 *GetSimSourceSuffix(u16 trainerId)
      || trainerId == 773 || trainerId == 777 || trainerId == 781 || trainerId == 785
      || trainerId == 789 || trainerId == 793 || trainerId == 797 || trainerId == 801)
         return sSimSourceSuffixEMR;
+    // v2.6.0 — original Ruby/Sapphire E4 + Steven.
+    if (trainerId >= TRAINER_SIDNEY_RS && trainerId <= TRAINER_STEVEN_RS)
+        return sSimSourceSuffixRS;
+    // v2.6.0 — original Diamond/Pearl E4 + Cynthia.
+    if (trainerId >= TRAINER_AARON_DP && trainerId <= TRAINER_CYNTHIA_DP)
+        return sSimSourceSuffixDP;
     // FRLG-ported teams: Indigo E4 rematch (855-858, the Lv 63-72 imports) +
     // Blue's three starter-variant teams (859-861, Lv 72-75). Previously
     // mis-tagged HGSS — the actual HGSS Blue team is at ID 966 now.
@@ -638,7 +658,8 @@ static const u8 *GetSimSourceSuffix(u16 trainerId)
     if (trainerId >= 869 && trainerId <= 890)
         return sSimSourceSuffixPWT;
     // ORAS post-game teams (Wally, Steven Delta Episode, May, Brendan, Hoenn E4).
-    if (trainerId >= 891 && trainerId <= 898)
+    if ((trainerId >= 891 && trainerId <= 898)
+     || trainerId == TRAINER_WALLACE_ORAS || trainerId == TRAINER_ZINNIA) // v2.6.0 Delta Episode
         return sSimSourceSuffixORAS;
     // Let's Go Pikachu/Eevee rematch teams (Indigo E4, Red, Blue, Bruno, Green,
     // and v0.10.4 Trace LGPE Champion Pikachu/Eevee variants 982-983).
@@ -834,6 +855,8 @@ static const u16 sSimulatorRoster[] = {
     261, 262, 263, 264,                                  // Hoenn E4
     335, 804,                                            // Wallace champion + Steven
     660,                                                 // v2.4.0 Wally (Victory Road final rematch — vanilla Emerald data)
+    1275, 1276, 1277, 1278,                              // v2.6.0 RS E4: Sidney/Phoebe/Glacia/Drake (original teams)
+    1279,                                                // v2.6.0 Steven RS (original champion team)
     805, 806, 807, 808, 809, 810, 811,                   // Frontier brains: Anabel/Tucker/Spenser/Greta/Noland/Lucy/Brandon
     // ---- Orre (2003-05, Gen 3 spin-offs: Colosseum + XD Gale of Darkness) ----
     1242, 1243, 1244, 1245,                              // v2.3.0 Colosseum admins: Miror B./Dakim/Venus/Ein
@@ -846,6 +869,8 @@ static const u16 sSimulatorRoster[] = {
     1257,                                                // v2.3.0 Chobin (Dr. Kaminko's assistant)
     1254,                                                // v2.3.0 Grand Master Greevil (6 Shadow mons)
     // ---- Platinum (2008, Gen 4 Sinnoh) + Gen 4 Battle Frontier brains ----
+    1280, 1281, 1282, 1283,                              // v2.6.0 DP E4: Aaron/Bertha/Flint/Lucian (original teams)
+    1284,                                                // v2.6.0 Cynthia DP (original champion team)
     985, 986, 987,                                       // Barry rival variants
     988, 989, 990, 991, 992, 993, 994, 995,              // Battleground gym leaders
     996, 997, 998, 999, 1000,                            // Stat trainers (Cheryl..Buck)
@@ -891,6 +916,7 @@ static const u16 sSimulatorRoster[] = {
     // ---- ORAS (2014, Gen 6 Hoenn remake) ----
     895, 896, 897, 898,                                  // Hoenn ORAS E4
     894, 893, 892, 891,                                  // Brendan/May/Steven Delta/Wally
+    1285, 1286,                                          // v2.6.0 Wallace ORAS (Delta) + Zinnia (Mega Salamence)
     // ---- SM/USUM (2016-17, Gen 7 Alola) — Alola cast, then Battle Tree,
     //      then Rainbow Rocket. Three jumpable sub-sections all USUM-era.
     917, 918, 919, 920, 921, 922, 923,                   // Trial captains (incl. Acerola)
@@ -1046,7 +1072,9 @@ static const u16 sCupBDSP[]       = {
 };
 
 // ORAS — Wally, Steven ORAS, May/Brendan rivals, Hoenn E4 ORAS
-static const u16 sCupOras[]       = { 891, 892, 893, 894, 895, 896, 897, 898 };
+static const u16 sCupOras[]       = { 891, 892, 893, 894, 895, 896, 897, 898,
+    1285, 1286,                                      // v2.6.0 Wallace Delta + Zinnia
+};
 
 // SwSh — Galar gym leaders (incl. Melony) + Leon × 3 + Hop × 3 + Mustard × 2 + Marnie/Bede + Klara/Avery/Peony
 static const u16 sCupSwSh[]       = {
@@ -1291,7 +1319,7 @@ static const struct SimCup sSimCups[] =
     { sCupName_PwtChamps,   sCupPwtChamps,    8 },   // Red/Blue/Lance/Steven/Wallace PWT + Cynthia/Alder + Bianca WL (Iris -> BW cup)
     { sCupName_PwtWorld,    sCupPwtWorld,    48 },   // All PWT leaders + champions across every region (Iris -> BW cup)
     { sCupName_XY,          sCupXY,          11 },   // v2.1.3 Gen 6 — Diantha + rivals + Kalos E4 + Lysandre + Tierno/Shauna/Trevor
-    { sCupName_Oras,        sCupOras,         8 },   // Gen 6 — Wally, Steven ORAS, May, Brendan, Hoenn E4 ORAS
+    { sCupName_Oras,        sCupOras,        10 },   // Gen 6 — Wally, Steven ORAS, May, Brendan, Hoenn E4 ORAS
     { sCupName_Alola,       sCupAlola,       36 },   // Gen 7 — every non-RR Alola trainer
     { sCupName_BattleTree,  sCupBattleTree,  14 },   // Gen 7 — all 14 canon Tree pool trainers, fresh roll each match
     { sCupName_RRocket,     sCupRRocket,      8 },   // Gen 7 — RR bosses (USUM Rainbow Rocket)
@@ -2457,6 +2485,8 @@ static const u8 sE4Name_BDSP[]     = _("Sinnoh BDSP");
 static const u8 sE4Name_SV[]       = _("Paldea SV");
 static const u8 sE4Name_BB[]       = _("Blueberry");
 static const u8 sE4Name_LGPE[]     = _("Kanto LGPE");
+static const u8 sE4Name_RS[]       = _("Hoenn RS");
+static const u8 sE4Name_DP[]       = _("Sinnoh DP");
 
 static const struct SimE4League sSimE4Leagues[] =
 {
@@ -2476,6 +2506,8 @@ static const struct SimE4League sSimE4Leagues[] =
     { sE4Name_SV,      {1117, 1118, 1119, 1120}, {1116, 0, 0},       1, FALSE, 1113 }, // Rika..Hassel -> Geeta
     { sE4Name_BB,      {1138, 1139, 1140, 1141}, {1142, 0, 0},       1, TRUE , 1113 }, // Crispin..Drayton -> Kieran (canon doubles)
     { sE4Name_LGPE,    { 899,  904,  900,  901}, { 982,  983, 0},    2, FALSE,  906 }, // Lorelei/Bruno/Agatha/Lance -> Trace (random starter)
+    { sE4Name_RS,      {1275, 1276, 1277, 1278}, {1279, 0, 0},       1, FALSE,  773 }, // v2.6.0 original RS E4 -> Steven
+    { sE4Name_DP,      {1280, 1281, 1282, 1283}, {1284, 0, 0},       1, FALSE,  985 }, // v2.6.0 original DP E4 -> Cynthia
 };
 #define SIM_E4_LEAGUE_COUNT (sizeof(sSimE4Leagues) / sizeof(sSimE4Leagues[0]))
 
@@ -2505,8 +2537,10 @@ static const struct DebugMenuOption sDebugMenu_Actions_E4Leagues[] =
 {
     { sE4Name_RBY,     DebugAction_E4_PickLeague, (void *) 0 },
     { sE4Name_GSC,     DebugAction_E4_PickLeague, (void *) 1 },
+    { sE4Name_RS,      DebugAction_E4_PickLeague, (void *)16 }, // v2.6.0 — RS (2002) sits between GSC and FRLG
     { sE4Name_FRLG,    DebugAction_E4_PickLeague, (void *) 2 },
     { sE4Name_Emerald, DebugAction_E4_PickLeague, (void *) 3 },
+    { sE4Name_DP,      DebugAction_E4_PickLeague, (void *)17 }, // v2.6.0 — DP (2006) before Platinum
     { sE4Name_Pt,      DebugAction_E4_PickLeague, (void *) 4 },
     { sE4Name_HGSS,    DebugAction_E4_PickLeague, (void *) 5 },
     { sE4Name_BW,      DebugAction_E4_PickLeague, (void *) 6 },
@@ -2515,10 +2549,10 @@ static const struct DebugMenuOption sDebugMenu_Actions_E4Leagues[] =
     { sE4Name_XY,      DebugAction_E4_PickLeague, (void *) 9 },
     { sE4Name_SM,      DebugAction_E4_PickLeague, (void *)10 },
     { sE4Name_USUM,    DebugAction_E4_PickLeague, (void *)11 },
+    { sE4Name_LGPE,    DebugAction_E4_PickLeague, (void *)15 }, // v2.6.0 — moved up: Gen 7 belongs after USUM
     { sE4Name_BDSP,    DebugAction_E4_PickLeague, (void *)12 },
     { sE4Name_SV,      DebugAction_E4_PickLeague, (void *)13 },
     { sE4Name_BB,      DebugAction_E4_PickLeague, (void *)14 },
-    { sE4Name_LGPE,    DebugAction_E4_PickLeague, (void *)15 },
     { NULL }
 };
 
@@ -6686,31 +6720,31 @@ static const u16 sSimulatorRosterSectionStarts[] = {
     CUSTOM_OFFSET,           // RGBY — RBY E4 (4) + Blue RGB ×3 + Blue Yellow ×3 + Oak Glitch ×3 (13)
     13 + CUSTOM_OFFSET,      // GSC — Kanto gyms (7) + Blue + Johto E4 (4) + Lance + Silver ×3 + Red (17)
     30 + CUSTOM_OFFSET,      // FRLG (7)
-    37 + CUSTOM_OFFSET,      // Emerald — gyms + E4 + Steven + Wallace + Hoenn Frontier brains + Wally (22)
-    59 + CUSTOM_OFFSET,      // Orre — Colosseum admins + Nascour + Evice, XD admins + Gonzap + Ardos/Eldes + Justy/Chobin + Greevil (16)
-    75 + CUSTOM_OFFSET,      // Platinum — Barrys + Battleground + stat + E4 + Cynthia Pt + Gen 4 brains (26)
-    101 + CUSTOM_OFFSET,      // HGSS — Red + Blue HGSS + 3 Silvers + gym/E4/Champion (25)
-    126 + CUSTOM_OFFSET,     // BW — N x2 + N B2W2 pool + Alder + Iris + Cheren x3 + Bianca x3 + Hugh x3 + E4 + Ghetsis + Colress + Benga + Ingo + Emmet + BW-rematch E4 x4 + Cynthia BW (28)
-    154 + CUSTOM_OFFSET,     // PWT Kanto (8)
-    162 + CUSTOM_OFFSET,     // PWT Hoenn (9)
-    171 + CUSTOM_OFFSET,     // PWT Johto (8)
-    179 + CUSTOM_OFFSET,     // PWT Sinnoh (8)
-    187 + CUSTOM_OFFSET,     // PWT Unova (8 base + 5 v1.5 = 13)
-    200 + CUSTOM_OFFSET,     // PWT Champs — Red/Blue/Lance/Steven/Wallace + Cynthia/Alder + Bianca (8, Iris moved to BW)
-    208 + CUSTOM_OFFSET,     // XY — Diantha/Serena/Calem + E4 (Malva/Siebold/Wikstrom/Drasna) + Lysandre + Tierno/Shauna/Trevor (11)
-    219 + CUSTOM_OFFSET,     // ORAS — Hoenn ORAS E4 + Wally/Steven/May/Brendan (8)
-    227 + CUSTOM_OFFSET,     // Alola — Trial Captains + Kahunas + E4 + Variants + v0.48 USUM + SM E4 (36)
-    263 + CUSTOM_OFFSET,     // Battle Tree (USUM) — Red/Blue/Anabel + Wally/Cynthia/Colress/Dexio/Sina/Grimsley/Guzma/Plumeria/Kiawe/Kukui/Mallow BT (14)
-    277 + CUSTOM_OFFSET,     // Rainbow Rocket — USUM Episode RR bosses (10)
-    287 + CUSTOM_OFFSET,     // LGPE — Green + Lorelei/Agatha/Lance/Red/Blue/Bruno + Trace + 7 gym rematches + Giovanni (17)
-    304 + CUSTOM_OFFSET,     // SwSh — Leon x3 + Hop x6 + Mustard x2 + Marnie/Bede + 9 gym + Klara/Avery/Peony (25)
-    329 + CUSTOM_OFFSET,     // BDSP — Barrys + 8 gym + 4 E4 + Cynthia + 3 Lucas + 3 Dawn (22)
-    351 + CUSTOM_OFFSET,     // Legends Arceus — Volo/Adaman/Irida/Ingo/Akari + Kamado/Zisu/Beni/Rei (9)
-    360 + CUSTOM_OFFSET,     // SV — Nemona + Geeta + Paldea E4 + Penny + Sada/Turo + 7 gyms + 6 profs + Carmine + BB E4 + Kieran + Clavell ×3 + Miriam + Arven + Cyrano (36)
-    396 + CUSTOM_OFFSET,     // Legends ZA — Urbain/Taunie + Royale challengers (24)
-    420 + CUSTOM_OFFSET,     // Anime — Ash (WC/Journeys + 7 region teams) + Alain + Paul + Gary (11)
-    431 + CUSTOM_OFFSET,     // VGC — Wolfe Glick + Ray Rizo 2012 World Finals (2)
-    433 + CUSTOM_OFFSET,     // Custom — v0.51 + v1.1 user-built slots (6)
+    37 + CUSTOM_OFFSET,      // Emerald — gyms + E4 + Steven + Wallace + Hoenn Frontier brains + Wally + RS E4/Steven (27)
+    64 + CUSTOM_OFFSET,      // Orre — Colosseum admins + Nascour + Evice, XD admins + Gonzap + Ardos/Eldes + Justy/Chobin + Greevil (16)
+    80 + CUSTOM_OFFSET,      // Platinum — Barrys + Battleground + stat + E4 + Cynthia Pt + Gen 4 brains + DP E4/Cynthia (31)
+    111 + CUSTOM_OFFSET,      // HGSS — Red + Blue HGSS + 3 Silvers + gym/E4/Champion (25)
+    136 + CUSTOM_OFFSET,     // BW — N x2 + N B2W2 pool + Alder + Iris + Cheren x3 + Bianca x3 + Hugh x3 + E4 + Ghetsis + Colress + Benga + Ingo + Emmet + BW-rematch E4 x4 + Cynthia BW (28)
+    164 + CUSTOM_OFFSET,     // PWT Kanto (8)
+    172 + CUSTOM_OFFSET,     // PWT Hoenn (9)
+    181 + CUSTOM_OFFSET,     // PWT Johto (8)
+    189 + CUSTOM_OFFSET,     // PWT Sinnoh (8)
+    197 + CUSTOM_OFFSET,     // PWT Unova (8 base + 5 v1.5 = 13)
+    210 + CUSTOM_OFFSET,     // PWT Champs — Red/Blue/Lance/Steven/Wallace + Cynthia/Alder + Bianca (8, Iris moved to BW)
+    218 + CUSTOM_OFFSET,     // XY — Diantha/Serena/Calem + E4 (Malva/Siebold/Wikstrom/Drasna) + Lysandre + Tierno/Shauna/Trevor (11)
+    229 + CUSTOM_OFFSET,     // ORAS — Hoenn ORAS E4 + Wally/Steven/May/Brendan + Wallace Delta/Zinnia (10)
+    239 + CUSTOM_OFFSET,     // Alola — Trial Captains + Kahunas + E4 + Variants + v0.48 USUM + SM E4 (36)
+    275 + CUSTOM_OFFSET,     // Battle Tree (USUM) — Red/Blue/Anabel + Wally/Cynthia/Colress/Dexio/Sina/Grimsley/Guzma/Plumeria/Kiawe/Kukui/Mallow BT (14)
+    289 + CUSTOM_OFFSET,     // Rainbow Rocket — USUM Episode RR bosses (10)
+    299 + CUSTOM_OFFSET,     // LGPE — Green + Lorelei/Agatha/Lance/Red/Blue/Bruno + Trace + 7 gym rematches + Giovanni (17)
+    316 + CUSTOM_OFFSET,     // SwSh — Leon x3 + Hop x6 + Mustard x2 + Marnie/Bede + 9 gym + Klara/Avery/Peony (25)
+    341 + CUSTOM_OFFSET,     // BDSP — Barrys + 8 gym + 4 E4 + Cynthia + 3 Lucas + 3 Dawn (22)
+    363 + CUSTOM_OFFSET,     // Legends Arceus — Volo/Adaman/Irida/Ingo/Akari + Kamado/Zisu/Beni/Rei (9)
+    372 + CUSTOM_OFFSET,     // SV — Nemona + Geeta + Paldea E4 + Penny + Sada/Turo + 7 gyms + 6 profs + Carmine + BB E4 + Kieran + Clavell ×3 + Miriam + Arven + Cyrano (36)
+    408 + CUSTOM_OFFSET,     // Legends ZA — Urbain/Taunie + Royale challengers (24)
+    432 + CUSTOM_OFFSET,     // Anime — Ash (WC/Journeys + 7 region teams) + Alain + Paul + Gary (11)
+    443 + CUSTOM_OFFSET,     // VGC — Wolfe Glick + Ray Rizo 2012 World Finals (2)
+    445 + CUSTOM_OFFSET,     // Custom — v0.51 + v1.1 user-built slots (6)
 };
 #define SIMULATOR_ROSTER_SECTION_COUNT (sizeof(sSimulatorRosterSectionStarts) / sizeof(sSimulatorRosterSectionStarts[0]))
 

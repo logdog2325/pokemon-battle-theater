@@ -43832,6 +43832,833 @@ Adamant Nature
 - Brick Break
 
 
+/* v2.6.0 — Ruby/Sapphire Elite Four + Champion Steven, ORIGINAL RS teams
+ * (Lv 46-58) — distinct from the Emerald _5 rematches (773+) and ORAS E4.
+ * Canon movesets incl. era quirks (double Banette/Dusclops/Sealeo/Glalie/
+ * Flygon, Walrein's Sheer Cold). Powers the Hoenn RS gauntlet league. */
+=== TRAINER_SIDNEY_RS ===
+Name: SIDNEY
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Mightyena (M)
+Ability: Intimidate
+Level: 46
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Crunch
+- Take Down
+- Sand Attack
+- Roar
+
+Shiftry (M)
+Ability: Chlorophyll
+Level: 48
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 4 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Fake Out
+- Extrasensory
+- Double Team
+- Swagger
+
+Cacturne (M)
+Ability: Sand Veil
+Level: 46
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Feint Attack
+- Needle Arm
+- Cotton Spore
+- Leech Seed
+
+Sharpedo (M)
+Ability: Rough Skin
+Level: 48
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 4 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Surf
+- Crunch
+- Slash
+- Swagger
+
+Absol (M) @ Sitrus Berry
+Ability: Pressure
+Level: 49
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Jolly Nature
+- Swords Dance
+- Slash
+- Aerial Ace
+- Snatch
+
+=== TRAINER_PHOEBE_RS ===
+Name: PHOEBE
+Class: Cooltrainer
+Pic: Cooltrainer F
+Gender: Female
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Dusclops (F)
+Ability: Pressure
+Level: 48
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 4 SpD / 0 Spe
+Impish Nature
+- Curse
+- Confuse Ray
+- Future Sight
+- Shadow Punch
+
+Banette (F)
+Ability: Insomnia
+Level: 49
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Spite
+- Will-O-Wisp
+- Shadow Ball
+- Feint Attack
+
+Sableye (F)
+Ability: Keen Eye
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Feint Attack
+- Shadow Ball
+- Psychic
+- Attract
+
+Banette (F)
+Ability: Insomnia
+Level: 49
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Toxic
+- Skill Swap
+- Shadow Ball
+- Psychic
+
+Dusclops (F) @ Sitrus Berry
+Ability: Pressure
+Level: 51
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Confuse Ray
+- Shadow Ball
+- Ice Beam
+- Earthquake
+
+=== TRAINER_GLACIA_RS ===
+Name: GLACIA
+Class: Cooltrainer
+Pic: Cooltrainer F
+Gender: Female
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Glalie (F)
+Ability: Inner Focus
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Hail
+- Light Screen
+- Ice Beam
+- Crunch
+
+Sealeo (F)
+Ability: Thick Fat
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Surf
+- Ice Ball
+- Hail
+- Body Slam
+
+Sealeo (F)
+Ability: Thick Fat
+Level: 52
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Hail
+- Blizzard
+- Dive
+- Attract
+
+Glalie (F)
+Ability: Inner Focus
+Level: 52
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Hail
+- Ice Beam
+- Shadow Ball
+- Crunch
+
+Walrein (F) @ Sitrus Berry
+Ability: Thick Fat
+Level: 53
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Blizzard
+- Surf
+- Body Slam
+- Sheer Cold
+
+=== TRAINER_DRAKE_RS ===
+Name: DRAKE
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Shelgon (M)
+Ability: Rock Head
+Level: 52
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 4 SpD / 0 Spe
+Impish Nature
+- Dragon Claw
+- Rock Tomb
+- Protect
+- Crunch
+
+Altaria (M)
+Ability: Natural Cure
+Level: 54
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Jolly Nature
+- Take Down
+- Dragon Breath
+- Dragon Dance
+- Refresh
+
+Flygon (M)
+Ability: Levitate
+Level: 53
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Adamant Nature
+- Fly
+- Dig
+- Dragon Breath
+- Sandstorm
+
+Flygon (M)
+Ability: Levitate
+Level: 53
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 4 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Mild Nature
+- Flamethrower
+- Crunch
+- Dragon Breath
+- Sand Attack
+
+Salamence (M) @ Sitrus Berry
+Ability: Intimidate
+Level: 55
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Flamethrower
+- Dragon Claw
+- Crunch
+- Fly
+
+=== TRAINER_STEVEN_RS ===
+Name: STEVEN
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Skarmory (M)
+Ability: Keen Eye
+Level: 57
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 4 SpD / 0 Spe
+Impish Nature
+- Steel Wing
+- Toxic
+- Aerial Ace
+- Spikes
+
+Claydol
+Ability: Levitate
+Level: 55
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 4 SpA / 0 SpD / 0 Spe
+Bold Nature
+- Earthquake
+- Ancient Power
+- Light Screen
+- Reflect
+
+Aggron (M)
+Ability: Sturdy
+Level: 56
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Quiet Nature
+- Earthquake
+- Dragon Claw
+- Thunder
+- Solar Beam
+
+Cradily (M)
+Ability: Suction Cups
+Level: 56
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 0 SpA / 252 SpD / 0 Spe
+Calm Nature
+- Ancient Power
+- Confuse Ray
+- Sludge Bomb
+- Giga Drain
+
+Armaldo (M)
+Ability: Battle Armor
+Level: 56
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Ancient Power
+- Slash
+- Aerial Ace
+- Water Pulse
+
+Metagross @ Sitrus Berry
+Ability: Clear Body
+Level: 58
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Meteor Mash
+- Earthquake
+- Psychic
+- Hyper Beam
+
+
+/* v2.6.0 — Diamond/Pearl Elite Four + Champion Cynthia, ORIGINAL DP teams
+ * (Lv 53-66) — distinct from the Platinum rematches (1001-1005) and BDSP.
+ * Canon movesets incl. the era icons: Flint's two-Fire-mon Sunny Day squad
+ * and Cynthia's Sitrus Garchomp. Powers the Sinnoh DP gauntlet league. */
+=== TRAINER_AARON_DP ===
+Name: AARON
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Dustox (M)
+Ability: Shield Dust
+Level: 53
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 0 SpA / 252 SpD / 0 Spe
+Calm Nature
+- Toxic
+- Bug Buzz
+- Double Team
+- Light Screen
+
+Beautifly (M)
+Ability: Swarm
+Level: 53
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Energy Ball
+- Bug Buzz
+- Psychic
+- Shadow Ball
+
+Vespiquen (F)
+Ability: Pressure
+Level: 54
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 4 SpD / 0 Spe
+Impish Nature
+- Attack Order
+- Defend Order
+- Heal Order
+- Power Gem
+
+Heracross (M)
+Ability: Swarm
+Level: 54
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Jolly Nature
+- Megahorn
+- Close Combat
+- Night Slash
+- Stone Edge
+
+Drapion (M) @ Sitrus Berry
+Ability: Battle Armor
+Level: 57
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Jolly Nature
+- X-Scissor
+- Cross Poison
+- Ice Fang
+- Aerial Ace
+
+=== TRAINER_BERTHA_DP ===
+Name: BERTHA
+Class: Cooltrainer
+Pic: Cooltrainer F
+Gender: Female
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Quagsire (F)
+Ability: Damp
+Level: 55
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 4 SpD / 0 Spe
+Impish Nature
+- Dig
+- Double Team
+- Protect
+- Sandstorm
+
+Sudowoodo (F)
+Ability: Sturdy
+Level: 56
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Earthquake
+- Sucker Punch
+- Hammer Arm
+- Sandstorm
+
+Golem (F)
+Ability: Rock Head
+Level: 56
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Earthquake
+- Gyro Ball
+- Brick Break
+- Sandstorm
+
+Whiscash (F)
+Ability: Oblivious
+Level: 55
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 0 Spe
+Adamant Nature
+- Fissure
+- Aqua Tail
+- Zen Headbutt
+- Rock Slide
+
+Hippowdon (F) @ Sitrus Berry
+Ability: Sand Stream
+Level: 59
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 4 SpD / 0 Spe
+Impish Nature
+- Earthquake
+- Stone Edge
+- Crunch
+- Curse
+
+=== TRAINER_FLINT_DP ===
+Name: FLINT
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Rapidash (M)
+Ability: Run Away
+Level: 58
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 4 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Flare Blitz
+- Solar Beam
+- Bounce
+- Sunny Day
+
+Steelix (M)
+Ability: Rock Head
+Level: 57
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 4 SpD / 0 Spe
+Impish Nature
+- Fire Fang
+- Rock Tomb
+- Screech
+- Sunny Day
+
+Drifblim (M)
+Ability: Aftermath
+Level: 58
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 0 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Will-O-Wisp
+- Ominous Wind
+- Double Team
+- Baton Pass
+
+Lopunny (M)
+Ability: Cute Charm
+Level: 57
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Jolly Nature
+- Fire Punch
+- Charm
+- Mirror Coat
+- Sunny Day
+
+Infernape (M) @ Sitrus Berry
+Ability: Blaze
+Level: 61
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Jolly Nature
+- Flare Blitz
+- Thunder Punch
+- Mach Punch
+- Earthquake
+
+=== TRAINER_LUCIAN_DP ===
+Name: LUCIAN
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Mr. Mime (M)
+Ability: Soundproof
+Level: 59
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Psychic
+- Thunderbolt
+- Reflect
+- Light Screen
+
+Girafarig (M)
+Ability: Inner Focus
+Level: 59
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 4 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Naive Nature
+- Psychic
+- Shadow Ball
+- Double Hit
+- Crunch
+
+Medicham (M)
+Ability: Pure Power
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Jolly Nature
+- Drain Punch
+- Fire Punch
+- Thunder Punch
+- Ice Punch
+
+Alakazam (M)
+Ability: Synchronize
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Psychic
+- Energy Ball
+- Focus Blast
+- Recover
+
+Bronzong @ Sitrus Berry
+Ability: Levitate
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 4 Atk / 0 Def / 0 SpA / 252 SpD / 0 Spe
+Sassy Nature
+- Psychic
+- Gyro Ball
+- Earthquake
+- Calm Mind
+
+=== TRAINER_CYNTHIA_DP ===
+Name: CYNTHIA
+Class: Cooltrainer
+Pic: Cooltrainer F
+Gender: Female
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Spiritomb (F)
+Ability: Pressure
+Level: 61
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Dark Pulse
+- Psychic
+- Silver Wind
+- Embargo
+
+Roserade (F)
+Ability: Natural Cure
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Energy Ball
+- Sludge Bomb
+- Shadow Ball
+- Extrasensory
+
+Gastrodon (F)
+Ability: Sticky Hold
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Muddy Water
+- Earthquake
+- Stone Edge
+- Sludge Bomb
+
+Lucario (M)
+Ability: Steadfast
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 4 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Mild Nature
+- Aura Sphere
+- Dragon Pulse
+- Psychic
+- Earthquake
+
+Milotic (F)
+Ability: Marvel Scale
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 4 SpD / 0 Spe
+Bold Nature
+- Surf
+- Ice Beam
+- Mirror Coat
+- Aqua Ring
+
+Garchomp (F) @ Sitrus Berry
+Ability: Sand Veil
+Level: 66
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Jolly Nature
+- Dragon Rush
+- Earthquake
+- Brick Break
+- Giga Impact
+
+
+/* v2.6.0 — ORAS Delta Episode: Wallace's Sky Pillar team (the former
+ * champion's mono-Water six) and Lorekeeper Zinnia with her MEGA Salamence.
+ * Canon movesets; EVs/natures filled. Both join the ORAS cup. */
+=== TRAINER_WALLACE_ORAS ===
+Name: WALLACE
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Wailord (M)
+Ability: Oblivious
+Level: 55
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Water Spout
+- Heavy Slam
+- Earthquake
+- Blizzard
+
+Tentacruel (F)
+Ability: Clear Body
+Level: 55
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 0 SpA / 252 SpD / 0 Spe
+Calm Nature
+- Sludge Wave
+- Brine
+- Rain Dance
+- Dazzling Gleam
+
+Ludicolo (M)
+Ability: Swift Swim
+Level: 55
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Fake Out
+- Scald
+- Energy Ball
+- Ice Beam
+
+Whiscash (M)
+Ability: Oblivious
+Level: 55
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Earthquake
+- Muddy Water
+- Rock Tomb
+- Rain Dance
+
+Gyarados (M)
+Ability: Intimidate
+Level: 55
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Jolly Nature
+- Waterfall
+- Crunch
+- Ice Fang
+- Stone Edge
+
+Milotic (F)
+Ability: Marvel Scale
+Level: 57
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 4 SpD / 0 Spe
+Bold Nature
+- Dragon Pulse
+- Blizzard
+- Recover
+- Hydro Pump
+
+=== TRAINER_ZINNIA ===
+Name: ZINNIA
+Class: Cooltrainer
+Pic: Cooltrainer F
+Gender: Female
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Goodra (F)
+Ability: Sap Sipper
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Dragon Pulse
+- Muddy Water
+- Thunderbolt
+- Ice Beam
+
+Tyrantrum (M)
+Ability: Strong Jaw
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Jolly Nature
+- Dragon Claw
+- Crunch
+- Earthquake
+- Stone Edge
+
+Altaria (F)
+Ability: Natural Cure
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 4 Def / 252 SpA / 0 SpD / 0 Spe
+Modest Nature
+- Dragon Pulse
+- Moonblast
+- Flamethrower
+- Hyper Voice
+
+Noivern (F)
+Ability: Infiltrator
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Timid Nature
+- Dragon Pulse
+- Air Slash
+- Shadow Ball
+- Super Fang
+
+Salamence (M) @ Salamencite
+Ability: Intimidate
+Level: 62
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 4 SpD / 252 Spe
+Jolly Nature
+- Dragon Claw
+- Crunch
+- Fire Fang
+- Thunder Fang
+
+
 === TRAINER_URBAIN ===
 Name: URBAIN
 Class: Cooltrainer

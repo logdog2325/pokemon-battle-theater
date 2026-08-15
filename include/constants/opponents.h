@@ -1465,6 +1465,24 @@
 #define TRAINER_ACEROLA_SM_E4               1273  // SM E4 Ghost (Palossand, Ghostium Z)
 #define TRAINER_KAHILI_SM_E4                1274  // SM E4 Flying (Toucannon, Flyinium Z)
 
+// v2.6.0 — Ruby/Sapphire Elite Four + Champion (original Lv 46-58 teams).
+#define TRAINER_SIDNEY_RS                   1275  // RS E4 Dark
+#define TRAINER_PHOEBE_RS                   1276  // RS E4 Ghost
+#define TRAINER_GLACIA_RS                   1277  // RS E4 Ice
+#define TRAINER_DRAKE_RS                    1278  // RS E4 Dragon
+#define TRAINER_STEVEN_RS                   1279  // RS Champion (Metagross ace)
+
+// v2.6.0 — Diamond/Pearl Elite Four + Champion (original Lv 53-66 teams).
+#define TRAINER_AARON_DP                    1280  // DP E4 Bug
+#define TRAINER_BERTHA_DP                   1281  // DP E4 Ground
+#define TRAINER_FLINT_DP                    1282  // DP E4 Fire (the two-Fire-mon team)
+#define TRAINER_LUCIAN_DP                   1283  // DP E4 Psychic
+#define TRAINER_CYNTHIA_DP                  1284  // DP Champion (the sim's FIFTH Cynthia)
+
+// v2.6.0 — ORAS Delta Episode.
+#define TRAINER_WALLACE_ORAS                1285  // Wallace's Sky Pillar team (mono-Water, Milotic ace)
+#define TRAINER_ZINNIA                      1286  // Lorekeeper Zinnia (Mega Salamence)
+
 // NOTE: Because each Trainer uses a flag to determine when they are defeated, there is only space for 9 additional trainers before trainer flag space overflows
 //       More space can be made by shifting flags around in constants/flags.h or changing how trainer flags are handled
 //       MAX_TRAINERS_COUNT can be increased but will take up additional saveblock space
