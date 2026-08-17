@@ -258,7 +258,16 @@ struct NPCFollower
 // v1.1: bumped 3 → 6. Community ask for more slots so users can save more
 // builds (e.g. a doubles team + a singles team + a VGC team) without having
 // to overwrite each other. Each slot is ~192 bytes in SaveBlock3.
-#define SIM_NUM_CUSTOM_TRAINERS 6
+// v2.6.1: bumped 6 → 8 (community ask: a full 8-trainer Custom Cup).
+// Storage is SPLIT: this toolchain (APCS) rounds struct sizes to 4-byte
+// boundaries, so each mon is 32 bytes and each slot 208 — SaveBlock3's
+// 1624-byte flash chunk fits only 7 slots (1458 + dexNavChain). Slots 1-7
+// live in SaveBlock3; slot 8 lives in SaveBlock1's tail slack. Both regions
+// zero-fill past old data on old saves (inUse=0 = empty), and the
+// STATIC_ASSERTs in src/save.c guard both budgets. All access goes through
+// Sim_GetCustomSlotData in src/debug.c — never index the arrays directly.
+#define SIM_NUM_CUSTOM_TRAINERS 8
+#define SIM_NUM_CUSTOM_TRAINERS_SB3 7  // slots stored in SaveBlock3
 #define SIM_CUSTOM_TRAINER_NAME_LEN 10  // matches TRAINER_NAME_LENGTH (max chars before EOS)
 
 struct SimCustomTrainerMon
@@ -315,8 +324,9 @@ struct SaveBlock3
 #if APRICORN_TREE_COUNT > 0
     u8 apricornTrees[NUM_APRICORN_TREE_BYTES];
 #endif
-    // v0.51 — 3 custom trainer slots (~444 bytes total).
-    struct SimCustomTrainer simCustomTrainers[SIM_NUM_CUSTOM_TRAINERS];
+    // v0.51 — custom trainer slots (3 → 6 in v1.1; 7 here since v2.6.1,
+    // with slot 8 overflowing into SaveBlock1 — see SIM_NUM_CUSTOM_TRAINERS).
+    struct SimCustomTrainer simCustomTrainers[SIM_NUM_CUSTOM_TRAINERS_SB3];
 }; /* max size 1624 bytes */
 
 extern struct SaveBlock3 *gSaveBlock3Ptr;
@@ -1253,6 +1263,11 @@ struct SaveBlock1
     u8 rivalName[PLAYER_NAME_LENGTH + 1];
     struct DaycareMon route5DayCareMon;
 #endif
+    // v2.6.1 — Custom Trainer slot 8 (sim). SaveBlock3's flash chunk fits
+    // only 7 of the 208-byte slots, so the 8th rides in SaveBlock1's tail
+    // slack (~245 bytes free before this). Old saves load this region
+    // zeroed -> inUse=0 -> empty, same guarantee as the SaveBlock3 slots.
+    struct SimCustomTrainer simCustomTrainer8;
     // sizeof: 0x3???
 };
 

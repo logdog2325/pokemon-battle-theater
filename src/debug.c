@@ -180,7 +180,7 @@ enum DebugTrainerSelection
     TRAINERS_DEBUG_SELECTION_PLAYER,
     // v1.1 — picker is being used as the "copy preset team into active custom
     // slot" source instead of one of the sim battle slots. Confirm copies the
-    // selected trainer's full party into gSaveBlock3Ptr->simCustomTrainers
+    // selected trainer's full party into the custom slot storage
     // [sBuildTrainerActiveSlot]; cancel returns to the slot menu unchanged.
     TRAINERS_DEBUG_SELECTION_COPY_TO_CUSTOM,
     // v1.7 — picker is being used as the Frontier Challenge team-picker.
@@ -343,7 +343,8 @@ bool32 Sim_TrainerCanTera(u16 trainerId)
     // Trainer editor (TYPE_NONE leaves opponentMonCanTera unset for that mon).
     if (trainerId == TRAINER_SIM_CUSTOM_1 || trainerId == TRAINER_SIM_CUSTOM_2
      || trainerId == TRAINER_SIM_CUSTOM_3 || trainerId == TRAINER_SIM_CUSTOM_4
-     || trainerId == TRAINER_SIM_CUSTOM_5 || trainerId == TRAINER_SIM_CUSTOM_6)
+     || trainerId == TRAINER_SIM_CUSTOM_5 || trainerId == TRAINER_SIM_CUSTOM_6
+     || trainerId == TRAINER_SIM_CUSTOM_7 || trainerId == TRAINER_SIM_CUSTOM_8)
         return TRUE;
 
     // Gen 9 SV trainers (1113-1142) — base game Nemona ×3 / Geeta / Paldea E4
@@ -754,7 +755,8 @@ static const u8 *GetSimSourceSuffix(u16 trainerId)
     // v0.51 Custom — user-built trainer slots. v1.1: slots 4-6 (1099-1101)
     // sit AFTER the LA block, so the range is discontiguous.
     if ((trainerId >= TRAINER_SIM_CUSTOM_1 && trainerId <= TRAINER_SIM_CUSTOM_3)
-     || (trainerId >= TRAINER_SIM_CUSTOM_4 && trainerId <= TRAINER_SIM_CUSTOM_6))
+     || (trainerId >= TRAINER_SIM_CUSTOM_4 && trainerId <= TRAINER_SIM_CUSTOM_6)
+     || (trainerId >= TRAINER_SIM_CUSTOM_7 && trainerId <= TRAINER_SIM_CUSTOM_8))
         return sSimSourceSuffixCustom;
     // v1.5 VGC 2012 World Championships finals (Wolfe Glick + Ray Rizo).
     if (trainerId == TRAINER_WOLFE_VGC2012 || trainerId == TRAINER_RAY_VGC2012)
@@ -998,6 +1000,7 @@ static const u16 sSimulatorRoster[] = {
     // ---- Custom section (user-built trainers, v0.51 + v1.1) ----
     1087, 1088, 1089,                                    // Custom 1/2/3
     1099, 1100, 1101,                                    // Custom 4/5/6
+    1287, 1288,                                          // Custom 7/8 (v2.6.1)
 };
 #define SIMULATOR_ROSTER_COUNT (sizeof(sSimulatorRoster) / sizeof(sSimulatorRoster[0]))
 
@@ -1296,6 +1299,14 @@ static const u8 sCupName_RGBY2[]        = _("RGBY");       // v2.1.2 classic Gen
 static const u8 sCupName_GSC[]          = _("GSC");        // v2.1.2 classic Gen 2
 static const u8 sCupName_XY[]           = _("XY");         // v2.1.3 Kalos
 static const u8 sCupName_Orre[]         = _("Orre");       // v2.3.0 Colosseum + XD
+static const u8 sCupName_Custom[]       = _("Custom");     // v2.6.1 the user's 8 build slots
+
+// v2.6.1 — Custom Cup: the user's own 8 build slots, so players can run
+// tournaments with teams they made. Empty slots are dropped at bracket build
+// (Sim_IsEmptyCustomSlot); fewer than 7 configured pads by cycling the rest.
+static const u16 sCupCustom[] = {
+    1087, 1088, 1089, 1099, 1100, 1101, 1287, 1288,
+};
 
 static const struct SimCup sSimCups[] =
 {
@@ -1330,6 +1341,7 @@ static const struct SimCup sSimCups[] =
     { sCupName_ZA,          sCupZA,          24 },   // Gen 9 — every Z-A Royale trainer
     { sCupName_Champions,   sCupChampions,   12 },   // Cross-gen — 11 in-game champions (+ Cynthia twice)
     { sCupName_AllStars,    sSimulatorRoster, SIMULATOR_ROSTER_COUNT },  // Cross-gen — EVERY curated trainer in the game
+    { sCupName_Custom,      sCupCustom,       8 },   // v2.6.1 — the user's 8 custom build slots
 };
 #define SIM_CUP_COUNT (sizeof(sSimCups) / sizeof(sSimCups[0]))
 
@@ -1685,6 +1697,9 @@ static void DebugAction_BuildTrainer_OpenSlot3(u8 taskId);
 static void DebugAction_BuildTrainer_OpenSlot4(u8 taskId);
 static void DebugAction_BuildTrainer_OpenSlot5(u8 taskId);
 static void DebugAction_BuildTrainer_OpenSlot6(u8 taskId);
+// v2.6.1 — 2 more slots (8-trainer Custom Cup).
+static void DebugAction_BuildTrainer_OpenSlot7(u8 taskId);
+static void DebugAction_BuildTrainer_OpenSlot8(u8 taskId);
 static void DebugAction_BuildTrainer_ResetSlot(u8 taskId);
 static void DebugAction_BuildTrainer_SetAllLvl50(u8 taskId);  // v1.15
 static void DebugAction_BuildTrainer_BackToWrapper(u8 taskId);
@@ -2445,6 +2460,8 @@ static const struct DebugMenuOption sDebugMenu_Actions_BuildTrainer[] =
     { COMPOUND_STRING("Custom 4"),       DebugAction_BuildTrainer_OpenSlot4,       },
     { COMPOUND_STRING("Custom 5"),       DebugAction_BuildTrainer_OpenSlot5,       },
     { COMPOUND_STRING("Custom 6"),       DebugAction_BuildTrainer_OpenSlot6,       },
+    { COMPOUND_STRING("Custom 7"),       DebugAction_BuildTrainer_OpenSlot7,       },
+    { COMPOUND_STRING("Custom 8"),       DebugAction_BuildTrainer_OpenSlot8,       },
     { NULL }
 };
 
@@ -2621,6 +2638,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_TournamentCups[] =
     { sCupName_ZA,             DebugAction_Tournament_PickCup, (void *)26 },
     { sCupName_Champions,      DebugAction_Tournament_PickCup, (void *)27 },
     { sCupName_AllStars,       DebugAction_Tournament_PickCup, (void *)28 },
+    { sCupName_Custom,         DebugAction_Tournament_PickCup, (void *)29 },
     { NULL }
 };
 
@@ -4194,13 +4212,25 @@ static void BuildTrainer_SanitizeSlot(struct SimCustomTrainer *slot)
     }
 }
 
+// v2.6.1 — the 8 custom slots are SPLIT across saveblocks: slots 0-6 in
+// SaveBlock3 (its 1624-byte flash chunk fits only 7 of the 208-byte slots)
+// and slot 7 in SaveBlock1's tail. Single accessor so no caller cares.
+static struct SimCustomTrainer *Sim_GetCustomSlotData(u8 slot)
+{
+    if (slot >= SIM_NUM_CUSTOM_TRAINERS)
+        slot = 0;
+    if (slot >= SIM_NUM_CUSTOM_TRAINERS_SB3)
+        return &gSaveBlock1Ptr->simCustomTrainer8;
+    return &gSaveBlock3Ptr->simCustomTrainers[slot];
+}
+
 static void DebugAction_BuildTrainer_OpenSlotN(u8 taskId, u8 slot)
 {
     sBuildTrainerActiveSlot = slot;
     // v0.52.12 — Migrate / sanitize stale save data BEFORE rendering any
     // slot rows. This is the first place the user lands on this slot's
     // saveblock data, so it's the right gate.
-    BuildTrainer_SanitizeSlot(&gSaveBlock3Ptr->simCustomTrainers[slot]);
+    BuildTrainer_SanitizeSlot(Sim_GetCustomSlotData(slot));
     Debug_DestroyMenu(taskId);
     // v0.52.3 — listId 3 routes the redraw through
     // Debug_GenerateListBuildTrainerSlotMenu so each row shows the saved
@@ -4215,6 +4245,8 @@ static void DebugAction_BuildTrainer_OpenSlot3(u8 taskId) { DebugAction_BuildTra
 static void DebugAction_BuildTrainer_OpenSlot4(u8 taskId) { DebugAction_BuildTrainer_OpenSlotN(taskId, 3); }
 static void DebugAction_BuildTrainer_OpenSlot5(u8 taskId) { DebugAction_BuildTrainer_OpenSlotN(taskId, 4); }
 static void DebugAction_BuildTrainer_OpenSlot6(u8 taskId) { DebugAction_BuildTrainer_OpenSlotN(taskId, 5); }
+static void DebugAction_BuildTrainer_OpenSlot7(u8 taskId) { DebugAction_BuildTrainer_OpenSlotN(taskId, 6); }
+static void DebugAction_BuildTrainer_OpenSlot8(u8 taskId) { DebugAction_BuildTrainer_OpenSlotN(taskId, 7); }
 
 // v0.52 Phase 2 — Wipe the active custom-trainer slot's saveblock entry.
 // Sets inUse=0 so Sim_GetCustomTrainerStruct falls back to the placeholder
@@ -4223,8 +4255,8 @@ static void DebugAction_BuildTrainer_ResetSlot(u8 taskId)
 {
     if (sBuildTrainerActiveSlot >= SIM_NUM_CUSTOM_TRAINERS)
         return;
-    memset(&gSaveBlock3Ptr->simCustomTrainers[sBuildTrainerActiveSlot], 0,
-           sizeof(gSaveBlock3Ptr->simCustomTrainers[sBuildTrainerActiveSlot]));
+    memset(Sim_GetCustomSlotData(sBuildTrainerActiveSlot), 0,
+           sizeof(struct SimCustomTrainer));
     // Stay on the slot menu so the user can confirm Reset took effect by
     // backing out and seeing the placeholder team in a battle.
 }
@@ -4237,7 +4269,7 @@ static void DebugAction_BuildTrainer_SetAllLvl50(u8 taskId)
 {
     if (sBuildTrainerActiveSlot >= SIM_NUM_CUSTOM_TRAINERS)
         return;
-    struct SimCustomTrainer *slot = &gSaveBlock3Ptr->simCustomTrainers[sBuildTrainerActiveSlot];
+    struct SimCustomTrainer *slot = Sim_GetCustomSlotData(sBuildTrainerActiveSlot);
     u32 touched = 0;
     for (u32 i = 0; i < 6; i++)
     {
@@ -4278,7 +4310,7 @@ static void DebugAction_BuildTrainer_BackToWrapper(u8 taskId)
 static void DebugAction_BuildTrainer_EditName(u8 taskId)
 {
     PlaySE(SE_SELECT);
-    struct SimCustomTrainer *slot = &gSaveBlock3Ptr->simCustomTrainers[sBuildTrainerActiveSlot];
+    struct SimCustomTrainer *slot = Sim_GetCustomSlotData(sBuildTrainerActiveSlot);
     // Mark the slot inUse so the synthesizer reads the new name. The user
     // explicitly hit "Name" — they're configuring this slot.
     slot->inUse = 1;
@@ -4514,7 +4546,7 @@ static u16 BuildTrainer_StepTrainerPic(u16 current, s32 direction, s32 step)
 
 static void DebugAction_BuildTrainer_TrainerPicPicker_Select(u8 taskId)
 {
-    struct SimCustomTrainer *slot = &gSaveBlock3Ptr->simCustomTrainers[sBuildTrainerActiveSlot];
+    struct SimCustomTrainer *slot = Sim_GetCustomSlotData(sBuildTrainerActiveSlot);
     bool32 redraw = FALSE;
     if (JOY_NEW(L_BUTTON))
     {
@@ -4600,7 +4632,7 @@ static void DebugAction_BuildTrainer_EditTrainerPic(u8 taskId)
     DrawStdWindowFrame(windowId, FALSE);
     CopyWindowToVram(windowId, COPYWIN_FULL);
 
-    struct SimCustomTrainer *slot = &gSaveBlock3Ptr->simCustomTrainers[sBuildTrainerActiveSlot];
+    struct SimCustomTrainer *slot = Sim_GetCustomSlotData(sBuildTrainerActiveSlot);
     // v0.52.11 — Clamp to a valid FRONT-pic range. Saves migrated from
     // before v0.52.5 added the trainerPic field can have garbage values at
     // the old padding offsets, and stepping from a wildly-out-of-range
@@ -4624,7 +4656,7 @@ static void DebugAction_BuildTrainer_EditTrainerPic(u8 taskId)
 // empty, initialize the buffer with sensible defaults (placeholder Magikarp).
 static void BuildTrainer_LoadWorkBufferFromSaveblock(void)
 {
-    struct SimCustomTrainer *slot = &gSaveBlock3Ptr->simCustomTrainers[sBuildTrainerActiveSlot];
+    struct SimCustomTrainer *slot = Sim_GetCustomSlotData(sBuildTrainerActiveSlot);
     // v0.52.12 — defend per-mon editor against stale save data (matches the
     // slot menu's own sanitizer)
     BuildTrainer_SanitizeSlot(slot);
@@ -4650,7 +4682,7 @@ static void BuildTrainer_LoadWorkBufferFromSaveblock(void)
 // reboots and the synthesized Trainer struct picks it up.
 static void BuildTrainer_CommitWorkBufferToSaveblock(void)
 {
-    struct SimCustomTrainer *slot = &gSaveBlock3Ptr->simCustomTrainers[sBuildTrainerActiveSlot];
+    struct SimCustomTrainer *slot = Sim_GetCustomSlotData(sBuildTrainerActiveSlot);
     if (sBuildTrainerActiveMon >= 6) return;
 
     // v1.6 — recompute item-driven form changes before commit. The editor
@@ -4708,7 +4740,7 @@ static bool32 BuildTrainer_CopyFromTrainer(u16 trainerId)
     const struct Trainer *src = GetTrainerStructFromId(trainerId);
     if (src == NULL || src->party == NULL || src->partySize == 0)
         return FALSE;
-    struct SimCustomTrainer *slot = &gSaveBlock3Ptr->simCustomTrainers[sBuildTrainerActiveSlot];
+    struct SimCustomTrainer *slot = Sim_GetCustomSlotData(sBuildTrainerActiveSlot);
     memset(slot, 0, sizeof(*slot));
     // Trainer name → slot name (truncate at SIM_CUSTOM_TRAINER_NAME_LEN).
     for (u8 i = 0; i < SIM_CUSTOM_TRAINER_NAME_LEN; i++)
@@ -4868,7 +4900,7 @@ static void DebugAction_BuildTrainer_OpenMon6(u8 taskId) { BuildTrainer_OpenMonE
 // hasn't edited any mons but wants the slot recognized.
 static void DebugAction_BuildTrainer_SaveSlot(u8 taskId)
 {
-    struct SimCustomTrainer *slot = &gSaveBlock3Ptr->simCustomTrainers[sBuildTrainerActiveSlot];
+    struct SimCustomTrainer *slot = Sim_GetCustomSlotData(sBuildTrainerActiveSlot);
     slot->inUse = 1;
     if (slot->monCount == 0)
         slot->monCount = 1;  // ensure at least placeholder Magikarp shows in battle
@@ -5159,7 +5191,7 @@ static void DebugAction_BuildTrainer_IVs_Back(u8 taskId)
 // garbage as a function pointer (observed crash: 0x01340134).
 static u8 Debug_GenerateListBuildTrainerSlotMenu(void)
 {
-    struct SimCustomTrainer *slot = &gSaveBlock3Ptr->simCustomTrainers[sBuildTrainerActiveSlot];
+    struct SimCustomTrainer *slot = Sim_GetCustomSlotData(sBuildTrainerActiveSlot);
     u8 totalItems = ARRAY_COUNT(sDebugMenu_Actions_BuildTrainerSlot) - 1;
     for (u32 i = 0; i < totalItems; i++)
     {
@@ -7248,7 +7280,7 @@ static u8 Sim_SimulateMatch(u8 slotA, u8 slotB)
 // v2.0.9 — TRUE if `trainerId` is a custom slot whose saveblock entry is NOT
 // configured (inUse == 0). Used to drop empty custom slots from tournament
 // candidate lists — the "All Stars" cup aliases sSimulatorRoster, which
-// includes all 6 TRAINER_SIM_CUSTOM_* IDs, so unconfigured slots would
+// includes all 8 TRAINER_SIM_CUSTOM_* IDs, so unconfigured slots would
 // otherwise enter the bracket as free-win placeholder-Magikarp opponents.
 static bool32 Sim_IsEmptyCustomSlot(u16 trainerId)
 {
@@ -7257,9 +7289,11 @@ static bool32 Sim_IsEmptyCustomSlot(u16 trainerId)
         slot = trainerId - TRAINER_SIM_CUSTOM_1;
     else if (trainerId >= TRAINER_SIM_CUSTOM_4 && trainerId <= TRAINER_SIM_CUSTOM_6)
         slot = (trainerId - TRAINER_SIM_CUSTOM_4) + 3;
+    else if (trainerId >= TRAINER_SIM_CUSTOM_7 && trainerId <= TRAINER_SIM_CUSTOM_8)
+        slot = (trainerId - TRAINER_SIM_CUSTOM_7) + 6;
     if (slot < 0 || slot >= SIM_NUM_CUSTOM_TRAINERS)
         return FALSE;  // not a custom slot at all
-    return !gSaveBlock3Ptr->simCustomTrainers[slot].inUse;
+    return !Sim_GetCustomSlotData(slot)->inUse;
 }
 
 static bool32 Sim_BuildTournamentBracket(u8 cupIndex, s32 playerSideId)
@@ -7294,7 +7328,7 @@ static bool32 Sim_BuildTournamentBracket(u8 cupIndex, s32 playerSideId)
         if ((s32)cup->trainers[i] == playerSideId)
             continue;
         // v2.0.9 — skip unconfigured custom slots so the All Stars cup (which
-        // aliases sSimulatorRoster, including all 6 TRAINER_SIM_CUSTOM_* IDs)
+        // aliases sSimulatorRoster, including all 8 TRAINER_SIM_CUSTOM_* IDs)
         // doesn't seed the bracket with placeholder-Magikarp free wins.
         if (Sim_IsEmptyCustomSlot(cup->trainers[i]))
             continue;
@@ -7307,9 +7341,13 @@ static bool32 Sim_BuildTournamentBracket(u8 cupIndex, s32 playerSideId)
         // 8-bracket, but we make the best of it.
         if (candidateCount == 0)
             return FALSE;
+        // v2.6.1 — cycle through the real candidates (the old expression
+        // `candidateCount % candidateCount` was always 0, so every pad slot
+        // cloned the FIRST candidate; small cups fought one trainer 6 times).
+        u16 realCount = candidateCount;
         while (candidateCount < 7 && candidateCount < ARRAY_COUNT(candidates))
         {
-            candidates[candidateCount] = candidates[candidateCount % candidateCount];
+            candidates[candidateCount] = candidates[(candidateCount - realCount) % realCount];
             candidateCount++;
         }
     }
@@ -7486,6 +7524,9 @@ static u16 Sim_RollTournamentOpponentPartner(s32 playerSideId, s32 currentOppone
     {
         u16 t = cup->trainers[i];
         if ((s32)t == playerSideId || (s32)t == currentOpponentId)
+            continue;
+        // v2.6.1 — never roll an unconfigured custom slot as a partner.
+        if (Sim_IsEmptyCustomSlot(t))
             continue;
         bool32 inBracket = FALSE;
         for (u8 j = 0; j < SIM_TOURNAMENT_BRACKET_SIZE; j++)
@@ -8637,7 +8678,7 @@ static void DebugAction_BuildTrainer_OpenImportCode(u8 taskId)
 // =============================================================================
 // v0.51 — Custom user-built trainer slots
 // =============================================================================
-// Storage lives in SaveBlock3 (struct SimCustomTrainer simCustomTrainers[3]).
+// Storage: slots 0-6 in SaveBlock3, slot 7 in SaveBlock1 (Sim_GetCustomSlotData).
 // At battle time, GetTrainerStructFromId() in include/data.h dispatches to
 // Sim_GetCustomTrainerStruct() when it sees a custom-range ID. We synthesize
 // a struct Trainer + its TrainerMon party in static EWRAM buffers, populated
@@ -8662,12 +8703,14 @@ const struct Trainer *Sim_GetCustomTrainerStruct(u16 trainerId)
         slot = trainerId - TRAINER_SIM_CUSTOM_1;
     else if (trainerId >= TRAINER_SIM_CUSTOM_4 && trainerId <= TRAINER_SIM_CUSTOM_6)
         slot = (trainerId - TRAINER_SIM_CUSTOM_4) + 3;
+    else if (trainerId >= TRAINER_SIM_CUSTOM_7 && trainerId <= TRAINER_SIM_CUSTOM_8)
+        slot = (trainerId - TRAINER_SIM_CUSTOM_7) + 6;  // v2.6.1 third window
     else
         return NULL;
     if (slot >= SIM_NUM_CUSTOM_TRAINERS)
         return NULL;
 
-    struct SimCustomTrainer *saved = &gSaveBlock3Ptr->simCustomTrainers[slot];
+    struct SimCustomTrainer *saved = Sim_GetCustomSlotData(slot);
     // v0.52.12 — sanitize stale save data here too, so battles initiated
     // against an old save's custom slot never read garbage.
     BuildTrainer_SanitizeSlot(saved);
@@ -8690,6 +8733,7 @@ const struct Trainer *Sim_GetCustomTrainerStruct(u16 trainerId)
         static const u8 sDefaultNames[SIM_NUM_CUSTOM_TRAINERS][9] = {
             _("CUSTOM 1"), _("CUSTOM 2"), _("CUSTOM 3"),
             _("CUSTOM 4"), _("CUSTOM 5"), _("CUSTOM 6"),
+            _("CUSTOM 7"), _("CUSTOM 8"),
         };
         StringCopy(t->trainerName, sDefaultNames[slot]);
     }
@@ -9334,6 +9378,10 @@ static bool32 Sim_BeginTournamentRun(u16 playerSideId, bool32 pilot)
     if (gSimTournamentCup == 0 || gSimTournamentCup >= SIM_CUP_COUNT)
         return FALSE;
     if (playerSideId == TRAINER_NONE)
+        return FALSE;
+    // v2.6.1 — an EMPTY custom slot can't be followed/piloted into a cup (it
+    // would battle as the placeholder Lv5 Magikarp). Picker simply reopens.
+    if (Sim_IsEmptyCustomSlot(playerSideId))
         return FALSE;
 
     Sim_StartTournament(playerSideId);

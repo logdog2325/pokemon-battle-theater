@@ -241,6 +241,29 @@ static void SetPerformedRentalSwap(void)
     sPerformedRentalSwap = TRUE;
 }
 
+
+// v2.6.1 — Battle Factory rentals/opponents draw FINAL-STAGE species only.
+// Mirrors CanEvolve (battle_util.c Eviolite check): a species is final when
+// its evolution table has no enabled target. EVO_NONE sentinel rows (totems,
+// Bloodmoon Ursaluna) and compile-time-disabled targets are not evolutions.
+// Applies only to the Factory generators in this file — the shared frontier
+// pool (Tower/Dome/etc) and the Slateport Tent are untouched.
+static bool32 FactorySpeciesCanEvolve(u16 species)
+{
+    u32 i;
+    const struct Evolution *evolutions = GetSpeciesEvolutions(species);
+
+    if (evolutions == NULL)
+        return FALSE;
+    for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
+    {
+        if (evolutions[i].method != EVO_NONE
+         && SanitizeSpeciesId(evolutions[i].targetSpecies) != SPECIES_NONE)
+            return TRUE;
+    }
+    return FALSE;
+}
+
 static void GenerateOpponentMons(void)
 {
     int i, j, k;
@@ -248,6 +271,7 @@ static void GenerateOpponentMons(void)
     u16 heldItems[FRONTIER_PARTY_SIZE];
     int firstMonId = 0;
     u16 trainerId = 0;
+    u32 evoRerolls = 0;
     enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
     u32 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
     u32 winStreak = gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode];
@@ -276,6 +300,10 @@ static void GenerateOpponentMons(void)
 
         // Unown (FRONTIER_MON_UNOWN) is forbidden on opponent Factory teams.
         if (gFacilityTrainerMons[monId].species == SPECIES_UNOWN)
+            continue;
+
+        // Final evolutions only (bounded so a starved pool can't hang).
+        if (FactorySpeciesCanEvolve(gFacilityTrainerMons[monId].species) && ++evoRerolls < 3000)
             continue;
 
         // Ensure none of the opponent's Pokémon are the same as the potential rental Pokémon for the player
@@ -400,6 +428,7 @@ static void GenerateInitialRentalMons(void)
     u8 rentalRank;
     u16 monId;
     u16 currSpecies;
+    u32 evoRerolls;
     u16 species[PARTY_SIZE];
     u16 monIds[PARTY_SIZE];
     u16 heldItems[PARTY_SIZE];
@@ -433,6 +462,7 @@ static void GenerateInitialRentalMons(void)
     rentalRank = GetNumPastRentalsRank(factoryBattleMode, factoryLvlMode);
 
     currSpecies = SPECIES_NONE;
+    evoRerolls = 0;
     i = 0;
     while (i != PARTY_SIZE)
     {
@@ -442,6 +472,10 @@ static void GenerateInitialRentalMons(void)
             monId = GetFactoryMonId(factoryLvlMode, challengeNum, FALSE);
 
         if (gFacilityTrainerMons[monId].species == SPECIES_UNOWN)
+            continue;
+
+        // Final evolutions only (bounded so a starved pool can't hang).
+        if (FactorySpeciesCanEvolve(gFacilityTrainerMons[monId].species) && ++evoRerolls < 3000)
             continue;
 
         // Cannot have two Pokémon of the same species.
@@ -668,6 +702,7 @@ void FillFactoryBrainParty(void)
     int monLevel;
     u8 fixedIV;
     u32 otId;
+    u32 evoRerolls = 0;
 
     enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
     u8 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
@@ -682,6 +717,9 @@ void FillFactoryBrainParty(void)
         u16 monId = GetFactoryMonId(lvlMode, challengeNum, FALSE);
 
         if (gFacilityTrainerMons[monId].species == SPECIES_UNOWN)
+            continue;
+        // Final evolutions only (bounded so a starved pool can't hang).
+        if (FactorySpeciesCanEvolve(gFacilityTrainerMons[monId].species) && ++evoRerolls < 3000)
             continue;
         if (monLevel == FRONTIER_MAX_LEVEL_50 && monId > FRONTIER_MONS_HIGH_TIER)
             continue;

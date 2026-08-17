@@ -1483,6 +1483,11 @@
 #define TRAINER_WALLACE_ORAS                1285  // Wallace's Sky Pillar team (mono-Water, Milotic ace)
 #define TRAINER_ZINNIA                      1286  // Lorekeeper Zinnia (Mega Salamence)
 
+// v2.6.1 — custom slots 7-8. Third discontiguous window (1-3 = 1087-1089,
+// 4-6 = 1099-1101 after the LA block); placed after Zinnia so nothing shifts.
+#define TRAINER_SIM_CUSTOM_7                1287
+#define TRAINER_SIM_CUSTOM_8                1288
+
 // NOTE: Because each Trainer uses a flag to determine when they are defeated, there is only space for 9 additional trainers before trainer flag space overflows
 //       More space can be made by shifting flags around in constants/flags.h or changing how trainer flags are handled
 //       MAX_TRAINERS_COUNT can be increased but will take up additional saveblock space

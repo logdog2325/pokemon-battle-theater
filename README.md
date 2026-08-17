@@ -14,7 +14,7 @@ or pilot one side via Pilot Mode.
 Title screen + box art commissioned from
 **[u/CDRX73](https://www.reddit.com/user/CDRX73/)**.
 
-**Download the latest patch:** [v2.6.0 — original RS + DP Elite Fours, Delta Episode Wallace + Zinnia, 18 gauntlet leagues](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
+**Download the latest patch:** [v2.6.1 — Trace rematch fix, final-evos-only Battle Factory, 8 custom slots + Custom Cup](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
 All releases live on the [Releases page](https://github.com/logdog2325/pokemon-battle-theater/releases).
 
 ---
@@ -114,6 +114,16 @@ All releases live on the [Releases page](https://github.com/logdog2325/pokemon-b
   Wallace and Lorekeeper Zinnia with her Mega Salamence. The E4 Challenge
   grows to 18 leagues in release order (Hoenn RS and Sinnoh DP slot in
   before their remakes; LGPE now sits after USUM)
+- **8 custom slots + the Custom Cup (v2.6.1)** — two more Build Trainer
+  slots (old saves keep everything; new slots load empty), and a new
+  "Custom" tournament cup that pools all 8 of your own builds so you can
+  run bracket tournaments with teams you made. Empty slots are skipped,
+  small-bracket padding now cycles real entrants instead of cloning one,
+  and empty slots can no longer be followed or rolled as doubles partners.
+  Also: the Battle Factory (rentals, opponents, and Noland) now draws
+  FINAL-STAGE species only, and Trace's two LGPE teams are his real Lv
+  66-67 champion-rematch squads (Mega Pidgeot with U-turn) instead of the
+  initial title fight
 - **Smart pool selection (v2.1.0)** — rotation-pool trainers (Ash's Full
   Team, Paul, Gary, the Battle Tree pools) now bring a *matchup-aware* six
   scored against your roster, with light randomization so the team varies

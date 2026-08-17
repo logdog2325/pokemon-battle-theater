@@ -259,7 +259,8 @@ static inline const struct Trainer *GetTrainerStructFromId(u16 trainerId)
     // v1.1 — slots 4-6 (IDs 1099-1101) live AFTER the LA block (1090-1098), so
     // the custom range is discontiguous. Check both windows.
     if ((trainerId >= TRAINER_SIM_CUSTOM_1 && trainerId <= TRAINER_SIM_CUSTOM_3)
-     || (trainerId >= TRAINER_SIM_CUSTOM_4 && trainerId <= TRAINER_SIM_CUSTOM_6))
+     || (trainerId >= TRAINER_SIM_CUSTOM_4 && trainerId <= TRAINER_SIM_CUSTOM_6)
+     || (trainerId >= TRAINER_SIM_CUSTOM_7 && trainerId <= TRAINER_SIM_CUSTOM_8))
         return Sim_GetCustomTrainerStruct(trainerId);
     sanitizedTrainerId = SanitizeTrainerId(trainerId);
 

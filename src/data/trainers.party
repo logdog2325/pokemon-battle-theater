@@ -26227,51 +26227,57 @@ AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
 Pidgeot (M) @ Pidgeotite
 Ability: Keen Eye
 Tags: Ace
-Level: 56
+Level: 66
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Quick Attack
 - Air Slash
 - Heat Wave
+- U-turn
 
 Vileplume (F)
 Ability: Chlorophyll
-Level: 56
+Level: 66
 IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Solar Beam
 - Reflect
 - Sludge Bomb
+- Dazzling Gleam
 
 Marowak (M)
 Ability: Rock Head
-Level: 56
+Level: 66
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Fire Punch
-- Bonemerang
 - Brick Break
+- Earthquake
+- Fire Punch
+- Thunder Punch
 
 Rapidash (F)
 Ability: Flash Fire
-Level: 56
+Level: 66
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Flare Blitz
 - Quick Attack
 - Poison Jab
+- Drill Run
 
 Slowbro (M)
 Ability: Own Tempo
-Level: 56
+Level: 66
 IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Psychic
 - Surf
+- Blizzard
 - Light Screen
 
 Jolteon (M)
 Ability: Volt Absorb
-Level: 57
+Level: 67
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Thunder
 - Quick Attack
 - Pin Missile
+- Shadow Ball
 
 === TRAINER_TRACE_LGPE_EEVEE ===
 Name: TRACE-R
@@ -26286,50 +26292,56 @@ AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
 Pidgeot (M) @ Pidgeotite
 Ability: Keen Eye
 Tags: Ace
-Level: 56
+Level: 66
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Quick Attack
 - Air Slash
 - Heat Wave
+- U-turn
 
 Vileplume (F)
 Ability: Chlorophyll
-Level: 56
+Level: 66
 IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Solar Beam
 - Reflect
 - Sludge Bomb
+- Dazzling Gleam
 
 Marowak (M)
 Ability: Rock Head
-Level: 56
+Level: 66
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Fire Punch
-- Bonemerang
 - Brick Break
+- Earthquake
+- Fire Punch
+- Thunder Punch
 
 Rapidash (F)
 Ability: Flash Fire
-Level: 56
+Level: 66
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Flare Blitz
 - Quick Attack
 - Poison Jab
+- Drill Run
 
 Slowbro (M)
 Ability: Own Tempo
-Level: 56
+Level: 66
 IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Psychic
 - Surf
+- Blizzard
 - Light Screen
 
 Raichu (M)
 Ability: Static
-Level: 57
+Level: 67
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Thunder
+- Brick Break
 - Quick Attack
+- Thunder
 - Iron Tail
 
 === TRAINER_SILVER_CHIK_HGSS ===
