@@ -1488,6 +1488,14 @@
 #define TRAINER_SIM_CUSTOM_7                1287
 #define TRAINER_SIM_CUSTOM_8                1288
 
+// v2.7.0 — Boss Battles phase trainers. Gauntlet-internal: NOT in the roster
+// picker or any cup; only the boss gauntlets reference them.
+#define TRAINER_XD001                       1289  // Greevil phase 1 — Shadow Lugia (XD001)
+#define TRAINER_KYUREM_B2                   1290  // Ghetsis phase 1 — Black Kyurem (Black 2)
+#define TRAINER_KYUREM_W2                   1291  // Ghetsis phase 1 — White Kyurem (White 2)
+#define TRAINER_GIRATINA_ALTERED            1292  // Volo phase 2 — Giratina Altered Forme
+#define TRAINER_GIRATINA_ORIGIN             1293  // Volo phase 3 — Giratina Origin Forme
+
 // NOTE: Because each Trainer uses a flag to determine when they are defeated, there is only space for 9 additional trainers before trainer flag space overflows
 //       More space can be made by shifting flags around in constants/flags.h or changing how trainer flags are handled
 //       MAX_TRAINERS_COUNT can be increased but will take up additional saveblock space

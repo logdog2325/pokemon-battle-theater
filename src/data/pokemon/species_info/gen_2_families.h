@@ -8608,6 +8608,97 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .levelUpLearnset = sLugiaLevelUpLearnset,
         .teachableLearnset = sLugiaTeachableLearnset,
     },
+
+    // v2.7.0 — XD001, Cipher's Shadow Lugia (Battle Theater Boss Battles).
+    // Identical to Lugia except the custom sprites/palettes and dex flavor;
+    // shares Lugia's learnsets, cry, dex number and overworld gfx. The boss
+    // trainer nicknames it XD001, so the healthbox reads XD001 in battle.
+    [SPECIES_LUGIA_SHADOW] =
+    {
+        .baseHP        = 106,
+        .baseAttack    = 90,
+        .baseDefense   = 130,
+        .baseSpeed     = 110,
+        .baseSpAttack  = 90,
+        .baseSpDefense = 154,
+        .types = MON_TYPES(TYPE_PSYCHIC, TYPE_FLYING),
+        .catchRate = 3,
+    #if P_UPDATED_EXP_YIELDS >= GEN_8
+        .expYield = 340,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_5
+        .expYield = 306,
+    #else
+        .expYield = 220,
+    #endif
+        .evYield_SpDefense = 3,
+        .genderRatio = MON_GENDERLESS,
+        .eggCycles = 120,
+        .friendship = 0,
+        .growthRate = GROWTH_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED),
+        .abilities = { ABILITY_PRESSURE, ABILITY_NONE, ABILITY_MULTISCALE },
+        .bodyColor = BODY_COLOR_PURPLE,
+        .speciesName = _("Lugia"),
+        .cryId = CRY_LUGIA,
+        .natDexNum = NATIONAL_DEX_LUGIA,
+        .categoryName = _("Shadow"),
+        .height = 52,
+        .weight = 2160,
+        .description = COMPOUND_STRING(
+            "XD001, the ultimate Shadow Pokémon.\n"
+            "Cipher sealed the door to its heart,\n"
+            "making it a merciless fighting machine\n"
+            "said to be impossible to snag."),
+        .pokemonScale = 256,
+        .pokemonOffset = 0,
+        .trainerScale = 721,
+        .trainerOffset = 19,
+        .frontPic = gMonFrontPic_LugiaShadow,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 5),
+            ANIMCMD_FRAME(0, 5),
+            ANIMCMD_FRAME(1, 5),
+            ANIMCMD_FRAME(0, 10),
+            ANIMCMD_FRAME(1, 5),
+            ANIMCMD_FRAME(0, 5),
+            ANIMCMD_FRAME(1, 5),
+            ANIMCMD_FRAME(0, 10),
+            ANIMCMD_FRAME(1, 5),
+            ANIMCMD_FRAME(0, 5),
+            ANIMCMD_FRAME(1, 5),
+            ANIMCMD_FRAME(0, 10),
+        ),
+        .frontAnimId = ANIM_GROW_IN_STAGES,
+        .frontAnimDelay = 20,
+        .enemyMonElevation = 6,
+        .backPic = gMonBackPic_LugiaShadow,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 1 : 0,
+        .backAnimId = BACK_ANIM_SHAKE_GLOW_BLUE,
+        .palette = gMonPalette_LugiaShadow,
+        .shinyPalette = gMonShinyPalette_LugiaShadow,
+        .iconSprite = gMonIcon_LugiaShadow,
+        .iconPalIndex = 2,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(2, 17, SHADOW_SIZE_L)
+        FOOTPRINT(Lugia)
+        OVERWORLD(
+            sPicTable_Lugia,
+            SIZE_64x64,
+            SHADOW_SIZE_M,
+            TRACKS_NONE,
+            sAnimTable_Following,
+            gOverworldPalette_Lugia,
+            gShinyOverworldPalette_Lugia
+        )
+        .isRestrictedLegendary = TRUE,
+        .isFrontierBanned = TRUE,
+        .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
+        .levelUpLearnset = sLugiaLevelUpLearnset,
+        .teachableLearnset = sLugiaTeachableLearnset,
+    },
 #endif //P_FAMILY_LUGIA
 
 #if P_FAMILY_HO_OH

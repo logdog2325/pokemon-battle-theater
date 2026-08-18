@@ -9611,6 +9611,15 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
 #else
     const u8 gMonIcon_Lugia[] = INCGFX_U8("graphics/pokemon/lugia/icon_gba.png", ".4bpp");
 #endif //P_GBA_STYLE_SPECIES_ICONS
+    // v2.7.0 — Shadow Lugia (XD001, Battle Theater boss). Battle sprites +
+    // icon by lvalovenfs (DeviantArt), used with credit; shiny palette is a
+    // crimson Hyper Mode-style recolor. Modern-style gfx only (this fork
+    // builds with P_GBA_STYLE_SPECIES_GFX FALSE).
+    const u32 gMonFrontPic_LugiaShadow[] = INCGFX_U32("graphics/pokemon/lugia/shadow/anim_front.png", ".4bpp.smol");
+    const u16 gMonPalette_LugiaShadow[] = INCGFX_U16("graphics/pokemon/lugia/shadow/normal.pal", ".gbapal");
+    const u32 gMonBackPic_LugiaShadow[] = INCGFX_U32("graphics/pokemon/lugia/shadow/back.png", ".4bpp.smol");
+    const u16 gMonShinyPalette_LugiaShadow[] = INCGFX_U16("graphics/pokemon/lugia/shadow/shiny.pal", ".gbapal");
+    const u8 gMonIcon_LugiaShadow[] = INCGFX_U8("graphics/pokemon/lugia/shadow/icon.png", ".4bpp");
 #if P_FOOTPRINTS
     const u8 gMonFootprint_Lugia[] = INCGFX_U8("graphics/pokemon/lugia/footprint.png", ".1bpp");
 #endif //P_FOOTPRINTS

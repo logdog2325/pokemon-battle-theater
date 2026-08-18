@@ -1857,6 +1857,7 @@ static void DebugAction_Tournament_StartRandom(u8 taskId);
 static bool32 Sim_BeginTournamentRun(u16 playerSideId, bool32 pilot);
 // v2.4.0 — E4 Challenge gauntlet: league picker -> level cap -> challenger.
 static void DebugAction_E4_PickLeague(u8 taskId, u32 leagueIdx);
+static void DebugAction_Boss_PickGauntlet(u8 taskId, u32 bossIdx);  // v2.7.0
 static void DebugAction_E4_ToggleLevelCap(u8 taskId);
 static void DebugAction_E4_ConfirmLevelCap(u8 taskId);
 static void Sim_ShowE4LevelCapMenu(void);
@@ -1877,6 +1878,17 @@ EWRAM_DATA bool8 gSimHofShowcase = FALSE;
 static EWRAM_DATA struct Pokemon sE4HofParty[PARTY_SIZE];
 static EWRAM_DATA u8 sE4GauntletLeague = 0;      // league of the active/last run
 static EWRAM_DATA u16 sE4GauntletChallenger = 0; // followed trainer of the run
+// v2.7.0 — Boss Battles: multi-phase boss gauntlets with NO healing between
+// phases. They ride the E4 gauntlet state machine (list/index/active/result);
+// sE4GauntletDoubles gives every room its own format (Greevil's six are a
+// 2v2, XD-style), and sBossCarryParty carries the challenger's post-battle
+// party (HP/PP/status/faints) into the next phase.
+static EWRAM_DATA u8 sBossPendingGauntlet = 0;
+static EWRAM_DATA bool8 sBossPendingActive = FALSE;
+static EWRAM_DATA bool8 sE4GauntletIsBoss = FALSE;
+static EWRAM_DATA bool8 sE4GauntletDoubles[5] = {FALSE};
+static EWRAM_DATA struct Pokemon sBossCarryParty[PARTY_SIZE];
+static EWRAM_DATA bool8 sBossCarryValid = FALSE;
 // v2.3.0 — format chosen in the tournament flow (doubles toggle; VGC and
 // best-of write the gSimVGCMode / gSimBestOf globals directly).
 static EWRAM_DATA bool8 sTournamentForceDouble = FALSE;
@@ -2573,6 +2585,44 @@ static const struct DebugMenuOption sDebugMenu_Actions_E4Leagues[] =
     { NULL }
 };
 
+// v2.7.0 — Boss Battles: the games' great multi-phase boss fights, run like
+// a mini E4 gauntlet but with NO healing between phases. Room 0 alt is the
+// 50/50 variant roll (Ghetsis' Kyurem matches the version, like multi-variant
+// league champions).
+struct SimBossGauntlet
+{
+    const u8 *name;
+    u16 rooms[3];
+    bool8 roomDoubles[3];
+    u8 roomCount;
+    u16 altRoom0;     // 0 = none; else replaces rooms[0] on a coin flip
+    u16 pickerStart;  // challenger picker lands in the boss's own era
+};
+
+static const u8 sBossName_Greevil[] = _("Greevil XD");
+static const u8 sBossName_Ghetsis[] = _("Ghetsis B2W2");
+static const u8 sBossName_Volo[]    = _("Volo LA");
+
+static const struct SimBossGauntlet sSimBossGauntlets[] =
+{
+    { sBossName_Greevil, {TRAINER_XD001, TRAINER_GREEVIL, 0},
+      {FALSE, TRUE, FALSE}, 2, 0,                1242 }, // Shadow Lugia -> his six Shadow mons (2v2, XD-style)
+    { sBossName_Ghetsis, {TRAINER_KYUREM_B2, TRAINER_GHETSIS_BW, 0},
+      {FALSE, FALSE, FALSE}, 2, TRAINER_KYUREM_W2, 1055 }, // Black/White Kyurem (rolled) -> Ghetsis
+    { sBossName_Volo,    {TRAINER_VOLO_LA, TRAINER_GIRATINA_ALTERED, TRAINER_GIRATINA_ORIGIN},
+      {FALSE, FALSE, FALSE}, 3, 0,               1090 }, // Volo's six -> Giratina Altered -> Origin
+};
+#define SIM_BOSS_GAUNTLET_COUNT (sizeof(sSimBossGauntlets) / sizeof(sSimBossGauntlets[0]))
+
+// Boss Battles step 1: pick the boss. Rows index sSimBossGauntlets[].
+static const struct DebugMenuOption sDebugMenu_Actions_BossGauntlets[] =
+{
+    { sBossName_Greevil, DebugAction_Boss_PickGauntlet, (void *)0 },
+    { sBossName_Ghetsis, DebugAction_Boss_PickGauntlet, (void *)1 },
+    { sBossName_Volo,    DebugAction_Boss_PickGauntlet, (void *)2 },
+    { NULL }
+};
+
 // v2.3.0 — Tournament wrapper flow, step 2: battle format for the whole cup
 // run. Singles/Doubles set the per-run doubles flag; VGC flips the global VGC
 // mode (forced doubles + Lv 50 cap + bring-6-pick-4, visible on the sim menu).
@@ -2652,6 +2702,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_TrainersWrapper[] =
     // v2.4.0 — E4 Challenge: run a league's Elite Four + champion gauntlet
     // with any trainer, spectated or piloted. Full heal between rooms.
     { COMPOUND_STRING("{COLOR LIGHT_RED}E4 Challenge…"), DebugAction_OpenSubMenu, sDebugMenu_Actions_E4Leagues, },
+    { COMPOUND_STRING("{COLOR LIGHT_RED}Boss Battles…"), DebugAction_OpenSubMenu, sDebugMenu_Actions_BossGauntlets, },
     // v1.7 — Frontier Challenge: skip the sim setup screen entirely, open
     // the trainer picker directly in FRONTIER selection mode. On confirm,
     // the chosen trainer's full team loads into gPlayerParty and the user
@@ -3258,6 +3309,9 @@ void Debug_ShowTrainersSubMenu(void)
     // gPlayerParty, with ZERO save writes. StartCredits in hall_of_fame.c
     // checks gSimHofShowcase and returns to the lobby (reopening this menu)
     // instead of rolling the credits. Defeats still fall through quietly.
+    // v2.7.0 — boss gauntlet wins earn the ceremony too (user call: it
+    // looks too good to reserve). The final phase's snapshot is already in
+    // sE4HofParty, battle scars and all.
     if (sE4GauntletResult == 1)
     {
         sE4GauntletResult = 0;
@@ -3281,6 +3335,10 @@ void Debug_ShowTrainersSubMenu(void)
         sSimMatchOpponent1 = sE4GauntletList[sE4GauntletIndex];
         sSimMatchOpponent2 = TRAINER_NONE;
         sSimMatchPartner = PARTNER_NONE;
+        // v2.7.0 — per-phase format (Greevil phase 2 is a 2v2). Boss runs
+        // also skip the between-rooms heal: see the sBossCarryParty restore
+        // in Sim_SetupMatchRound's party build.
+        sSimMatchForceDouble = sE4GauntletDoubles[sE4GauntletIndex];
         Sim_TriggerNextMatchRound();
         return;
     }
@@ -4091,6 +4149,10 @@ static void DebugTask_HandleMenuInput_General(u8 taskId)
             else if (option.action == DebugAction_E4_PickLeague)
             {
                 DebugAction_E4_PickLeague(taskId, (u32)option.actionParams);
+            }
+            else if (option.action == DebugAction_Boss_PickGauntlet)
+            {
+                DebugAction_Boss_PickGauntlet(taskId, (u32)option.actionParams);
             }
             else
             {
@@ -7122,7 +7184,10 @@ static void DebugAction_Trainers_ChooseTrainer(u8 taskId, u32 selection)
         // v2.4.0 — E4 Challenge challenger picker. Land on the chosen
         // league's own roster section so era-appropriate challengers are
         // right there (L/R still jumps sections as usual).
-        gTasks[taskId].tInput = sSimE4Leagues[sE4PendingLeague].pickerStart;
+        // v2.7.0 — boss runs land the picker in the boss's own era instead.
+        gTasks[taskId].tInput = sBossPendingActive
+            ? sSimBossGauntlets[sBossPendingGauntlet].pickerStart
+            : sSimE4Leagues[sE4PendingLeague].pickerStart;
         break;
     case TRAINERS_DEBUG_SELECTION_COPY_TO_CUSTOM:
         // v1.1 — copy picker has no "saved selection" to restore. Land on the
@@ -9210,6 +9275,11 @@ static void Sim_SetupMatchRound(s32 trainer1Id, s32 trainer2Id, s32 partnerId, s
         if (B_FLAG_AI_VS_AI_BATTLE && !pilotMode)
             FlagSet(B_FLAG_AI_VS_AI_BATTLE);
         CreateNPCTrainerPartyFromTrainer(gPlayerParty, GetTrainerStructFromId(playerSideId), TRUE, gBattleTypeFlags);
+        // v2.7.0 — Boss Battles run with NO healing between phases: overwrite
+        // the freshly built (fully healed) party with the previous phase's
+        // post-battle state. Fainted mons stay fainted; PP stays spent.
+        if (sE4GauntletActive && sE4GauntletIsBoss && sBossCarryValid && sE4GauntletIndex > 0)
+            memcpy(gPlayerParty, sBossCarryParty, sizeof(sBossCarryParty));
         // v2.0.4 — Two-variable convention: gSimPlayerSideId always stores
         // the player-AI/piloted trainer's ID, gPartnerTrainerId stays as the
         // partner's ID when a partner is present (so the engine's partner-
@@ -9492,6 +9562,7 @@ static void DebugAction_E4_PickLeague(u8 taskId, u32 leagueIdx)
     if (leagueIdx >= SIM_E4_LEAGUE_COUNT)
         return;
     sE4PendingLeague = (u8)leagueIdx;
+    sBossPendingActive = FALSE;  // v2.7.0 — league flow, not a boss run
     Debug_DestroyMenu(taskId);
     Sim_ShowE4LevelCapMenu();
 }
@@ -9531,6 +9602,18 @@ static void DebugAction_E4_ConfirmLevelCap(u8 taskId)
     Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_E4Who);
 }
 
+// v2.7.0 — Boss Battles step 1 handler: arm the boss, then the shared
+// level-cap step (Off/50/75/100 + Continue), then the who menu.
+static void DebugAction_Boss_PickGauntlet(u8 taskId, u32 bossIdx)
+{
+    if (bossIdx >= SIM_BOSS_GAUNTLET_COUNT)
+        return;
+    sBossPendingGauntlet = (u8)bossIdx;
+    sBossPendingActive = TRUE;
+    Debug_DestroyMenu(taskId);
+    Sim_ShowE4LevelCapMenu();
+}
+
 // Roll a random challenger from the whole curated roster (skipping empty
 // custom slots) — any trainer might take a shot at the league.
 static void DebugAction_E4_StartRandom(u8 taskId)
@@ -9567,26 +9650,56 @@ static void Sim_E4RestoreChallengerPartyForHof(void)
 
 static bool32 Sim_BeginE4Gauntlet(u16 challengerId, bool32 pilot)
 {
-    if (challengerId == TRAINER_NONE || sE4PendingLeague >= SIM_E4_LEAGUE_COUNT)
+    if (challengerId == TRAINER_NONE)
         return FALSE;
-    const struct SimE4League *lg = &sSimE4Leagues[sE4PendingLeague];
+    if (sBossPendingActive)
+    {
+        // v2.7.0 — Boss Battles: variable-length phase list, per-phase
+        // doubles, no healing (sBossCarryParty), always uncapped.
+        const struct SimBossGauntlet *bg = &sSimBossGauntlets[sBossPendingGauntlet];
+        for (u32 i = 0; i < bg->roomCount; i++)
+        {
+            sE4GauntletList[i] = bg->rooms[i];
+            sE4GauntletDoubles[i] = bg->roomDoubles[i];
+        }
+        // One variant per run: Ghetsis rolls Black 2 OR White 2 Kyurem,
+        // the same coin-flip idea as multi-variant league champions.
+        if (bg->altRoom0 != 0 && (Random() & 1))
+            sE4GauntletList[0] = bg->altRoom0;
+        sE4GauntletLen = bg->roomCount;
+        sE4GauntletIsBoss = TRUE;
+        sBossCarryValid = FALSE;
+        gSimLevelCap = sE4PendingLevelCap;  // v2.7.0 — cap step now asked here too
+        sBossPendingActive = FALSE;
+    }
+    else
+    {
+        if (sE4PendingLeague >= SIM_E4_LEAGUE_COUNT)
+            return FALSE;
+        const struct SimE4League *lg = &sSimE4Leagues[sE4PendingLeague];
 
-    // Build the 5-room run: E4 in canon order, then a rolled champion.
-    for (u32 i = 0; i < 4; i++)
-        sE4GauntletList[i] = lg->e4[i];
-    sE4GauntletList[4] = lg->champs[lg->champCount > 1 ? Random() % lg->champCount : 0];
-    sE4GauntletLen = 5;
+        // Build the 5-room run: E4 in canon order, then a rolled champion.
+        for (u32 i = 0; i < 4; i++)
+        {
+            sE4GauntletList[i] = lg->e4[i];
+            sE4GauntletDoubles[i] = lg->doubles;
+        }
+        sE4GauntletList[4] = lg->champs[lg->champCount > 1 ? Random() % lg->champCount : 0];
+        sE4GauntletDoubles[4] = lg->doubles;
+        sE4GauntletLen = 5;
+        sE4GauntletIsBoss = FALSE;
+        gSimLevelCap = sE4PendingLevelCap;
+    }
     sE4GauntletIndex = 0;
     sE4GauntletActive = TRUE;
     sE4GauntletResult = 0;
     sE4GauntletLeague = sE4PendingLeague;
     sE4GauntletChallenger = challengerId;
 
-    // Format: the league decides doubles (Blueberry only); level cap comes
-    // from the flow's own step. Both write the same knobs the sim menu
-    // shows. Tournament/best-of state is disarmed so the round dispatcher
-    // can't cross wires with a cup run.
-    gSimLevelCap = sE4PendingLevelCap;
+    // Format: per-phase doubles (league runs: the league decides, Blueberry
+    // only; boss runs: each phase sets its own — Greevil's six are a 2v2).
+    // Tournament/best-of state is disarmed so the round dispatcher can't
+    // cross wires with a cup run.
     gSimVGCMode = FALSE;
     gSimTournamentCup = 0;
     gSimT1Wins = 0;
@@ -9597,11 +9710,11 @@ static bool32 Sim_BeginE4Gauntlet(u16 challengerId, bool32 pilot)
     sSimMatchOpponent2 = TRAINER_NONE;
     sSimMatchPartner = PARTNER_NONE;
     sSimMatchPlayerAI = challengerId;
-    sSimMatchForceDouble = lg->doubles;
+    sSimMatchForceDouble = sE4GauntletDoubles[0];
     sSimMatchPilotMode = pilot;
     if (sDebugMenuListData != NULL)
     {
-        sDebugMenuListData->data[5] = lg->doubles;
+        sDebugMenuListData->data[5] = sE4GauntletDoubles[0];
         sDebugMenuListData->data[7] = pilot;
     }
     Sim_SetupMatchRound(sE4GauntletList[0], TRAINER_NONE, PARTNER_NONE, challengerId);
@@ -9628,6 +9741,14 @@ void Sim_E4GauntletAfterMatch(bool32 challengerWon)
         {
             sE4GauntletActive = FALSE;  // champion crowned
             sE4GauntletResult = 1;      // v2.4.0 — victory splash on reopen
+        }
+        else if (sE4GauntletIsBoss)
+        {
+            // v2.7.0 — NO HEALING between boss phases: carry the post-battle
+            // party (HP/PP/status/faints). sE4HofParty was snapshotted from
+            // gPlayerParty during battle cleanup, just before this call.
+            memcpy(sBossCarryParty, sE4HofParty, sizeof(sBossCarryParty));
+            sBossCarryValid = TRUE;
         }
     }
     else

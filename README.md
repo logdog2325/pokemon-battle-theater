@@ -13,8 +13,10 @@ or pilot one side via Pilot Mode.
 
 Title screen + box art commissioned from
 **[u/CDRX73](https://www.reddit.com/user/CDRX73/)**.
+Shadow Lugia (XD001) battle sprites + icon by
+**[lvalovenfs](https://www.deviantart.com/lvalovenfs)** (DeviantArt), used with credit.
 
-**Download the latest patch:** [v2.6.1 — Trace rematch fix, final-evos-only Battle Factory, 8 custom slots + Custom Cup](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
+**Download the latest patch:** [v2.7.0 — BOSS BATTLES: Greevil, Ghetsis, and Volo multi-phase gauntlets with no healing, starring Shadow Lugia](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
 All releases live on the [Releases page](https://github.com/logdog2325/pokemon-battle-theater/releases).
 
 ---
@@ -124,6 +126,20 @@ All releases live on the [Releases page](https://github.com/logdog2325/pokemon-b
   FINAL-STAGE species only, and Trace's two LGPE teams are his real Lv
   66-67 champion-rematch squads (Mega Pidgeot with U-turn) instead of the
   initial title fight
+- **BOSS BATTLES (v2.7.0)** — the games' legendary multi-phase boss fights,
+  run like a mini E4 gauntlet with NO HEALING between phases: HP, PP,
+  status, and faints all carry forward. Greevil XD (Shadow Lugia solo, then
+  his six Shadow Pokémon as an XD-style 2v2), Ghetsis B2W2 (the scripted
+  Black or White Kyurem fight — one rolled per run — then his Hydreigon
+  team), and Volo LA (his six, then Giratina Altered, then Giratina ORIGIN,
+  back to back). Spectate or pilot, level caps optional, and a boss win
+  earns the full Hall of Fame ceremony
+- **Shadow Lugia, for real (v2.7.0)** — XD001 fights with proper Shadow
+  Lugia battle sprites (front animation, back sprite, and party icon by
+  lvalovenfs on DeviantArt), battles under the name XD001, and carries all
+  four of its Shadow moves. Base Lugia and its shiny are untouched — XD001
+  is its own species entry, complete with a Cipher-flavored dex entry and a
+  crimson Hyper Mode-style shiny palette
 - **Smart pool selection (v2.1.0)** — rotation-pool trainers (Ash's Full
   Team, Paul, Gary, the Battle Tree pools) now bring a *matchup-aware* six
   scored against your roster, with light randomization so the team varies

@@ -44671,6 +44671,117 @@ Jolly Nature
 - Thunder Fang
 
 
+/* v2.7.0 — Boss Battles phase trainers. XD001 is Greevil's Shadow Lugia
+ * (all four Shadow moves); the two Kyurem entries are the B2/W2 scripted
+ * fights (fused formes, so Teravolt/Turboblaze + the signature moves are
+ * canon-correct); the Giratina pair is Volo's two-phase finale. Giratina
+ * Origin holds the Griseous Core so the forme can't revert mid-battle
+ * (Legends: Arceus has no held items, but forme integrity wins). */
+=== TRAINER_XD001 ===
+Name: GREEVIL
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+XD001 (Lugia-Shadow)
+Ability: Pressure
+Level: 50
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
+Rash Nature
+- Shadow Blast
+- Shadow Shed
+- Shadow Down
+- Shadow Storm
+
+=== TRAINER_KYUREM_B2 ===
+Name: GHETSIS
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Kyurem-Black
+Ability: Teravolt
+Level: 55
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 252 Spe
+Naughty Nature
+- Dragon Breath
+- Slash
+- Fusion Bolt
+- Freeze Shock
+
+=== TRAINER_KYUREM_W2 ===
+Name: GHETSIS
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Kyurem-White
+Ability: Turboblaze
+Level: 55
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
+Mild Nature
+- Dragon Breath
+- Slash
+- Fusion Flare
+- Ice Burn
+
+=== TRAINER_GIRATINA_ALTERED ===
+Name: VOLO
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Giratina
+Ability: Pressure
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 128 Atk / 0 Def / 128 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Aura Sphere
+- Dragon Claw
+- Earth Power
+- Shadow Force
+
+=== TRAINER_GIRATINA_ORIGIN ===
+Name: VOLO
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Giratina-Origin @ Griseous Core
+Ability: Levitate
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 128 Atk / 0 Def / 128 SpA / 0 SpD / 0 Spe
+Quiet Nature
+- Aura Sphere
+- Dragon Claw
+- Earth Power
+- Shadow Force
+
 === TRAINER_URBAIN ===
 Name: URBAIN
 Class: Cooltrainer
