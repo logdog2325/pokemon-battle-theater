@@ -72,6 +72,7 @@ void Debug_FinishSearchAndReopen(void);
 extern EWRAM_DATA bool8 gSimFrontierChallengePending;
 extern EWRAM_DATA bool8 gSimFrontierChallengeActive;  // v1.19
 extern EWRAM_DATA u8 gSimFrontierBorrowedName[PLAYER_NAME_LENGTH + 1];
+extern EWRAM_DATA u16 gSimFrontierBorrowedId;  // v2.8.0 era typings
 extern EWRAM_DATA s16 gSimLevelCap;
 extern EWRAM_DATA u8 gSimBestOf;
 extern EWRAM_DATA u8 gSimT1Wins;
@@ -124,6 +125,11 @@ void Sim_SnapshotPicksForNextRound(void);
 // mark the tournament as eliminated. Handles SF lazy-simulation as the player
 // moves to the final. Called from CB2_EndDebugBattle.
 void Sim_AdvanceTournamentAfterMatch(bool32 playerWon);
+// v2.8.0 — Era-accurate typings. Rewrites gBattleMons[battler].types to the
+// typing the species had when the trainer's game shipped (e.g. a Gen 4
+// Togekiss is Normal/Flying, not Fairy/Flying). No-op outside sim battles.
+void Sim_ApplyEraTypes(u32 battler);
+
 // v2.4.0 — E4 Challenge gauntlet (debug.c): active check + post-battle advance.
 bool32 Sim_IsE4GauntletActive(void);
 void Sim_E4GauntletAfterMatch(bool32 challengerWon);

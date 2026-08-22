@@ -16,7 +16,7 @@ Title screen + box art commissioned from
 Shadow Lugia (XD001) battle sprites + icon by
 **[lvalovenfs](https://www.deviantart.com/lvalovenfs)** (DeviantArt), used with credit.
 
-**Download the latest patch:** [v2.7.1 — canon audit: 200 item/moveset/ability corrections, era-correct Gengar, 1v2 fairness fix](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
+**Download the latest patch:** [v2.8.0 — era-accurate typings: a Gen 4 Togekiss is Normal/Flying again](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
 All releases live on the [Releases page](https://github.com/logdog2325/pokemon-battle-theater/releases).
 
 ---
@@ -154,6 +154,28 @@ All releases live on the [Releases page](https://github.com/logdog2325/pokemon-b
   Gengar now carries Levitate AND Cursed Body as ability slots, so
   pre-Gen-7 teams float and Gen 7+ teams don't. Plus: 1v2 battles finally
   give the player side its full six Pokemon instead of three
+- **ERA-ACCURATE TYPINGS (v2.8.0)** — types are species data, so a modern
+  build was handing Cynthia's Platinum Togekiss the Fairy typing it did not
+  receive until Gen 6. Every Pokemon now battles with the typing it HAD when
+  its trainer's game shipped, derived from the same era the picker displays.
+  All 25 historically retyped species are covered, verified against
+  Bulbapedia: the full Gen 6 Fairy retype (including the asymmetries — the
+  Clefairy line and Togepi went pure Fairy while the Jigglypuff line kept
+  Normal, and Azurill is Normal/Fairy unlike Marill and Azumarill), Magnemite
+  and Magneton gaining Steel in Gen 2, and Rotom's appliance forms, which
+  were all Electric/Ghost until Gen 5. So Cynthia's Platinum Togekiss is
+  Normal/Flying while her BDSP one stays Fairy/Flying, Wally's Gardevoir is
+  pure Psychic, and Sabrina's GSC Mr. Mime has no Fairy. Facility teams use
+  their own eras too — the Hoenn Frontier Brains are Gen 3, the Sinnoh Brains
+  Gen 4, the Battle Tree pools Gen 7 — and a team borrowed for a Frontier
+  Challenge run carries its owner's era into the facility
+- **Dynamax is Sword/Shield only again (v2.8.0)** — piloted teams could
+  Dynamax anything, because the gate that unlocked pilot-mode Dynamax in
+  v2.3.1 never checked the individual Pokemon. Piloted teams now follow the
+  same per-mon rule the AI always did: only the Sword/Shield trainers on
+  their canonical Dynamax and G-Max mons, Ash's Gigantamax Gengar, and
+  custom mons with the per-mon toggle switched on. This also fixes that
+  toggle being ignored in pilot mode
 - **Smart pool selection (v2.1.0)** — rotation-pool trainers (Ash's Full
   Team, Paul, Gary, the Battle Tree pools) now bring a *matchup-aware* six
   scored against your roster, with light randomization so the team varies

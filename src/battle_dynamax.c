@@ -104,6 +104,22 @@ bool32 CanDynamax(enum BattlerId battler)
             return FALSE;
     }
 
+    // v2.8.0 — PILOT MODE must obey the same per-mon rule the AI side does.
+    // CanDynamax is only a "may this side Dynamax at all" gate; it never looks
+    // at the mon's own dynamaxLevel. AI trainers get that check from
+    // ShouldTrainerBattlerUseGimmick, but a human-controlled battler never
+    // reaches it — so the v2.3.1 pilot bypass above let ANY piloted team
+    // Dynamax. Only mons whose trainer data actually sets a Dynamax level
+    // qualify: the Sword/Shield trainers on their canonical Dynamax/G-Max
+    // mons, Ash's Journeys Gigantamax Gengar, and custom-built mons whose
+    // per-mon Dynamax toggle (v2.5.1) is switched on.
+    if (gSimPilotMode && IsOnPlayerSide(battler))
+    {
+        struct Pokemon *mon = GetBattlerMon(battler);
+        if (GetMonData(mon, MON_DATA_DYNAMAX_LEVEL) == 0)
+            return FALSE;
+    }
+
     // Check if species isn't allowed to Dynamax.
     if (GET_BASE_SPECIES_ID(species) == SPECIES_ZACIAN
         || GET_BASE_SPECIES_ID(species) == SPECIES_ZAMAZENTA

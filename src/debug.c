@@ -289,6 +289,7 @@ static bool32 IsHoennRivalForMusic(u16 trainerId)
 // Opponent right (B_BATTLER_3) → TRAINER_BATTLE_PARAM.opponentB when the
 //   battle is a two-opponents type (MULTI + TWO_OPPONENTS); otherwise still
 //   opponentA (single trainer fielding two mons, e.g. Tate & Liza).
+
 u16 Sim_GetBattlerTrainerId(enum BattlerId battler)
 {
     if (IsOnPlayerSide(battler))
@@ -812,6 +813,176 @@ static const u8 *GetSimSourceSuffix(u16 trainerId)
         return sSimSourceSuffixZA;
     return sSimSourceSuffixNone;
 }
+
+// ============================================================================
+// v2.8.0 — ERA-ACCURATE TYPINGS
+// ----------------------------------------------------------------------------
+// Types are species data, so a modern build gives Cynthia's Platinum Togekiss
+// the Fairy typing it only received in Gen 6 — six years after her Sinnoh
+// team existed. This table restores the typing a species HAD when the
+// trainer's game shipped. The generation each trainer's team comes from is
+// derived from GetSimSourceSuffix (the same classification the picker shows),
+// so a team can never display one era and battle as another.
+//
+// Only sim battles are affected; vanilla play and the Frontier are untouched.
+// ============================================================================
+
+struct SimEraTyping
+{
+    u16 species;
+    u8  sinceGen;  // generation the CURRENT typing began
+    u8  oldType0;  // typing used before sinceGen
+    u8  oldType1;
+};
+
+static const struct SimEraTyping sSimEraTypings[] =
+{
+    // --- Fairy did not exist until Gen 6 ---
+    { SPECIES_CLEFAIRY,   6, TYPE_NORMAL,  TYPE_NORMAL  },
+    { SPECIES_CLEFABLE,   6, TYPE_NORMAL,  TYPE_NORMAL  },
+    { SPECIES_CLEFFA,     6, TYPE_NORMAL,  TYPE_NORMAL  },
+    { SPECIES_JIGGLYPUFF, 6, TYPE_NORMAL,  TYPE_NORMAL  },
+    { SPECIES_WIGGLYTUFF, 6, TYPE_NORMAL,  TYPE_NORMAL  },
+    { SPECIES_IGGLYBUFF,  6, TYPE_NORMAL,  TYPE_NORMAL  },
+    { SPECIES_TOGEPI,     6, TYPE_NORMAL,  TYPE_NORMAL  },
+    { SPECIES_TOGETIC,    6, TYPE_NORMAL,  TYPE_FLYING  },
+    { SPECIES_TOGEKISS,   6, TYPE_NORMAL,  TYPE_FLYING  },  // Cynthia's Platinum ace
+    { SPECIES_MARILL,     6, TYPE_WATER,   TYPE_WATER   },
+    { SPECIES_AZUMARILL,  6, TYPE_WATER,   TYPE_WATER   },
+    { SPECIES_AZURILL,    6, TYPE_NORMAL,  TYPE_NORMAL  },
+    { SPECIES_SNUBBULL,   6, TYPE_NORMAL,  TYPE_NORMAL  },
+    { SPECIES_GRANBULL,   6, TYPE_NORMAL,  TYPE_NORMAL  },
+    { SPECIES_MR_MIME,    6, TYPE_PSYCHIC, TYPE_PSYCHIC },
+    { SPECIES_MIME_JR,    6, TYPE_PSYCHIC, TYPE_PSYCHIC },
+    { SPECIES_RALTS,      6, TYPE_PSYCHIC, TYPE_PSYCHIC },
+    { SPECIES_KIRLIA,     6, TYPE_PSYCHIC, TYPE_PSYCHIC },
+    { SPECIES_GARDEVOIR,  6, TYPE_PSYCHIC, TYPE_PSYCHIC },
+    { SPECIES_MAWILE,     6, TYPE_STEEL,   TYPE_STEEL   },
+    { SPECIES_COTTONEE,   6, TYPE_GRASS,   TYPE_GRASS   },
+    { SPECIES_WHIMSICOTT, 6, TYPE_GRASS,   TYPE_GRASS   },
+    // --- Rotom's appliance forms were all Electric/GHOST in Gen 4; Gen 5
+    //     gave each form its own secondary type. (Base Rotom never changed.)
+    { SPECIES_ROTOM_HEAT,  5, TYPE_ELECTRIC, TYPE_GHOST },
+    { SPECIES_ROTOM_WASH,  5, TYPE_ELECTRIC, TYPE_GHOST },
+    { SPECIES_ROTOM_FROST, 5, TYPE_ELECTRIC, TYPE_GHOST },
+    { SPECIES_ROTOM_FAN,   5, TYPE_ELECTRIC, TYPE_GHOST },
+    { SPECIES_ROTOM_MOW,   5, TYPE_ELECTRIC, TYPE_GHOST },
+    // --- Steel did not exist until Gen 2 ---
+    { SPECIES_MAGNEMITE,  2, TYPE_ELECTRIC, TYPE_ELECTRIC },
+    { SPECIES_MAGNETON,   2, TYPE_ELECTRIC, TYPE_ELECTRIC },
+};
+
+// Which generation's games does this trainer's team come from? Resolved from
+// the picker's own source-suffix classification, so the two can never drift.
+// Returns 0 when the trainer has no era (custom slots, anime, VGC teams,
+// facility pools) — those keep modern typings.
+static u8 Sim_GetTrainerGameGen(u16 trainerId)
+{
+    const u8 *src = GetSimSourceSuffix(trainerId);
+
+    if (src == sSimSourceSuffixRBY || src == sSimSourceSuffixRGBY
+     || src == sSimSourceSuffixRGB_Zard || src == sSimSourceSuffixRGB_Toise
+     || src == sSimSourceSuffixRGB_Saur || src == sSimSourceSuffixYel_Vap
+     || src == sSimSourceSuffixYel_Jolt || src == sSimSourceSuffixYel_Flare)
+        return 1;
+    if (src == sSimSourceSuffixGSC || src == sSimSourceSuffixGSC_Typh
+     || src == sSimSourceSuffixGSC_Fera || src == sSimSourceSuffixGSC_Mega)
+        return 2;
+    if (src == sSimSourceSuffixRS || src == sSimSourceSuffixEMR
+     || src == sSimSourceSuffixFRLG || src == sSimSourceSuffixColo
+     || src == sSimSourceSuffixXDGale)
+        return 3;
+    if (src == sSimSourceSuffixDP || src == sSimSourceSuffixPT
+     || src == sSimSourceSuffixHGSS)
+        return 4;
+    if (src == sSimSourceSuffixBW || src == sSimSourceSuffixB2W2
+     || src == sSimSourceSuffixPWT
+     || src == sSimSourceSuffixBW_Embo || src == sSimSourceSuffixBW_Samu
+     || src == sSimSourceSuffixBW_Serp || src == sSimSourceSuffixBW_NResh
+     || src == sSimSourceSuffixBW_NZek
+     || src == sSimSourceSuffixBW2_Embo || src == sSimSourceSuffixBW2_Samu
+     || src == sSimSourceSuffixBW2_Serp)
+        return 5;
+    if (src == sSimSourceSuffixXY || src == sSimSourceSuffixORAS)
+        return 6;
+    if (src == sSimSourceSuffixSM || src == sSimSourceSuffixRR
+     || src == sSimSourceSuffixLGPE)
+        return 7;
+    if (src == sSimSourceSuffixSWSH || src == sSimSourceSuffixBDSP)
+        return 8;
+    if (src == sSimSourceSuffixSV || src == sSimSourceSuffixZA
+     || src == sSimSourceSuffixSV_NemM || src == sSimSourceSuffixSV_NemQ
+     || src == sSimSourceSuffixSV_NemS)
+        return 9;
+
+    // v2.8.0 — facility trainers carry no source suffix, so map them by ID.
+    // Battle Tree pools are USUM-era (Gen 7).
+    if (trainerId == TRAINER_WALLY_BT || trainerId == TRAINER_CYNTHIA_BT
+     || trainerId == TRAINER_COLRESS_BT || trainerId == TRAINER_DEXIO_BT
+     || trainerId == TRAINER_GRIMSLEY_BT || trainerId == TRAINER_GUZMA_BT
+     || trainerId == TRAINER_KIAWE_BT || trainerId == TRAINER_KUKUI_BT
+     || trainerId == TRAINER_MALLOW_BT || trainerId == TRAINER_PLUMERIA_BT
+     || trainerId == TRAINER_SINA_BT || trainerId == TRAINER_RED_BT
+     || trainerId == TRAINER_BLUE_BT || trainerId == TRAINER_ANABEL_BT)
+        return 7;
+    // Sinnoh Frontier Brains are Platinum-era (Gen 4). The Hoenn Brains are
+    // vanilla Emerald data and fall through to the Gen 3 rule below.
+    if (trainerId == TRAINER_PALMER || trainerId == TRAINER_DAHLIA
+     || trainerId == TRAINER_DARACH || trainerId == TRAINER_ARGENTA
+     || trainerId == TRAINER_THORTON)
+        return 4;
+
+    // v2.8.0 — every ID below the sim's own additions is base-game Emerald
+    // data (Wally's Victory Road rematches, the Hoenn gym trainers, the
+    // Hoenn Frontier Brains at 805-811...), so it is Gen 3. Without this the
+    // roster's Wally (TRAINER_WALLY_VR_5, ID 660) had no era at all and his
+    // Gardevoir kept the Fairy typing it did not gain until Gen 6.
+    if (trainerId != TRAINER_NONE && trainerId < 855)
+        return 3;
+
+    return 0;  // anime / custom / VGC -> modern typings
+}
+
+// Rewrite a battler's types to its trainer's era. Called right after the
+// engine seeds types from species data (battle start, switch-in, and form
+// change), so every path that refreshes types is covered.
+void Sim_ApplyEraTypes(u32 battler)
+{
+    u16 trainerId;
+
+    if (Sim_IsActive())
+    {
+        trainerId = Sim_GetBattlerTrainerId((enum BattlerId)battler);
+    }
+    else if (gSimFrontierChallengeActive && IsOnPlayerSide((enum BattlerId)battler))
+    {
+        // v2.8.0 — Frontier Challenge borrows a trainer's team and plays the
+        // facility with it. That side is still "their" Pokemon, so it keeps
+        // their era; the facility's own opponents stay modern.
+        trainerId = gSimFrontierBorrowedId;
+    }
+    else
+    {
+        return;
+    }
+
+    u16 species = gBattleMons[battler].species;
+    u8 gen = Sim_GetTrainerGameGen(trainerId);
+    if (gen == 0)
+        return;
+
+    for (u32 i = 0; i < ARRAY_COUNT(sSimEraTypings); i++)
+    {
+        if (sSimEraTypings[i].species != species)
+            continue;
+        if (gen >= sSimEraTypings[i].sinceGen)
+            return;  // trainer's game is new enough to use the modern typing
+        gBattleMons[battler].types[0] = sSimEraTypings[i].oldType0;
+        gBattleMons[battler].types[1] = sSimEraTypings[i].oldType1;
+        return;
+    }
+}
+
 
 // Battle Simulator: curated roster (Emerald-build trainers only).
 // Kanto E4 rematch and Blue variants are ported from FRLG data into Emerald
@@ -1517,6 +1688,9 @@ EWRAM_DATA bool8 gSimFrontierChallengeActive = FALSE;
 // tick after the warp lands re-applies the borrowed name from this
 // buffer to guarantee it sticks. Cleared at boot via EWRAM zero-init.
 EWRAM_DATA u8 gSimFrontierBorrowedName[PLAYER_NAME_LENGTH + 1] = {0};
+// v2.8.0 — which trainer's team was borrowed for a Frontier Challenge run, so
+// the borrowed side keeps that trainer's era typings inside facility battles.
+EWRAM_DATA u16 gSimFrontierBorrowedId = 0;
 // v0.52.5 — pending re-open of the Build Trainer slot menu after returning
 // from DoNamingScreen. sBuildTrainerActiveSlot already persists in EWRAM so
 // the slot index round-trips automatically.
@@ -9949,6 +10123,7 @@ static void Sim_StartFrontierChallenge(s32 trainerId)
     // first field tick where playerName can get overwritten — this
     // buffer survives the whole sequence and the tick fixup restores
     // playerName from it just before the user regains control.
+    gSimFrontierBorrowedId = (u16)trainerId;  // v2.8.0 era typings
     StringCopyN(gSimFrontierBorrowedName, trainer->trainerName, PLAYER_NAME_LENGTH);
     gSimFrontierBorrowedName[PLAYER_NAME_LENGTH] = EOS;
     // v1.7 — grant all 8 Hoenn badges so the loaner mons obey at any level.
