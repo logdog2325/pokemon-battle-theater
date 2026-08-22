@@ -5321,6 +5321,11 @@ static void Cmd_switchindataupdate(void)
     gBattleMons[battler].types[0] = GetSpeciesType(gBattleMons[battler].species, 0);
     gBattleMons[battler].types[1] = GetSpeciesType(gBattleMons[battler].species, 1);
     gBattleMons[battler].types[2] = TYPE_MYSTERY;
+    // v2.8.0 — this runs on EVERY switch-in, including the opening send-out,
+    // and re-derives types from species data. Without this call it silently
+    // undid the era typings applied in DoBattleIntro, so a Gen 3 Gardevoir
+    // went back to Psychic/Fairy the moment it stepped onto the field.
+    Sim_ApplyEraTypes(battler);
     gBattleMons[battler].ability = GetAbilityBySpecies(gBattleMons[battler].species, gBattleMons[battler].abilityNum);
     #if TESTING
     if (gTestRunnerEnabled)
