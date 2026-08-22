@@ -16,7 +16,7 @@ Title screen + box art commissioned from
 Shadow Lugia (XD001) battle sprites + icon by
 **[lvalovenfs](https://www.deviantart.com/lvalovenfs)** (DeviantArt), used with credit.
 
-**Download the latest patch:** [v2.7.0 — BOSS BATTLES: Greevil, Ghetsis, and Volo multi-phase gauntlets with no healing, starring Shadow Lugia](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
+**Download the latest patch:** [v2.7.1 — canon audit: 200 item/moveset/ability corrections, era-correct Gengar, 1v2 fairness fix](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
 All releases live on the [Releases page](https://github.com/logdog2325/pokemon-battle-theater/releases).
 
 ---
@@ -140,6 +140,20 @@ All releases live on the [Releases page](https://github.com/logdog2325/pokemon-b
   four of its Shadow moves. Base Lugia and its shiny are untouched — XD001
   is its own species entry, complete with a Cipher-flavored dex entry and a
   crimson Hyper Mode-style shiny palette
+- **Canon audit (v2.7.1)** — every game-sourced trainer was cross-checked
+  against Bulbapedia (held items, movesets, abilities, natures, EV/IV
+  spreads), with each change independently re-verified before it landed.
+  200 corrections across two passes: the ORAS Elite Four and the B2W2
+  Challenge Mode Elite Four lose their invented competitive items and gain
+  their real sets (canon Lv 77-79); BW Cheren and B2W2 Hugh get their true
+  post-game movesets; 86 wrong abilities fixed (hidden or later-generation
+  abilities their era never had); invented EV spreads and natures stripped
+  from ~390 trainers, keeping only the spreads canon actually documents
+  (Crispin/Lacey/Drayton, Cynthia BDSP, Cyrano, Ingo/Emmet); and all nine
+  Legends: Arceus trainers drop held items, since that game has none.
+  Gengar now carries Levitate AND Cursed Body as ability slots, so
+  pre-Gen-7 teams float and Gen 7+ teams don't. Plus: 1v2 battles finally
+  give the player side its full six Pokemon instead of three
 - **Smart pool selection (v2.1.0)** — rotation-pool trainers (Ash's Full
   Team, Paul, Gary, the Battle Tree pools) now bring a *matchup-aware* six
   scored against your roster, with light randomization so the team varies

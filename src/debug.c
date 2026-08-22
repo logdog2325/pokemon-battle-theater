@@ -9274,7 +9274,16 @@ static void Sim_SetupMatchRound(s32 trainer1Id, s32 trainer2Id, s32 partnerId, s
         // v0.51.1: skip AI-vs-AI flag in pilot mode so player has human controls.
         if (B_FLAG_AI_VS_AI_BATTLE && !pilotMode)
             FlagSet(B_FLAG_AI_VS_AI_BATTLE);
-        CreateNPCTrainerPartyFromTrainer(gPlayerParty, GetTrainerStructFromId(playerSideId), TRUE, gBattleTypeFlags);
+        // v2.7.1 — 1v2 fairness: CreateNPCTrainerPartyFromTrainer halves any
+        // party when BATTLE_TYPE_TWO_OPPONENTS is set (right for each
+        // opponent's 3-of-6), but the same flags were chopping the PLAYER side
+        // to 3 against the opponents' combined 6. With no partner the player
+        // owns all six slots, so drop the flag for this build only. With a
+        // partner the halving is correct (partner holds slots 3-5).
+        u32 playerBuildFlags = gBattleTypeFlags;
+        if (partnerId == PARTNER_NONE)
+            playerBuildFlags &= ~BATTLE_TYPE_TWO_OPPONENTS;
+        CreateNPCTrainerPartyFromTrainer(gPlayerParty, GetTrainerStructFromId(playerSideId), TRUE, playerBuildFlags);
         // v2.7.0 — Boss Battles run with NO healing between phases: overwrite
         // the freshly built (fully healed) party with the previous phase's
         // post-battle state. Fainted mons stay fainted; PP stays spent.

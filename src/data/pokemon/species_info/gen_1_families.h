@@ -12153,7 +12153,14 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
 #endif
 
 #if P_UPDATED_ABILITIES >= GEN_7
-    #define GENGAR_ABILITIES {ABILITY_CURSED_BODY, ABILITY_NONE, ABILITY_NONE}
+    // Battle Theater v2.7.1: Gengar had LEVITATE from Gen 3 through Gen 6 and
+    // only gained Cursed Body in Gen 7. This sim stages teams from every era
+    // side by side, so both are exposed as ability slots: Gen 7+ trainers
+    // (Plumeria, Allister, Raifort, LGPE/BDSP...) specify Cursed Body (slot 0)
+    // and pre-Gen-7 trainers (Agatha, Morty, Silver, Fantina, Shauntal...)
+    // specify Levitate (slot 1). Without slot 1 the engine's out-of-list
+    // fallback silently reverts every classic Gengar to Cursed Body.
+    #define GENGAR_ABILITIES {ABILITY_CURSED_BODY, ABILITY_LEVITATE, ABILITY_NONE}
 #else
     #define GENGAR_ABILITIES {ABILITY_LEVITATE, ABILITY_NONE, ABILITY_NONE}
 #endif
