@@ -4193,6 +4193,21 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             }
             }
             break;
+        // v2.8.1 — Spicy Spray (Mega Scovillain): burns anything that damages it.
+        case ABILITY_SPICY_SPRAY:
+            if (IsBattlerAlive(gBattlerAttacker)
+             && !gBattleStruct->unableToUseMove
+             && IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES)
+             && CanBeBurned(gBattlerTarget, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker)))
+            {
+                gEffectBattler = gBattlerAttacker;
+                gBattleScripting.battler = gBattlerTarget;
+                gBattleScripting.moveEffect = MOVE_EFFECT_BURN;
+                PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                BattleScriptCall(BattleScript_AbilityStatusEffect);
+                effect++;
+            }
+            break;
         case ABILITY_FLAME_BODY:
             if (IsBattlerAlive(gBattlerAttacker)
              && !gBattleStruct->unableToUseMove
@@ -4569,6 +4584,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_GRIM_NEIGH:
         case ABILITY_AS_ONE_SHADOW_RIDER:
         case ABILITY_BEAST_BOOST:
+        case ABILITY_EELEVATE:  // v2.8.1 — same KO payoff as Beast Boost.
             {
                 if (!IsBattlerAlive(battler) || NoAliveMonsForEitherParty())
                     break;
@@ -4576,7 +4592,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 enum Stat stat = STAT_ATK;
                 u32 numMonsFainted = NumFaintedBattlersByAttacker(battler);
 
-                if (ability == ABILITY_BEAST_BOOST)
+                if (ability == ABILITY_BEAST_BOOST || ability == ABILITY_EELEVATE)
                     stat = GetHighestStatId(battler);
                 else if (ability == ABILITY_GRIM_NEIGH || ability == ABILITY_AS_ONE_SHADOW_RIDER)
                     stat = STAT_SPATK;
@@ -5944,9 +5960,9 @@ bool32 IsBattlerProtected(struct BattleContext *ctx)
     {
         if (IsZMove(ctx->move) || IsMaxMove(ctx->move))
             return FALSE; // Z-Moves and Max Moves bypass protection (except Max Guard).
-        if (ctx->abilityAtk == ABILITY_UNSEEN_FIST
+        if ((ctx->abilityAtk == ABILITY_UNSEEN_FIST || ctx->abilityAtk == ABILITY_PIERCING_DRILL)
          && IsMoveMakingContact(ctx->battlerAtk, ctx->battlerDef, ctx->abilityAtk, ctx->holdEffectAtk, ctx->move))
-            return FALSE;
+            return FALSE;  // v2.8.1 — Piercing Drill bores through (at 1/4 damage).
     }
 
     if (GetBattlerMoveTargetType(ctx->battlerAtk, ctx->move) == TARGET_ALL_BATTLERS)
@@ -6032,6 +6048,8 @@ static bool32 IsBattlerUngroundedByAbilityItemOrEffect(enum BattlerId battler, e
     if (holdEffect == HOLD_EFFECT_AIR_BALLOON)
         return TRUE;
     if (ability == ABILITY_LEVITATE)
+        return TRUE;
+    if (ability == ABILITY_EELEVATE)  // v2.8.1 — Mega Eelektross floats.
         return TRUE;
     return FALSE;
 }
@@ -6740,6 +6758,11 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct BattleContext *ctx)
         if (moveType == TYPE_ELECTRIC && gBattleStruct->battlerState[battlerAtk].ateBoost)
             modifier = uq4_12_multiply(modifier, UQ_4_12(GetConfig(B_ATE_MULTIPLIER) >= GEN_7 ? 1.2 : 1.3));
         break;
+    // v2.8.1 — Dragonize (Mega Feraligatr): Normal moves become Dragon at 1.2x.
+    case ABILITY_DRAGONIZE:
+        if (moveType == TYPE_DRAGON && gBattleStruct->battlerState[battlerAtk].ateBoost)
+            modifier = uq4_12_multiply(modifier, UQ_4_12(1.2));
+        break;
     case ABILITY_REFRIGERATE:
         if (moveType == TYPE_ICE && gBattleStruct->battlerState[battlerAtk].ateBoost)
             modifier = uq4_12_multiply(modifier, UQ_4_12(GetConfig(B_ATE_MULTIPLIER) >= GEN_7 ? 1.2 : 1.3));
@@ -6801,6 +6824,14 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct BattleContext *ctx)
             break;
         }
     }
+
+    // v2.8.1 — Piercing Drill (Mega Excadrill) hits through protection, but a
+    // move that gets through deals only a quarter of its damage.
+    if (ctx->abilityAtk == ABILITY_PIERCING_DRILL
+     && gProtectStructs[ctx->battlerDef].protected != PROTECT_NONE
+     && gProtectStructs[ctx->battlerDef].protected != PROTECT_MAX_GUARD
+     && IsMoveMakingContact(ctx->battlerAtk, ctx->battlerDef, ctx->abilityAtk, ctx->holdEffectAtk, ctx->move))
+        modifier = uq4_12_multiply(modifier, UQ_4_12(0.25));
 
     // target's abilities
     switch (ctx->abilityDef)
@@ -7080,6 +7111,11 @@ static inline u32 CalcAttackStat(struct BattleContext *ctx)
         break;
     case ABILITY_DRAGONS_MAW:
         if (moveType == TYPE_DRAGON)
+            modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+        break;
+    // v2.8.1 — Fire Mane (Mega Pyroar): Fire moves gain 50% power.
+    case ABILITY_FIRE_MANE:
+        if (moveType == TYPE_FIRE)
             modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
         break;
     case ABILITY_GORILLA_TACTICS:
@@ -7445,6 +7481,16 @@ static inline uq4_12_t GetSameTypeAttackBonusModifier(struct BattleContext *ctx)
 // Utility Umbrella holders take normal damage from what would be rain- and sun-weakened attacks.
 static uq4_12_t GetWeatherDamageModifier(struct BattleContext *ctx)
 {
+    // v2.8.1 — Mega Sol (Mega Meganium): this Pokemon's moves resolve as if
+    // harsh sunlight were up, whatever the real weather is, without setting
+    // weather field-wide.
+    if (ctx->abilityAtk == ABILITY_MEGA_SOL && ctx->holdEffectDef != HOLD_EFFECT_UTILITY_UMBRELLA)
+    {
+        if (ctx->moveType == TYPE_FIRE)
+            return UQ_4_12(1.5);
+        if (ctx->moveType == TYPE_WATER)
+            return UQ_4_12(0.5);
+    }
     if (ctx->weather == B_WEATHER_NONE)
         return UQ_4_12(1.0);
     if (GetMoveEffect(ctx->move) == EFFECT_HYDRO_STEAM && (ctx->weather & B_WEATHER_SUN) && ctx->holdEffectAtk != HOLD_EFFECT_UTILITY_UMBRELLA)
@@ -7610,6 +7656,15 @@ static inline uq4_12_t GetDefenderAbilitiesModifier(struct BattleContext *ctx)
         if (ctx->typeEffectivenessModifier >= UQ_4_12(2.0))
         {
             modifier = UQ_4_12(0.75);
+            recordAbility = TRUE;
+        }
+        break;
+    // v2.8.1 — Aura Guard (Mega Lucario Z): halves damage from contact moves.
+    // Same shape as Fluffy's contact branch, without Fluffy's Fire weakness.
+    case ABILITY_AURA_GUARD:
+        if (IsMoveMakingContact(ctx->battlerAtk, ctx->battlerDef, ctx->abilityAtk, ctx->holdEffectAtk, ctx->move))
+        {
+            modifier = UQ_4_12(0.5);
             recordAbility = TRUE;
         }
         break;

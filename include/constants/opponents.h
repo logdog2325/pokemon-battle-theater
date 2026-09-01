@@ -1496,6 +1496,11 @@
 #define TRAINER_GIRATINA_ALTERED            1292  // Volo phase 2 — Giratina Altered Forme
 #define TRAINER_GIRATINA_ORIGIN             1293  // Volo phase 3 — Giratina Origin Forme
 
+// v2.8.1 — Gonzap's COLOSSEUM rematch team (Realgam Tower Lv 64 six).
+// TRAINER_GONZAP holds his XD: Gale of Darkness rematch team.
+#define TRAINER_GONZAP_COLO                 1294  // Team Snagem boss, Colosseum rematch
+#define TRAINER_MIROR_B_COLO                1295  // Miror B., Colosseum final team (no Shadow mon)
+
 // NOTE: Because each Trainer uses a flag to determine when they are defeated, there is only space for 9 additional trainers before trainer flag space overflows
 //       More space can be made by shifting flags around in constants/flags.h or changing how trainer flags are handled
 //       MAX_TRAINERS_COUNT can be increased but will take up additional saveblock space

@@ -1666,6 +1666,57 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 0,
     },
 
+    [ABILITY_MEGA_SOL] =
+    {
+        .name = _("Mega Sol"),
+        .description = COMPOUND_STRING("Moves act as if sunny."),
+        .aiRating = 7,
+    },
+
+    [ABILITY_DRAGONIZE] =
+    {
+        .name = _("Dragonize"),
+        .description = COMPOUND_STRING("Normal moves turn Dragon."),
+        .aiRating = 7,
+    },
+
+    [ABILITY_PIERCING_DRILL] =
+    {
+        .name = _("PiercingDrill"),
+        .description = COMPOUND_STRING("Drills through Protect."),
+        .aiRating = 6,
+    },
+
+    [ABILITY_EELEVATE] =
+    {
+        .name = _("Eelevate"),
+        .description = COMPOUND_STRING("Floats; grows on a KO."),
+        .aiRating = 8,
+        .breakable = TRUE,
+    },
+
+    [ABILITY_FIRE_MANE] =
+    {
+        .name = _("Fire Mane"),
+        .description = COMPOUND_STRING("Powers up Fire moves."),
+        .aiRating = 6,
+    },
+
+    [ABILITY_SPICY_SPRAY] =
+    {
+        .name = _("Spicy Spray"),
+        .description = COMPOUND_STRING("Burns those who hit it."),
+        .aiRating = 6,
+    },
+
+    [ABILITY_AURA_GUARD] =
+    {
+        .name = _("Aura Guard"),
+        .description = COMPOUND_STRING("Halves contact damage."),
+        .aiRating = 6,
+        .breakable = TRUE,
+    },
+
     [ABILITY_FLUFFY] =
     {
         .name = _("Fluffy"),

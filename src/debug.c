@@ -503,7 +503,8 @@ static const u8 *GetSimTierColorPrefix(u16 trainerId)
     // tier; the Grand Masters (Evice, Greevil) get champion tier below.
     if ((trainerId >= TRAINER_MIROR_B && trainerId <= TRAINER_NASCOUR)
      || (trainerId >= TRAINER_LOVRINA && trainerId <= TRAINER_ELDES)
-     || trainerId == TRAINER_FEIN)
+     || trainerId == TRAINER_FEIN || trainerId == TRAINER_GONZAP_COLO
+     || trainerId == TRAINER_MIROR_B_COLO)  // v2.8.1
         return sSimTierColorE4;
     // v1.21 Z-A: Royale Rank A-tier rivals (Vinnie / Canari / Ivor / Corbeau /
     // L / Naveen / Tarragon / Grisham / Jacinthe / Griselle / Gwynn / Lidia /
@@ -785,7 +786,9 @@ static const u8 *GetSimSourceSuffix(u16 trainerId)
     if (trainerId >= TRAINER_BROCK_GSC && trainerId <= TRAINER_RED_GSC)
         return sSimSourceSuffixGSC;
     // v2.3.0 — Orre: Colosseum (Miror B...Evice + Justy) vs XD (Lovrina...Fein + Chobin).
-    if ((trainerId >= TRAINER_MIROR_B && trainerId <= TRAINER_EVICE) || trainerId == TRAINER_JUSTY)
+    if ((trainerId >= TRAINER_MIROR_B && trainerId <= TRAINER_EVICE)
+     || trainerId == TRAINER_JUSTY || trainerId == TRAINER_GONZAP_COLO
+     || trainerId == TRAINER_MIROR_B_COLO)  // v2.8.1
         return sSimSourceSuffixColo;
     if ((trainerId >= TRAINER_LOVRINA && trainerId <= TRAINER_FEIN) || trainerId == TRAINER_CHOBIN)
         return sSimSourceSuffixXDGale;
@@ -1037,6 +1040,7 @@ static const u16 sSimulatorRoster[] = {
     1246, 1247,                                          // v2.3.0 Nascour + Grand Master Evice (Shadow Tyranitar)
     1248, 1249, 1250,                                    // v2.3.0 XD Cipher admins: Lovrina/Snattle/Gorigan
     1251,                                                // v2.3.0 Gonzap (Team Snagem)
+    1294, 1295,                                          // v2.8.1 Gonzap + Miror B. (Colosseum)
     1252, 1253,                                          // v2.3.0 Ardos / Eldes
     1255,                                                // v2.3.0 Fein (fake Wes; Shadow Togetic)
     1257,                                                // v2.3.0 Chobin (Dr. Kaminko's assistant)
@@ -1412,6 +1416,7 @@ static const u16 sCupOrre[] = {
     1246, 1247,                                     // Nascour / Evice
     1248, 1249, 1250,                               // Lovrina / Snattle / Gorigan
     1251, 1252, 1253,                               // Gonzap / Ardos / Eldes
+    1294, 1295,                                     // v2.8.1 Gonzap + Miror B. (Colosseum)
     1255, 1256, 1257,                               // Fein / Justy / Chobin
     1254,                                           // Greevil
 };
@@ -1488,7 +1493,7 @@ static const struct SimCup sSimCups[] =
     { sCupName_GSC,         sCupGSC,         17 },   // Gen 2 — GSC Kanto gyms + Blue + Johto E4 + Lance + Silver ×3 + Red
     { sCupName_FRLG,        sCupFRLG,         8 },   // Gen 3 — Red, Indigo E4, 3 Blue starter variants
     { sCupName_Emerald,     sCupEmerald,     22 },   // Gen 3 — 8 gym _5 rematches + 4 E4 + Wallace + Steven + Hoenn Frontier brains
-    { sCupName_Orre,        sCupOrre,        16 },   // v2.3.0 Gen 3 spin-offs — every Colosseum/XD boss incl. Shadow mons
+    { sCupName_Orre,        sCupOrre,        18 },   // v2.3.0 Gen 3 spin-offs — every Colosseum/XD boss incl. Shadow mons
     { sCupName_Platinum,    sCupPlatinum,    21 },   // Gen 4 — Sinnoh gyms + E4 + Cynthia Pt + Barry + Riley + Buck + Gen 4 brains
     { sCupName_HGSS,        sCupHGSS,        30 },   // Gen 4 — Red, Blue HGSS, 3 Silvers, Johto gyms, Kanto HGSS gyms, Johto E4, Lance HGSS + Gen 4 brains
     { sCupName_FrontierBrains, sCupFrontierBrains, 12 },   // Gen 3+4 — Frontier brain gauntlet
@@ -6989,30 +6994,30 @@ static const u16 sSimulatorRosterSectionStarts[] = {
     13 + CUSTOM_OFFSET,      // GSC — Kanto gyms (7) + Blue + Johto E4 (4) + Lance + Silver ×3 + Red (17)
     30 + CUSTOM_OFFSET,      // FRLG (7)
     37 + CUSTOM_OFFSET,      // Emerald — gyms + E4 + Steven + Wallace + Hoenn Frontier brains + Wally + RS E4/Steven (27)
-    64 + CUSTOM_OFFSET,      // Orre — Colosseum admins + Nascour + Evice, XD admins + Gonzap + Ardos/Eldes + Justy/Chobin + Greevil (16)
-    80 + CUSTOM_OFFSET,      // Platinum — Barrys + Battleground + stat + E4 + Cynthia Pt + Gen 4 brains + DP E4/Cynthia (31)
-    111 + CUSTOM_OFFSET,      // HGSS — Red + Blue HGSS + 3 Silvers + gym/E4/Champion (25)
-    136 + CUSTOM_OFFSET,     // BW — N x2 + N B2W2 pool + Alder + Iris + Cheren x3 + Bianca x3 + Hugh x3 + E4 + Ghetsis + Colress + Benga + Ingo + Emmet + BW-rematch E4 x4 + Cynthia BW (28)
-    164 + CUSTOM_OFFSET,     // PWT Kanto (8)
-    172 + CUSTOM_OFFSET,     // PWT Hoenn (9)
-    181 + CUSTOM_OFFSET,     // PWT Johto (8)
-    189 + CUSTOM_OFFSET,     // PWT Sinnoh (8)
-    197 + CUSTOM_OFFSET,     // PWT Unova (8 base + 5 v1.5 = 13)
-    210 + CUSTOM_OFFSET,     // PWT Champs — Red/Blue/Lance/Steven/Wallace + Cynthia/Alder + Bianca (8, Iris moved to BW)
-    218 + CUSTOM_OFFSET,     // XY — Diantha/Serena/Calem + E4 (Malva/Siebold/Wikstrom/Drasna) + Lysandre + Tierno/Shauna/Trevor (11)
-    229 + CUSTOM_OFFSET,     // ORAS — Hoenn ORAS E4 + Wally/Steven/May/Brendan + Wallace Delta/Zinnia (10)
-    239 + CUSTOM_OFFSET,     // Alola — Trial Captains + Kahunas + E4 + Variants + v0.48 USUM + SM E4 (36)
-    275 + CUSTOM_OFFSET,     // Battle Tree (USUM) — Red/Blue/Anabel + Wally/Cynthia/Colress/Dexio/Sina/Grimsley/Guzma/Plumeria/Kiawe/Kukui/Mallow BT (14)
-    289 + CUSTOM_OFFSET,     // Rainbow Rocket — USUM Episode RR bosses (10)
-    299 + CUSTOM_OFFSET,     // LGPE — Green + Lorelei/Agatha/Lance/Red/Blue/Bruno + Trace + 7 gym rematches + Giovanni (17)
-    316 + CUSTOM_OFFSET,     // SwSh — Leon x3 + Hop x6 + Mustard x2 + Marnie/Bede + 9 gym + Klara/Avery/Peony (25)
-    341 + CUSTOM_OFFSET,     // BDSP — Barrys + 8 gym + 4 E4 + Cynthia + 3 Lucas + 3 Dawn (22)
-    363 + CUSTOM_OFFSET,     // Legends Arceus — Volo/Adaman/Irida/Ingo/Akari + Kamado/Zisu/Beni/Rei (9)
-    372 + CUSTOM_OFFSET,     // SV — Nemona + Geeta + Paldea E4 + Penny + Sada/Turo + 7 gyms + 6 profs + Carmine + BB E4 + Kieran + Clavell ×3 + Miriam + Arven + Cyrano (36)
-    408 + CUSTOM_OFFSET,     // Legends ZA — Urbain/Taunie + Royale challengers (24)
-    432 + CUSTOM_OFFSET,     // Anime — Ash (WC/Journeys + 7 region teams) + Alain + Paul + Gary (11)
-    443 + CUSTOM_OFFSET,     // VGC — Wolfe Glick + Ray Rizo 2012 World Finals (2)
-    445 + CUSTOM_OFFSET,     // Custom — v0.51 + v1.1 user-built slots (6)
+    64 + CUSTOM_OFFSET,      // Orre — Colosseum admins + Nascour + Evice, XD admins + Gonzap + Ardos/Eldes + Justy/Chobin + Greevil + Gonzap + Miror B. Colo (18)
+    82 + CUSTOM_OFFSET,      // Platinum — Barrys + Battleground + stat + E4 + Cynthia Pt + Gen 4 brains + DP E4/Cynthia (31)
+    113 + CUSTOM_OFFSET,      // HGSS — Red + Blue HGSS + 3 Silvers + gym/E4/Champion (25)
+    138 + CUSTOM_OFFSET,     // BW — N x2 + N B2W2 pool + Alder + Iris + Cheren x3 + Bianca x3 + Hugh x3 + E4 + Ghetsis + Colress + Benga + Ingo + Emmet + BW-rematch E4 x4 + Cynthia BW (28)
+    166 + CUSTOM_OFFSET,     // PWT Kanto (8)
+    174 + CUSTOM_OFFSET,     // PWT Hoenn (9)
+    183 + CUSTOM_OFFSET,     // PWT Johto (8)
+    191 + CUSTOM_OFFSET,     // PWT Sinnoh (8)
+    199 + CUSTOM_OFFSET,     // PWT Unova (8 base + 5 v1.5 = 13)
+    212 + CUSTOM_OFFSET,     // PWT Champs — Red/Blue/Lance/Steven/Wallace + Cynthia/Alder + Bianca (8, Iris moved to BW)
+    220 + CUSTOM_OFFSET,     // XY — Diantha/Serena/Calem + E4 (Malva/Siebold/Wikstrom/Drasna) + Lysandre + Tierno/Shauna/Trevor (11)
+    231 + CUSTOM_OFFSET,     // ORAS — Hoenn ORAS E4 + Wally/Steven/May/Brendan + Wallace Delta/Zinnia (10)
+    241 + CUSTOM_OFFSET,     // Alola — Trial Captains + Kahunas + E4 + Variants + v0.48 USUM + SM E4 (36)
+    277 + CUSTOM_OFFSET,     // Battle Tree (USUM) — Red/Blue/Anabel + Wally/Cynthia/Colress/Dexio/Sina/Grimsley/Guzma/Plumeria/Kiawe/Kukui/Mallow BT (14)
+    291 + CUSTOM_OFFSET,     // Rainbow Rocket — USUM Episode RR bosses (10)
+    301 + CUSTOM_OFFSET,     // LGPE — Green + Lorelei/Agatha/Lance/Red/Blue/Bruno + Trace + 7 gym rematches + Giovanni (17)
+    318 + CUSTOM_OFFSET,     // SwSh — Leon x3 + Hop x6 + Mustard x2 + Marnie/Bede + 9 gym + Klara/Avery/Peony (25)
+    343 + CUSTOM_OFFSET,     // BDSP — Barrys + 8 gym + 4 E4 + Cynthia + 3 Lucas + 3 Dawn (22)
+    365 + CUSTOM_OFFSET,     // Legends Arceus — Volo/Adaman/Irida/Ingo/Akari + Kamado/Zisu/Beni/Rei (9)
+    374 + CUSTOM_OFFSET,     // SV — Nemona + Geeta + Paldea E4 + Penny + Sada/Turo + 7 gyms + 6 profs + Carmine + BB E4 + Kieran + Clavell ×3 + Miriam + Arven + Cyrano (36)
+    410 + CUSTOM_OFFSET,     // Legends ZA — Urbain/Taunie + Royale challengers (24)
+    434 + CUSTOM_OFFSET,     // Anime — Ash (WC/Journeys + 7 region teams) + Alain + Paul + Gary (11)
+    445 + CUSTOM_OFFSET,     // VGC — Wolfe Glick + Ray Rizo 2012 World Finals (2)
+    447 + CUSTOM_OFFSET,     // Custom — v0.51 + v1.1 user-built slots (6)
 };
 #define SIMULATOR_ROSTER_SECTION_COUNT (sizeof(sSimulatorRosterSectionStarts) / sizeof(sSimulatorRosterSectionStarts[0]))
 

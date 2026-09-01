@@ -10561,7 +10561,8 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .friendship = 35,
         .growthRate = GROWTH_MEDIUM_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
-        .abilities = { ABILITY_MAGIC_BOUNCE, ABILITY_MAGIC_BOUNCE, ABILITY_MAGIC_BOUNCE },
+        // v2.8.1 — Mega Absol Z: Sharpness (Champions). Z-A data still lists Magic Bounce.
+        .abilities = { ABILITY_SHARPNESS, ABILITY_SHARPNESS, ABILITY_SHARPNESS },
         .bodyColor = BODY_COLOR_WHITE,
         .noFlip = TRUE,
         .speciesName = _("Absol"),
@@ -10926,7 +10927,8 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FAIRY, EGG_GROUP_MINERAL),
-        .abilities = { ABILITY_SNOW_CLOAK, ABILITY_NONE, ABILITY_CURSED_BODY },
+        // v2.8.1 — Pokemon Champions ability (was the base form's placeholder).
+        .abilities = { ABILITY_SNOW_WARNING, ABILITY_SNOW_WARNING, ABILITY_SNOW_WARNING },
         .bodyColor = BODY_COLOR_WHITE,
         .speciesName = _("Froslass"),
     #if P_MODIFIED_MEGA_CRIES

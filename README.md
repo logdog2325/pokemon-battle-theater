@@ -16,7 +16,7 @@ Title screen + box art commissioned from
 Shadow Lugia (XD001) battle sprites + icon by
 **[lvalovenfs](https://www.deviantart.com/lvalovenfs)** (DeviantArt), used with credit.
 
-**Download the latest patch:** [v2.8.0 — era-accurate typings: a Gen 4 Togekiss is Normal/Flying again](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
+**Download the latest patch:** [v2.8.1 — every Z-A Mega gets its real ability, plus two Colosseum bosses](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
 All releases live on the [Releases page](https://github.com/logdog2325/pokemon-battle-theater/releases).
 
 ---
@@ -176,6 +176,22 @@ All releases live on the [Releases page](https://github.com/logdog2325/pokemon-b
   their canonical Dynamax and G-Max mons, Ash's Gigantamax Gengar, and
   custom mons with the per-mon toggle switched on. This also fixes that
   toggle being ignored in pilot mode
+- **Z-A Mega abilities, for real (v2.8.1)** — 28 of the 32 Legends: Z-A Mega
+  Evolutions had never been given their actual abilities; every one was
+  silently inheriting its base form's, so Mega Clefable had Cute Charm
+  instead of Magic Bounce and Mega Greninja had Torrent instead of Protean.
+  All 32 now carry their canon ability, verified against The Pokemon
+  Company's own announcement — including the three Z Megas: **Mega Absol Z
+  (Sharpness)**, **Mega Garchomp Z (Levitate)**, and **Mega Lucario Z
+  (Aura Guard)**. Seven abilities that did not exist in the engine were
+  written from scratch: Aura Guard (halves contact damage), Mega Sol (moves
+  resolve as if in harsh sun), Dragonize (Normal moves turn Dragon at 1.2x),
+  Piercing Drill (contact moves drill through Protect for quarter damage),
+  Eelevate (Ground immunity plus a stat boost on a KO), Fire Mane (Fire
+  moves +50%), and Spicy Spray (burns whatever damages it)
+- **Two more Orre bosses (v2.8.1)** — Gonzap's Colosseum rematch team (the
+  Lv 64 six, every one packing Hyper Beam) and Miror B.'s final Colosseum
+  team, each sitting beside their XD counterparts and tagged (Colo)
 - **Smart pool selection (v2.1.0)** — rotation-pool trainers (Ash's Full
   Team, Paul, Gary, the Battle Tree pools) now bring a *matchup-aware* six
   scored against your roster, with light randomization so the team varies

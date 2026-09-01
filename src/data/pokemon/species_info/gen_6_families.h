@@ -232,7 +232,8 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
-        .abilities = { ABILITY_OVERGROW, ABILITY_NONE, ABILITY_BULLETPROOF },
+        // v2.8.1 — Pokemon Champions ability (was the base form's placeholder).
+        .abilities = { ABILITY_BULLETPROOF, ABILITY_BULLETPROOF, ABILITY_BULLETPROOF },
         .bodyColor = BODY_COLOR_GREEN,
         .speciesName = _("Chesnaught"),
     #if P_MODIFIED_MEGA_CRIES
@@ -506,7 +507,8 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
-        .abilities = { ABILITY_BLAZE, ABILITY_NONE, ABILITY_MAGICIAN },
+        // v2.8.1 — Pokemon Champions ability (was the base form's placeholder).
+        .abilities = { ABILITY_LEVITATE, ABILITY_LEVITATE, ABILITY_LEVITATE },
         .bodyColor = BODY_COLOR_RED,
         .speciesName = _("Delphox"),
     #if P_MODIFIED_MEGA_CRIES
@@ -902,7 +904,8 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_WATER_1),
-        .abilities = { ABILITY_TORRENT, ABILITY_NONE, ABILITY_PROTEAN },
+        // v2.8.1 — Pokemon Champions ability (was the base form's placeholder).
+        .abilities = { ABILITY_PROTEAN, ABILITY_PROTEAN, ABILITY_PROTEAN },
         .bodyColor = BODY_COLOR_BLUE,
         .noFlip = TRUE,
         .speciesName = _("Greninja"),
@@ -1898,7 +1901,8 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
-        .abilities = { ABILITY_RIVALRY, ABILITY_UNNERVE, ABILITY_MOXIE },
+        // v2.8.1 — Pokemon Champions ability.
+        .abilities = { ABILITY_FIRE_MANE, ABILITY_FIRE_MANE, ABILITY_FIRE_MANE },
         .bodyColor = BODY_COLOR_BROWN,
         .speciesName = _("Pyroar"),
     #if P_MODIFIED_MEGA_CRIES
@@ -4182,7 +4186,8 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_WATER_1, EGG_GROUP_DRAGON),
-        .abilities = { ABILITY_POISON_POINT, ABILITY_POISON_TOUCH, ABILITY_ADAPTABILITY },
+        // v2.8.1 — Pokemon Champions ability (was the base form's placeholder).
+        .abilities = { ABILITY_REGENERATOR, ABILITY_REGENERATOR, ABILITY_REGENERATOR },
         .bodyColor = BODY_COLOR_BROWN,
         .speciesName = _("Dragalge"),
     #if P_MODIFIED_MEGA_CRIES
@@ -4888,7 +4893,8 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FLYING, EGG_GROUP_HUMAN_LIKE),
-        .abilities = { ABILITY_LIMBER, ABILITY_UNBURDEN, ABILITY_MOLD_BREAKER },
+        // v2.8.1 — Pokemon Champions ability (was the base form's placeholder).
+        .abilities = { ABILITY_NO_GUARD, ABILITY_NO_GUARD, ABILITY_NO_GUARD },
         .bodyColor = BODY_COLOR_GREEN,
         .speciesName = _("Hawlucha"),
     #if P_MODIFIED_MEGA_CRIES

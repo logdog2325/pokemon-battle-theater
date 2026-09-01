@@ -332,6 +332,15 @@ enum __attribute__((packed)) Ability
     ABILITY_TERA_SHELL = 308,
     ABILITY_TERAFORM_ZERO = 309,
     ABILITY_POISON_PUPPETEER = 310,
+    // v2.8.1 — debuts on Mega Lucario Z (Pokemon Champions, Aug 2026 reveal).
+    ABILITY_AURA_GUARD = 311,
+    // v2.8.1 — the rest of the Pokemon Champions Mega abilities.
+    ABILITY_MEGA_SOL = 312,
+    ABILITY_DRAGONIZE = 313,
+    ABILITY_PIERCING_DRILL = 314,
+    ABILITY_EELEVATE = 315,
+    ABILITY_FIRE_MANE = 316,
+    ABILITY_SPICY_SPRAY = 317,
     ABILITIES_COUNT_GEN9,
     ABILITIES_COUNT = ABILITIES_COUNT_GEN9,
 };

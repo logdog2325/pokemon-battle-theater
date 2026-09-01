@@ -42189,6 +42189,135 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Earth Power
 - Shadow Force
 
+/* v2.8.1 — Gonzap, Team Snagem's boss and Wes's old crew leader: his
+ * COLOSSEUM rematch team (Realgam Tower, all Lv 64, every mon packing Hyper
+ * Beam). His XD rematch team lives at TRAINER_GONZAP. Colosseum is Gen 3, so
+ * the era-typing system correctly fields Granbull as pure Normal. */
+=== TRAINER_GONZAP_COLO ===
+Name: GONZAP
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Breloom (F)
+Ability: Effect Spore
+Level: 64
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Hyper Beam
+- Bulk Up
+- Sky Uppercut
+- Iron Tail
+
+Crawdaunt (M)
+Ability: Hyper Cutter
+Level: 64
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Hyper Beam
+- Swords Dance
+- Aerial Ace
+- Brick Break
+
+Granbull (F)
+Ability: Intimidate
+Level: 64
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Hyper Beam
+- Bulk Up
+- Shadow Ball
+- Brick Break
+
+Armaldo (F)
+Ability: Battle Armor
+Level: 64
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Hyper Beam
+- Swords Dance
+- Ancient Power
+- Brick Break
+
+Machamp (M)
+Ability: Guts
+Level: 64
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Hyper Beam
+- Bulk Up
+- Submission
+- Foresight
+
+Gyarados (M)
+Ability: Intimidate
+Level: 64
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Hyper Beam
+- Dragon Dance
+- Earthquake
+- Roar
+
+
+/* v2.8.1 — Miror B.'s FINAL COLOSSEUM team (Lv 63-65): three Ludicolo, an
+ * Exploud and an Armaldo, with no Shadow Pokemon. TRAINER_MIROR_B holds his
+ * other team (the Ludicolo wall behind a Shadow Dragonite). Five mons, as
+ * the source lists them. */
+=== TRAINER_MIROR_B_COLO ===
+Name: MIROR B
+Class: Cooltrainer
+Pic: Cooltrainer M
+Gender: Male
+Music: Cool
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Ludicolo (F)
+Ability: Swift Swim
+Level: 63
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Hydro Pump
+- Giga Drain
+- Ice Beam
+- Rain Dance
+
+Ludicolo (M)
+Ability: Swift Swim
+Level: 64
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Rain Dance
+- Giga Drain
+- Hydro Pump
+- Nature Power
+
+Exploud (M)
+Ability: Soundproof
+Level: 64
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Shadow Ball
+- Extrasensory
+- Take Down
+- Earthquake
+
+Ludicolo (F)
+Ability: Rain Dish
+Level: 65
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Rain Dance
+- Giga Drain
+- Dive
+- Leech Seed
+
+Armaldo (M)
+Ability: Battle Armor
+Level: 65
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Aerial Ace
+- Rock Slide
+- Metal Claw
+- Strength
+
+
 === TRAINER_URBAIN ===
 Name: URBAIN
 Class: Cooltrainer

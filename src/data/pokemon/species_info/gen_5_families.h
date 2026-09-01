@@ -534,7 +534,8 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
-        .abilities = { ABILITY_BLAZE, ABILITY_NONE, ABILITY_RECKLESS },
+        // v2.8.1 — Pokemon Champions ability (was the base form's placeholder).
+        .abilities = { ABILITY_MOLD_BREAKER, ABILITY_MOLD_BREAKER, ABILITY_MOLD_BREAKER },
         .bodyColor = BODY_COLOR_RED,
         .noFlip = TRUE,
         .speciesName = _("Emboar"),
@@ -2854,7 +2855,8 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
-        .abilities = { ABILITY_SAND_RUSH, ABILITY_SAND_FORCE, ABILITY_MOLD_BREAKER },
+        // v2.8.1 — Pokemon Champions ability.
+        .abilities = { ABILITY_PIERCING_DRILL, ABILITY_PIERCING_DRILL, ABILITY_PIERCING_DRILL },
         .bodyColor = BODY_COLOR_GRAY,
         .noFlip = TRUE,
         .speciesName = _("Excadrill"),
@@ -4087,7 +4089,8 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_BUG),
-        .abilities = { ABILITY_POISON_POINT, ABILITY_SWARM, ABILITY_SPEED_BOOST },
+        // v2.8.1 — Pokemon Champions ability (was the base form's placeholder).
+        .abilities = { ABILITY_SHELL_ARMOR, ABILITY_SHELL_ARMOR, ABILITY_SHELL_ARMOR },
         .bodyColor = BODY_COLOR_RED,
         .speciesName = _("Scolipede"),
     #if P_MODIFIED_MEGA_CRIES
@@ -5826,7 +5829,8 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD, EGG_GROUP_DRAGON),
-        .abilities = { ABILITY_SHED_SKIN, ABILITY_MOXIE, ABILITY_INTIMIDATE },
+        // v2.8.1 — Pokemon Champions ability (was the base form's placeholder).
+        .abilities = { ABILITY_INTIMIDATE, ABILITY_INTIMIDATE, ABILITY_INTIMIDATE },
         .bodyColor = BODY_COLOR_RED,
         .speciesName = _("Scrafty"),
     #if P_MODIFIED_MEGA_CRIES
@@ -9824,7 +9828,8 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_AMORPHOUS),
-        .abilities = { ABILITY_LEVITATE, ABILITY_NONE, ABILITY_NONE },
+        // v2.8.1 — Pokemon Champions ability.
+        .abilities = { ABILITY_EELEVATE, ABILITY_EELEVATE, ABILITY_EELEVATE },
         .bodyColor = BODY_COLOR_BLUE,
         .speciesName = _("Eelektross"),
     #if P_MODIFIED_MEGA_CRIES
@@ -10251,7 +10256,8 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_AMORPHOUS),
-        .abilities = { ABILITY_FLASH_FIRE, ABILITY_FLAME_BODY, ABILITY_INFILTRATOR },
+        // v2.8.1 — Pokemon Champions ability (was the base form's placeholder).
+        .abilities = { ABILITY_INFILTRATOR, ABILITY_INFILTRATOR, ABILITY_INFILTRATOR },
         .bodyColor = BODY_COLOR_BLACK,
         .noFlip = TRUE,
         .speciesName = _("Chandelure"),
@@ -11375,7 +11381,8 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MINERAL),
-        .abilities = { ABILITY_IRON_FIST, ABILITY_KLUTZ, ABILITY_NO_GUARD },
+        // v2.8.1 — Pokemon Champions ability (was the base form's placeholder).
+        .abilities = { ABILITY_UNSEEN_FIST, ABILITY_UNSEEN_FIST, ABILITY_UNSEEN_FIST },
         .bodyColor = BODY_COLOR_GREEN,
         .noFlip = TRUE,
         .speciesName = _("Golurk"),
