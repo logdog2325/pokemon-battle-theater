@@ -1501,6 +1501,17 @@
 #define TRAINER_GONZAP_COLO                 1294  // Team Snagem boss, Colosseum rematch
 #define TRAINER_MIROR_B_COLO                1295  // Miror B., Colosseum final team (no Shadow mon)
 
+// v2.8.2 — Logan's own teams, one per game (dev-only, like TRAINER_LOGAN).
+#define TRAINER_LOGAN_BW2                    1296
+#define TRAINER_LOGAN_ORAS                   1297
+#define TRAINER_LOGAN_USUM                   1298
+#define TRAINER_LOGAN_LGPE                   1299
+#define TRAINER_LOGAN_SWSH                   1300
+#define TRAINER_LOGAN_BDSP                   1301
+#define TRAINER_LOGAN_LA                     1302
+#define TRAINER_LOGAN_SV                     1303
+#define TRAINER_LOGAN_ZA                     1304
+
 // NOTE: Because each Trainer uses a flag to determine when they are defeated, there is only space for 9 additional trainers before trainer flag space overflows
 //       More space can be made by shifting flags around in constants/flags.h or changing how trainer flags are handled
 //       MAX_TRAINERS_COUNT can be increased but will take up additional saveblock space

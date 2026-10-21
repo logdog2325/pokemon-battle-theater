@@ -345,7 +345,8 @@ bool32 Sim_TrainerCanTera(u16 trainerId)
     if (trainerId == TRAINER_SIM_CUSTOM_1 || trainerId == TRAINER_SIM_CUSTOM_2
      || trainerId == TRAINER_SIM_CUSTOM_3 || trainerId == TRAINER_SIM_CUSTOM_4
      || trainerId == TRAINER_SIM_CUSTOM_5 || trainerId == TRAINER_SIM_CUSTOM_6
-     || trainerId == TRAINER_SIM_CUSTOM_7 || trainerId == TRAINER_SIM_CUSTOM_8)
+     || trainerId == TRAINER_SIM_CUSTOM_7 || trainerId == TRAINER_SIM_CUSTOM_8
+     || trainerId == TRAINER_LOGAN_SV)  // v2.8.2 — his Scarlet team only
         return TRUE;
 
     // Gen 9 SV trainers (1113-1142) — base game Nemona ×3 / Geeta / Paldea E4
@@ -600,6 +601,7 @@ static const u8 sSimSourceSuffixColo[]      = _(" (Colo)");
 static const u8 sSimSourceSuffixXDGale[]    = _(" (XD)");
 static const u8 sSimSourceSuffixSV[]     = _(" (SV)");     // v1.21 Scarlet/Violet (Paldea)
 static const u8 sSimSourceSuffixZA[]     = _(" (Z-A)");    // v1.21 Legends: Z-A (Kalos)
+static const u8 sSimSourceSuffixLA[]     = _(" (LA)");     // v2.8.2 Legends: Arceus
 // v2.1.0 — Ash's per-region anime teams all share the name "ASH", so each
 // gets a region label to disambiguate them in the picker. 1086 (the old
 // "World Champion" squad) is relabeled "Journeys".
@@ -633,6 +635,18 @@ static const u8 sSimSourceSuffixNone[] = _("");
 
 static const u8 *GetSimSourceSuffix(u16 trainerId)
 {
+    // v2.8.2 — Logan's own teams, one per game he played, so the nine
+    // identically-named LOGAN entries are tellable apart in the picker.
+    if (trainerId == TRAINER_LOGAN_BW2)  return sSimSourceSuffixB2W2;
+    if (trainerId == TRAINER_LOGAN_ORAS) return sSimSourceSuffixORAS;
+    if (trainerId == TRAINER_LOGAN_USUM) return sSimSourceSuffixSM;
+    if (trainerId == TRAINER_LOGAN_LGPE) return sSimSourceSuffixLGPE;
+    if (trainerId == TRAINER_LOGAN_SWSH) return sSimSourceSuffixSWSH;
+    if (trainerId == TRAINER_LOGAN_BDSP) return sSimSourceSuffixBDSP;
+    if (trainerId == TRAINER_LOGAN_LA)   return sSimSourceSuffixLA;
+    if (trainerId == TRAINER_LOGAN_SV)   return sSimSourceSuffixSV;
+    if (trainerId == TRAINER_LOGAN_ZA)   return sSimSourceSuffixZA;
+
     // Emerald base-game origin: Hoenn E4 (261-264), Champion Steven (335),
     // Champion Wallace (804), Hoenn gym leader _5 rematches (773-801 odd).
     if ((trainerId >= 261 && trainerId <= 264) || trainerId == 335 || trainerId == 804
@@ -1003,6 +1017,8 @@ static const u16 sSimulatorRoster[] = {
     // ---- Custom challengers (Logan, Taylor) — dev-only, top of list ----
     905,                                                 // Logan (custom Gen-9 challenger)
     1054,                                                // Taylor (rain team, Drake sprite)
+    // v2.8.2 — Logan's own teams, one per game (see the Logan Cup).
+    1296, 1297, 1298, 1299, 1300, 1301, 1302, 1303, 1304,
 #endif
     // v2.1.2 — ROSTER IN TRUE GENERATION ORDER per user request: RGBY (Gen 1)
     // and GSC (Gen 2) now LEAD the list, then FRLG -> Emerald -> Platinum ->
@@ -1484,6 +1500,14 @@ static const u16 sCupCustom[] = {
     1087, 1088, 1089, 1099, 1100, 1101, 1287, 1288,
 };
 
+// v2.8.2 — Logan's own teams, one per game, so they can fight each other.
+#ifndef RELEASE_BUILD
+static const u8 sCupName_Logan[] = _("Logan");
+static const u16 sCupLogan[] = {
+    1296, 1297, 1298, 1299, 1300, 1301, 1302, 1303, 1304,
+};
+#endif
+
 static const struct SimCup sSimCups[] =
 {
     { sCupName_Off,         NULL,             0 },   // 0: Off
@@ -1518,6 +1542,9 @@ static const struct SimCup sSimCups[] =
     { sCupName_Champions,   sCupChampions,   12 },   // Cross-gen — 11 in-game champions (+ Cynthia twice)
     { sCupName_AllStars,    sSimulatorRoster, SIMULATOR_ROSTER_COUNT },  // Cross-gen — EVERY curated trainer in the game
     { sCupName_Custom,      sCupCustom,       8 },   // v2.6.1 — the user's 8 custom build slots
+#ifndef RELEASE_BUILD
+    { sCupName_Logan,       sCupLogan,        9 },   // v2.8.2 — dev-only, last so no index shifts
+#endif
 };
 #define SIM_CUP_COUNT (sizeof(sSimCups) / sizeof(sSimCups[0]))
 
@@ -1707,7 +1734,14 @@ EWRAM_DATA bool8 gSimBuildTrainerReopenSlot = FALSE;
 // because the destination menu (Mon editor vs Slot menu) differs.
 EWRAM_DATA bool8 gSimImportCodePending = FALSE;
 // Buffer the naming screen writes into. Up to 30 chars + EOS + slack.
-EWRAM_DATA u8 gSimTeamCodeBuffer[32] = {0};
+EWRAM_DATA u8 gSimTeamCodeBuffer[40] = {0};  // v2.8.2 — 34-char codes + EOS
+// v2.8.2 — last team-code import result, so a failed import can SAY why.
+// Before this the only feedback was SE_FAILURE: the editor reopened
+// unchanged and players reported "nothing happens, no error". 0xFF = nothing
+// to report. Cleared when the import screen is opened again. Stored as
+// result+1 because EWRAM_DATA lands in .sbss, which only accepts zero
+// initializers — so 0 has to mean "nothing", not SIM_CODE_OK.
+static EWRAM_DATA u8 sImportCodeStatus = 0;
 // v2.0.6 — Name-search re-entry. Mirrors gSimImportCodePending pattern. SELECT
 // in the species or held-item picker tears down the menu, sets this flag +
 // SearchTarget, and opens NAMING_SCREEN_TEAMCODE for a short text entry. On
@@ -2563,7 +2597,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_BuildTrainerMon[] =
     // On confirm, gSimImportCodePending flag drives a field_control_avatar
     // hook that decodes the buffer via Sim_DecodeTeamCode and re-opens this
     // per-mon editor with the imported values populated.
-    { COMPOUND_STRING("Import from code…"),        DebugAction_BuildTrainer_OpenImportCode },
+    { COMPOUND_STRING("Import from code… {STR_VAR_1}"), DebugAction_BuildTrainer_OpenImportCode },
     // v2.0.6 — Single-mon preset import. Opens the trainer picker in
     // COPY_MON_TO_CUSTOM mode; DPAD-LEFT/RIGHT cycles which mon of the
     // source trainer's party to import (top label shows the mon name); A
@@ -2868,6 +2902,9 @@ static const struct DebugMenuOption sDebugMenu_Actions_TournamentCups[] =
     { sCupName_Champions,      DebugAction_Tournament_PickCup, (void *)27 },
     { sCupName_AllStars,       DebugAction_Tournament_PickCup, (void *)28 },
     { sCupName_Custom,         DebugAction_Tournament_PickCup, (void *)29 },
+#ifndef RELEASE_BUILD
+    { sCupName_Logan,          DebugAction_Tournament_PickCup, (void *)30 },
+#endif
     { NULL }
 };
 
@@ -5512,6 +5549,13 @@ static u8 Debug_GenerateListBuildTrainerMonMenu(void)
         // sync with sDebugMenu_Actions_BuildTrainerMon's row order.
         switch (i)
         {
+        case 17: // Import from code… — show the last failure reason, if any
+            // v2.8.2 — blank on success/first open, so the row reads exactly
+            // as before; on failure it names the actual decode error
+            // ("Code corrupt (typo?)", "Missing PB prefix", ...).
+            if (sImportCodeStatus != 0)
+                StringCopy(gStringVar1, Sim_TeamCodeResultLabel((enum SimTeamCodeResult)(sImportCodeStatus - 1)));
+            break;
         case 0:  // Species
             StringCopy(gStringVar1, GetSpeciesName(sBuildTrainerWorkMon.species));
             break;
@@ -6979,7 +7023,7 @@ static u32 SimulatorRoster_Step(u32 currentId, s32 direction)
 #ifdef RELEASE_BUILD
 #define CUSTOM_OFFSET 0
 #else
-#define CUSTOM_OFFSET 2
+#define CUSTOM_OFFSET 11
 #endif
 // v1.5 — type bumped u8 → u16 since the LA section now starts past index 255.
 // Total roster is approaching 260 with the new PWT entries + VGC 2012 cup.
@@ -8522,6 +8566,7 @@ static const struct Trainer *Sim_GetTrainerStruct(s32 id)
 static void DebugAction_BuildTrainer_OpenImportCode(u8 taskId)
 {
     PlaySE(SE_SELECT);
+    sImportCodeStatus = 0;  // v2.8.2 — drop any stale error from last time
     // Start with an empty buffer so the naming screen's existing-string copy
     // path doesn't pre-fill with garbage. User types the full PB-prefix.
     memset(gSimTeamCodeBuffer, EOS, sizeof(gSimTeamCodeBuffer));
@@ -8551,10 +8596,14 @@ void Debug_DecodeImportedTeamCodeAndReopen(void)
         sBuildTrainerWorkMon = mon;
         BuildTrainer_CommitWorkBufferToSaveblock();
         PlaySE(SE_SUCCESS);
+        sImportCodeStatus = 0;
     }
     else
     {
         PlaySE(SE_FAILURE);
+        // v2.8.2 — remember WHY, so the reopened editor can show it on the
+        // "Import from code…" row instead of silently looking unchanged.
+        sImportCodeStatus = (u8)res + 1;
     }
     // Re-open the per-mon editor by simulating the OpenMonEditor path.
     // sDebugMenuListData was freed by Debug_DestroyMenu_Full when we left for

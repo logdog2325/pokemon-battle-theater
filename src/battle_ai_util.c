@@ -90,27 +90,68 @@ enum MoveTarget AI_GetBattlerMoveTargetType(enum BattlerId battler, enum Move mo
     return GetMoveTarget(move);
 }
 
+// v2.8.2 — One-hit KO moves (Fissure, Sheer Cold, Horn Drill, Guillotine)
+// report the target's ENTIRE HP bar as their damage (see EFFECT_OHKO in
+// battle_util.c: dmg = gBattleMons[battlerDef].hp). Every AI consumer reads
+// damage through AI_GetDamage, so all of them saw a 30%-accurate move as a
+// guaranteed kill. That is both halves of the reported bug: on offense the
+// AI ranked an OHKO move as the best possible option and spammed it, and on
+// defense it read an incoming one as certain death and panic-switched.
+//
+// Weight the damage by the odds the move actually connects, using the same
+// formula the engine rolls against (DoesOHKOMoveMissTarget): base accuracy
+// plus the level difference, zero when it cannot land at all, and full
+// damage only when the hit is genuinely guaranteed by Lock-On / No Guard.
+static u32 AI_WeightOhkoDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex, u32 dmg, struct AiLogicData *aiData)
+{
+    enum Move *moves = GetMovesArray(battlerAtk);
+    enum Move move = moves[moveIndex];
+
+    if (GetMoveEffect(move) != EFFECT_OHKO)
+        return dmg;
+
+    // Cannot connect at all: higher-level target, Sturdy, or a Dynamaxed foe.
+    if (gBattleMons[battlerDef].level > gBattleMons[battlerAtk].level
+     || GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX
+     || (!DoesBattlerIgnoreAbilityChecks(battlerAtk, aiData->abilities[battlerAtk], move)
+         && aiData->abilities[battlerDef] == ABILITY_STURDY))
+        return 0;
+
+    // Genuinely a sure thing — worth every point of that damage.
+    if (gBattleMons[battlerAtk].volatiles.battlerWithSureHit == battlerDef + 1
+     || aiData->abilities[battlerAtk] == ABILITY_NO_GUARD
+     || aiData->abilities[battlerDef] == ABILITY_NO_GUARD)
+        return dmg;
+
+    u32 odds = GetMoveAccuracy(move) + (gBattleMons[battlerAtk].level - gBattleMons[battlerDef].level);
+    if (MoveHasIncreasedAccByTenOnSameType(move) && !IS_BATTLER_OF_TYPE(battlerAtk, GetMoveType(move)))
+        odds -= 10;
+    if (odds > 100)
+        odds = 100;
+    return dmg * odds / 100;
+}
+
 u32 AI_GetDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *aiData)
 {
     if (calcContext == AI_ATTACKING && BattlerHasAi(battlerAtk))
     {
         if ((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_RISKY) && !(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSERVATIVE)) // Risky assumes it deals max damage
-            return aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].maximum;
+            return AI_WeightOhkoDamage(battlerAtk, battlerDef, moveIndex, aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].maximum, aiData);
         if ((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSERVATIVE) && !(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_RISKY)) // Conservative assumes it deals min damage
-            return aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].minimum;
-        return aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].median; // Default assumes it deals median damage
+            return AI_WeightOhkoDamage(battlerAtk, battlerDef, moveIndex, aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].minimum, aiData);
+        return AI_WeightOhkoDamage(battlerAtk, battlerDef, moveIndex, aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].median, aiData); // Default assumes it deals median damage
     }
     else if (calcContext == AI_DEFENDING && BattlerHasAi(battlerDef))
     {
         if ((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_RISKY) && !(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSERVATIVE)) // Risky assumes it takes min damage
-            return aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].minimum;
+            return AI_WeightOhkoDamage(battlerAtk, battlerDef, moveIndex, aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].minimum, aiData);
         if ((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSERVATIVE) && !(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_RISKY)) // Conservative assumes it takes max damage
-            return aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].maximum;
-        return aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].median; // Default assumes it takes median damage
+            return AI_WeightOhkoDamage(battlerAtk, battlerDef, moveIndex, aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].maximum, aiData);
+        return AI_WeightOhkoDamage(battlerAtk, battlerDef, moveIndex, aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].median, aiData); // Default assumes it takes median damage
     }
     else
     {
-        return aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].median;
+        return AI_WeightOhkoDamage(battlerAtk, battlerDef, moveIndex, aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].median, aiData);
     }
 }
 

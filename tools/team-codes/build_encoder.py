@@ -12,6 +12,15 @@ Usage:
     python3 build_encoder.py
 """
 
+# !! STALE GENERATOR — DO NOT REGENERATE encoder.html WITHOUT READING THIS !!
+# encoder.html has been hand-edited since this script last produced it, and
+# those edits were never backported here. Regenerating silently REVERTS them:
+# normalizeAscii() (smart quotes / en- and em-dash / non-breaking space
+# normalisation) is missing from this file entirely, and the teraType handling
+# here is older than the shipped page's. Back-port the shipped encoder.html's
+# JS into this script BEFORE running it again, or the fixes disappear.
+
+
 from __future__ import annotations
 import json
 import pathlib
@@ -163,6 +172,9 @@ HTML_TEMPLATE = r"""<!doctype html>
     padding: 10px;
   }
   .code-row.err { border-color: var(--error); }
+  /* v2.8.2 — valid code, but something looks wrong (e.g. no moves parsed). */
+  .code-row.warn { border-color: #d19a20; }
+  .code-row.warn .code-meta { color: #d19a20; }
   .code-label {
     font-size: 12px; color: var(--muted);
     min-width: 90px;
@@ -270,6 +282,8 @@ function lookup(table, name, kind) {
 }
 
 // Parse a Showdown text export into an array of Mon objects.
+const MOVE_BULLET = /^[-*\u2022\u00b7\u2023\u25aa\u25b8\u2043]\s*/;
+
 function parseShowdown(text) {
   const mons = [];
   let current = null;
@@ -321,8 +335,14 @@ function parseShowdown(text) {
       continue;
     }
 
-    if (line.startsWith("-")) {
-      const move = line.replace(/^-\s*/, "").trim();
+    // v2.8.2 — Showdown writes move lines as "- Thunderbolt", but text pasted
+    // out of Discord, Reddit or any rendered markdown page arrives with the
+    // dash turned into a bullet ("* Thunderbolt", "\u2022 Thunderbolt"). Those
+    // used to match no branch at all and were dropped SILENTLY, producing a
+    // perfectly valid code for a moveless Pokemon - which is why imports
+    // "did nothing" with no error anywhere. Accept the usual bullet glyphs.
+    if (MOVE_BULLET.test(line)) {
+      const move = line.replace(MOVE_BULLET, "").trim();
       for (let i = 0; i < 4; i++) {
         if (current.moves[i] === 0) {
           current.moves[i] = lookup(TABLES.moves, move, "move");
@@ -515,7 +535,12 @@ function render() {
     if (i < mons.length) {
       try {
         const code = encodeCode(mons[i]);
-        rows.push(rowHtml(i + 1, code, null));
+        // v2.8.2 — a Pokemon that parsed with zero moves almost always means
+        // its move lines were not recognised (mangled bullets, or they were
+        // left off entirely). The code is still valid, so keep it copyable,
+        // but say so loudly instead of handing back a silent dud.
+        const noMoves = mons[i].moves.every(m => m === 0);
+        rows.push(rowHtml(i + 1, code, null, noMoves));
       } catch (e) {
         rows.push(rowHtml(i + 1, e.message, "encode error"));
       }
@@ -534,15 +559,16 @@ function render() {
 // box (centered at maxChars=24). Flag the overflow so the user knows to
 // simplify the EV/IV spread (drop one stat investment, or round EVs to
 // multiples of 4) until the code fits.
-const ROM_MAX_CODE_LEN = 24;
+const ROM_MAX_CODE_LEN = 34;  // v2.8.2 — in-ROM entry widened to 34
 
-function rowHtml(label, code, errKind) {
+function rowHtml(label, code, errKind, noMoves) {
   const isErr = !!errKind;
   const tooLong = !isErr && code.length > ROM_MAX_CODE_LEN;
-  const cls = isErr ? "code-row err" : (tooLong ? "code-row err" : "code-row");
+  const cls = isErr ? "code-row err" : (tooLong ? "code-row err" : (noMoves ? "code-row warn" : "code-row"));
   let meta;
   if (isErr) meta = errKind;
   else if (tooLong) meta = `${code.length} chars — too long for ROM (max ${ROM_MAX_CODE_LEN})`;
+  else if (noMoves) meta = `${code.length} chars — no moves recognised: move lines must start with "-"`;
   else meta = `${code.length} chars`;
   const btn = isErr
     ? `<button class="copy-btn" disabled>copy</button>`

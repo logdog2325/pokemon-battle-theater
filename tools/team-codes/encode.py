@@ -345,8 +345,10 @@ def parse_showdown(text: str) -> list[Mon]:
                 current.species = species_id(mon_line)
             continue
         # Subsequent lines: "Field: Value" or "- Move"
-        if line.startswith("-"):
-            move = line.lstrip("- ").strip()
+        # v2.8.2 — accept bullet glyphs too; pasted markdown turns "-" into
+        # "*" or "\u2022" and those move lines were being dropped silently.
+        if line[:1] in "-*\u2022\u00b7\u2023\u25aa\u25b8\u2043":
+            move = line[1:].strip()
             for i in range(4):
                 if current.moves[i] == 0:
                     current.moves[i] = move_id(move)

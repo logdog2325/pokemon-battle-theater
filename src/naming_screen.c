@@ -159,9 +159,11 @@ struct NamingScreenData
     u8 tilemapBuffer1[0x800];
     u8 tilemapBuffer2[0x800];
     u8 tilemapBuffer3[0x800];
-    // v1.3 — bumped 16 → 32 to fit the team-code import buffer
-    // (NAMING_SCREEN_TEAMCODE uses maxChars=30 + EOS + slack).
-    u8 textBuffer[32];
+    // v1.3 — bumped 16 → 32 to fit the team-code import buffer.
+    // v2.8.2 — bumped 32 → 40: NAMING_SCREEN_TEAMCODE now allows 34 chars,
+    // the true worst case for a fully-specified mon (every EV stat, every IV
+    // deviating, non-100 level). 34 + EOS + slack.
+    u8 textBuffer[40];
     u8 tileBuffer[0x600];
     u8 state;
     u8 windows[WIN_COUNT];
@@ -347,6 +349,7 @@ static const u8 *const sNamingScreenKeyboardText[KBPAGE_COUNT][KBROW_COUNT];
 static const struct SpriteSheet sSpriteSheets[];
 static const struct SpritePalette sSpritePalettes[];
 
+static u8 GetInputCharPitch(void);  // v2.8.2 — narrow pitch for team codes
 static void CB2_LoadNamingScreen(void);
 static void NamingScreen_Init(void);
 static void NamingScreen_InitBGs(void);
@@ -495,7 +498,7 @@ static void NamingScreen_Init(void)
     sNamingScreen->bgToHide = 1;
     sNamingScreen->template = sNamingScreenTemplates[sNamingScreen->templateNum];
     sNamingScreen->currentPage = sNamingScreen->template->initialPage;
-    sNamingScreen->inputCharBaseXPos = (DISPLAY_WIDTH - sNamingScreen->template->maxChars * 8) / 2 + 6;
+    sNamingScreen->inputCharBaseXPos = (DISPLAY_WIDTH - sNamingScreen->template->maxChars * GetInputCharPitch()) / 2 + 6;
     if (sNamingScreen->templateNum == NAMING_SCREEN_WALDA)
         sNamingScreen->inputCharBaseXPos += 11;
     sNamingScreen->keyRepeatStartDelayCopy = gKeyRepeatStartDelay;
@@ -1371,7 +1374,7 @@ static void CreateTextEntrySprites(void)
     gSprites[spriteId].oam.priority = 3;
     gSprites[spriteId].invisible = TRUE;
     xPos = sNamingScreen->inputCharBaseXPos;
-    for (i = 0; i < sNamingScreen->template->maxChars; i++, xPos += 8)
+    for (i = 0; i < sNamingScreen->template->maxChars; i++, xPos += GetInputCharPitch())
     {
         spriteId = CreateSprite(&sSpriteTemplate_Underscore, xPos + 3, 60, 0);
         gSprites[spriteId].oam.priority = 3;
@@ -1782,6 +1785,22 @@ static void HandleDpadMovement(struct Task *task)
 #undef tKeyboardEvent
 #undef tButtonId
 
+// v2.8.2 — Horizontal pitch between entry slots. The team-code screen packs
+// 34 characters into the 216px entry window, which does not fit at the normal
+// 8px pitch (34*8 = 272px, wider than the whole 240px screen). Base64 codes
+// are all narrow glyphs (A-Z a-z 0-9 - _), so they render cleanly at a 6px
+// pitch with FONT_NARROW: 34*6 = 204px, comfortably inside the window.
+// Every other naming screen keeps the original 8px pitch untouched.
+#define NAMING_SCREEN_NARROW_PITCH 6
+#define NAMING_SCREEN_NORMAL_PITCH 8
+
+static u8 GetInputCharPitch(void)
+{
+    if (sNamingScreen->templateNum == NAMING_SCREEN_TEAMCODE)
+        return NAMING_SCREEN_NARROW_PITCH;
+    return NAMING_SCREEN_NORMAL_PITCH;
+}
+
 static void DrawNormalTextEntryBox(void)
 {
     FillWindowPixelBuffer(sNamingScreen->windows[WIN_TEXT_ENTRY_BOX], PIXEL_FILL(1));
@@ -1998,6 +2017,7 @@ static void DrawTextEntry(void)
     // screen coords; subtracting the window's pixel offset converts to
     // window-local x for AddTextPrinterParameterized.
     u16 x = sNamingScreen->inputCharBaseXPos - 0x10;
+    u8 pitch = GetInputCharPitch();
 
     FillWindowPixelBuffer(sNamingScreen->windows[WIN_TEXT_ENTRY], PIXEL_FILL(1));
 
@@ -2007,7 +2027,12 @@ static void DrawTextEntry(void)
         temp[1] = gText_ExpandedPlaceholder_Empty[0];
         extraWidth = (IsWideLetter(temp[0]) == TRUE) ? 2 : 0;
 
-        AddTextPrinterParameterized(sNamingScreen->windows[WIN_TEXT_ENTRY], FONT_NORMAL, temp, i * 8 + x + extraWidth, 1, TEXT_SKIP_DRAW, NULL);
+        // v2.8.2 — narrow pitch uses FONT_NARROW so 34 base64 glyphs fit; the
+        // wide-letter nudge is a FONT_NORMAL correction and is skipped there.
+        if (pitch < NAMING_SCREEN_NORMAL_PITCH)
+            AddTextPrinterParameterized(sNamingScreen->windows[WIN_TEXT_ENTRY], FONT_NARROW, temp, i * pitch + x, 1, TEXT_SKIP_DRAW, NULL);
+        else
+            AddTextPrinterParameterized(sNamingScreen->windows[WIN_TEXT_ENTRY], FONT_NORMAL, temp, i * pitch + x + extraWidth, 1, TEXT_SKIP_DRAW, NULL);
     }
 
     TryDrawGenderIcon();
@@ -2228,15 +2253,18 @@ static const struct NamingScreenTemplate sCodeScreenTemplate =
     .title = COMPOUND_STRING("Enter code:"),
 };
 
-// v1.3 — Pokemon Battle Theater team code entry. maxChars=24 was tuned from
-// the v1.3 visual test: at 30 chars the leftmost ~3 underscores were clipped
-// behind the window's left border tile (inputCharBaseXPos = 6 sits inside
-// the tile-window inset). At 24 chars the input box is centered at x=30
-// → x=222 with clean ~18px margins on both sides.
+// v1.3 — Pokemon Battle Theater team code entry.
+// v2.8.2 — maxChars 24 -> 34, so EVERY possible code is typable. 34 is the
+// true worst case (all six EV stats invested, every IV deviating from 31, a
+// non-100 level); at 24 those codes could not be entered at all.
 //
-// 24 chars matches the typical v2 team-code length. Codes longer than 24
-// (full-custom EV/IV spreads) need the web encoder to warn + the user to
-// simplify the spread before typing.
+// The v1.3 note below still explains why 30 failed back then: at the normal
+// 8px pitch the leftmost underscores clipped behind the window's left border
+// (30*8 = 240px = the entire screen). The fix is pitch, not width —
+// GetInputCharPitch() drops this screen to 6px and FONT_NARROW, which base64
+// glyphs (A-Z a-z 0-9 - _) render cleanly at. 34*6 = 204px, centered at
+// x=24 -> x=228, inside the 216px entry window (x=16..232). Sprite budget is
+// fine too: 34 underscores + cursor/arrow/buttons/icon = 42 of MAX_SPRITES 64.
 //
 // iconFunction = 3 reuses the Pokémon-icon style from CAUGHT_MON / NICKNAME
 // so the screen shows Ditto (passed in via DoNamingScreen's monSpecies arg)
@@ -2244,7 +2272,10 @@ static const struct NamingScreenTemplate sCodeScreenTemplate =
 static const struct NamingScreenTemplate sTeamCodeScreenTemplate =
 {
     .copyExistingString = FALSE,
-    .maxChars = 24,
+    // v2.8.2 — 24 -> 34: a fully-specified mon (all six EV stats invested,
+    // every IV deviating from 31, a non-100 level) encodes to 34 chars, and
+    // those codes were simply untypable before. Rendered at the narrow pitch.
+    .maxChars = 34,
     .iconFunction = 3,                 // Pokémon icon (uses monSpecies arg)
     .addGenderIcon = FALSE,
     .initialPage = KBPAGE_LETTERS_UPPER,

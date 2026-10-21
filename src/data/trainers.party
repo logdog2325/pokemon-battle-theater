@@ -42318,6 +42318,600 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Strength
 
 
+/* ============================================================================
+ * LOGAN'S OWN TEAMS — dev-only (stripped from RELEASE_BUILD like TRAINER_LOGAN).
+ * One trainer per game he actually played, for the Logan Cup.
+ * Only LOGAN_SWSH Dynamaxes; only LOGAN_SV Terastallizes; LOGAN_ZA is the
+ * Mega squad (Absol Z and Feraligatr use the new Champions abilities).
+ * ========================================================================= */
+=== TRAINER_LOGAN_BW2 ===
+Name: LOGAN
+Class: Pkmn Ranger
+Pic: Pokemon Ranger M
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Aramis (Virizion) @ Leftovers
+Ability: Justified
+Level: 76
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Giga Impact
+- Swords Dance
+- Leaf Blade
+- Sacred Sword
+
+Set (Krookodile) (M) @ Choice Band
+Ability: Intimidate
+Level: 74
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Crunch
+- Outrage
+- Dragon Claw
+- Earthquake
+
+Surtr (Emboar) (M) @ Assault Vest
+Ability: Blaze
+Level: 74
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Flamethrower
+- Head Smash
+- Flare Blitz
+- Arm Thrust
+
+Dolly (Ampharos) (M) @ Choice Specs
+Ability: Static
+Level: 79
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Volt Switch
+- Signal Beam
+- Power Gem
+- Thunderbolt
+
+Pikablue (Azumarill) @ Sitrus Berry
+Ability: Huge Power
+Level: 76
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Aqua Tail
+- Aqua Jet
+- Superpower
+- Ice Punch
+
+Sigilyph (M) @ Life Orb
+Ability: Magic Guard
+Level: 74
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Fly
+- Air Slash
+- Sky Attack
+- Psychic
+
+=== TRAINER_LOGAN_ORAS ===
+Name: LOGAN
+Class: Pkmn Ranger
+Pic: Pokemon Ranger M
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Patty (Slaking) (F) @ Choice Band
+Ability: Truant
+Level: 54
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Body Slam
+- Double-Edge
+- Drain Punch
+- Shadow Claw
+
+T-rex (Hariyama) (F) @ Assault Vest
+Ability: Thick Fat
+Level: 58
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Stone Edge
+- Heavy Slam
+- Close Combat
+- Fake Out
+
+Grilzith (Sceptile) (M) @ Sceptilite
+Ability: Overgrow
+Level: 62
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Screech
+- Synthesis
+- Dragon Pulse
+- Leaf Storm
+
+Aggron @ Life Orb
+Ability: Sturdy
+Level: 54
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Stone Edge
+- Dark Pulse
+- Earthquake
+- Iron Tail
+
+La (Kyogre) @ Blue Orb
+Ability: Drizzle
+Level: 52
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Ice Beam
+- Origin Pulse
+- Blizzard
+- Aqua Ring
+
+Latias @ Latiasite
+Ability: Levitate
+Level: 56
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Mist Ball
+- Dragon Pulse
+- Aura Sphere
+- Mystical Fire
+
+=== TRAINER_LOGAN_USUM ===
+Name: LOGAN
+Class: Pkmn Ranger
+Pic: Pokemon Ranger M
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Mudsdale (F) @ Leftovers
+Ability: Stamina
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Rock Tomb
+- Heavy Slam
+- Superpower
+- Earthquake
+
+Crabominable (M) @ Choice Band
+Ability: Hyper Cutter
+Level: 67
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Crabhammer
+- Payback
+- Close Combat
+- Ice Punch
+
+Tyranitar (F) @ Tyranitarite
+Ability: Sand Stream
+Level: 76
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Earthquake
+- Stone Edge
+- Rock Slide
+- Crunch
+
+Decidueye (M) @ Decidium Z
+Ability: Overgrow
+Level: 74
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Sucker Punch
+- Spirit Shackle
+- Leaf Blade
+- Brave Bird
+
+Oricorio (F) @ Life Orb
+Ability: Dancer
+Level: 78
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Teeter Dance
+- Revelation Dance
+- U-turn
+- Hurricane
+
+Vikavolt (F) @ Expert Belt
+Ability: Levitate
+Level: 73
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Thunder Wave
+- Thunderbolt
+- X-Scissor
+- Crunch
+
+=== TRAINER_LOGAN_LGPE ===
+Name: LOGAN
+Class: Pkmn Ranger
+Pic: Pokemon Ranger M
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Pikachu-Partner (F) @ Light Ball
+Ability: Static
+Level: 56
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Splishy Splash
+- Brick Break
+- Thunderbolt
+- Floaty Fall
+
+Charizard (M) @ Charizardite X
+Ability: Blaze
+Level: 54
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Wing Attack
+- Dragon Pulse
+- Fire Punch
+- Flamethrower
+
+Venusaur (M) @ Venusaurite
+Ability: Overgrow
+Level: 54
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Sludge Bomb
+- Sleep Powder
+- Petal Dance
+- Leech Seed
+
+Blastoise (M) @ Blastoisinite
+Ability: Torrent
+Level: 54
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Dark Pulse
+- Dragon Pulse
+- Surf
+- Protect
+
+Primeape (M) @ Choice Band
+Ability: Vital Spirit
+Level: 55
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- U-turn
+- Thunder Punch
+- Brick Break
+- Low Kick
+
+Nidoking @ Life Orb
+Ability: Poison Point
+Level: 55
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Thrash
+- Earthquake
+- Ice Beam
+- Sludge Bomb
+
+=== TRAINER_LOGAN_SWSH ===
+Name: LOGAN
+Class: Pkmn Ranger
+Pic: Pokemon Ranger M
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Toxtricity (F) @ Muscle Band
+Ability: Plus
+Level: 68
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+Dynamax Level: 10
+- Shift Gear
+- Discharge
+- Nuzzle
+- Poison Jab
+
+Dozums (Rillaboom) (M) @ Miracle Seed
+Ability: Overgrow
+Level: 73
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+Dynamax Level: 10
+- Boomburst
+- Wood Hammer
+- Drum Beating
+- U-turn
+
+Alduin (Haxorus) (F) @ Life Orb
+Ability: Mold Breaker
+Level: 67
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+Dynamax Level: 10
+- Crunch
+- Dragon Dance
+- Outrage
+- Dragon Claw
+
+Jay (Corviknight) (M) @ Leftovers
+Ability: Unnerve
+Level: 62
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+Dynamax Level: 10
+- Brave Bird
+- Steel Wing
+- Power Trip
+- Hone Claws
+
+Kurama (Ninetales) (M) @ Wise Glasses
+Ability: Flash Fire
+Level: 72
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+Dynamax Level: 10
+- Will-O-Wisp
+- Disable
+- Extrasensory
+- Flamethrower
+
+Ms Ribbiet (Seismitoad) (F) @ Damp Rock
+Ability: Swift Swim
+Level: 64
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+Dynamax Level: 10
+- Mud Shot
+- Drain Punch
+- Rain Dance
+- Muddy Water
+
+=== TRAINER_LOGAN_BDSP ===
+Name: LOGAN
+Class: Pkmn Ranger
+Pic: Pokemon Ranger M
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+BRTD (Staraptor) (M) @ Clear Amulet
+Ability: Intimidate
+Level: 61
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Close Combat
+- Brave Bird
+- U-turn
+- Steel Wing
+
+Gastrodon (M) @ Quick Claw
+Ability: Storm Drain
+Level: 64
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Ice Beam
+- Earth Power
+- Surf
+- Recover
+
+Luxray (M) @ Razor Claw
+Ability: Intimidate
+Level: 64
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Spark
+- Crunch
+- Volt Switch
+- Thunderbolt
+
+MakeaWish (Jirachi) @ Shell Bell
+Ability: Serene Grace
+Level: 61
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Zen Headbutt
+- Meteor Mash
+- Psychic
+- Helping Hand
+
+Spooky (Mismagius) (F) @ Spell Tag
+Ability: Levitate
+Level: 66
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Confuse Ray
+- Psybeam
+- Dazzling Gleam
+- Hex
+
+Goky (Infernape) @ Fist Plate
+Ability: Blaze
+Level: 66
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Mach Punch
+- Power-Up Punch
+- Flamethrower
+- Close Combat
+
+=== TRAINER_LOGAN_LA ===
+Name: LOGAN
+Class: Pkmn Ranger
+Pic: Pokemon Ranger M
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Staraptor (M) @ Choice Scarf
+Ability: Intimidate
+Level: 69
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Close Combat
+- Brave Bird
+- Quick Attack
+- Air Slash
+
+Samurott-Hisui (M) @ Life Orb
+Ability: Sharpness
+Level: 75
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- X-Scissor
+- Aqua Tail
+- Ceaseless Edge
+- Night Slash
+
+Kleavor (M) @ Choice Band
+Ability: Sharpness
+Level: 68
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Close Combat
+- X-Scissor
+- Psycho Cut
+- Stone Axe
+
+Ursaluna (M) @ Flame Orb
+Ability: Guts
+Level: 69
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Headlong Rush
+- Shadow Claw
+- Play Rough
+- High Horsepower
+
+Sylveon (M) @ Leftovers
+Ability: Cute Charm
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Play Rough
+- Quick Attack
+- Mystical Fire
+- Dazzling Gleam
+
+Dusknoir (M) @ Assault Vest
+Ability: Pressure
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Ice Punch
+- Psychic
+- Dark Pulse
+- Shadow Ball
+
+=== TRAINER_LOGAN_SV ===
+Name: LOGAN
+Class: Pkmn Ranger
+Pic: Pokemon Ranger M
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Clodsire (M) @ Poison Barb
+Ability: Water Absorb
+Level: 79
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+Tera Type: Ground
+- Gunk Shot
+- Earthquake
+- Yawn
+- Poison Jab
+
+Azumarill (F) @ Leftovers
+Ability: Huge Power
+Level: 94
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+Tera Type: Fairy
+- Play Rough
+- Ice Spinner
+- Superpower
+- Liquidation
+
+Arthur (Meowscarada) (M) @ Clear Amulet
+Ability: Overgrow
+Level: 85
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+Tera Type: Grass
+- Low Kick
+- U-turn
+- Flower Trick
+- Night Slash
+
+Raichu (M) @ Life Orb
+Ability: Static
+Level: 88
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+Tera Type: Electric
+- Nasty Plot
+- Thunderbolt
+- Nuzzle
+- Volt Switch
+
+Talonflame (F)
+Ability: Flame Body
+Level: 67
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+Tera Type: Normal
+- Flare Blitz
+- Acrobatics
+- Tailwind
+- Flamethrower
+
+Espeon (M) @ Expert Belt
+Ability: Synchronize
+Level: 87
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+Tera Type: Normal
+- Dazzling Gleam
+- Shadow Ball
+- Psychic
+- Quick Attack
+
+=== TRAINER_LOGAN_ZA ===
+Name: LOGAN
+Class: Pkmn Ranger
+Pic: Pokemon Ranger M
+Gender: Male
+Music: Male
+Items: Full Restore / Full Restore / Full Restore / Full Restore
+Double Battle: No
+AI: Check Bad Move / Try To Faint / Check Viability / Smart Switching
+
+Absol (F) @ Absolite Z
+Ability: Pressure
+Level: 94
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Night Slash
+- Shadow Claw
+- Air Slash
+- Swords Dance
+
+Moody (Camerupt) (F) @ Cameruptite
+Ability: Solid Rock
+Level: 100
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Earth Power
+- Stone Edge
+- Earthquake
+- Flamethrower
+
+Abomasnow (F) @ Abomasite
+Ability: Snow Warning
+Level: 94
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Earth Power
+- Wood Hammer
+- Ice Hammer
+- Leech Seed
+
+Feraligatr (M) @ Feraligite
+Ability: Torrent
+Level: 95
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Crunch
+- Aqua Jet
+- Liquidation
+- Outrage
+
+Xerneas @ Power Herb
+Ability: Fairy Aura
+Level: 87
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Outrage
+- Horn Leech
+- Moonblast
+- Geomancy
+
+Bois (Heracross) (M) @ Heracronite
+Ability: Swarm
+Level: 99
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Close Combat
+- Aerial Ace
+- Rock Blast
+- Pin Missile
+
 === TRAINER_URBAIN ===
 Name: URBAIN
 Class: Cooltrainer

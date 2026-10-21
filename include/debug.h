@@ -52,7 +52,7 @@ void SimRequestWrapperReopen(void);
 // flag, calls the handler, and the handler decodes the buffer + re-opens
 // the per-mon editor with the imported values.
 extern EWRAM_DATA bool8 gSimImportCodePending;
-extern EWRAM_DATA u8 gSimTeamCodeBuffer[32];
+extern EWRAM_DATA u8 gSimTeamCodeBuffer[40];
 void Debug_DecodeImportedTeamCodeAndReopen(void);
 // v2.0.6 — name-search re-entry from species/item picker (see debug.c).
 // SELECT in the picker opens NAMING_SCREEN_PLAYER, user types a partial

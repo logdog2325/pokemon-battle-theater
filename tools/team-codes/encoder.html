@@ -53,6 +53,9 @@
     padding: 10px;
   }
   .code-row.err { border-color: var(--error); }
+  /* v2.8.2 — valid code, but something looks off (e.g. no moves parsed). */
+  .code-row.warn { border-color: #d19a20; }
+  .code-row.warn .code-meta { color: #d19a20; }
   .code-label {
     font-size: 12px; color: var(--muted);
     min-width: 90px;
@@ -317,6 +320,14 @@ function normalizeAscii(text) {
     .replace(/[  -​]/g, " ");      // non-breaking + thin spaces → " "
 }
 
+// v2.8.2 — Showdown writes move lines as "- Thunderbolt", but text pasted out
+// of Discord, Reddit or any rendered markdown page arrives with the dash
+// swapped for a bullet ("* Thunderbolt", "\u2022 Thunderbolt"). Those matched no
+// branch in the loop below and were dropped SILENTLY, yielding a perfectly
+// valid code for a moveless Pokemon - the cause of "the code looks fine but
+// nothing imports, and there's no error". Accept the usual bullet glyphs.
+const MOVE_BULLET = /^[-*\u2022\u00b7\u2023\u25aa\u25b8\u2043]\s*/;
+
 function parseShowdown(text) {
   text = normalizeAscii(text);
   const mons = [];
@@ -369,8 +380,8 @@ function parseShowdown(text) {
       continue;
     }
 
-    if (line.startsWith("-")) {
-      const move = line.replace(/^-\s*/, "").trim();
+    if (MOVE_BULLET.test(line)) {
+      const move = line.replace(MOVE_BULLET, "").trim();
       for (let i = 0; i < 4; i++) {
         if (current.moves[i] === 0) {
           current.moves[i] = lookup(TABLES.moves, move, "move");
@@ -603,7 +614,11 @@ function render() {
     if (i < mons.length) {
       try {
         const code = encodeCode(mons[i]);
-        rows.push(rowHtml(i + 1, code, null));
+        // v2.8.2 — a Pokemon that parsed with zero moves almost always means
+        // its move lines weren't recognised. The code is still valid, so keep
+        // it copyable, but flag it instead of handing back a silent dud.
+        const noMoves = mons[i].moves.every(m => m === 0);
+        rows.push(rowHtml(i + 1, code, null, noMoves));
       } catch (e) {
         rows.push(rowHtml(i + 1, e.message, "encode error"));
       }
@@ -626,15 +641,16 @@ function render() {
 // instead the format was bumped to v4 with a flag-encoded teraType that
 // reclaims 4 bits when teraType is None (typical case), keeping common
 // codes inside the 24-char budget.
-const ROM_MAX_CODE_LEN = 24;
+const ROM_MAX_CODE_LEN = 34;  // v2.8.2 — in-ROM entry widened to 34
 
-function rowHtml(label, code, errKind) {
+function rowHtml(label, code, errKind, noMoves) {
   const isErr = !!errKind;
   const tooLong = !isErr && code.length > ROM_MAX_CODE_LEN;
-  const cls = isErr ? "code-row err" : (tooLong ? "code-row err" : "code-row");
+  const cls = isErr ? "code-row err" : (tooLong ? "code-row err" : (noMoves ? "code-row warn" : "code-row"));
   let meta;
   if (isErr) meta = errKind;
   else if (tooLong) meta = `${code.length} chars — too long for ROM (max ${ROM_MAX_CODE_LEN})`;
+  else if (noMoves) meta = `${code.length} chars — no moves read; move lines must start with "-"`;
   else meta = `${code.length} chars`;
   const btn = isErr
     ? `<button class="copy-btn" disabled>copy</button>`

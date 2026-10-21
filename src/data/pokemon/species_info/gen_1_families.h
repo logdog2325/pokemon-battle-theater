@@ -3646,14 +3646,16 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .formSpeciesIdTable = sPikachuFormSpeciesIdTable,
     },
 
+    // v2.8.2 — Partner Pikachu's real Let's Go base stats (45/80/50/75/60/120);
+    // the expansion had it sharing regular Pikachu's line, so it was a skin only.
     [SPECIES_PIKACHU_PARTNER] =
     {
-        .baseHP        = 35,
-        .baseAttack    = 55,
-        .baseDefense   = 40,
-        .baseSpeed     = 90,
-        .baseSpAttack  = 50,
-        .baseSpDefense = 50,
+        .baseHP        = 45,
+        .baseAttack    = 80,
+        .baseDefense   = 50,
+        .baseSpeed     = 120,
+        .baseSpAttack  = 75,
+        .baseSpDefense = 60,
         .types = MON_TYPES(TYPE_ELECTRIC),
         .catchRate = 190,
         .expYield = PIKACHU_EXP_YIELD,

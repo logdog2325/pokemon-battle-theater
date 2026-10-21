@@ -16,7 +16,7 @@ Title screen + box art commissioned from
 Shadow Lugia (XD001) battle sprites + icon by
 **[lvalovenfs](https://www.deviantart.com/lvalovenfs)** (DeviantArt), used with credit.
 
-**Download the latest patch:** [v2.8.1 — every Z-A Mega gets its real ability, plus two Colosseum bosses](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
+**Download the latest patch:** [v2.8.2 — smarter OHKO handling, team codes that always fit, import errors that explain themselves](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
 All releases live on the [Releases page](https://github.com/logdog2325/pokemon-battle-theater/releases).
 
 ---
@@ -176,6 +176,15 @@ All releases live on the [Releases page](https://github.com/logdog2325/pokemon-b
   their canonical Dynamax and G-Max mons, Ash's Gigantamax Gengar, and
   custom mons with the per-mon toggle switched on. This also fixes that
   toggle being ignored in pilot mode
+- **OHKO moves, weighed honestly (v2.8.2)** — the AI used to treat Fissure,
+  Sheer Cold, Horn Drill and Guillotine as a guaranteed kill, so it spammed
+  them on offense and panic-switched away from them on defense. It now
+  weighs them by their real odds of landing, and knows they can't touch a
+  higher-level target, a Sturdy mon, or a Dynamaxed foe
+- **Team codes that always fit (v2.8.2)** — the in-ROM code entry now takes
+  up to 34 characters, so every possible code is typable; failed imports say
+  why instead of silently doing nothing; and the encoder accepts move lines
+  pasted with bullets (•, *) and warns when a mon parsed with no moves
 - **Z-A Mega abilities, for real (v2.8.1)** — 28 of the 32 Legends: Z-A Mega
   Evolutions had never been given their actual abilities; every one was
   silently inheriting its base form's, so Mega Clefable had Cute Charm
@@ -533,6 +542,8 @@ flow / debug menu reference.
 - [u/CDRX73](https://www.reddit.com/user/CDRX73/) — commissioned animated title
   screen + box art (Mega Sceptile vs Mega Charizard X, v2.0.9)
 - LiYun — Battle Theater background art
+- [lvalovenfs](https://www.deviantart.com/lvalovenfs) (DeviantArt) — Shadow Lugia
+  sprite sheet used for XD001 (v2.7)
 - Bulbapedia / Smogon archives — canonical trainer rosters
 - u/Healthy_Bug7977 and u/LordePachi — suggested the Marvel Snap / Hearthstone–style
   deck-code import that became v1.3's Showdown team-code feature
