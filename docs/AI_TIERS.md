@@ -336,6 +336,11 @@ Totals across the roster below: 119 Gym Leader, 149 Elite Four, 179 Champion. Cu
 | Wally Oras | Elite Four |
 | Wallace Oras | Champion |
 | Zinnia | Champion |
+
+### SM/USUM (2016-17, Gen 7 Alola) — Alola cast, then Battle Tree
+
+| Trainer | Tier |
+|---|---|
 | Ilima | Gym Leader |
 | Lana | Gym Leader |
 | Kiawe | Gym Leader |
