@@ -24,6 +24,7 @@
 #include "credits_frlg.h"
 #include "data.h"
 #include "daycare.h"
+#include "battle_controllers.h"
 #include "debug.h"
 #include "decoration.h"
 #include "decoration_inventory.h"
@@ -2072,6 +2073,10 @@ static bool32 Sim_BeginTournamentRun(u16 playerSideId, bool32 pilot);
 static void DebugAction_E4_PickLeague(u8 taskId, u32 leagueIdx);
 static void DebugAction_Boss_PickGauntlet(u8 taskId, u32 bossIdx);  // v2.7.0
 static void DebugAction_E4_ToggleLevelCap(u8 taskId);
+static void DebugAction_E4_ToggleAiMode(u8 taskId);
+static void DebugAction_Tournament_ToggleAiMode(u8 taskId);
+static void DebugAction_Trainers_ToggleAiMode(u8 taskId);
+static const u8 *Sim_AiModeLabel(void);
 static void DebugAction_E4_ConfirmLevelCap(u8 taskId);
 static void Sim_ShowE4LevelCapMenu(void);
 static void DebugAction_E4_StartRandom(u8 taskId);
@@ -2487,6 +2492,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_Trainers[] =
     { COMPOUND_STRING("Opponent 2: {STR_VAR_1}"), DebugAction_Trainers_ChooseTrainer, (void *)TRAINERS_DEBUG_SELECTION_TRAINER2},
     { COMPOUND_STRING("Co-op Partner: {STR_VAR_1}"), DebugAction_Trainers_ChooseTrainer,  (void *)TRAINERS_DEBUG_SELECTION_PARTNER},
     { COMPOUND_STRING("Level Cap: {STR_VAR_1}"), DebugAction_ToggleFlag, DebugAction_Trainers_ToggleLevelCap },
+    { COMPOUND_STRING("AI: {STR_VAR_1}"), DebugAction_ToggleFlag, DebugAction_Trainers_ToggleAiMode },  // v2.9.0
     { COMPOUND_STRING("Best Of: {STR_VAR_1}"), DebugAction_ToggleFlag, DebugAction_Trainers_ToggleBestOf },
     { COMPOUND_STRING("VGC Mode: {STR_VAR_1}"), DebugAction_ToggleFlag, DebugAction_Trainers_ToggleVGC },
     // v2.1.3 — Tournament row moved to its own wrapper-menu flow (cup picker
@@ -2742,8 +2748,8 @@ static const struct SimE4League sSimE4Leagues[] =
     { sE4Name_B2W2,    {1067, 1068, 1069, 1070}, { 964, 0, 0},       1, FALSE, 1064 }, // B2W2 E4 -> Iris
     { sE4Name_ORAS,    { 895,  896,  897,  898}, { 892, 0, 0},       1, FALSE,  894 }, // ORAS E4 -> Steven
     { sE4Name_XY,      {1234, 1235, 1236, 1237}, {1083, 0, 0},       1, FALSE, 1083 }, // Malva..Drasna -> Diantha
-    { sE4Name_SM,      {1271, 1272, 1273, 1274}, { 930,  932,  933}, 3, FALSE,  917 }, // SM E4 (Hala) -> Kukui (random starter)
-    { sE4Name_USUM,    { 928,  925,  922,  929}, { 931,  934,  935}, 3, FALSE,  917 }, // Molayne/Olivia/Acerola/Kahili -> Hau (random starter)
+    { sE4Name_SM,      {1271, 1273, 1274, 1272}, { 930,  932,  933}, 3, FALSE,  917 }, // v2.9.0 Hala/Acerola/Kahili/Olivia -> Kukui (random starter)
+    { sE4Name_USUM,    { 922,  929,  925,  928}, { 931,  934,  935}, 3, FALSE,  917 }, // v2.9.0 Acerola/Kahili/Olivia/Molayne (strongest last) -> Hau (random starter)
     { sE4Name_BDSP,    {1017, 1018, 1019, 1020}, {1021, 0, 0},       1, FALSE, 1006 }, // BDSP E4 -> Cynthia
     { sE4Name_SV,      {1117, 1118, 1119, 1120}, {1116, 0, 0},       1, FALSE, 1113 }, // Rika..Hassel -> Geeta
     { sE4Name_BB,      {1138, 1139, 1140, 1141}, {1142, 0, 0},       1, TRUE , 1113 }, // Crispin..Drayton -> Kieran (canon doubles)
@@ -2769,6 +2775,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_E4LevelCap[] =
     // v2.4.0 UX — A on the cap row CYCLES it in place (Off -> 50 -> 75 ->
     // 100, same as the sim menu's row); Continue confirms and moves on.
     { COMPOUND_STRING("Level Cap: {STR_VAR_1}"), DebugAction_E4_ToggleLevelCap },
+    { COMPOUND_STRING("AI: {STR_VAR_2}"),        DebugAction_E4_ToggleAiMode },  // v2.9.0
     { COMPOUND_STRING("Continue"),               DebugAction_E4_ConfirmLevelCap },
     { NULL }
 };
@@ -2827,6 +2834,581 @@ static const struct SimBossGauntlet sSimBossGauntlets[] =
 };
 #define SIM_BOSS_GAUNTLET_COUNT (sizeof(sSimBossGauntlets) / sizeof(sSimBossGauntlets[0]))
 
+// =============================================================================
+// v2.9.0 — AI tiers. In sim battles the engine's per-trainer AI is re-leveled
+// by role: Gym Leaders think at one level, the Elite Four a step higher, and
+// Champions — plus anime teams, VGC/Worlds players and Boss Battle bosses —
+// highest. Only the "intelligence" flags are replaced; personality flags
+// (Ace mons, forced setup, stall, risky, ...) are kept. Omniscient is never
+// used. "Equalized" puts every trainer on both sides at champion tier.
+#define SIM_AI_INTEL_MASK (AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY \
+                         | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_HP_AWARE \
+                         | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_TERA | AI_FLAG_TRY_TO_2HKO \
+                         | AI_FLAG_PREDICTION | AI_FLAG_ASSUMPTIONS)
+#define SIM_AI_TIER_GYM   (AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY)
+#define SIM_AI_TIER_E4    (SIM_AI_TIER_GYM | AI_FLAG_SMART_SWITCHING)
+#define SIM_AI_TIER_CHAMP (SIM_AI_TIER_E4 | AI_FLAG_HP_AWARE | AI_FLAG_SMART_TERA)
+
+static bool32 Sim_AiEqualized(void)
+{
+    return gSaveBlock3Ptr->simAiMode == 1;  // old saves / garbage read as canon
+}
+
+static const u8 sSimAiLabelEqualized[] = _("Equalized");
+static const u8 sSimAiLabelCanon[]     = _("Canon Tiers");
+static const u8 *Sim_AiModeLabel(void)
+{
+    return Sim_AiEqualized() ? sSimAiLabelEqualized : sSimAiLabelCanon;
+}
+
+static void Sim_ToggleAiMode(void)
+{
+    gSaveBlock3Ptr->simAiMode = Sim_AiEqualized() ? 0 : 1;
+}
+
+// v2.9.0 — explicit AI tier per roster trainer (1 = Gym Leader, 2 = Elite Four,
+// 3 = Champion; 0 = keep the trainer's own AI). Trainer classes in this ROM are
+// mostly flavor (Cynthia is "Beauty"), so tiers are listed by ID instead.
+// Rivals are E4 tier except Nemona and Hop; villains, facility bosses, Legends,
+// Prof. Oak, Mustard, Peony, Klara/Avery and custom slots are Champion tier.
+static const u8 sSimAiTierById[] =
+{
+    [TRAINER_ALLISTER] = 1,
+    [TRAINER_BEA] = 1,
+    [TRAINER_BLAINE_GSC] = 1,
+    [TRAINER_BLAINE_LGPE] = 1,
+    [TRAINER_BRASSIUS] = 1,
+    [TRAINER_BRAWLY_5] = 1,
+    [TRAINER_BRAWLY_PWT] = 1,
+    [TRAINER_BROCK_GSC] = 1,
+    [TRAINER_BROCK_LGPE] = 1,
+    [TRAINER_BRYCEN_PWT] = 1,
+    [TRAINER_BUGSY_HGSS] = 1,
+    [TRAINER_BUGSY_PWT] = 1,
+    [TRAINER_BURGH_PWT] = 1,
+    [TRAINER_BYRON_BDSP] = 1,
+    [TRAINER_BYRON_PT] = 1,
+    [TRAINER_BYRON_PWT] = 1,
+    [TRAINER_CANDICE_BDSP] = 1,
+    [TRAINER_CANDICE_PT] = 1,
+    [TRAINER_CANDICE_PWT] = 1,
+    [TRAINER_CHEREN_PWT] = 1,
+    [TRAINER_CHILI_PWT] = 1,
+    [TRAINER_CHUCK_HGSS] = 1,
+    [TRAINER_CHUCK_PWT] = 1,
+    [TRAINER_CILAN_PWT] = 1,
+    [TRAINER_CLAIR_HGSS] = 1,
+    [TRAINER_CLAIR_PWT] = 1,
+    [TRAINER_CLAY_PWT] = 1,
+    [TRAINER_CRESS_PWT] = 1,
+    [TRAINER_DRAYDEN_PWT] = 1,
+    [TRAINER_ELESA_PWT] = 1,
+    [TRAINER_ERIKA_GSC] = 1,
+    [TRAINER_ERIKA_LGPE] = 1,
+    [TRAINER_FALKNER_HGSS] = 1,
+    [TRAINER_FALKNER_PWT] = 1,
+    [TRAINER_FANTINA_BDSP] = 1,
+    [TRAINER_FANTINA_PT] = 1,
+    [TRAINER_FANTINA_PWT] = 1,
+    [TRAINER_FLANNERY_5] = 1,
+    [TRAINER_FLANNERY_PWT] = 1,
+    [TRAINER_GARDENIA_BDSP] = 1,
+    [TRAINER_GARDENIA_PT] = 1,
+    [TRAINER_GARDENIA_PWT] = 1,
+    [TRAINER_GORDIE] = 1,
+    [TRAINER_GRUSHA] = 1,
+    [TRAINER_ILIMA] = 1,
+    [TRAINER_IONO] = 1,
+    [TRAINER_JANINE_GSC] = 1,
+    [TRAINER_JASMINE_HGSS] = 1,
+    [TRAINER_JASMINE_PWT] = 1,
+    [TRAINER_JUAN_5] = 1,
+    [TRAINER_JUAN_PWT] = 1,
+    [TRAINER_KABU] = 1,
+    [TRAINER_KATY] = 1,
+    [TRAINER_KIAWE] = 1,
+    [TRAINER_KOFU] = 1,
+    [TRAINER_KOGA_LGPE] = 1,
+    [TRAINER_LANA] = 1,
+    [TRAINER_LEADER_BLAINE_PWT] = 1,
+    [TRAINER_LEADER_BLAINE_REMATCH] = 1,
+    [TRAINER_LEADER_BROCK_PWT] = 1,
+    [TRAINER_LEADER_BROCK_REMATCH] = 1,
+    [TRAINER_LEADER_ERIKA_PWT] = 1,
+    [TRAINER_LEADER_ERIKA_REMATCH] = 1,
+    [TRAINER_LEADER_JANINE_PWT] = 1,
+    [TRAINER_LEADER_KOGA_REMATCH] = 1,
+    [TRAINER_LEADER_LT_SURGE_PWT] = 1,
+    [TRAINER_LEADER_LT_SURGE_REMATCH] = 1,
+    [TRAINER_LEADER_MISTY_PWT] = 1,
+    [TRAINER_LEADER_MISTY_REMATCH] = 1,
+    [TRAINER_LEADER_SABRINA_PWT] = 1,
+    [TRAINER_LEADER_SABRINA_REMATCH] = 1,
+    [TRAINER_LENORA_PWT] = 1,
+    [TRAINER_LIZA_PWT] = 1,
+    [TRAINER_MALLOW] = 1,
+    [TRAINER_MARLON_PWT] = 1,
+    [TRAINER_MAYLENE_BDSP] = 1,
+    [TRAINER_MAYLENE_PT] = 1,
+    [TRAINER_MAYLENE_PWT] = 1,
+    [TRAINER_MELONY] = 1,
+    [TRAINER_MILO_GYM] = 1,
+    [TRAINER_MINA] = 1,
+    [TRAINER_MISTY_GSC] = 1,
+    [TRAINER_MISTY_LGPE] = 1,
+    [TRAINER_MORTY_HGSS] = 1,
+    [TRAINER_MORTY_PWT] = 1,
+    [TRAINER_NESSA] = 1,
+    [TRAINER_NORMAN_5] = 1,
+    [TRAINER_NORMAN_PWT] = 1,
+    [TRAINER_PIERS] = 1,
+    [TRAINER_PRYCE_HGSS] = 1,
+    [TRAINER_PRYCE_PWT] = 1,
+    [TRAINER_RAIHAN] = 1,
+    [TRAINER_ROARK_BDSP] = 1,
+    [TRAINER_ROARK_PT] = 1,
+    [TRAINER_ROARK_PWT] = 1,
+    [TRAINER_ROXANNE_5] = 1,
+    [TRAINER_ROXANNE_PWT] = 1,
+    [TRAINER_ROXIE_PWT] = 1,
+    [TRAINER_RYME] = 1,
+    [TRAINER_SABRINA_GSC] = 1,
+    [TRAINER_SABRINA_LGPE] = 1,
+    [TRAINER_SKYLA_PWT] = 1,
+    [TRAINER_SOPHOCLES] = 3,  // also a title challenger (Logan)
+    [TRAINER_SURGE_GSC] = 1,
+    [TRAINER_SURGE_LGPE] = 1,
+    [TRAINER_TATE_AND_LIZA_5] = 1,
+    [TRAINER_TATE_PWT] = 1,
+    [TRAINER_TULIP] = 1,
+    [TRAINER_VOLKNER_BDSP] = 1,
+    [TRAINER_VOLKNER_PT] = 1,
+    [TRAINER_VOLKNER_PWT] = 1,
+    [TRAINER_WAKE_BDSP] = 1,
+    [TRAINER_WAKE_PT] = 1,
+    [TRAINER_WAKE_PWT] = 1,
+    [TRAINER_WATTSON_5] = 1,
+    [TRAINER_WATTSON_PWT] = 1,
+    [TRAINER_WHITNEY_HGSS] = 1,
+    [TRAINER_WHITNEY_PWT] = 1,
+    [TRAINER_WINONA_5] = 1,
+    [TRAINER_WINONA_PWT] = 1,
+    [TRAINER_AARON_BDSP] = 2,
+    [TRAINER_AARON_DP] = 2,
+    [TRAINER_AARON_PT] = 2,
+    [TRAINER_ACEROLA] = 2,
+    [TRAINER_ACEROLA_SM_E4] = 2,
+    [TRAINER_AGATHA_LGPE] = 2,
+    [TRAINER_AGATHA_RBY] = 2,
+    [TRAINER_AMARYS] = 2,
+    [TRAINER_ARDOS] = 2,
+    [TRAINER_ARVEN] = 2,
+    [TRAINER_BARRY_BDSP_CHIMCHAR] = 2,
+    [TRAINER_BARRY_BDSP_PIPLUP] = 2,
+    [TRAINER_BARRY_BDSP_TURTWIG] = 2,
+    [TRAINER_BARRY_CHIMCHAR] = 2,
+    [TRAINER_BARRY_PIPLUP] = 2,
+    [TRAINER_BARRY_TURTWIG] = 2,
+    [TRAINER_BEDE] = 2,
+    [TRAINER_BERTHA_BDSP] = 2,
+    [TRAINER_BERTHA_DP] = 2,
+    [TRAINER_BERTHA_PT] = 2,
+    [TRAINER_BIANCA_EMBOAR_BW] = 2,
+    [TRAINER_BIANCA_PWT] = 2,
+    [TRAINER_BIANCA_SAMUROTT_BW] = 2,
+    [TRAINER_BIANCA_SERPERIOR_BW] = 2,
+    [TRAINER_BRENDAN_ORAS] = 2,
+    [TRAINER_BRUNO_GSC] = 2,
+    [TRAINER_BRUNO_HGSS] = 2,
+    [TRAINER_BRUNO_LGPE] = 2,
+    [TRAINER_BRUNO_RBY] = 2,
+    [TRAINER_BUCK_PT] = 2,
+    [TRAINER_CAITLIN_BW] = 2,
+    [TRAINER_CAITLIN_BW1] = 2,
+    [TRAINER_CALEM_XY] = 2,
+    [TRAINER_CARMINE] = 2,
+    [TRAINER_CHEREN_EMBOAR_BW] = 2,
+    [TRAINER_CHEREN_SAMUROTT_BW] = 2,
+    [TRAINER_CHEREN_SERPERIOR_BW] = 2,
+    [TRAINER_CHERYL_PT] = 2,
+    [TRAINER_CHOBIN] = 2,
+    [TRAINER_CLAVELL_MEOWSCARADA] = 2,
+    [TRAINER_CLAVELL_QUAQUAVAL] = 2,
+    [TRAINER_CLAVELL_SKELEDIRGE] = 2,
+    [TRAINER_CRISPIN] = 2,
+    [TRAINER_CYRANO] = 2,
+    [TRAINER_DAKIM] = 2,
+    [TRAINER_DAWN_BDSP_CHIMCHAR] = 2,
+    [TRAINER_DAWN_BDSP_PIPLUP] = 2,
+    [TRAINER_DAWN_BDSP_TURTWIG] = 2,
+    [TRAINER_DENDRA] = 2,
+    [TRAINER_DRAKE] = 2,
+    [TRAINER_DRAKE_ORAS] = 2,
+    [TRAINER_DRAKE_RS] = 2,
+    [TRAINER_DRASNA] = 2,
+    [TRAINER_DRAYTON] = 2,
+    [TRAINER_EIN] = 2,
+    [TRAINER_ELDES] = 2,
+    [TRAINER_ELITE_FOUR_AGATHA_KANTO] = 2,
+    [TRAINER_ELITE_FOUR_BRUNO_KANTO] = 2,
+    [TRAINER_ELITE_FOUR_LANCE_KANTO] = 2,
+    [TRAINER_ELITE_FOUR_LORELEI_KANTO] = 2,
+    [TRAINER_FEIN] = 2,
+    [TRAINER_FLINT_BDSP] = 2,
+    [TRAINER_FLINT_DP] = 2,
+    [TRAINER_FLINT_PT] = 2,
+    [TRAINER_GLACIA] = 2,
+    [TRAINER_GLACIA_ORAS] = 2,
+    [TRAINER_GLACIA_RS] = 2,
+    [TRAINER_GORIGAN] = 2,
+    [TRAINER_GREEN_LGPE] = 2,
+    [TRAINER_GRIMSLEY_BW] = 2,
+    [TRAINER_GRIMSLEY_BW1] = 2,
+    [TRAINER_HALA] = 2,
+    [TRAINER_HALA_SM_E4] = 2,
+    [TRAINER_HAPU] = 3,  // also a title challenger (Logan)
+    [TRAINER_HASSEL] = 2,
+    [TRAINER_HUGH_EMBOAR_BW] = 2,
+    [TRAINER_HUGH_SAMUROTT_BW] = 2,
+    [TRAINER_HUGH_SERPERIOR_BW] = 2,
+    [TRAINER_JACQ] = 2,
+    [TRAINER_JUSTY] = 2,
+    [TRAINER_KAHILI] = 2,
+    [TRAINER_KAHILI_SM_E4] = 2,
+    [TRAINER_KAREN_GSC] = 2,
+    [TRAINER_KAREN_HGSS] = 2,
+    [TRAINER_KIERAN] = 2,
+    [TRAINER_KOGA_GSC] = 2,
+    [TRAINER_KOGA_HGSS] = 2,
+    [TRAINER_LACEY] = 2,
+    [TRAINER_LANCE_LGPE] = 2,
+    [TRAINER_LANCE_RBY] = 2,
+    [TRAINER_LARRY_E4] = 2,
+    [TRAINER_LORELEI_LGPE] = 2,
+    [TRAINER_LORELEI_RBY] = 2,
+    [TRAINER_LOVRINA] = 2,
+    [TRAINER_LUCAS_BDSP_CHIMCHAR] = 2,
+    [TRAINER_LUCAS_BDSP_PIPLUP] = 2,
+    [TRAINER_LUCAS_BDSP_TURTWIG] = 2,
+    [TRAINER_LUCIAN_BDSP] = 2,
+    [TRAINER_LUCIAN_DP] = 2,
+    [TRAINER_LUCIAN_PT] = 2,
+    [TRAINER_MALVA] = 2,
+    [TRAINER_MARLEY_PT] = 2,
+    [TRAINER_MARNIE] = 2,
+    [TRAINER_MARSHAL_BW] = 2,
+    [TRAINER_MARSHAL_BW1] = 2,
+    [TRAINER_MAY_ORAS] = 2,
+    [TRAINER_MIRA_PT] = 2,
+    [TRAINER_MIRIAM] = 2,
+    [TRAINER_MIROR_B] = 2,
+    [TRAINER_MIROR_B_COLO] = 2,
+    [TRAINER_MOLAYNE] = 2,
+    [TRAINER_NANU] = 2,
+    [TRAINER_NASCOUR] = 2,
+    [TRAINER_OLIVIA_ALOLA] = 2,
+    [TRAINER_OLIVIA_SM_E4] = 2,
+    [TRAINER_PENNY] = 2,
+    [TRAINER_PHOEBE] = 2,
+    [TRAINER_PHOEBE_ORAS] = 2,
+    [TRAINER_PHOEBE_RS] = 2,
+    [TRAINER_POPPY] = 2,
+    [TRAINER_RAIFORT] = 2,
+    [TRAINER_RIKA] = 2,
+    [TRAINER_RILEY_PT] = 2,
+    [TRAINER_SAGUARO] = 2,
+    [TRAINER_SALVATORE] = 2,
+    [TRAINER_SERENA_XY] = 2,
+    [TRAINER_SHAUNA] = 2,
+    [TRAINER_SHAUNTAL_BW] = 2,
+    [TRAINER_SHAUNTAL_BW1] = 2,
+    [TRAINER_SIDNEY] = 2,
+    [TRAINER_SIDNEY_ORAS] = 2,
+    [TRAINER_SIDNEY_RS] = 2,
+    [TRAINER_SIEBOLD] = 2,
+    [TRAINER_SILVER_CHIK_HGSS] = 2,
+    [TRAINER_SILVER_CYND_HGSS] = 2,
+    [TRAINER_SILVER_GSC_FERALIGATR] = 2,
+    [TRAINER_SILVER_GSC_MEGANIUM] = 2,
+    [TRAINER_SILVER_GSC_TYPHLOSION] = 2,
+    [TRAINER_SILVER_TOTO_HGSS] = 2,
+    [TRAINER_SNATTLE] = 2,
+    [TRAINER_TIERNO] = 2,
+    [TRAINER_TREVOR] = 2,
+    [TRAINER_TYME] = 2,
+    [TRAINER_VENUS] = 2,
+    [TRAINER_WALLY_ORAS] = 2,
+    [TRAINER_WALLY_VR_5] = 2,
+    [TRAINER_WIKSTROM] = 2,
+    [TRAINER_WILL_GSC] = 2,
+    [TRAINER_WILL_HGSS] = 2,
+    [TRAINER_ADAMAN_LA] = 3,
+    [TRAINER_AKARI_LA] = 3,
+    [TRAINER_ALAIN] = 3,
+    [TRAINER_ALDER_BW] = 3,
+    [TRAINER_ALDER_PWT] = 3,
+    [TRAINER_ANABEL] = 3,
+    [TRAINER_ANABEL_BT] = 3,
+    [TRAINER_ANABEL_USUM] = 3,
+    [TRAINER_ANDY] = 3,
+    [TRAINER_ARCHIE_RR] = 3,
+    [TRAINER_ARGENTA] = 3,
+    [TRAINER_ASH_ALL] = 3,
+    [TRAINER_ASH_ALOLA] = 3,
+    [TRAINER_ASH_HOENN] = 3,
+    [TRAINER_ASH_INDIGO] = 3,
+    [TRAINER_ASH_KALOS] = 3,
+    [TRAINER_ASH_SINNOH] = 3,
+    [TRAINER_ASH_UNOVA] = 3,
+    [TRAINER_ASH_WORLD_CHAMPION] = 3,
+    [TRAINER_AVERY] = 3,
+    [TRAINER_BENGA] = 3,
+    [TRAINER_BENI_LA] = 3,
+    [TRAINER_BLUE_BT] = 3,
+    [TRAINER_BLUE_BULBASAUR] = 3,
+    [TRAINER_BLUE_CHARMANDER] = 3,
+    [TRAINER_BLUE_GSC] = 3,
+    [TRAINER_BLUE_HGSS] = 3,
+    [TRAINER_BLUE_LGPE] = 3,
+    [TRAINER_BLUE_PWT] = 3,
+    [TRAINER_BLUE_RGB_BLASTOISE] = 3,
+    [TRAINER_BLUE_RGB_CHARIZARD] = 3,
+    [TRAINER_BLUE_RGB_VENUSAUR] = 3,
+    [TRAINER_BLUE_SQUIRTLE] = 3,
+    [TRAINER_BLUE_USUM] = 3,
+    [TRAINER_BLUE_YELLOW_FLAREON] = 3,
+    [TRAINER_BLUE_YELLOW_JOLTEON] = 3,
+    [TRAINER_BLUE_YELLOW_VAPOREON] = 3,
+    [TRAINER_BRANDON] = 3,
+    [TRAINER_CANARI] = 3,
+    [TRAINER_COLRESS_BT] = 3,
+    [TRAINER_COLRESS_BW] = 3,
+    [TRAINER_CORBEAU] = 3,
+    [TRAINER_CYNTHIA_BDSP] = 3,
+    [TRAINER_CYNTHIA_BT] = 3,
+    [TRAINER_CYNTHIA_BW] = 3,
+    [TRAINER_CYNTHIA_DP] = 3,
+    [TRAINER_CYNTHIA_PT] = 3,
+    [TRAINER_CYNTHIA_PWT] = 3,
+    [TRAINER_CYRUS_RR_UM] = 3,
+    [TRAINER_CYRUS_RR_US] = 3,
+    [TRAINER_DAHLIA] = 3,
+    [TRAINER_DARACH] = 3,
+    [TRAINER_DEXIO_BT] = 3,
+    [TRAINER_DEXIO_SM] = 2,  // not a title challenger (Logan)
+    [TRAINER_DIANTHA_XY] = 3,
+    [TRAINER_EMMA] = 3,
+    [TRAINER_EMMET] = 3,
+    [TRAINER_EVICE] = 3,
+    [TRAINER_FABA_SM] = 3,
+    [TRAINER_GARY] = 3,
+    [TRAINER_GEETA] = 3,
+    [TRAINER_GHETSIS_BW] = 3,
+    [TRAINER_GHETSIS_UM_RR] = 3,
+    [TRAINER_GHETSIS_US_RR] = 3,
+    [TRAINER_GIOVANNI_LGPE] = 3,
+    [TRAINER_GIOVANNI_UM_RR] = 3,
+    [TRAINER_GIOVANNI_US_RR] = 3,
+    [TRAINER_GLADION_BLASTOISE] = 3,
+    [TRAINER_GLADION_CHARIZARD] = 3,
+    [TRAINER_GLADION_VENUSAUR] = 3,
+    [TRAINER_GONZAP] = 3,
+    [TRAINER_GONZAP_COLO] = 3,
+    [TRAINER_GREEVIL] = 3,
+    [TRAINER_GRETA] = 3,
+    [TRAINER_GRIMSLEY_BT] = 3,
+    [TRAINER_GRISELLE] = 3,
+    [TRAINER_GRISHAM] = 3,
+    [TRAINER_GUZMA_BT] = 3,
+    [TRAINER_GUZMA_SM] = 3,
+    [TRAINER_GWYNN] = 3,
+    [TRAINER_HAU] = 3,
+    [TRAINER_HAU_DECIDUEYE] = 3,
+    [TRAINER_HAU_INCINEROAR] = 3,
+    [TRAINER_HOP_GR_SH] = 3,
+    [TRAINER_HOP_GR_SW] = 3,
+    [TRAINER_HOP_SC_SH] = 3,
+    [TRAINER_HOP_SC_SW] = 3,
+    [TRAINER_HOP_SO_SH] = 3,
+    [TRAINER_HOP_SO_SW] = 3,
+    [TRAINER_INGO] = 3,
+    [TRAINER_INGO_LA] = 3,
+    [TRAINER_IRIDA_LA] = 3,
+    [TRAINER_IRIS_PWT] = 3,
+    [TRAINER_IVOR] = 3,
+    [TRAINER_JACINTHE] = 3,
+    [TRAINER_JOSEE] = 3,
+    [TRAINER_KAMADO_LA] = 3,
+    [TRAINER_KIAWE_BT] = 3,
+    [TRAINER_KLARA] = 3,
+    [TRAINER_KORRINA_ZA] = 3,
+    [TRAINER_KUKUI] = 3,
+    [TRAINER_KUKUI_BT] = 3,
+    [TRAINER_KUKUI_INCINEROAR] = 3,
+    [TRAINER_KUKUI_PRIMARINA] = 3,
+    [TRAINER_LANCE_GSC] = 3,
+    [TRAINER_LANCE_HGSS] = 3,
+    [TRAINER_LANCE_PWT] = 3,
+    [TRAINER_LEADER_GIOVANNI_PWT] = 3,
+    [TRAINER_LEBANNE] = 3,
+    [TRAINER_LEON_GROOKEY] = 3,
+    [TRAINER_LEON_SCORBUNNY] = 3,
+    [TRAINER_LEON_SOBBLE] = 3,
+    [TRAINER_LIDIA] = 3,
+    [TRAINER_LOGAN] = 3,
+    [TRAINER_LOGAN_BDSP] = 3,
+    [TRAINER_LOGAN_BW2] = 3,
+    [TRAINER_LOGAN_LA] = 3,
+    [TRAINER_LOGAN_LGPE] = 3,
+    [TRAINER_LOGAN_ORAS] = 3,
+    [TRAINER_LOGAN_SV] = 3,
+    [TRAINER_LOGAN_SWSH] = 3,
+    [TRAINER_LOGAN_USUM] = 3,
+    [TRAINER_LOGAN_ZA] = 3,
+    [TRAINER_LUCY] = 3,
+    [TRAINER_LUSAMINE_SM] = 3,
+    [TRAINER_LYSANDRE] = 3,
+    [TRAINER_LYSANDRE_UM_RR] = 3,
+    [TRAINER_LYSANDRE_US_RR] = 3,
+    [TRAINER_L_ZA] = 3,
+    [TRAINER_MALLOW_BT] = 3,
+    [TRAINER_MANI] = 3,
+    [TRAINER_MAXIE_RR] = 3,
+    [TRAINER_MUSTARD_RAPID] = 3,
+    [TRAINER_MUSTARD_SINGLE] = 3,
+    [TRAINER_NAVEEN] = 3,
+    [TRAINER_NEMONA_MEOWSCARADA] = 3,
+    [TRAINER_NEMONA_QUAQUAVAL] = 3,
+    [TRAINER_NEMONA_SKELEDIRGE] = 3,
+    [TRAINER_NOLAND] = 3,
+    [TRAINER_N_B2W2] = 3,
+    [TRAINER_N_RESHIRAM_BW] = 3,
+    [TRAINER_N_ZEKROM_BW] = 3,
+    [TRAINER_OAK_GLITCH_BLASTOISE] = 3,
+    [TRAINER_OAK_GLITCH_CHARIZARD] = 3,
+    [TRAINER_OAK_GLITCH_VENUSAUR] = 3,
+    [TRAINER_PALMER] = 3,
+    [TRAINER_PAUL_ANIME] = 3,
+    [TRAINER_PEONY] = 3,
+    [TRAINER_PHILIPPE] = 3,
+    [TRAINER_PLUMERIA_BT] = 3,
+    [TRAINER_PLUMERIA_SM] = 3,
+    [TRAINER_RAY_VGC2012] = 3,
+    [TRAINER_RED] = 3,
+    [TRAINER_RED_BT] = 3,
+    [TRAINER_RED_GSC] = 3,
+    [TRAINER_RED_LGPE] = 3,
+    [TRAINER_RED_PWT] = 3,
+    [TRAINER_RED_USUM] = 3,
+    [TRAINER_REI_LA] = 3,
+    [TRAINER_RINTARO] = 3,
+    [TRAINER_RYUKI_SM] = 3,
+    [TRAINER_SADA] = 3,
+    [TRAINER_SIM_CUSTOM_1] = 3,
+    [TRAINER_SIM_CUSTOM_2] = 3,
+    [TRAINER_SIM_CUSTOM_3] = 3,
+    [TRAINER_SIM_CUSTOM_4] = 3,
+    [TRAINER_SIM_CUSTOM_5] = 3,
+    [TRAINER_SIM_CUSTOM_6] = 3,
+    [TRAINER_SIM_CUSTOM_7] = 3,
+    [TRAINER_SIM_CUSTOM_8] = 3,
+    [TRAINER_SINA_BT] = 3,
+    [TRAINER_SPENSER] = 3,
+    [TRAINER_STEVEN] = 3,
+    [TRAINER_STEVEN_ORAS] = 3,
+    [TRAINER_STEVEN_PWT] = 3,
+    [TRAINER_STEVEN_RS] = 3,
+    [TRAINER_TARRAGON] = 3,
+    [TRAINER_TAUNIE] = 3,
+    [TRAINER_TAYLOR_BRO] = 3,
+    [TRAINER_THORTON] = 3,
+    [TRAINER_TRACE_LGPE_EEVEE] = 3,
+    [TRAINER_TRACE_LGPE_PIKACHU] = 3,
+    [TRAINER_TRISTAN_SM] = 3,
+    [TRAINER_TUCKER] = 3,
+    [TRAINER_TURO] = 3,
+    [TRAINER_URBAIN] = 3,
+    [TRAINER_VINNIE] = 3,
+    [TRAINER_VOLO_LA] = 3,
+    [TRAINER_WALLACE] = 3,
+    [TRAINER_WALLACE_ORAS] = 3,
+    [TRAINER_WALLACE_PWT] = 3,
+    [TRAINER_WALLY_BT] = 3,
+    [TRAINER_WOLFE_VGC2012] = 3,
+    [TRAINER_XAVI] = 3,
+    [TRAINER_YVON] = 3,
+    [TRAINER_ZINNIA] = 3,
+    [TRAINER_ZISU_LA] = 3,
+};
+
+static bool32 Sim_IsBossTrainer(u16 trainerId)
+{
+    for (u32 i = 0; i < ARRAY_COUNT(sSimBossGauntlets); i++)
+    {
+        const struct SimBossGauntlet *g = &sSimBossGauntlets[i];
+        if (g->altRoom0 == trainerId)
+            return TRUE;
+        for (u32 r = 0; r < g->roomCount && r < 3; r++)
+            if (g->rooms[r] == trainerId)
+                return TRUE;
+    }
+    return FALSE;
+}
+
+u64 Sim_ApplyAiTier(u16 trainerId, u64 flags)
+{
+    u64 tierFlags;
+    u8 tier;
+    const u8 *sfx;
+    enum TrainerClassID cls;
+
+    if (!IsAiVsAiBattle() && !gSimPilotMode)
+        return flags;  // not a sim battle — leave the engine alone
+
+    if (Sim_AiEqualized())
+        return (flags & ~SIM_AI_INTEL_MASK) | SIM_AI_TIER_CHAMP;
+
+    tier = 0;
+    if (trainerId < ARRAY_COUNT(sSimAiTierById))
+        tier = sSimAiTierById[trainerId];
+    if (tier == 0)
+    {
+        // Fallbacks for anything not in the table: anime / VGC teams, Boss
+        // Battle bosses and real Champion-class trainers think at the top tier.
+        sfx = GetSimSourceSuffix(trainerId);
+        cls = GetTrainerClassFromId(trainerId);
+        if (cls == TRAINER_CLASS_CHAMPION || sfx == sSimSourceSuffixVGC || sfx == sSimSourceSuffixAnime
+         || sfx == sSimSourceSuffixAshAlola || sfx == sSimSourceSuffixAshKalos
+         || sfx == sSimSourceSuffixAshSinnoh || sfx == sSimSourceSuffixAshHoenn
+         || sfx == sSimSourceSuffixAshUnova || sfx == sSimSourceSuffixAshIndigo
+         || sfx == sSimSourceSuffixAshJourneys || sfx == sSimSourceSuffixAshAll
+         || Sim_IsBossTrainer(trainerId))
+            tier = 3;
+        else if (cls == TRAINER_CLASS_ELITE_FOUR)
+            tier = 2;
+        else if (cls == TRAINER_CLASS_LEADER)
+            tier = 1;
+        else
+            return flags & ~AI_FLAG_OMNISCIENT;  // everyone else keeps their own AI
+    }
+    tierFlags = (tier == 3) ? SIM_AI_TIER_CHAMP : (tier == 2) ? SIM_AI_TIER_E4 : SIM_AI_TIER_GYM;
+    return (flags & ~SIM_AI_INTEL_MASK) | tierFlags;
+}
+
+static void DebugAction_Trainers_ToggleAiMode(u8 taskId)
+{
+    Sim_ToggleAiMode();  // the generic ToggleFlag redraw repaints the row
+}
+
+static void DebugAction_E4_ToggleAiMode(u8 taskId)
+{
+    Sim_ToggleAiMode();
+    Debug_DestroyMenu(taskId);
+    Sim_ShowE4LevelCapMenu();
+}
+
+// =============================================================================
+
 // Boss Battles step 1: pick the boss. Rows index sSimBossGauntlets[].
 static const struct DebugMenuOption sDebugMenu_Actions_BossGauntlets[] =
 {
@@ -2864,6 +3446,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_TournamentWho[] =
     { COMPOUND_STRING("Random Spectate"),   DebugAction_Tournament_StartRandom },
     { COMPOUND_STRING("Spectate Trainer…"), DebugAction_Trainers_ChooseTrainer, (void *)TRAINERS_DEBUG_SELECTION_TOURNAMENT_SPECTATE },
     { COMPOUND_STRING("Pilot Trainer…"),    DebugAction_Trainers_ChooseTrainer, (void *)TRAINERS_DEBUG_SELECTION_TOURNAMENT_PILOT },
+    { COMPOUND_STRING("AI: {STR_VAR_1}"),   DebugAction_Tournament_ToggleAiMode },  // v2.9.0
     { NULL }
 };
 
@@ -4001,7 +4584,10 @@ static u8 Debug_GenerateListTrainerMenu(void)
             else
                 ConvertIntToDecimalStringN(gStringVar1, gSimLevelCap, STR_CONV_MODE_LEFT_ALIGN, 3);
             break;
-        case 6: // Best Of (1 = single, otherwise show "X (a-b)" current score)
+        case 6: // AI tier mode (v2.9.0)
+            StringCopy(gStringVar1, Sim_AiModeLabel());
+            break;
+        case 7: // Best Of (1 = single, otherwise show "X (a-b)" current score)
             if (gSimBestOf <= 1)
             {
                 StringCopy(gStringVar1, COMPOUND_STRING("Off"));
@@ -4022,7 +4608,7 @@ static u8 Debug_GenerateListTrainerMenu(void)
                 ConvertIntToDecimalStringN(gStringVar1, gSimBestOf, STR_CONV_MODE_LEFT_ALIGN, 1);
             }
             break;
-        case 7: // VGC Mode
+        case 8: // VGC Mode
             if (gSimVGCMode)
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR GREEN} ON"));
             else
@@ -4030,19 +4616,19 @@ static u8 Debug_GenerateListTrainerMenu(void)
             break;
         // v2.1.3 — Tournament row removed from this menu (now a dedicated
         // wrapper-menu flow); cases below shifted up by one.
-        case 8: // Double Battle
+        case 9: // Double Battle
             if (sDebugMenuListData->data[5] || trainer2Id != TRAINER_NONE || partnerId != PARTNER_NONE)
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR GREEN} TRUE"));
             else
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR RED} FALSE"));
             break;
-        case 9: // Pilot Mode (v0.51.1) — player slot becomes human-controlled
+        case 10: // Pilot Mode (v0.51.1) — player slot becomes human-controlled
             if (sDebugMenuListData->data[7])
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR GREEN} TRUE"));
             else
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR RED} FALSE"));
             break;
-        case 10: // Matches
+        case 11: // Matches
             if (!isRealFight)
             {
                 noDraw = TRUE;
@@ -4062,7 +4648,7 @@ static u8 Debug_GenerateListTrainerMenu(void)
                 ConvertIntToDecimalStringN(gStringVar2, CountMaxPossibleRematch(rematchTableId), STR_CONV_MODE_LEADING_ZEROS, 1);
             }
             break;
-        case 11: // Rematch Ready
+        case 12: // Rematch Ready
             if (FREE_MATCH_CALL || I_VS_SEEKER_CHARGING || !isRealFight || rematchTableId == -1)
             {
                 noDraw = TRUE;
@@ -4073,7 +4659,7 @@ static u8 Debug_GenerateListTrainerMenu(void)
             else
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR RED} FALSE"));
             break;
-        case 13: // Recharge VS Seeker (visibility)
+        case 14: // Recharge VS Seeker (visibility)
             if (FREE_MATCH_CALL || I_VS_SEEKER_CHARGING == 0)
                 noDraw = TRUE;
             break;
@@ -9757,6 +10343,7 @@ static void DebugAction_Tournament_PickBestOf(u8 taskId, u32 bestOf)
     gSimBestOf = (bestOf >= 3) ? 3 : 0;
     Debug_DestroyMenu(taskId);
     sDebugMenuListData->listId = 0;
+    StringCopy(gStringVar1, Sim_AiModeLabel());  // v2.9.0 — AI row
     Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_TournamentWho);
 }
 
@@ -9804,6 +10391,16 @@ static void DebugAction_E4_PickLeague(u8 taskId, u32 leagueIdx)
     Sim_ShowE4LevelCapMenu();
 }
 
+// v2.9.0 — AI row on the tournament who-menu (defined here, below the table).
+static void DebugAction_Tournament_ToggleAiMode(u8 taskId)
+{
+    Sim_ToggleAiMode();
+    Debug_DestroyMenu(taskId);
+    sDebugMenuListData->listId = 0;
+    StringCopy(gStringVar1, Sim_AiModeLabel());
+    Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_TournamentWho);
+}
+
 // Render the level-cap step with the CURRENT pending value baked into the
 // row text ({STR_VAR_1} expands at menu-fill time).
 static void Sim_ShowE4LevelCapMenu(void)
@@ -9812,6 +10409,7 @@ static void Sim_ShowE4LevelCapMenu(void)
         StringCopy(gStringVar1, COMPOUND_STRING("Off"));
     else
         ConvertIntToDecimalStringN(gStringVar1, sE4PendingLevelCap, STR_CONV_MODE_LEFT_ALIGN, 3);
+    StringCopy(gStringVar2, Sim_AiModeLabel());  // v2.9.0
     sDebugMenuListData->listId = 0;
     Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_E4LevelCap);
 }

@@ -144,4 +144,7 @@ void Sim_E4SnapshotChallengerParty(void);
 void Sim_OverridePlayerName(u16 playerSideId, bool32 pilotMode);
 void Sim_RestorePlayerName(void);
 
+// v2.9.0 — AI tiers (gym < E4 < champion) or equalized; see Sim_ApplyAiTier.
+u64 Sim_ApplyAiTier(u16 trainerId, u64 flags);
+
 #endif // GUARD_DEBUG_H

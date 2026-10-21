@@ -16,7 +16,7 @@ Title screen + box art commissioned from
 Shadow Lugia (XD001) battle sprites + icon by
 **[lvalovenfs](https://www.deviantart.com/lvalovenfs)** (DeviantArt), used with credit.
 
-**Download the latest patch:** [v2.8.2 — smarter OHKO handling, team codes that always fit, import errors that explain themselves](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
+**Download the latest patch:** [v2.9.0 — AI tiers: Gym Leaders, Elite Four and Champions each think at their own level](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
 All releases live on the [Releases page](https://github.com/logdog2325/pokemon-battle-theater/releases).
 
 ---
@@ -176,6 +176,12 @@ All releases live on the [Releases page](https://github.com/logdog2325/pokemon-b
   their canonical Dynamax and G-Max mons, Ash's Gigantamax Gengar, and
   custom mons with the per-mon toggle switched on. This also fixes that
   toggle being ignored in pilot mode
+- **AI tiers (v2.9.0)** — every trainer's battle AI now matches their role:
+  Gym Leaders think at one level, the Elite Four a step higher, Champions
+  highest. A new **AI** setting (Run Simulation, E4/Boss level-cap step, and
+  tournament start) switches between **Canon Tiers** and **Equalized**, which
+  puts both sides at Champion level. Omniscient AI is gone. What each tier
+  does and where every trainer sits: [docs/AI_TIERS.md](docs/AI_TIERS.md)
 - **OHKO moves, weighed honestly (v2.8.2)** — the AI used to treat Fissure,
   Sheer Cold, Horn Drill and Guillotine as a guaranteed kill, so it spammed
   them on offense and panic-switched away from them on defense. It now

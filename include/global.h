@@ -327,6 +327,7 @@ struct SaveBlock3
     // v0.51 — custom trainer slots (3 → 6 in v1.1; 7 here since v2.6.1,
     // with slot 8 overflowing into SaveBlock1 — see SIM_NUM_CUSTOM_TRAINERS).
     struct SimCustomTrainer simCustomTrainers[SIM_NUM_CUSTOM_TRAINERS_SB3];
+    u8 simAiMode;  // v2.9.0 — 0 = canon AI tiers, 1 = equalized (anything else reads as 0)
 }; /* max size 1624 bytes */
 
 extern struct SaveBlock3 *gSaveBlock3Ptr;
