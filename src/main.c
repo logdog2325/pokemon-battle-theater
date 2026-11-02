@@ -122,7 +122,8 @@ void AgbMain(void)
 
 #ifndef NDEBUG
 #if (LOG_HANDLER == LOG_HANDLER_MGBA_PRINT)
-    (void) MgbaOpen();
+    if (MgbaOpen())  // v3.0.0 — confirms the AI Log channel is live
+        MgbaPrintf(MGBA_LOG_WARN, "Battle Theater: AI Log connected");
 #elif (LOG_HANDLER == LOG_HANDLER_AGB_PRINT)
     AGBPrintInit();
 #endif

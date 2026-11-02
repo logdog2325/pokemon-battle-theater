@@ -668,6 +668,8 @@ static void CB2_InitBattleInternal(void)
         }
     }
 
+    Sim_ApplyAiLeads();  // v3.0.0 — both parties are final here
+
     gMain.inBattle = TRUE;
     gSaveBlock2Ptr->frontier.disableRecordBattle = FALSE;
 

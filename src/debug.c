@@ -24,6 +24,8 @@
 #include "credits_frlg.h"
 #include "data.h"
 #include "daycare.h"
+#include "mini_printf.h"
+#include <stdarg.h>
 #include "battle_controllers.h"
 #include "debug.h"
 #include "decoration.h"
@@ -2076,6 +2078,13 @@ static void DebugAction_E4_ToggleLevelCap(u8 taskId);
 static void DebugAction_E4_ToggleAiMode(u8 taskId);
 static void DebugAction_Tournament_ToggleAiMode(u8 taskId);
 static void DebugAction_Trainers_ToggleAiMode(u8 taskId);
+static void DebugAction_Trainers_ToggleAiLog(u8 taskId);
+static void DebugAction_Trainers_ToggleAiLeads(u8 taskId);
+static void DebugAction_E4_ToggleAiLeads(u8 taskId);
+static void DebugAction_Tournament_ToggleAiLeads(u8 taskId);
+static const u8 *Sim_AiLeadsLabel(void);
+static const u8 sSimAiLogLabelOn[];
+static const u8 sSimAiLogLabelOff[];
 static const u8 *Sim_AiModeLabel(void);
 static void DebugAction_E4_ConfirmLevelCap(u8 taskId);
 static void Sim_ShowE4LevelCapMenu(void);
@@ -2493,6 +2502,8 @@ static const struct DebugMenuOption sDebugMenu_Actions_Trainers[] =
     { COMPOUND_STRING("Co-op Partner: {STR_VAR_1}"), DebugAction_Trainers_ChooseTrainer,  (void *)TRAINERS_DEBUG_SELECTION_PARTNER},
     { COMPOUND_STRING("Level Cap: {STR_VAR_1}"), DebugAction_ToggleFlag, DebugAction_Trainers_ToggleLevelCap },
     { COMPOUND_STRING("AI: {STR_VAR_1}"), DebugAction_ToggleFlag, DebugAction_Trainers_ToggleAiMode },  // v2.9.0
+    { COMPOUND_STRING("AI Log: {STR_VAR_1}"), DebugAction_ToggleFlag, DebugAction_Trainers_ToggleAiLog },  // v3.0.0
+    { COMPOUND_STRING("AI Leads: {STR_VAR_1}"), DebugAction_ToggleFlag, DebugAction_Trainers_ToggleAiLeads },  // v3.0.0
     { COMPOUND_STRING("Best Of: {STR_VAR_1}"), DebugAction_ToggleFlag, DebugAction_Trainers_ToggleBestOf },
     { COMPOUND_STRING("VGC Mode: {STR_VAR_1}"), DebugAction_ToggleFlag, DebugAction_Trainers_ToggleVGC },
     // v2.1.3 — Tournament row moved to its own wrapper-menu flow (cup picker
@@ -2776,6 +2787,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_E4LevelCap[] =
     // 100, same as the sim menu's row); Continue confirms and moves on.
     { COMPOUND_STRING("Level Cap: {STR_VAR_1}"), DebugAction_E4_ToggleLevelCap },
     { COMPOUND_STRING("AI: {STR_VAR_2}"),        DebugAction_E4_ToggleAiMode },  // v2.9.0
+    { COMPOUND_STRING("AI Leads: {STR_VAR_3}"),  DebugAction_E4_ToggleAiLeads },  // v3.0.0
     { COMPOUND_STRING("Continue"),               DebugAction_E4_ConfirmLevelCap },
     { NULL }
 };
@@ -3355,7 +3367,7 @@ static bool32 Sim_IsBossTrainer(u16 trainerId)
     return FALSE;
 }
 
-u64 Sim_ApplyAiTier(u16 trainerId, u64 flags)
+static u64 Sim_ComputeAiTier(u16 trainerId, u64 flags, u8 *tierOut)
 {
     u64 tierFlags;
     u8 tier;
@@ -3366,7 +3378,10 @@ u64 Sim_ApplyAiTier(u16 trainerId, u64 flags)
         return flags;  // not a sim battle — leave the engine alone
 
     if (Sim_AiEqualized())
+    {
+        *tierOut = 3;
         return (flags & ~SIM_AI_INTEL_MASK) | SIM_AI_TIER_CHAMP;
+    }
 
     tier = 0;
     if (trainerId < ARRAY_COUNT(sSimAiTierById))
@@ -3391,9 +3406,546 @@ u64 Sim_ApplyAiTier(u16 trainerId, u64 flags)
         else
             return flags & ~AI_FLAG_OMNISCIENT;  // everyone else keeps their own AI
     }
+    *tierOut = tier;
     tierFlags = (tier == 3) ? SIM_AI_TIER_CHAMP : (tier == 2) ? SIM_AI_TIER_E4 : SIM_AI_TIER_GYM;
     return (flags & ~SIM_AI_INTEL_MASK) | tierFlags;
 }
+
+// =============================================================================
+// v3.0.0 — AI Log. When on, every AI decision in a sim battle is printed to
+// mGBA's log window (Tools > View Logs): each move's final score against each
+// target, the move and target chosen, and switches. Nothing is drawn on the
+// GBA screen. Other emulators and real hardware ignore the debug writes, but
+// it stays OFF unless turned on.
+static EWRAM_DATA u16 sAiLogTrainer[MAX_BATTLERS_COUNT] = {0};
+static EWRAM_DATA u8 sAiLogTier[MAX_BATTLERS_COUNT] = {0};
+static EWRAM_DATA u16 sAiLogLastTurn = 0;  // turn + 1, so 0 = nothing printed yet
+static const char *const sAiLogTierNames[] = { "own AI", "Gym tier", "E4 tier", "Champion tier" };
+
+u64 Sim_ApplyAiTier(u16 trainerId, u32 battler, u64 flags)
+{
+    u8 tier = 0;
+    u64 out = Sim_ComputeAiTier(trainerId, flags, &tier);
+    if (battler < MAX_BATTLERS_COUNT)
+    {
+        sAiLogTrainer[battler] = trainerId;
+        sAiLogTier[battler] = tier;
+    }
+    return out;
+}
+
+static bool32 Sim_AiLogActive(void)
+{
+    return gSaveBlock3Ptr->simAiLog == 1 && (IsAiVsAiBattle() || gSimPilotMode);
+}
+
+// Per-decision record of how each AI behavior moved each move's score, so
+// the log can say WHY, not just what. Indexed [attacker][target][move].
+#define SIM_AILOG_MAX_STEPS   6
+#define SIM_AILOG_COMPARE_ID  0xFF   // AI_CompareDamagingMoves pass
+static EWRAM_DATA u8  sAiLogStepCount[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES] = {0};
+static EWRAM_DATA u8  sAiLogStepId[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES][SIM_AILOG_MAX_STEPS] = {0};
+static EWRAM_DATA s16 sAiLogStepDelta[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES][SIM_AILOG_MAX_STEPS] = {0};
+static EWRAM_DATA s32 sAiLogCompareBefore[MAX_MON_MOVES] = {0};
+static EWRAM_DATA u8 sAiLogOutWhy[MAX_BATTLERS_COUNT] = {0};
+
+static const char *Sim_AiLogBehaviorName(u32 id)
+{
+    switch (id)
+    {
+    case 0:  return "Avoid Bad Moves";
+    case 1:  return "Go For The KO";
+    case 2:  return "Matchup Sense";
+    case 3:  return "Setup First Turn";
+    case 4:  return "Risky Play";
+    case 5:  return "2HKO Plan";
+    case 6:  return "Baton Pass Plan";
+    case 7:  return "Doubles Teamwork";
+    case 8:  return "HP Aware";
+    case 9:  return "Field Control";
+    case 12: return "Status Lover";
+    case 13: return "Stall Plan";
+    case 22: return "Biggest Hit";
+    case SIM_AILOG_COMPARE_ID: return "Strongest Attack";
+    default: return "Other";
+    }
+}
+
+// Always prints (mGBA log only), so the window confirms a battle started
+// and whether the setting is on, even when the log itself is off.
+void Sim_AiLogBattleStart(void)
+{
+    sAiLogLastTurn = 0;
+    DebugPrintfLevel(MGBA_LOG_WARN, " ");
+    if (gSaveBlock3Ptr->simAiLog == 1)
+        DebugPrintfLevel(MGBA_LOG_WARN, "################ NEW BATTLE - AI Log is ON ################");
+    else
+        DebugPrintfLevel(MGBA_LOG_WARN, "New battle - AI Log is OFF (Run Simulation > AI Log to turn it on)");
+}
+
+void Sim_AiLogReset(u32 battler)
+{
+    if (!Sim_AiLogActive() || battler >= MAX_BATTLERS_COUNT)
+        return;
+    memset(sAiLogStepCount[battler], 0, sizeof(sAiLogStepCount[battler]));
+    sAiLogOutWhy[battler] = SIM_OUT_NONE;
+}
+
+void Sim_AiLogDelta(u32 atk, u32 def, u32 moveIndex, u32 logicId, s32 delta)
+{
+    u8 *n;
+    if (delta == 0 || !Sim_AiLogActive() || atk >= MAX_BATTLERS_COUNT || def >= MAX_BATTLERS_COUNT || moveIndex >= MAX_MON_MOVES)
+        return;
+    n = &sAiLogStepCount[atk][def][moveIndex];
+    if (*n >= SIM_AILOG_MAX_STEPS)
+        return;
+    sAiLogStepId[atk][def][moveIndex][*n] = (u8)logicId;
+    sAiLogStepDelta[atk][def][moveIndex][*n] = (s16)delta;
+    (*n)++;
+}
+
+void Sim_AiLogCompareBegin(u32 atk, u32 def)
+{
+    if (!Sim_AiLogActive())
+        return;
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+        sAiLogCompareBefore[i] = gAiThinkingStruct->score[i];
+}
+
+void Sim_AiLogCompareEnd(u32 atk, u32 def)
+{
+    if (!Sim_AiLogActive())
+        return;
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+        Sim_AiLogDelta(atk, def, i, SIM_AILOG_COMPARE_ID, gAiThinkingStruct->score[i] - sAiLogCompareBefore[i]);
+}
+
+static void Sim_AiLogHeader(u32 battler)
+{
+    if (sAiLogLastTurn != gBattleTurnCounter + 1)
+    {
+        sAiLogLastTurn = gBattleTurnCounter + 1;
+        DebugPrintfLevel(MGBA_LOG_WARN, " ");
+        DebugPrintfLevel(MGBA_LOG_WARN, "================ TURN %d ================", gBattleTurnCounter + 1);
+    }
+    DebugPrintfLevel(MGBA_LOG_WARN, " ");
+    DebugPrintfLevel(MGBA_LOG_WARN, "%S (%s) - %S, %d%% HP",
+                     GetTrainerNameFromId(sAiLogTrainer[battler]),
+                     sAiLogTierNames[sAiLogTier[battler] & 3],
+                     GetSpeciesName(gBattleMons[battler].species),
+                     gAiLogicData->hpPercents[battler]);
+}
+
+static s32 Sim_Snprintf(char *buf, u32 len, const char *fmt, ...)
+{
+    va_list va;
+    s32 n;
+    va_start(va, fmt);
+    n = mini_vsnprintf(buf, len, fmt, va);
+    va_end(va);
+    return n;
+}
+
+// Expected share of the target's CURRENT HP, from the AI's own damage roll.
+static u32 Sim_AiLogPct(u32 atk, u32 def, u32 i)
+{
+    u32 hp = gBattleMons[def].hp;
+    u32 dmg = gAiLogicData->simulatedDmg[atk][def][i].median;
+    if (hp == 0)
+        return 0;
+    return (dmg >= hp) ? 100 : (dmg * 100) / hp;
+}
+
+static bool32 Sim_AiLogKos(u32 atk, u32 def, u32 i)
+{
+    return !IsBattleMoveStatus(gBattleMons[atk].moves[i])
+        && gAiLogicData->simulatedDmg[atk][def][i].median >= gBattleMons[def].hp;
+}
+
+static void Sim_AiLogFacts(u32 atk, u32 def, u32 i, char *buf)
+{
+    uq4_12_t eff = gAiLogicData->effectiveness[atk][def][i];
+    const char *effTxt = "";
+    if (IsBattleMoveStatus(gBattleMons[atk].moves[i]))
+    {
+        Sim_Snprintf(buf, 48, "status move");
+        return;
+    }
+    if (eff == 0)                   effTxt = ", no effect";
+    else if (eff >= UQ_4_12(2.0))   effTxt = ", super effective";
+    else if (eff < UQ_4_12(1.0))    effTxt = ", not very effective";
+    if (Sim_AiLogKos(atk, def, i))
+        Sim_Snprintf(buf, 48, "KOs%s", effTxt);
+    else
+        Sim_Snprintf(buf, 48, "~%d%% dmg%s", Sim_AiLogPct(atk, def, i), effTxt);
+}
+
+// The trainer's own voice: one line on the pick, one on the runner-up.
+static void Sim_AiLogThought(u32 atk, u32 def, u32 chosen)
+{
+    enum Move move = gBattleMons[atk].moves[chosen];
+    u32 runnerUp = MAX_MON_MOVES;
+    s32 best = -1000;
+
+    if (IsBattleMoveStatus(move))
+    {
+        if (gAiLogicData->hpPercents[atk] <= 50)
+            DebugPrintfLevel(MGBA_LOG_WARN, "  \"I'm down to %d%%. %S buys me time.\"", gAiLogicData->hpPercents[atk], GetMoveName(move));
+        else
+            DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S sets me up better than attacking right now.\"", GetMoveName(move));
+    }
+    else if (Sim_AiLogKos(atk, def, chosen))
+        DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S knocks out %S. Taking it.\"", GetMoveName(move), GetSpeciesName(gBattleMons[def].species));
+    else if (gAiLogicData->effectiveness[atk][def][chosen] >= UQ_4_12(2.0))
+        DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S is super effective on %S - about %d%% of what it has left.\"", GetMoveName(move), GetSpeciesName(gBattleMons[def].species), Sim_AiLogPct(atk, def, chosen));
+    else
+        DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S is my best hit on %S - about %d%%.\"", GetMoveName(move), GetSpeciesName(gBattleMons[def].species), Sim_AiLogPct(atk, def, chosen));
+
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+    {
+        s32 sc = gAiBattleData->finalScore[atk][def][i];
+        if (i == chosen || gBattleMons[atk].moves[i] == MOVE_NONE)
+            continue;
+        if (sc > best) { best = sc; runnerUp = i; }
+    }
+    if (runnerUp == MAX_MON_MOVES)
+        return;
+    if (IsBattleMoveStatus(gBattleMons[atk].moves[runnerUp]))
+        DebugPrintfLevel(MGBA_LOG_WARN, "  \"I thought about %S, but this is the better play.\"", GetMoveName(gBattleMons[atk].moves[runnerUp]));
+    else if (gAiLogicData->effectiveness[atk][def][runnerUp] == 0)
+        DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S won't even touch %S.\"", GetMoveName(gBattleMons[atk].moves[runnerUp]), GetSpeciesName(gBattleMons[def].species));
+    else if (Sim_AiLogKos(atk, def, runnerUp))
+        DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S would knock it out too, but this is the better play.\"", GetMoveName(gBattleMons[atk].moves[runnerUp]));
+    else
+        DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S would only do about %d%%.\"", GetMoveName(gBattleMons[atk].moves[runnerUp]), Sim_AiLogPct(atk, def, runnerUp));
+}
+
+void Sim_AiLogDecision(u32 battler, u32 chosenMoveIndex)
+{
+    u32 target, i, s;
+    u32 chosenTarget = IsDoubleBattle() ? gAiBattleData->chosenTarget[battler] : GetOppositeBattler(battler);
+    char facts[48];
+    char why[96];
+
+    if (!Sim_AiLogActive() || battler >= MAX_BATTLERS_COUNT || chosenMoveIndex >= MAX_MON_MOVES)
+        return;
+    Sim_AiLogHeader(battler);
+    if (chosenTarget < MAX_BATTLERS_COUNT && IsBattlerAlive(chosenTarget))
+        Sim_AiLogThought(battler, chosenTarget, chosenMoveIndex);
+
+    for (target = 0; target < gBattlersCount; target++)
+    {
+        if (GetBattlerSide(target) == GetBattlerSide(battler) || !IsBattlerAlive(target))
+            continue;
+        if (IsDoubleBattle())
+            DebugPrintfLevel(MGBA_LOG_WARN, "  vs %S:", GetSpeciesName(gBattleMons[target].species));
+        for (i = 0; i < MAX_MON_MOVES; i++)
+        {
+            enum Move move = gBattleMons[battler].moves[i];
+            bool32 chosen = (i == chosenMoveIndex) && (target == chosenTarget);
+            u32 len = 0;
+            if (move == MOVE_NONE)
+                continue;
+            Sim_AiLogFacts(battler, target, i, facts);
+            DebugPrintfLevel(MGBA_LOG_WARN, "    %S  %d  (%s)%s", GetMoveName(move),
+                             gAiBattleData->finalScore[battler][target][i], facts,
+                             chosen ? "  <- CHOSEN" : "");
+            why[0] = '\0';
+            for (s = 0; s < sAiLogStepCount[battler][target][i] && len < sizeof(why) - 32; s++)
+                len += Sim_Snprintf(why + len, sizeof(why) - len, "%s%s %s%d", s ? ", " : "",
+                                    Sim_AiLogBehaviorName(sAiLogStepId[battler][target][i][s]),
+                                    sAiLogStepDelta[battler][target][i][s] > 0 ? "+" : "",
+                                    sAiLogStepDelta[battler][target][i][s]);
+            if (len)
+                DebugPrintfLevel(MGBA_LOG_WARN, "        why: %s", why);
+        }
+    }
+}
+
+// v3.0.0 — why it's leaving, and why the one coming in was picked.
+static EWRAM_DATA u8 sAiLogPickWhy[MAX_BATTLERS_COUNT] = {0};
+static EWRAM_DATA u8 sAiLogPickOpp[MAX_BATTLERS_COUNT] = {0};
+
+bool32 Sim_AiLogSwitchWhy(u32 battler, u32 reason)
+{
+    if (battler < MAX_BATTLERS_COUNT)
+        sAiLogOutWhy[battler] = reason;
+    return TRUE;
+}
+
+u32 Sim_AiLogPick(u32 battler, u32 reason, u32 opposingBattler, u32 partyId)
+{
+    if (battler < MAX_BATTLERS_COUNT)
+    {
+        sAiLogPickWhy[battler] = reason;
+        sAiLogPickOpp[battler] = opposingBattler;
+    }
+    return partyId;
+}
+
+static void Sim_AiLogSayOut(u32 battler)
+{
+    const u8 *me = GetSpeciesName(gBattleMons[battler].species);
+    switch (sAiLogOutWhy[battler])
+    {
+    case SIM_OUT_WONDER_GUARD:  DebugPrintfLevel(MGBA_LOG_WARN, "  \"Nothing %S has can get past that Wonder Guard.\"", me); break;
+    case SIM_OUT_TRAPPER:       DebugPrintfLevel(MGBA_LOG_WARN, "  \"I've got a trapper that can lock this one down.\""); break;
+    case SIM_OUT_ABSORBER:      DebugPrintfLevel(MGBA_LOG_WARN, "  \"I know what's coming, and I've got a Pokemon that soaks it up.\""); break;
+    case SIM_OUT_CHARGING:      DebugPrintfLevel(MGBA_LOG_WARN, "  \"It's charging up or out of reach. Free turn to reposition.\""); break;
+    case SIM_OUT_TRUANT:        DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S is about to loaf around. No point staying in.\"", me); break;
+    case SIM_OUT_ALL_MOVES_BAD: DebugPrintfLevel(MGBA_LOG_WARN, "  \"None of %S's moves do anything here.\"", me); break;
+    case SIM_OUT_STATUSED:      DebugPrintfLevel(MGBA_LOG_WARN, "  \"That status is wearing %S down. Time to reset.\"", me); break;
+    case SIM_OUT_ABILITY:       DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S's ability pays off if it switches out now.\"", me); break;
+    case SIM_OUT_BAD_ODDS:      DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S is losing this matchup.\"", me); break;
+    case SIM_OUT_ENCORED:       DebugPrintfLevel(MGBA_LOG_WARN, "  \"Encore has %S stuck on a useless move.\"", me); break;
+    case SIM_OUT_CHOICE_LOCK:   DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S is choice-locked into the wrong move.\"", me); break;
+    case SIM_OUT_STATS_LOWERED: DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S's attack has been cut too far to keep fighting.\"", me); break;
+    case SIM_OUT_TEAMMATE_HITS: DebugPrintfLevel(MGBA_LOG_WARN, "  \"One of my teammates hits back harder than %S here.\"", me); break;
+    default:                    DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S should come out.\"", me); break;
+    }
+}
+
+static void Sim_AiLogSayPick(u32 battler, u32 newSpecies)
+{
+    const u8 *x = GetSpeciesName(newSpecies);
+    u32 opp = sAiLogPickOpp[battler];
+    const u8 *foe = (opp < MAX_BATTLERS_COUNT && IsBattlerAlive(opp)) ? GetSpeciesName(gBattleMons[opp].species) : (const u8 *)gText_EmptyString2;
+    switch (sAiLogPickWhy[battler])
+    {
+    case SIM_PICK_TRAPPER:      DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S can trap %S and finish it.\"", x, foe); break;
+    case SIM_PICK_REVENGE:      DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S is faster than %S and can knock it out.\"", x, foe); break;
+    case SIM_PICK_SLOW_REVENGE: DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S can take a hit from %S and knock it out.\"", x, foe); break;
+    case SIM_PICK_FAST_THREAT:  DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S outspeeds %S and hits it hard.\"", x, foe); break;
+    case SIM_PICK_SLOW_THREAT:  DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S can take a hit from %S and hit back hard.\"", x, foe); break;
+    case SIM_PICK_TYPE_SE:      DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S has the type edge on %S and hits it super effectively.\"", x, foe); break;
+    case SIM_PICK_TYPE:         DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S matches up well against %S.\"", x, foe); break;
+    case SIM_PICK_HEAL:         DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S can come in safely and recover.\"", x); break;
+    case SIM_PICK_BATON:        DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S can pass its boosts along.\"", x); break;
+    case SIM_PICK_1V1:          DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S should win the one-on-one against %S.\"", x, foe); break;
+    case SIM_PICK_DAMAGE:       DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S does the most damage to %S.\"", x, foe); break;
+    case SIM_PICK_DEFENSIVE:    DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S takes %S's hits best.\"", x, foe); break;
+    case SIM_PICK_LAST_RESORT:  DebugPrintfLevel(MGBA_LOG_WARN, "  \"Nothing great left. %S, you're up.\"", x); break;
+    case SIM_PICK_ACE:          DebugPrintfLevel(MGBA_LOG_WARN, "  \"Saved my ace for last. Go, %S!\"", x); break;
+    case SIM_PICK_SIMPLE:       DebugPrintfLevel(MGBA_LOG_WARN, "  \"%S looks like my best option.\"", x); break;
+    default:                    DebugPrintfLevel(MGBA_LOG_WARN, "  \"Go, %S!\"", x); break;
+    }
+}
+
+void Sim_AiLogSwitch(u32 battler, u32 partyIndex)
+{
+    struct Pokemon *party;
+    u32 newSpecies;
+
+    if (!Sim_AiLogActive() || battler >= MAX_BATTLERS_COUNT || partyIndex >= PARTY_SIZE)
+        return;
+    party = GetBattlerParty(battler);
+    newSpecies = GetMonData(&party[partyIndex], MON_DATA_SPECIES);
+    Sim_AiLogHeader(battler);
+    Sim_AiLogSayOut(battler);
+    Sim_AiLogSayPick(battler, newSpecies);
+    DebugPrintfLevel(MGBA_LOG_WARN, "    SWITCHES -> %S", GetSpeciesName(newSpecies));
+    sAiLogOutWhy[battler] = SIM_OUT_NONE;
+    sAiLogPickWhy[battler] = SIM_PICK_NONE;
+}
+
+void Sim_AiLogSendOut(u32 battler, u32 partyId)
+{
+    struct Pokemon *party;
+    u32 newSpecies;
+
+    if (!Sim_AiLogActive() || battler >= MAX_BATTLERS_COUNT || partyId >= PARTY_SIZE)
+        return;
+    party = GetBattlerParty(battler);
+    newSpecies = GetMonData(&party[partyId], MON_DATA_SPECIES);
+    DebugPrintfLevel(MGBA_LOG_WARN, " ");
+    DebugPrintfLevel(MGBA_LOG_WARN, "%S (%s) - %S fainted, choosing who's next",
+                     GetTrainerNameFromId(sAiLogTrainer[battler]),
+                     sAiLogTierNames[sAiLogTier[battler] & 3],
+                     GetSpeciesName(gBattleMons[battler].species));
+    Sim_AiLogSayPick(battler, newSpecies);
+    DebugPrintfLevel(MGBA_LOG_WARN, "    SENDS OUT -> %S", GetSpeciesName(newSpecies));
+    sAiLogPickWhy[battler] = SIM_PICK_NONE;
+}
+
+static const u8 sSimAiLogLabelOn[]  = _("On (mGBA log)");
+static const u8 sSimAiLogLabelOff[] = _("Off");
+
+static void DebugAction_Trainers_ToggleAiLog(u8 taskId)
+{
+    gSaveBlock3Ptr->simAiLog = (gSaveBlock3Ptr->simAiLog == 1) ? 0 : 1;
+}
+// =============================================================================
+
+// =============================================================================
+// v3.0.0 — AI Leads. Off: each side leads with its first party slot, as in
+// the games. On: like VGC team preview, each AI looks at BOTH full teams and
+// leads with the Pokemon that matches up best — its best hit on each foe
+// (type chart + ability immunities, STAB, base power) minus the foe's best hit
+// back, plus a nudge for outspeeding — summed over the whole enemy team.
+// Never leads with an Ace (it stays last), and skips trainers that switch in
+// fixed party order. Not applied to multi / two-opponent battles, where each
+// half of a party belongs to a different trainer, or to a piloted side.
+static const u8 sSimAiLeadsLabelOn[]  = _("AI Picks");
+static const u8 sSimAiLeadsLabelOff[] = _("Party Order");
+
+static const u8 *Sim_AiLeadsLabel(void)
+{
+    return gSaveBlock3Ptr->simAiLeads == 1 ? sSimAiLeadsLabelOn : sSimAiLeadsLabelOff;
+}
+
+static void Sim_ToggleAiLeads(void)
+{
+    gSaveBlock3Ptr->simAiLeads = (gSaveBlock3Ptr->simAiLeads == 1) ? 0 : 1;
+}
+
+// Best (power x effectiveness x STAB) any of attacker's moves deals to defender.
+static u32 Sim_LeadBestHit(struct Pokemon *atk, struct Pokemon *def)
+{
+    u32 best = 0;
+    u16 atkSpecies = GetMonData(atk, MON_DATA_SPECIES);
+    u16 defSpecies = GetMonData(def, MON_DATA_SPECIES);
+    enum Ability defAbility = GetMonAbility(def);
+
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+    {
+        enum Move move = GetMonData(atk, MON_DATA_MOVE1 + i);
+        u32 power, val;
+        enum Type type;
+        if (move == MOVE_NONE || IsBattleMoveStatus(move))
+            continue;
+        power = GetMovePower(move);
+        if (power <= 1)
+            power = 60;  // variable-power moves: treat as average
+        type = GetMoveType(move);
+        val = (power * CalcPartyMonTypeEffectivenessMultiplier(move, defSpecies, defAbility)) >> 12;
+        if (type == GetSpeciesType(atkSpecies, 0) || type == GetSpeciesType(atkSpecies, 1))
+            val = val * 3 / 2;
+        if (val > best)
+            best = val;
+    }
+    return best;
+}
+
+static bool32 Sim_LeadIsUsable(struct Pokemon *mon)
+{
+    u16 species = GetMonData(mon, MON_DATA_SPECIES);
+    return species != SPECIES_NONE && !GetMonData(mon, MON_DATA_IS_EGG) && GetMonData(mon, MON_DATA_HP) > 0;
+}
+
+static s32 Sim_LeadScore(struct Pokemon *mon, struct Pokemon *foes)
+{
+    s32 total = 0;
+    u32 mySpeed = GetMonData(mon, MON_DATA_SPEED);
+    for (u32 f = 0; f < PARTY_SIZE; f++)
+    {
+        if (!Sim_LeadIsUsable(&foes[f]))
+            continue;
+        total += (s32)Sim_LeadBestHit(mon, &foes[f]) - (s32)Sim_LeadBestHit(&foes[f], mon);
+        if (mySpeed > GetMonData(&foes[f], MON_DATA_SPEED))
+            total += 15;
+    }
+    return total;
+}
+
+static void Sim_SwapPartyMons(struct Pokemon *party, u32 a, u32 b)
+{
+    struct Pokemon tmp;
+    if (a == b)
+        return;
+    tmp = party[a];
+    party[a] = party[b];
+    party[b] = tmp;
+}
+
+// Reorders one side so its chosen lead(s) sit in slot 0 (and 1 in doubles).
+static void Sim_PickLeadsFor(struct Pokemon *party, struct Pokemon *foes, u16 trainerId, u16 foeTrainerId)
+{
+    u64 flags = GetTrainerAIFlagsFromId(trainerId);
+    u32 count = 0, aceCount = 0, leads = IsDoubleBattle() ? 2 : 1;
+    u32 lastUsable = PARTY_SIZE;
+
+    if (flags & AI_FLAG_SEQUENCE_SWITCHING)
+        return;  // this trainer's whole plan is its party order
+    for (u32 i = 0; i < PARTY_SIZE; i++)
+        if (Sim_LeadIsUsable(&party[i]))
+        {
+            count++;
+            lastUsable = i;
+        }
+    if (flags & AI_FLAG_DOUBLE_ACE_POKEMON)
+        aceCount = 2;
+    else if (flags & AI_FLAG_ACE_POKEMON)
+        aceCount = 1;
+    if (count <= leads + aceCount)
+        return;
+
+    for (u32 slot = 0; slot < leads; slot++)
+    {
+        s32 bestScore = -0x7FFFFFFF;
+        u32 best = slot;
+        for (u32 i = slot; i < PARTY_SIZE; i++)
+        {
+            s32 sc;
+            if (!Sim_LeadIsUsable(&party[i]))
+                continue;
+            if (aceCount && i + aceCount > lastUsable)
+                continue;  // the Ace(s) at the back stay in reserve
+            sc = Sim_LeadScore(&party[i], foes);
+            if (sc > bestScore)
+            {
+                bestScore = sc;
+                best = i;
+            }
+        }
+        Sim_SwapPartyMons(party, slot, best);
+    }
+
+    if (gSaveBlock3Ptr->simAiLog == 1)
+    {
+        if (leads == 2)
+            DebugPrintfLevel(MGBA_LOG_WARN, "%S picks %S and %S to lead - best matchups against %S's team.",
+                             GetTrainerNameFromId(trainerId),
+                             GetSpeciesName(GetMonData(&party[0], MON_DATA_SPECIES)),
+                             GetSpeciesName(GetMonData(&party[1], MON_DATA_SPECIES)),
+                             GetTrainerNameFromId(foeTrainerId));
+        else
+            DebugPrintfLevel(MGBA_LOG_WARN, "%S picks %S to lead - best matchup against %S's team.",
+                             GetTrainerNameFromId(trainerId),
+                             GetSpeciesName(GetMonData(&party[0], MON_DATA_SPECIES)),
+                             GetTrainerNameFromId(foeTrainerId));
+    }
+}
+
+void Sim_ApplyAiLeads(void)
+{
+    u16 foeId = TRAINER_BATTLE_PARAM.opponentA;
+
+    if (gSaveBlock3Ptr->simAiLeads != 1 || !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+        return;
+    if (!IsAiVsAiBattle() && !gSimPilotMode)
+        return;  // not a sim battle
+    if (gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_FRONTIER))
+        return;  // split parties: each half belongs to a different trainer
+
+    if (gSaveBlock3Ptr->simAiLog == 1)
+        DebugPrintfLevel(MGBA_LOG_WARN, " ");
+    Sim_PickLeadsFor(gEnemyParty, gPlayerParty, foeId, gSimPlayerSideId);
+    if (!gSimPilotMode)
+        Sim_PickLeadsFor(gPlayerParty, gEnemyParty, gSimPlayerSideId, foeId);
+}
+
+static void DebugAction_Trainers_ToggleAiLeads(u8 taskId)
+{
+    Sim_ToggleAiLeads();  // generic ToggleFlag redraw repaints the row
+}
+
+static void DebugAction_E4_ToggleAiLeads(u8 taskId)
+{
+    Sim_ToggleAiLeads();
+    Debug_DestroyMenu(taskId);
+    Sim_ShowE4LevelCapMenu();
+}
+// =============================================================================
 
 static void DebugAction_Trainers_ToggleAiMode(u8 taskId)
 {
@@ -3447,6 +3999,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_TournamentWho[] =
     { COMPOUND_STRING("Spectate Trainer…"), DebugAction_Trainers_ChooseTrainer, (void *)TRAINERS_DEBUG_SELECTION_TOURNAMENT_SPECTATE },
     { COMPOUND_STRING("Pilot Trainer…"),    DebugAction_Trainers_ChooseTrainer, (void *)TRAINERS_DEBUG_SELECTION_TOURNAMENT_PILOT },
     { COMPOUND_STRING("AI: {STR_VAR_1}"),   DebugAction_Tournament_ToggleAiMode },  // v2.9.0
+    { COMPOUND_STRING("AI Leads: {STR_VAR_2}"), DebugAction_Tournament_ToggleAiLeads },  // v3.0.0
     { NULL }
 };
 
@@ -4587,7 +5140,13 @@ static u8 Debug_GenerateListTrainerMenu(void)
         case 6: // AI tier mode (v2.9.0)
             StringCopy(gStringVar1, Sim_AiModeLabel());
             break;
-        case 7: // Best Of (1 = single, otherwise show "X (a-b)" current score)
+        case 7: // AI Log (v3.0.0)
+            StringCopy(gStringVar1, gSaveBlock3Ptr->simAiLog == 1 ? sSimAiLogLabelOn : sSimAiLogLabelOff);
+            break;
+        case 8: // AI Leads (v3.0.0)
+            StringCopy(gStringVar1, Sim_AiLeadsLabel());
+            break;
+        case 9: // Best Of (1 = single, otherwise show "X (a-b)" current score)
             if (gSimBestOf <= 1)
             {
                 StringCopy(gStringVar1, COMPOUND_STRING("Off"));
@@ -4608,7 +5167,7 @@ static u8 Debug_GenerateListTrainerMenu(void)
                 ConvertIntToDecimalStringN(gStringVar1, gSimBestOf, STR_CONV_MODE_LEFT_ALIGN, 1);
             }
             break;
-        case 8: // VGC Mode
+        case 10: // VGC Mode
             if (gSimVGCMode)
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR GREEN} ON"));
             else
@@ -4616,19 +5175,19 @@ static u8 Debug_GenerateListTrainerMenu(void)
             break;
         // v2.1.3 — Tournament row removed from this menu (now a dedicated
         // wrapper-menu flow); cases below shifted up by one.
-        case 9: // Double Battle
+        case 11: // Double Battle
             if (sDebugMenuListData->data[5] || trainer2Id != TRAINER_NONE || partnerId != PARTNER_NONE)
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR GREEN} TRUE"));
             else
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR RED} FALSE"));
             break;
-        case 10: // Pilot Mode (v0.51.1) — player slot becomes human-controlled
+        case 12: // Pilot Mode (v0.51.1) — player slot becomes human-controlled
             if (sDebugMenuListData->data[7])
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR GREEN} TRUE"));
             else
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR RED} FALSE"));
             break;
-        case 11: // Matches
+        case 13: // Matches
             if (!isRealFight)
             {
                 noDraw = TRUE;
@@ -4648,7 +5207,7 @@ static u8 Debug_GenerateListTrainerMenu(void)
                 ConvertIntToDecimalStringN(gStringVar2, CountMaxPossibleRematch(rematchTableId), STR_CONV_MODE_LEADING_ZEROS, 1);
             }
             break;
-        case 12: // Rematch Ready
+        case 14: // Rematch Ready
             if (FREE_MATCH_CALL || I_VS_SEEKER_CHARGING || !isRealFight || rematchTableId == -1)
             {
                 noDraw = TRUE;
@@ -4659,7 +5218,7 @@ static u8 Debug_GenerateListTrainerMenu(void)
             else
                 StringCopy(gStringVar1, COMPOUND_STRING("{COLOR RED} FALSE"));
             break;
-        case 14: // Recharge VS Seeker (visibility)
+        case 16: // Recharge VS Seeker (visibility)
             if (FREE_MATCH_CALL || I_VS_SEEKER_CHARGING == 0)
                 noDraw = TRUE;
             break;
@@ -10344,6 +10903,7 @@ static void DebugAction_Tournament_PickBestOf(u8 taskId, u32 bestOf)
     Debug_DestroyMenu(taskId);
     sDebugMenuListData->listId = 0;
     StringCopy(gStringVar1, Sim_AiModeLabel());  // v2.9.0 — AI row
+    StringCopy(gStringVar2, Sim_AiLeadsLabel());  // v3.0.0 — AI Leads row
     Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_TournamentWho);
 }
 
@@ -10398,6 +10958,17 @@ static void DebugAction_Tournament_ToggleAiMode(u8 taskId)
     Debug_DestroyMenu(taskId);
     sDebugMenuListData->listId = 0;
     StringCopy(gStringVar1, Sim_AiModeLabel());
+    StringCopy(gStringVar2, Sim_AiLeadsLabel());
+    Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_TournamentWho);
+}
+
+static void DebugAction_Tournament_ToggleAiLeads(u8 taskId)
+{
+    Sim_ToggleAiLeads();
+    Debug_DestroyMenu(taskId);
+    sDebugMenuListData->listId = 0;
+    StringCopy(gStringVar1, Sim_AiModeLabel());
+    StringCopy(gStringVar2, Sim_AiLeadsLabel());
     Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_TournamentWho);
 }
 
@@ -10410,6 +10981,7 @@ static void Sim_ShowE4LevelCapMenu(void)
     else
         ConvertIntToDecimalStringN(gStringVar1, sE4PendingLevelCap, STR_CONV_MODE_LEFT_ALIGN, 3);
     StringCopy(gStringVar2, Sim_AiModeLabel());  // v2.9.0
+    StringCopy(gStringVar3, Sim_AiLeadsLabel());  // v3.0.0
     sDebugMenuListData->listId = 0;
     Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_E4LevelCap);
 }

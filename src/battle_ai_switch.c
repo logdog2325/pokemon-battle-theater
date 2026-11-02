@@ -20,6 +20,7 @@
 #include "constants/battle_move_effects.h"
 #include "constants/items.h"
 #include "constants/moves.h"
+#include "debug.h"
 
 // this file's functions
 struct IncomingHealInfo
@@ -1340,31 +1341,31 @@ bool32 ShouldSwitch(enum BattlerId battler)
     // The rest can prompt a switch to party member returned by GetMostSuitableMonToSwitchInto
 
     if (ShouldSwitchIfWonderGuard(battler))
-        return TRUE;
+        return Sim_AiLogSwitchWhy(battler, SIM_OUT_WONDER_GUARD);  // v3.0.0
     if ((gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_SWITCHING) && (CanMonSurviveHazardSwitchin(battler) == FALSE))
         return FALSE;
     if (ShouldSwitchIfTrapperInParty(battler))
-        return TRUE;
+        return Sim_AiLogSwitchWhy(battler, SIM_OUT_TRAPPER);  // v3.0.0
     if (FindMonThatAbsorbsOpponentsMove(battler))
-        return TRUE;
+        return Sim_AiLogSwitchWhy(battler, SIM_OUT_ABSORBER);  // v3.0.0
     if (ShouldSwitchIfOpponentChargingOrInvulnerable(battler))
-        return TRUE;
+        return Sim_AiLogSwitchWhy(battler, SIM_OUT_CHARGING);  // v3.0.0
     if (ShouldSwitchIfTruant(battler))
-        return TRUE;
+        return Sim_AiLogSwitchWhy(battler, SIM_OUT_TRUANT);  // v3.0.0
     if (ShouldSwitchIfAllMovesBad(battler))
-        return TRUE;
+        return Sim_AiLogSwitchWhy(battler, SIM_OUT_ALL_MOVES_BAD);  // v3.0.0
     if (ShouldSwitchIfBadlyStatused(battler))
-        return TRUE;
+        return Sim_AiLogSwitchWhy(battler, SIM_OUT_STATUSED);  // v3.0.0
     if (ShouldSwitchIfAbilityBenefit(battler))
-        return TRUE;
+        return Sim_AiLogSwitchWhy(battler, SIM_OUT_ABILITY);  // v3.0.0
     if (ShouldSwitchIfHasBadOdds(battler))
-        return TRUE;
+        return Sim_AiLogSwitchWhy(battler, SIM_OUT_BAD_ODDS);  // v3.0.0
     if (ShouldSwitchIfEncored(battler))
-        return TRUE;
+        return Sim_AiLogSwitchWhy(battler, SIM_OUT_ENCORED);  // v3.0.0
     if (ShouldSwitchIfBadChoiceLock(battler))
-        return TRUE;
+        return Sim_AiLogSwitchWhy(battler, SIM_OUT_CHOICE_LOCK);  // v3.0.0
     if (ShouldSwitchIfAttackingStatsLowered(battler))
-        return TRUE;
+        return Sim_AiLogSwitchWhy(battler, SIM_OUT_STATS_LOWERED);  // v3.0.0
 
     // Removing switch capabilites under specific conditions
     // These Functions prevent the "FindMonWithFlagsAndSuperEffective" from getting out of hand.
@@ -1380,7 +1381,7 @@ bool32 ShouldSwitch(enum BattlerId battler)
     // Can prompt switch if AI has a pokemon in party that resists current opponent & has super effective move
     if (FindMonWithFlagsAndSuperEffective(battler, MOVE_RESULT_DOESNT_AFFECT_FOE, 50)
         || FindMonWithFlagsAndSuperEffective(battler, MOVE_RESULT_NOT_VERY_EFFECTIVE, 33))
-        return TRUE;
+        return Sim_AiLogSwitchWhy(battler, SIM_OUT_TEAMMATE_HITS);  // v3.0.0
 
     return FALSE;
 }
@@ -2352,28 +2353,28 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
     if (isFreeSwitch)
     {
         // Return Trapper > Revenge Killer > Type Matchup > Healing Candidate > Baton Pass > Best Damage
-        if (trapperIds != 0)                    return GetSwitchinCandidate(trapperIds, battler, firstId, lastId, switchType);
-        else if (revengeKillerIds != 0)         return GetSwitchinCandidate(revengeKillerIds, battler, firstId, lastId, switchType);
-        else if (slowRevengeKillerIds != 0)     return GetSwitchinCandidate(slowRevengeKillerIds, battler, firstId, lastId, switchType);
-        else if (fastThreatenIds != 0)          return GetSwitchinCandidate(fastThreatenIds, battler, firstId, lastId, switchType);
-        else if (slowThreatenIds != 0)          return GetSwitchinCandidate(slowThreatenIds, battler, firstId, lastId, switchType);
-        else if (typeMatchupEffectiveIds != 0)  return getRandom ? GetSwitchinCandidate(typeMatchupEffectiveIds, battler, firstId, lastId, switchType) : bestTypeMatchupEffectiveId;
-        else if (typeMatchupIds != 0)           return getRandom ? GetSwitchinCandidate(typeMatchupIds, battler, firstId, lastId, switchType) : bestTypeMatchupId;
-        else if (healingCandidateIds != 0)      return getRandom ? GetSwitchinCandidate(healingCandidateIds, battler, firstId, lastId, switchType) : bestHealGainId;
-        else if (batonPassIds != 0)             return GetSwitchinCandidate(batonPassIds, battler, firstId, lastId, switchType);
-        else if (generic1v1MonIds != 0)         return GetSwitchinCandidate(generic1v1MonIds, battler, firstId, lastId, switchType);
-        else if (damageMonIds != 0)             return getRandom ? GetSwitchinCandidate(damageMonIds, battler, firstId, lastId, switchType) : bestDamageMonId;
+        if (trapperIds != 0)                    return Sim_AiLogPick(battler, SIM_PICK_TRAPPER, opposingBattler, GetSwitchinCandidate(trapperIds, battler, firstId, lastId, switchType));
+        else if (revengeKillerIds != 0)         return Sim_AiLogPick(battler, SIM_PICK_REVENGE, opposingBattler, GetSwitchinCandidate(revengeKillerIds, battler, firstId, lastId, switchType));
+        else if (slowRevengeKillerIds != 0)     return Sim_AiLogPick(battler, SIM_PICK_SLOW_REVENGE, opposingBattler, GetSwitchinCandidate(slowRevengeKillerIds, battler, firstId, lastId, switchType));
+        else if (fastThreatenIds != 0)          return Sim_AiLogPick(battler, SIM_PICK_FAST_THREAT, opposingBattler, GetSwitchinCandidate(fastThreatenIds, battler, firstId, lastId, switchType));
+        else if (slowThreatenIds != 0)          return Sim_AiLogPick(battler, SIM_PICK_SLOW_THREAT, opposingBattler, GetSwitchinCandidate(slowThreatenIds, battler, firstId, lastId, switchType));
+        else if (typeMatchupEffectiveIds != 0)  return Sim_AiLogPick(battler, SIM_PICK_TYPE_SE, opposingBattler, getRandom ? GetSwitchinCandidate(typeMatchupEffectiveIds, battler, firstId, lastId, switchType) : bestTypeMatchupEffectiveId);
+        else if (typeMatchupIds != 0)           return Sim_AiLogPick(battler, SIM_PICK_TYPE, opposingBattler, getRandom ? GetSwitchinCandidate(typeMatchupIds, battler, firstId, lastId, switchType) : bestTypeMatchupId);
+        else if (healingCandidateIds != 0)      return Sim_AiLogPick(battler, SIM_PICK_HEAL, opposingBattler, getRandom ? GetSwitchinCandidate(healingCandidateIds, battler, firstId, lastId, switchType) : bestHealGainId);
+        else if (batonPassIds != 0)             return Sim_AiLogPick(battler, SIM_PICK_BATON, opposingBattler, GetSwitchinCandidate(batonPassIds, battler, firstId, lastId, switchType));
+        else if (generic1v1MonIds != 0)         return Sim_AiLogPick(battler, SIM_PICK_1V1, opposingBattler, GetSwitchinCandidate(generic1v1MonIds, battler, firstId, lastId, switchType));
+        else if (damageMonIds != 0)             return Sim_AiLogPick(battler, SIM_PICK_DAMAGE, opposingBattler, getRandom ? GetSwitchinCandidate(damageMonIds, battler, firstId, lastId, switchType) : bestDamageMonId);
     }
     else
     {
         // Return Trapper > Type Matchup > Best Defensive > Healing Candidate > Baton Pass
-        if (trapperIds != 0)                    return GetSwitchinCandidate(trapperIds, battler, firstId, lastId, switchType);
-        else if (typeMatchupEffectiveIds != 0)  return getRandom ? GetSwitchinCandidate(typeMatchupEffectiveIds, battler, firstId, lastId, switchType) : bestTypeMatchupEffectiveId;
-        else if (typeMatchupIds != 0)           return getRandom ? GetSwitchinCandidate(typeMatchupIds, battler, firstId, lastId, switchType) : bestTypeMatchupId;
-        else if (defensiveMonIds != 0)          return getRandom ? GetSwitchinCandidate(defensiveMonIds, battler, firstId, lastId, switchType) : bestDefensiveMonId;
-        else if (healingCandidateIds != 0)      return getRandom ? GetSwitchinCandidate(healingCandidateIds, battler, firstId, lastId, switchType) : bestHealGainId;
-        else if (batonPassIds != 0)             return GetSwitchinCandidate(batonPassIds, battler, firstId, lastId, switchType);
-        else if (generic1v1MonIds != 0)         return GetSwitchinCandidate(generic1v1MonIds, battler, firstId, lastId, switchType);
+        if (trapperIds != 0)                    return Sim_AiLogPick(battler, SIM_PICK_TRAPPER, opposingBattler, GetSwitchinCandidate(trapperIds, battler, firstId, lastId, switchType));
+        else if (typeMatchupEffectiveIds != 0)  return Sim_AiLogPick(battler, SIM_PICK_TYPE_SE, opposingBattler, getRandom ? GetSwitchinCandidate(typeMatchupEffectiveIds, battler, firstId, lastId, switchType) : bestTypeMatchupEffectiveId);
+        else if (typeMatchupIds != 0)           return Sim_AiLogPick(battler, SIM_PICK_TYPE, opposingBattler, getRandom ? GetSwitchinCandidate(typeMatchupIds, battler, firstId, lastId, switchType) : bestTypeMatchupId);
+        else if (defensiveMonIds != 0)          return Sim_AiLogPick(battler, SIM_PICK_DEFENSIVE, opposingBattler, getRandom ? GetSwitchinCandidate(defensiveMonIds, battler, firstId, lastId, switchType) : bestDefensiveMonId);
+        else if (healingCandidateIds != 0)      return Sim_AiLogPick(battler, SIM_PICK_HEAL, opposingBattler, getRandom ? GetSwitchinCandidate(healingCandidateIds, battler, firstId, lastId, switchType) : bestHealGainId);
+        else if (batonPassIds != 0)             return Sim_AiLogPick(battler, SIM_PICK_BATON, opposingBattler, GetSwitchinCandidate(batonPassIds, battler, firstId, lastId, switchType));
+        else if (generic1v1MonIds != 0)         return Sim_AiLogPick(battler, SIM_PICK_1V1, opposingBattler, GetSwitchinCandidate(generic1v1MonIds, battler, firstId, lastId, switchType));
     }
 
     // Not required to switch here and no good candidates, bail
@@ -2382,11 +2383,11 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
 
     // Fallback
     if (validMonIds != 0)
-        return GetValidSwitchinCandidate(validMonIds, battler, firstId, lastId, switchType);
+        return Sim_AiLogPick(battler, SIM_PICK_LAST_RESORT, opposingBattler, GetValidSwitchinCandidate(validMonIds, battler, firstId, lastId, switchType));
 
     // If ace mon is the last available Pokemon and U-Turn/Volt Switch or Eject Pack/Button was used - switch to the mon.
     if (aceMonId != PARTY_SIZE && CountUsablePartyMons(battler) <= aceMonCount)
-        return aceMonId;
+        return Sim_AiLogPick(battler, SIM_PICK_ACE, opposingBattler, aceMonId);
 
     return PARTY_SIZE;
 }
@@ -2501,7 +2502,18 @@ static u32 GetNextMonInParty(struct Pokemon *party, int firstId, int lastId, enu
     return PARTY_SIZE;
 }
 
+static u32 GetMostSuitableMonToSwitchInto_Inner(enum BattlerId battler, enum SwitchType switchType);
+
+// v3.0.0 — AI Log: narrate the replacement pick after a knockout.
 u32 GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum SwitchType switchType)
+{
+    u32 id = GetMostSuitableMonToSwitchInto_Inner(battler, switchType);
+    if (switchType == SWITCH_AFTER_KO && !gAiLogicData->aiCalcInProgress)  // real send-out, not turn planning
+        Sim_AiLogSendOut(battler, id);
+    return id;
+}
+
+static u32 GetMostSuitableMonToSwitchInto_Inner(enum BattlerId battler, enum SwitchType switchType)
 {
     enum BattlerId opposingBattler = 0;
     u32 bestMonId = PARTY_SIZE;
@@ -2536,6 +2548,7 @@ u32 GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum SwitchType switc
     else
     {
         bestMonId = GetBestMonVanilla(party, firstId, lastId, battler, opposingBattler, battlerIn1, battlerIn2, switchType);
+        Sim_AiLogPick(battler, SIM_PICK_SIMPLE, opposingBattler, bestMonId);  // v3.0.0
         return bestMonId;
     }
 }

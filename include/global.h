@@ -328,6 +328,8 @@ struct SaveBlock3
     // with slot 8 overflowing into SaveBlock1 — see SIM_NUM_CUSTOM_TRAINERS).
     struct SimCustomTrainer simCustomTrainers[SIM_NUM_CUSTOM_TRAINERS_SB3];
     u8 simAiMode;  // v2.9.0 — 0 = canon AI tiers, 1 = equalized (anything else reads as 0)
+    u8 simAiLog;   // v3.0.0 — 1 = print AI decisions to mGBA's log window (anything else = off)
+    u8 simAiLeads; // v3.0.0 — 1 = AI picks its lead from team preview (anything else = party order)
 }; /* max size 1624 bytes */
 
 extern struct SaveBlock3 *gSaveBlock3Ptr;

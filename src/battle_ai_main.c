@@ -233,7 +233,7 @@ static u64 GetAiFlags(u16 trainerId, enum BattlerId battler)
         else if (gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_TRAINER_HILL | BATTLE_TYPE_SECRET_BASE))
             flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT;
         else
-            flags = Sim_ApplyAiTier(trainerId, GetTrainerAIFlagsFromId(trainerId));  // v2.9.0
+            flags = Sim_ApplyAiTier(trainerId, battler, GetTrainerAIFlagsFromId(trainerId));  // v2.9.0
     }
 
     if (IsDoubleBattle() && flags != 0)
@@ -257,6 +257,7 @@ static u64 GetAiFlags(u16 trainerId, enum BattlerId battler)
 
 void BattleAI_SetupFlags(void)
 {
+    Sim_AiLogBattleStart();  // v3.0.0
     if (IsAiVsAiBattle())
         // v2.0.4 — Use gSimPlayerSideId (the actual player-AI's trainer ID)
         // rather than gPartnerTrainerId. In multi battles, gPartnerTrainerId
@@ -532,6 +533,7 @@ void AI_TrySwitchOrUseItem(enum BattlerId battler)
 
             gBattleStruct->monToSwitchIntoId[battler] = gBattleStruct->AI_monToSwitchIntoId[battler];
             gAiLogicData->monToSwitchInId[battler] = gBattleStruct->AI_monToSwitchIntoId[battler];
+            Sim_AiLogSwitch(battler, gBattleStruct->AI_monToSwitchIntoId[battler]);  // v3.0.0
             return;
         }
         else if (ShouldUseItem(battler))
@@ -550,6 +552,7 @@ u32 BattleAI_ChooseMoveIndex(enum BattlerId battler)
 
     SetAIUsingGimmick(battler, USE_GIMMICK);
     SetupRandomRollsForAIMoveSelection(battler);
+    Sim_AiLogReset(battler);  // v3.0.0
 
     if (gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_TERA && (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA))
         DecideTerastal(battler);
@@ -558,6 +561,8 @@ u32 BattleAI_ChooseMoveIndex(enum BattlerId battler)
 
     if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE)
         ReconsiderGimmick(battler, gBattlerTarget, gBattleMons[battler].moves[chosenMoveIndex]);
+
+    Sim_AiLogDecision(battler, chosenMoveIndex);  // v3.0.0
 
     // Clear protect structures, some flags may be set during AI calcs
     // e.g. pranksterElevated from GetBattleMovePriority
@@ -898,7 +903,11 @@ static u32 ChooseMoveOrAction_Singles(enum BattlerId battler)
         gAiThinkingStruct->aiLogicId++;
     }
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_CHECK_VIABILITY)
+    {
+        Sim_AiLogCompareBegin(battler, opposingBattler);  // v3.0.0
         AI_CompareDamagingMoves(battler, opposingBattler);
+        Sim_AiLogCompareEnd(battler, opposingBattler);
+    }
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
@@ -981,7 +990,11 @@ static u32 ChooseMoveOrAction_Doubles(enum BattlerId battler)
                 gAiThinkingStruct->aiLogicId++;
             }
             if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_CHECK_VIABILITY)
+            {
+                Sim_AiLogCompareBegin(battler, gBattlerTarget);  // v3.0.0
                 AI_CompareDamagingMoves(battler, gBattlerTarget);
+                Sim_AiLogCompareEnd(battler, gBattlerTarget);
+            }
 
             mostViableMovesScores[0] = gAiThinkingStruct->score[0];
             mostViableMovesIndices[0] = 0;
@@ -1116,11 +1129,14 @@ static inline void BattleAI_DoAIProcessing(struct AiThinkingStruct *aiThink, enu
               && sBattleAiFuncTable[aiThink->aiLogicId] != NULL)
             {
                 // Call AI function
+                s32 simOldScore = aiThink->score[aiThink->movesetIndex];  // v3.0.0 AI Log
                 aiThink->score[aiThink->movesetIndex] =
                     sBattleAiFuncTable[aiThink->aiLogicId](battlerAtk,
                       battlerDef,
                       aiThink->moveConsidered,
                       aiThink->score[aiThink->movesetIndex]);
+                Sim_AiLogDelta(battlerAtk, battlerDef, aiThink->movesetIndex, aiThink->aiLogicId,
+                               aiThink->score[aiThink->movesetIndex] - simOldScore);
             }
         }
         else

@@ -16,7 +16,7 @@ Title screen + box art commissioned from
 Shadow Lugia (XD001) battle sprites + icon by
 **[lvalovenfs](https://www.deviantart.com/lvalovenfs)** (DeviantArt), used with credit.
 
-**Download the latest patch:** [v2.9.0 — AI tiers: Gym Leaders, Elite Four and Champions each think at their own level](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
+**Download the latest patch:** [v3.0.0 — AI tiers, AI-picked leads, and a log that shows trainers thinking](https://github.com/logdog2325/pokemon-battle-theater/releases/latest).
 All releases live on the [Releases page](https://github.com/logdog2325/pokemon-battle-theater/releases).
 
 ---
@@ -176,6 +176,16 @@ All releases live on the [Releases page](https://github.com/logdog2325/pokemon-b
   their canonical Dynamax and G-Max mons, Ash's Gigantamax Gengar, and
   custom mons with the per-mon toggle switched on. This also fixes that
   toggle being ignored in pilot mode
+- **AI Leads (v3.0.0)** — a new **AI Leads** setting (Run Simulation, E4/Boss
+  level-cap step, tournament start). **Party Order** leads with the first slot
+  like the games; **AI Picks** works like VGC team preview: each AI looks at
+  both full teams and leads with its best matchup. Aces stay in the back.
+- **AI Log (v3.0.0)** — watch both trainers think. Turn on **AI Log** in
+  Run Simulation, then in mGBA open **Tools → View Logs**: every turn, each
+  trainer says what it's thinking in plain words, with every move's score,
+  expected damage, and exactly which AI behaviors pushed it up or down, plus
+  its switches. Nothing is added to the GBA screen. mGBA
+  only; off by default. How to read it: [docs/AI_TIERS.md](docs/AI_TIERS.md#watching-the-ai-think)
 - **AI tiers (v2.9.0)** — every trainer's battle AI now matches their role:
   Gym Leaders think at one level, the Elite Four a step higher, Champions
   highest. A new **AI** setting (Run Simulation, E4/Boss level-cap step, and

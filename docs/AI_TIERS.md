@@ -27,6 +27,64 @@ A trainer's personality flags are kept at every tier — Ace Pokémon, setup on 
 
 Trainers marked **Own AI (unchanged)** keep the AI from their trainer data.
 
+## Picking a lead
+
+The **AI Leads** setting sits next to **AI** in the same three menus, and it's saved.
+
+- **Party Order** (default) — every trainer leads with the first Pokémon in its party, as in the games.
+- **AI Picks** — like VGC team preview. Before the battle, each AI looks at both full teams and leads with the Pokémon that matches up best across the whole opposing team: its best hit on each foe (type chart, ability immunities like Levitate, STAB, move power), minus the foe's best hit back, plus a bonus for outspeeding. In doubles it picks two.
+- **Ace** Pokémon are never picked to lead; they stay in reserve, as their trainers intend. Trainers that switch in a fixed party order keep their order.
+- Leads aren't re-picked in multi battles or 2-vs-1 battles (each half of a party belongs to a different trainer), and a side you're piloting always keeps your order.
+- With **AI Log** on, each trainer's lead choice is printed before the battle.
+
+## Watching the AI think
+
+Turn on **AI Log** in the Run Simulation menu (it's saved), start a battle in **mGBA**, and open **Tools → View Logs**. Each turn, both trainers explain themselves:
+
+```
+================ TURN 3 ================
+
+WALLACE (Champion tier) - MILOTIC, 82% HP
+  "SURF is my best hit on METAGROSS - about 38%."
+  "ICE BEAM would only do about 19%."
+    SURF  128  (~38% dmg)  <- CHOSEN
+        why: Matchup Sense +8, Strongest Attack +20
+    ICE BEAM  101  (~19% dmg, not very effective)
+        why: Matchup Sense +1
+    TOXIC  70  (status move)
+        why: Avoid Bad Moves -30
+
+STEVEN (Champion tier) - METAGROSS, 31% HP
+  "METAGROSS is losing this matchup."
+  "SKARMORY takes MILOTIC's hits best."
+    SWITCHES -> SKARMORY
+
+WALLACE (Champion tier) - LUDICOLO fainted, choosing who's next
+  "MANECTRIC is faster than SKARMORY and can knock it out."
+    SENDS OUT -> MANECTRIC
+```
+
+**Reading it:**
+- **The quotes** are the trainer's thinking in plain words, built from what the AI actually knows: expected damage, type matchups and its own HP.
+- **The number** after each move is its final score. Every move starts at 100, and the highest score is the one it uses (ties are random).
+- **(…)** shows what the AI expects the move to do: **KOs**, **~N% dmg** of the target's remaining HP, **super effective**, **not very effective**, **no effect**, or **status move**.
+- **why:** lists exactly which of the trainer's AI behaviors moved that score, and by how much:
+
+| Behavior | What it's doing |
+|---|---|
+| Avoid Bad Moves | Penalizing moves that would fail or be wasted |
+| Go For The KO | Rewarding moves that knock the target out |
+| Matchup Sense | Weighing each move's effect in this situation |
+| Strongest Attack | Boosting its best damaging option |
+| HP Aware | Adjusting for its own and the target's HP |
+| Setup First Turn, Stall Plan, Risky Play… | A trainer's personality |
+
+- **Switches** say why the trainer is leaving (losing the matchup, badly statused, choice-locked, can't touch a Wonder Guard…) and why it picked who's coming in (faster and can KO, takes the hits best, type advantage, saving its ace…). After a knockout, it explains its **send-out** the same way. Leads follow the **AI Leads** setting (see above).
+- **Want it in its own window?** Launch mGBA from a terminal with `-C logToStdout=1 -l 4` and the log streams there instead (filter for `GBA Debug`).
+- In **doubles**, moves are listed once per opposing Pokémon, and **CHOSEN** marks the move *and* the target it picked.
+- **own AI** means that trainer isn't in the tier table and uses its own trainer data.
+- Only mGBA shows this. Other emulators and real hardware ignore it, and it's off by default.
+
 ## Who gets which tier
 
 - **Gym Leaders** → Gym Leader. **Elite Four** → Elite Four. **Champions** → Champion.

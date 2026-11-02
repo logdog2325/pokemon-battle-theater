@@ -145,6 +145,29 @@ void Sim_OverridePlayerName(u16 playerSideId, bool32 pilotMode);
 void Sim_RestorePlayerName(void);
 
 // v2.9.0 — AI tiers (gym < E4 < champion) or equalized; see Sim_ApplyAiTier.
-u64 Sim_ApplyAiTier(u16 trainerId, u64 flags);
+u64 Sim_ApplyAiTier(u16 trainerId, u32 battler, u64 flags);
+// v3.0.0 — AI Log: both sides' decisions printed to mGBA's Tools > View Logs.
+void Sim_AiLogDecision(u32 battler, u32 chosenMoveIndex);
+void Sim_AiLogSwitch(u32 battler, u32 partyIndex);
+void Sim_AiLogReset(u32 battler);
+void Sim_AiLogBattleStart(void);
+void Sim_ApplyAiLeads(void);  // v3.0.0 — AI Leads setting
+void Sim_AiLogDelta(u32 atk, u32 def, u32 moveIndex, u32 logicId, s32 delta);
+void Sim_AiLogCompareBegin(u32 atk, u32 def);
+void Sim_AiLogCompareEnd(u32 atk, u32 def);
+// v3.0.0 — why the AI switches out, and why it picks who comes in.
+bool32 Sim_AiLogSwitchWhy(u32 battler, u32 reason);
+u32 Sim_AiLogPick(u32 battler, u32 reason, u32 opposingBattler, u32 partyId);
+void Sim_AiLogSendOut(u32 battler, u32 partyId);
+enum SimAiSwitchWhy {
+    SIM_OUT_NONE, SIM_OUT_WONDER_GUARD, SIM_OUT_TRAPPER, SIM_OUT_ABSORBER, SIM_OUT_CHARGING,
+    SIM_OUT_TRUANT, SIM_OUT_ALL_MOVES_BAD, SIM_OUT_STATUSED, SIM_OUT_ABILITY, SIM_OUT_BAD_ODDS,
+    SIM_OUT_ENCORED, SIM_OUT_CHOICE_LOCK, SIM_OUT_STATS_LOWERED, SIM_OUT_TEAMMATE_HITS,
+};
+enum SimAiPickWhy {
+    SIM_PICK_NONE, SIM_PICK_TRAPPER, SIM_PICK_REVENGE, SIM_PICK_SLOW_REVENGE, SIM_PICK_FAST_THREAT,
+    SIM_PICK_SLOW_THREAT, SIM_PICK_TYPE_SE, SIM_PICK_TYPE, SIM_PICK_HEAL, SIM_PICK_BATON,
+    SIM_PICK_1V1, SIM_PICK_DAMAGE, SIM_PICK_DEFENSIVE, SIM_PICK_LAST_RESORT, SIM_PICK_ACE, SIM_PICK_SIMPLE,
+};
 
 #endif // GUARD_DEBUG_H
